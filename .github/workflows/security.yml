@@ -9,9 +9,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write
-  actions: read
-  id-token: write
 
 concurrency:
   group: security-${{ github.ref }}
@@ -21,6 +18,10 @@ jobs:
   codeql:
     name: CodeQL
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -36,6 +37,8 @@ jobs:
   audit:
     name: Cargo audit
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -63,6 +66,10 @@ jobs:
     name: OpenSSF Scorecard
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      id-token: write
+      security-events: write
     steps:
       - name: Checkout
         uses: actions/checkout@v5
