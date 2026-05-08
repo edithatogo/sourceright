@@ -1,0 +1,7 @@
+{
+  "id": "00-public-repo-infrastructure",
+  "status": "planned",
+  "priority": "highest",
+  "owned_paths": [".github/", "docs/", "LICENSE-*", "README.md", "Cargo.toml"],
+  "dependencies": []
+}

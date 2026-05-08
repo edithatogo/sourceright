@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose a reference, provider, export, CLI, MCP, or roadmap feature.
+title: "feature: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow should Sourceright support?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should change?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Reference intake
+        - CSL model
+        - Provider verification
+        - Cleaning and standardisation
+        - Manual review
+        - Export
+        - CLI
+        - MCP
+        - Legal citations
+        - Claim/source/provenance
+        - Infrastructure

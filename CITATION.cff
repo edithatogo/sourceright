@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: Sourceright
+message: "If you use Sourceright in academic work, please cite the project repository until release-specific citations are available."
+type: software
+authors:
+  - name: Sourceright contributors
+repository-code: "https://github.com/edithatogo/sourceright"
+url: "https://edithatogo.github.io/sourceright/"
+license: "MIT OR Apache-2.0"
+version: "0.1.0"
+date-released: "2026-05-08"

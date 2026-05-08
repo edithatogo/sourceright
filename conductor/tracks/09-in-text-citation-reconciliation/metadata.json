@@ -1,0 +1,7 @@
+{
+  "id": "09-in-text-citation-reconciliation",
+  "status": "planned",
+  "priority": "medium",
+  "owned_paths": ["src/", "tests/fixtures/"],
+  "dependencies": ["03-reference-intake", "04-csl-canonical-model", "05-verification-sidecar"]
+}

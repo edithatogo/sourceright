@@ -1,0 +1,7 @@
+{
+  "id": "02-legacy-audit",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": ["legacy/", "docs/import-manifest.md", "conductor/tracks/02-legacy-audit/"],
+  "dependencies": ["01-product-roadmap"]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "12-cli-and-mcp",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": ["src/", "tests/"],
+  "dependencies": ["03-reference-intake", "04-csl-canonical-model", "05-verification-sidecar", "11-export-suite"]
+}

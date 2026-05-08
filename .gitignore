@@ -1,0 +1,11 @@
+/target/
+/target*/
+/.cargo/
+/.serena/
+/.cache/
+/.tmp/
+*.log
+*.tmp
+node_modules/
+dist/
+book/

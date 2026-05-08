@@ -1,0 +1,15 @@
+[package]
+name = "sourceright"
+version = "0.1.0"
+edition = "2024"
+description = "Reference verification infrastructure for academic and legal citation workflows."
+license = "MIT OR Apache-2.0"
+publish = false
+repository = "https://github.com/edithatogo/sourceright"
+homepage = "https://edithatogo.github.io/sourceright/"
+documentation = "https://edithatogo.github.io/sourceright/"
+readme = "README.md"
+keywords = ["citations", "references", "csl", "mcp", "verification"]
+categories = ["command-line-utilities", "text-processing"]
+
+[dependencies]

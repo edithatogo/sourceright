@@ -1,0 +1,7 @@
+{
+  "id": "10-manual-agent-review",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": ["src/", "tests/fixtures/"],
+  "dependencies": ["05-verification-sidecar", "08-conflict-resolution"]
+}

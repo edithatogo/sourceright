@@ -1,0 +1,30 @@
+name: Bug report
+description: Report incorrect behavior, failed validation, or broken output.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What failed?
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Input shape
+      description: Describe the document/reference input without private data.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation output
+      description: Paste relevant command output.

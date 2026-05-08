@@ -1,0 +1,10 @@
+[book]
+title = "Sourceright"
+authors = ["Sourceright contributors"]
+language = "en"
+multilingual = false
+src = "docs/src"
+
+[output.html]
+git-repository-url = "https://github.com/edithatogo/sourceright"
+edit-url-template = "https://github.com/edithatogo/sourceright/edit/main/{path}"

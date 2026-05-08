@@ -1,0 +1,7 @@
+{
+  "id": "13-legal-citations",
+  "status": "roadmap",
+  "priority": "medium",
+  "owned_paths": ["conductor/tracks/13-legal-citations/"],
+  "dependencies": ["05-verification-sidecar", "08-conflict-resolution", "10-manual-agent-review"]
+}
