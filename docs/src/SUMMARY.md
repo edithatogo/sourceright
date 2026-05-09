@@ -10,6 +10,7 @@
 - [Verification Sidecar](verification-sidecar.md)
 - [Reference Reporting](reporting.md)
 - [Exports](exports.md)
+- [Journal Workflow Integrations](journal-integrations.md)
 - [Publishing Plan](publishing.md)
 - [Manual Review](manual-review.md)
 - [Legal Roadmap](legal-roadmap.md)
