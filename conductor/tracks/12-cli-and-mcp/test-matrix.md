@@ -10,6 +10,8 @@
 | CSL validation usage/runtime errors | Implemented | Missing paths, extra arguments, unreadable files, and JSON parse errors exit `2` with stderr errors. |
 | MCP placeholder | Initial | `sourceright mcp` prints unavailable server status and exits non-zero. |
 | MCP status | Initial | `sourceright mcp status` reports unavailable server status without pretending tools exist. |
+| Report JSON output | Implemented | `sourceright report --json` emits compact `sourceright.reference_report.v1` JSON. |
+| Report MCP resource output | Implemented | `sourceright report --mcp-resource` emits the `sourceright://reports/reference-integrity` resource envelope. |
 | Extract command | Planned | Produces reference candidates from supported input formats. |
 | Normalize command | Planned | Produces canonical CSL JSON from extracted or supplied records. |
 | Verify command | Planned | Produces verification sidecars and provider match diagnostics. |

@@ -62,17 +62,7 @@ The sidecar may contain candidate CSL fragments from providers, but those fragme
 
 ## Status Values
 
-Initial implementation should use a small status set:
-
-- `unverified`: canonical CSL exists but no provider or manual verification has completed.
-- `verified`: automated or manual verification supports the canonical CSL record.
-- `needs_review`: deterministic checks found ambiguity, low confidence, missing evidence, or conflicts.
-- `rejected`: the record should not be treated as a valid reference without further user action.
-- `merged`: a manual or deterministic process resolved this record into another canonical CSL ID.
-
-Status transitions should be explicit in sidecar data. When a record moves from `needs_review` to `verified`, the sidecar should retain the decision evidence rather than only the final status.
-
-The Rust model currently exposes the stable workflow states used by the sidecar:
+The Rust model exposes the stable workflow states used by the sidecar:
 
 - `not_required`: no review queue entry is required.
 - `queued`: manual or agent review is waiting.
@@ -124,11 +114,18 @@ Minimum validation expectations:
 - Confidence values are numeric and bounded from `0.0` to `1.0`.
 - Provider candidate entries name the provider and preserve enough provider identity to re-check or explain the match.
 - Conflict entries identify the field, competing values, source/provider, and severity.
-- Review records include a state and reason when `status` is `needs_review`.
-- `review-queue.jsonl` entries refer to records whose sidecar status is `needs_review`.
+- Review records include decision evidence when terminal conflicted records are resolved or left unresolved.
+- `review-queue.jsonl` entries are derived from records whose sidecar status is `queued`, `in_progress`, or `unresolved`.
 
 Validation should also protect the clean boundary. If sidecar-only fields are found in `references.csl.json`, the canonical model validator should reject or migrate them. If bibliographic corrections are made during review, the canonical CSL item should be updated and the sidecar should record the decision.
 
 ## Compatibility
 
 The first sidecar schema version is `sourceright.verification.v1`. Future incompatible changes should increment `schema_version` and provide migration diagnostics. Compatible additions may add optional fields, but existing readers should continue to treat unknown fields as non-authoritative unless the schema version requires them.
+
+The Rust core exposes the completed sidecar contract through:
+
+- `parse_verification_sidecar_json` for canonical loading.
+- `format_verification_sidecar_json` for newline-terminated deterministic pretty JSON.
+- `VerificationSidecar::validate` for stable sidecar diagnostics, including schema-version checks and provider/conflict/review invariant checks.
+- `VerificationSidecar::review_queue_entries` and `VerificationSidecar::to_review_queue_jsonl` for derived queue output.

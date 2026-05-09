@@ -8,9 +8,13 @@ The placeholder also provides a status-only path:
 - `sourceright mcp status` prints status and exits successfully.
 - `sourceright mcp --status` is an alias for `status`.
 
-Current status output is intentionally conservative: server mode is `not-implemented`, transport is `none`, and available MCP tools/resources/prompts are all `0`. The output points users back to the implemented CLI commands that are useful today: `validate-csl` and `report`.
+Current status output is intentionally conservative: server mode is `not-implemented`, transport is `none`, and no MCP server is started. It also reports the read-only surfaces already implemented in the Rust core and CLI so adapters can target the stable contracts without implying server transport is available.
 
-The planned MCP server should expose the same Rust core as the CLI once the reference pipeline is available. The first contract now available for reuse is `validate-csl --json`, which returns a deterministic local-file validation envelope with `ok`, `path`, and `diagnostics` fields and uses exit code `1` for validation findings.
+The planned MCP server should expose the same Rust core as the CLI once the reference pipeline is available. The first contracts now available for reuse are:
+
+- `validate-csl --json`, which returns a deterministic local-file validation envelope with `ok`, `path`, and `diagnostics` fields and uses exit code `1` for validation findings.
+- `report --json`, which returns `sourceright.reference_report.v1`.
+- `report --mcp-resource`, which returns the report resource envelope at `sourceright://reports/reference-integrity`.
 
 Planned tools:
 
@@ -39,4 +43,4 @@ Planned prompts:
 - Conflict explanation.
 - Provider comparison.
 
-The first useful MCP increment should be read-only and local-file based: validate CSL JSON, generate reference integrity reports, report diagnostics, and describe the unavailable pipeline tools without side effects. Write-capable tools should wait until the CLI pipeline commands have stable input and output contracts.
+The first useful MCP increment should be read-only and local-file based: validate CSL JSON, generate reference integrity reports, report diagnostics, expose the derived review queue resource, and describe unavailable pipeline tools without side effects. Write-capable tools should wait until the CLI pipeline commands have stable input and output contracts.

@@ -1,6 +1,6 @@
 {
   "id": "12-cli-and-mcp",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owned_paths": ["docs/src/cli.md", "docs/src/mcp.md", "conductor/tracks/12-cli-and-mcp/"],
   "dependencies": ["03-reference-intake", "04-csl-canonical-model", "05-verification-sidecar", "11-export-suite"]
