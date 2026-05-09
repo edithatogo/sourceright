@@ -2,7 +2,17 @@
 
 | Scenario | Expected result |
 | --- | --- |
-| DOI lookup | Exact provider candidate is recorded. |
-| Bibliographic lookup | Ranked candidates are returned with confidence. |
-| Provider outage | Deterministic retry/error metadata is recorded. |
-| Conflicting provider data | No silent overwrite occurs. |
+| Crossref DOI lookup | Exact provider candidate is recorded with DOI metadata, confidence inputs, and Crossref provenance. |
+| Crossref bibliographic lookup | Ranked candidates are returned with confidence and enough source detail to explain the ranking. |
+| DOI resolution success | DOI reachability, redirect chain, and final target are recorded without replacing canonical citation fields. |
+| DOI resolution failure | Deterministic error metadata is recorded as validation evidence. |
+| DataCite lookup | Dataset, software, preprint, or non-journal scholarly metadata is normalized into candidate output. |
+| OpenAlex enrichment | Work graph identifiers, venue context, authorship context, and citation metadata are attached as enrichment evidence. |
+| PubMed/NCBI lookup | PMID/PMCID evidence is attached for biomedical references without removing DOI provenance. |
+| ORCID enrichment | Author identity candidates are linked to already-matched works and do not create work matches by themselves. |
+| Provider no-match | A no-match result is recorded deterministically without creating an empty canonical update. |
+| Ambiguous provider match | Multiple candidates are preserved with ranking/confidence instead of choosing silently. |
+| Provider rate-limit or outage | Deterministic retry/error metadata is recorded from fixture-backed tests. |
+| Malformed provider response | Parser failure is surfaced as provider error evidence and does not alter canonical data. |
+| Conflicting provider data | Conflict evidence is recorded and no silent overwrite occurs. |
+| Fixture-backed unit test | Provider behavior is validated from local fixtures or explicit mocks without live network access. |

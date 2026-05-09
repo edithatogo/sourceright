@@ -1,6 +1,6 @@
 {
   "id": "05-verification-sidecar",
-  "status": "planned",
+  "status": "in_progress",
   "priority": "high",
   "owned_paths": ["src/", "tests/fixtures/"],
   "dependencies": ["04-csl-canonical-model"]

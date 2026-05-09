@@ -2,9 +2,12 @@
 
 - [Overview](index.md)
 - [Reference Workflow](workflow.md)
+- [Legacy Audit](legacy-audit.md)
 - [CLI Plan](cli.md)
 - [MCP Plan](mcp.md)
 - [Provider Strategy](providers.md)
+- [Canonical CSL Model](csl-model.md)
+- [Verification Sidecar](verification-sidecar.md)
 - [Exports](exports.md)
 - [Publishing Plan](publishing.md)
 - [Manual Review](manual-review.md)

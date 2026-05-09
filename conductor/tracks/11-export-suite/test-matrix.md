@@ -1,9 +1,22 @@
 # Export Suite Test Matrix
 
-| Scenario | Expected result |
-| --- | --- |
-| CSL input | All configured export files are generated. |
-| RIS export | Reparse or structural check succeeds. |
-| BibLaTeX export | Required identifiers and fields are present. |
-| ENW/XML export | EndNote-oriented fields are mapped predictably. |
-| Verification sidecar | Internal review metadata is excluded from clean exports. |
+| Scenario | Fixture focus | Expected result | Validation expectation |
+| --- | --- | --- | --- |
+| Full suite generation | Representative canonical CSL JSON with article, book/chapter, web, and thesis-like items | XML, ENW, RIS, BibLaTeX, and YAML files are generated with stable filenames and stable record ordering | Compare generated file list, record counts, and deterministic ordering across two runs |
+| Clean export boundary | CSL items accompanied by verification sidecar fields, review notes, confidence scores, and raw extraction traces | Clean exports contain bibliographic fields only | Search every clean output for sidecar-only keys and known internal marker values; none appear |
+| XML structure | Titles and names containing ampersands, angle brackets, quotes, apostrophes, and non-ASCII characters | XML is well-formed UTF-8 with one root and one child reference per item | Reparse with an XML parser; verify root shape, record count, stable ids, DOI/URL preservation, and selected contributor/date fields |
+| XML field mapping | Records with journal, book, web, DOI, URL, ISBN, ISSN, PMID, pages, volume, and issue fields | Expected XML elements or attributes are present when source values exist and absent when values are missing | Structural assertions over parsed XML for representative fields and omitted optionals |
+| ENW record blocks | Multiple item types with authors and editors | Each source item becomes one predictably delimited EndNote-style record block | Count blocks; verify each block has a reference type tag, title when present, stable id, and no internal metadata |
+| ENW contributors | Records with multiple authors/editors and non-ASCII names | Contributors are emitted one tag per person in source order | Structural tag scan confirms contributor count and order for representative records |
+| ENW identifiers | Records with DOI, URL, ISBN, ISSN, PMID, and source id | Supported identifiers map to predictable ENW tags | Field-level assertions confirm identifiers survive unchanged where the ENW policy supports them |
+| RIS block parsing | Records covering article, book/chapter, web, and fallback item types | Each record is emitted as one `TY  -` to `ER  -` block | Reparse RIS blocks; verify delimiter count, type tags, record count, and stable ids |
+| RIS repeated fields | Records with multiple authors/editors and multi-value identifiers where applicable | Repeated values use repeated RIS tags rather than joined strings | Parsed blocks preserve contributor counts and DOI/URL values |
+| RIS optional fields | Records missing pages, issue, DOI, or URL | Missing optionals are omitted cleanly | Structural assertions confirm no empty placeholder tags for absent values |
+| BibLaTeX parsing | Representative CSL item types with punctuation-heavy titles | Output parses as BibLaTeX entries with unique deterministic keys | Parse entries; verify entry count, key uniqueness, expected entry types, and no parser errors |
+| BibLaTeX escaping | Titles, names, and journals with braces, percent signs, ampersands, and capitalization-sensitive words | Escaping/bracing preserves parser validity and required title text | Parsed fields retain expected text; source DOI/URL values survive unchanged |
+| BibLaTeX required fields | Article, book, chapter, web, and fallback records | Required/common fields for mapped entry types are present when available | Field assertions cover title, author/editor, date/year, journaltitle/booktitle, publisher, identifiers, and pages |
+| YAML shape | Canonical CSL fixture with nested names, dates, and identifiers | YAML has a top-level version marker and ordered `references` collection | Parse YAML; verify version marker, record count, stable ids, nested contributor values, date parts, DOI/URL, and source ids |
+| YAML diagnostic clarity | Clean canonical records with representative optional fields | YAML is human-reviewable and follows canonical CSL-style field names unless documented otherwise | Round-trip parsed YAML values match selected source CSL JSON fields |
+| Cross-format identity | Same canonical input exported to every format | Every format preserves enough identity to match each output record back to the source CSL item | Compare source id or deterministic fallback key across parsed/structurally inspected outputs |
+| Cross-format ordering | Same canonical input exported to every format | Record order is consistent across XML, ENW, RIS, BibLaTeX, and YAML | Extract ids/keys from each output and compare ordered sequences |
+| Round-trip minimum | YAML, XML, RIS, and BibLaTeX outputs | Practical reparsers recover record count and key identifiers | Reparse each supported format and compare count, stable ids/keys, DOI/URL, and representative contributor counts |
