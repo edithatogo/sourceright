@@ -4,5 +4,7 @@
 | --- | --- |
 | Valid article record | Serializes to stable CSL JSON. |
 | Missing required fields | Emits deterministic validation diagnostics. |
-| Style-specific input | Normalizes into style-neutral CSL fields. |
+| Non-canonical IDs | Emits deterministic diagnostics for whitespace normalization and duplicate normalized IDs. |
+| Non-canonical types, titles, and DOIs | Emits deterministic diagnostics and exposes normalization helpers for provider matching. |
+| Style-specific input | Normalizes into style-neutral CSL fields while preserving unknown CSL payload fields. |
 | Verification metadata | Is rejected or moved to the sidecar boundary. |

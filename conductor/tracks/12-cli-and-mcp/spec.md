@@ -8,7 +8,9 @@ Expose Sourceright through a local Rust CLI first, then through an MCP server ov
 
 - `sourceright init`: create or confirm the local Sourceright workspace layout.
 - `sourceright validate-csl`: validate canonical CSL JSON and return deterministic diagnostics.
+- `sourceright report`: generate a reference integrity report from a Sourceright workspace.
 - `sourceright mcp`: placeholder command that clearly reports MCP server mode is not ready yet.
+- `sourceright mcp status`: status-only placeholder output that exits successfully for readiness checks.
 
 ## Planned CLI Interface
 
@@ -21,7 +23,7 @@ Expose Sourceright through a local Rust CLI first, then through an MCP server ov
 
 ## MCP Interface
 
-Initial MCP behavior is a placeholder exposed through `sourceright mcp`. The first useful server increment should be read-only and should support CSL validation before workflow tools are enabled.
+Initial MCP behavior is a placeholder exposed through `sourceright mcp`. Plain `mcp` must not start or imply a server. It should print a conservative status and exit non-zero. `mcp status` may exit successfully because it only reports readiness. The first useful server increment should be read-only and should support CSL validation before workflow tools are enabled.
 
 Planned tools:
 

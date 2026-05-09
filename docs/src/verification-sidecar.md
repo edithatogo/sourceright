@@ -8,25 +8,20 @@ The canonical sidecar file name is `references.verification.json`. The initial i
 
 ```json
 {
-  "schema_version": 1,
-  "records": {
+  "schema_version": "sourceright.verification.v1",
+  "references": {
     "smith-2024-trial": {
-      "status": "needs_review",
-      "confidence": 0.72,
-      "sources": [
-        {
-          "kind": "document",
-          "label": "input.docx",
-          "extracted_text": "Smith J. Example trial title. Journal. 2024."
-        }
-      ],
-      "candidates": [
+      "extraction": {
+        "source": "input.docx",
+        "original_text": "Smith J. Example trial title. Journal. 2024.",
+        "span": "paragraph:12"
+      },
+      "provider_candidates": [
         {
           "provider": "crossref",
-          "provider_id": "10.0000/example",
           "confidence": 0.86,
-          "matched_fields": ["DOI", "title"],
-          "candidate_csl": {
+          "retrieved_at": "2026-05-09T00:00:00Z",
+          "data": {
             "type": "article-journal",
             "title": "Example trial title",
             "DOI": "10.0000/example"
@@ -42,10 +37,8 @@ The canonical sidecar file name is `references.verification.json`. The initial i
           "severity": "review"
         }
       ],
-      "review": {
-        "state": "queued",
-        "reason": "Provider year conflicts with extracted reference."
-      }
+      "review_status": "queued",
+      "review_decisions": []
     }
   }
 }
@@ -78,6 +71,18 @@ Initial implementation should use a small status set:
 - `merged`: a manual or deterministic process resolved this record into another canonical CSL ID.
 
 Status transitions should be explicit in sidecar data. When a record moves from `needs_review` to `verified`, the sidecar should retain the decision evidence rather than only the final status.
+
+The Rust model currently exposes the stable workflow states used by the sidecar:
+
+- `not_required`: no review queue entry is required.
+- `queued`: manual or agent review is waiting.
+- `in_progress`: a reviewer has claimed or started the record.
+- `resolved`: review is complete and the retained evidence supports the current canonical CSL record or a deliberate merge.
+- `unresolved`: review completed without enough evidence to treat the record as clean.
+
+Review helpers enforce explicit transitions. A resolved record must be reopened to `queued` before being moved back to active review, and conflicted records with terminal review states should retain at least one review decision. Queue builders should use the model helper rather than hand-maintaining a separate status list.
+
+Provider candidates are considered usable only when they name a provider, include a retrieval timestamp, carry non-null provider data, and use a finite confidence value from `0.0` to `1.0`. Conflict entries should identify the field, severity, and either a provider or source so reports and future providers can explain why review is needed.
 
 ## Review Queue
 
@@ -124,4 +129,4 @@ Validation should also protect the clean boundary. If sidecar-only fields are fo
 
 ## Compatibility
 
-The first sidecar schema version is `1`. Future incompatible changes should increment `schema_version` and provide migration diagnostics. Compatible additions may add optional fields, but existing readers should continue to treat unknown fields as non-authoritative unless the schema version requires them.
+The first sidecar schema version is `sourceright.verification.v1`. Future incompatible changes should increment `schema_version` and provide migration diagnostics. Compatible additions may add optional fields, but existing readers should continue to treat unknown fields as non-authoritative unless the schema version requires them.
