@@ -12,6 +12,7 @@ document/text
   -> references.csl.json
   -> standardisation, cleaning, verification, enrichment
   -> references.verification.json and review-queue.jsonl
+  -> reference integrity report
   -> XML, ENW, RIS, BibLaTeX, and YAML exports
 ```
 
@@ -21,6 +22,7 @@ document/text
 - Provider-backed verification through Crossref first, then DOI resolution, DataCite, OpenAlex, PubMed/NCBI, and ORCID where useful.
 - In-text citation reconciliation against reference-list entries.
 - Manual review queues designed for human and agent/subagent verification.
+- Reference reports for citation integrity auditing and AI-related citation-error signals.
 - CLI and MCP server interfaces over the same Rust core.
 - Future legal citation verification with a separate legal citation model and public legal citation APIs.
 - Later claim/source/provenance workflows once reference verification is reliable.

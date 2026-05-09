@@ -37,6 +37,17 @@ fn run(mut args: impl Iterator<Item = String>) -> Result<(), String> {
                 return Err("CSL validation failed".to_string());
             }
         }
+        Some("report") => {
+            let workspace_root = args
+                .next()
+                .map(PathBuf::from)
+                .unwrap_or_else(|| PathBuf::from(".sourceright"));
+            let workspace = SourcerightWorkspace::from_root(workspace_root);
+            let report = workspace
+                .reference_report_markdown()
+                .map_err(|error| error.to_string())?;
+            println!("{report}");
+        }
         Some("mcp") => {
             eprintln!("MCP server mode is planned but not implemented yet.");
             return Err("MCP server mode is not implemented".to_string());
@@ -53,6 +64,6 @@ fn run(mut args: impl Iterator<Item = String>) -> Result<(), String> {
 
 fn print_help() {
     println!(
-        "sourceright\n\nUsage:\n  sourceright --help\n  sourceright --version\n  sourceright init [document-or-directory]\n  sourceright validate-csl <references.csl.json>\n  sourceright mcp\n\nSourceright is reference verification infrastructure."
+        "sourceright\n\nUsage:\n  sourceright --help\n  sourceright --version\n  sourceright init [document-or-directory]\n  sourceright validate-csl <references.csl.json>\n  sourceright report [.sourceright-directory]\n  sourceright mcp\n\nSourceright is reference verification infrastructure."
     );
 }
