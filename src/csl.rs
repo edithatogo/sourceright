@@ -230,8 +230,17 @@ impl ValidationDiagnostic {
 }
 
 pub fn validate_csl_json(input: &str) -> Result<Vec<ValidationDiagnostic>, serde_json::Error> {
-    let document: CslDocument = serde_json::from_str(input)?;
+    let document = parse_csl_json(input)?;
     Ok(document.validate())
+}
+
+pub fn parse_csl_json(input: &str) -> Result<CslDocument, serde_json::Error> {
+    serde_json::from_str(input)
+}
+
+pub fn format_csl_json(document: &CslDocument) -> Result<String, serde_json::Error> {
+    let json = serde_json::to_string_pretty(document)?;
+    Ok(format!("{json}\n"))
 }
 
 pub fn normalize_identifier(value: &str) -> String {
@@ -398,5 +407,64 @@ mod tests {
 
         assert_eq!(diagnostics.len(), 1);
         assert_eq!(diagnostics[0].code, "csl.type.unsupported");
+    }
+
+    #[test]
+    fn formats_csl_json_with_stable_newline_terminated_output() {
+        let document = CslDocument {
+            items: vec![CslItem {
+                id: "smith-2024-trial".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("A reference verification trial".to_string()),
+                doi: Some("10.1234/example".to_string()),
+                extra: BTreeMap::from([
+                    (
+                        "issued".to_string(),
+                        serde_json::json!({"date-parts": [[2024]]}),
+                    ),
+                    (
+                        "container-title".to_string(),
+                        Value::String("Example Journal".to_string()),
+                    ),
+                ]),
+            }],
+        };
+
+        let json = format_csl_json(&document).expect("format CSL JSON");
+
+        assert!(json.ends_with('\n'));
+        assert_eq!(
+            json,
+            concat!(
+                "[\n",
+                "  {\n",
+                "    \"id\": \"smith-2024-trial\",\n",
+                "    \"type\": \"article-journal\",\n",
+                "    \"title\": \"A reference verification trial\",\n",
+                "    \"DOI\": \"10.1234/example\",\n",
+                "    \"container-title\": \"Example Journal\",\n",
+                "    \"issued\": {\n",
+                "      \"date-parts\": [\n",
+                "        [\n",
+                "          2024\n",
+                "        ]\n",
+                "      ]\n",
+                "    }\n",
+                "  }\n",
+                "]\n"
+            )
+        );
+    }
+
+    #[test]
+    fn parses_and_reformats_csl_json_deterministically() {
+        let input = r#"[{"issued":{"date-parts":[[2024]]},"container-title":"Example Journal","DOI":"10.1234/example","title":"A reference verification trial","type":"article-journal","id":"smith-2024-trial"}]"#;
+
+        let document = parse_csl_json(input).expect("parse CSL JSON");
+        let first = format_csl_json(&document).expect("format CSL JSON");
+        let reparsed = parse_csl_json(&first).expect("reparse formatted CSL JSON");
+        let second = format_csl_json(&reparsed).expect("reformat CSL JSON");
+
+        assert_eq!(first, second);
     }
 }

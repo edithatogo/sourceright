@@ -10,7 +10,7 @@ The placeholder also provides a status-only path:
 
 Current status output is intentionally conservative: server mode is `not-implemented`, transport is `none`, and available MCP tools/resources/prompts are all `0`. The output points users back to the implemented CLI commands that are useful today: `validate-csl` and `report`.
 
-The planned MCP server should expose the same Rust core as the CLI once the reference pipeline is available.
+The planned MCP server should expose the same Rust core as the CLI once the reference pipeline is available. The first contract now available for reuse is `validate-csl --json`, which returns a deterministic local-file validation envelope with `ok`, `path`, and `diagnostics` fields and uses exit code `1` for validation findings.
 
 Planned tools:
 

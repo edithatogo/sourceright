@@ -12,6 +12,27 @@ Expose Sourceright through a local Rust CLI first, then through an MCP server ov
 - `sourceright mcp`: placeholder command that clearly reports MCP server mode is not ready yet.
 - `sourceright mcp status`: status-only placeholder output that exits successfully for readiness checks.
 
+## `validate-csl` Contract
+
+`sourceright validate-csl [--json] <references.csl.json>` validates a caller-supplied CSL JSON file path without rewriting the file.
+
+Exit codes:
+
+- `0`: the file is readable, parses as CSL JSON, and has no validation diagnostics.
+- `1`: the file is readable and parses as CSL JSON, but validation diagnostics were found.
+- `2`: usage errors, I/O errors, JSON parse errors, and other runtime failures.
+
+Human-readable output:
+
+- success prints `valid`.
+- validation failure prints stable diagnostic lines as `<code> <path> <message>`.
+
+Machine-readable output:
+
+- `--json` prints compact JSON to stdout as `{"ok":bool,"path":string,"diagnostics":[{"code":string,"path":string,"message":string}]}`.
+- `path` preserves the caller-supplied file path string.
+- diagnostics preserve the Rust validator's deterministic traversal order.
+
 ## Planned CLI Interface
 
 - `sourceright extract`: extract reference candidates from supported inputs.

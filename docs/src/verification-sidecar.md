@@ -89,10 +89,12 @@ Provider candidates are considered usable only when they name a provider, includ
 `review-queue.jsonl` is the work queue for unresolved records. Each line should be one JSON object keyed to a CSL `id`. It should contain enough context for human or agent review without requiring mutation of the canonical CSL file:
 
 ```json
-{"id":"smith-2024-trial","reason":"year_conflict","priority":"normal","assigned_to":null}
+{"id":"smith-2024-trial","extraction":{"source":"input.docx","original_text":"Smith J. Example trial title. Journal. 2024.","span":"paragraph:12"},"provider_candidates":[{"provider":"crossref","confidence":0.86,"retrieved_at":"2026-05-09T00:00:00Z","data":{"DOI":"10.0000/example","title":"Example trial title","type":"article-journal"}}],"conflicts":[{"candidate":{"date-parts":[[2023]]},"canonical":{"date-parts":[[2024]]},"field":"issued","provider":"crossref","severity":"review"}],"review_status":"queued"}
 ```
 
 The queue is derived from the sidecar. `references.verification.json` is the durable verification record; `review-queue.jsonl` is the operational list of records that still need attention.
+
+The Rust model exposes `VerificationSidecar::review_queue_entries()` and `VerificationSidecar::to_review_queue_jsonl()` for this derived output. These helpers include only records whose review status is `queued`, `in_progress`, or `unresolved`, and because records are stored by CSL id in a sorted map, emitted JSONL lines are deterministic by reference id. Resolved and `not_required` records stay in `references.verification.json` but are omitted from the operational queue.
 
 The queue should be partitionable for parallel review. A reviewer should be able to claim or complete one record without changing unrelated queue entries.
 
