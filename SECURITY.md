@@ -6,7 +6,11 @@ Sourceright is pre-1.0. Security fixes target the `main` branch until release ch
 
 ## Reporting a vulnerability
 
-Please report security issues privately through GitHub Security Advisories once the public repository is available. Avoid opening public issues for vulnerabilities, secrets, or provider-token exposure.
+Please report security issues privately through GitHub Security Advisories:
+
+https://github.com/edithatogo/sourceright/security/advisories/new
+
+Avoid opening public issues for vulnerabilities, secrets, or provider-token exposure.
 
 ## Security expectations
 

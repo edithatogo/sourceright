@@ -1,0 +1,19 @@
+[package]
+name = "sourceright-fuzz"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+sourceright = { path = ".." }
+
+[[bin]]
+name = "validate_csl"
+path = "fuzz_targets/validate_csl.rs"
+test = false
+doc = false
+bench = false
