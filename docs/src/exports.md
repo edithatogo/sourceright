@@ -7,7 +7,7 @@ verification sidecar fields into clean outputs.
 
 ## Shared expectations
 
-- Export commands accept canonical CSL JSON input and write one or more named
+- `sourceright export` accepts a Sourceright workspace and writes one or more named
   output files.
 - Records are emitted in a stable order, using the same deterministic ordering
   for every format.
@@ -21,6 +21,16 @@ verification sidecar fields into clean outputs.
 - Each generated file has a structural validation check. Where a practical
   parser exists, tests should reparse the generated file and compare the parsed
   record count and key identifiers with the source CSL JSON.
+
+The implemented Rust exporter writes:
+
+- `references.yaml`
+- `references.xml`
+- `references.ris`
+- `references.enw`
+- `references.bib`
+
+`sourceright export --all [.sourceright-directory]` writes the full suite. `sourceright export --format <yaml|xml|ris|enw|biblatex> [.sourceright-directory]` writes a single format.
 
 ## Format criteria
 

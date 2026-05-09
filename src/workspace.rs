@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 use thiserror::Error;
 
 use crate::csl::{CslDocument, format_csl_json, validate_csl_json};
+use crate::export::{ExportArtifact, ExportFormat, export_document, export_suite};
 use crate::report::{ReferenceReport, ReferenceReportJsonOutput, ReferenceReportResource};
 use crate::sidecar::{VerificationSidecar, format_verification_sidecar_json};
 
@@ -93,6 +94,32 @@ impl SourcerightWorkspace {
         let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
         fs::write(&self.review_queue_jsonl, sidecar.to_review_queue_jsonl()?)?;
         Ok(())
+    }
+
+    pub fn export_references(
+        &self,
+        format: Option<ExportFormat>,
+    ) -> Result<Vec<ExportArtifact>, WorkspaceError> {
+        let csl: CslDocument = read_json(&self.references_csl_json)?;
+        Ok(match format {
+            Some(format) => vec![export_document(&csl, format)],
+            None => export_suite(&csl),
+        })
+    }
+
+    pub fn write_exports(
+        &self,
+        format: Option<ExportFormat>,
+    ) -> Result<Vec<PathBuf>, WorkspaceError> {
+        fs::create_dir_all(&self.exports_dir)?;
+        let artifacts = self.export_references(format)?;
+        let mut paths = Vec::new();
+        for artifact in artifacts {
+            let path = self.exports_dir.join(&artifact.filename);
+            fs::write(&path, artifact.content)?;
+            paths.push(path);
+        }
+        Ok(paths)
     }
 
     pub fn reference_report(&self) -> Result<ReferenceReport, WorkspaceError> {
@@ -194,6 +221,28 @@ mod tests {
         assert_eq!(
             jsonl,
             r#"{"id":"queued","review_status":"queued"}"#.to_string() + "\n"
+        );
+    }
+
+    #[test]
+    fn write_exports_generates_clean_suite_files() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            r#"[{"id":"smith-2024","type":"article-journal","title":"Trial","DOI":"10.1000/example"}]"#,
+        )
+        .expect("write references");
+
+        let paths = workspace.write_exports(None).expect("write exports");
+
+        assert_eq!(paths.len(), 5);
+        assert!(workspace.exports_dir.join("references.ris").exists());
+        assert!(
+            fs::read_to_string(workspace.exports_dir.join("references.ris"))
+                .expect("read ris")
+                .contains("DO  - 10.1000/example")
         );
     }
 }

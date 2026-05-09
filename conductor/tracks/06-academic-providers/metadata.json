@@ -1,6 +1,6 @@
 {
   "id": "06-academic-providers",
-  "status": "planned",
+  "status": "in_progress",
   "priority": "high",
   "owned_paths": ["src/", "tests/fixtures/"],
   "dependencies": ["04-csl-canonical-model", "05-verification-sidecar", "08-conflict-resolution"]

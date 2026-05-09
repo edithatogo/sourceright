@@ -1,6 +1,6 @@
 {
   "id": "11-export-suite",
-  "status": "planned",
+  "status": "completed",
   "priority": "high",
   "owned_paths": ["src/", "tests/fixtures/"],
   "dependencies": ["04-csl-canonical-model", "07-standardisation-cleaning"]

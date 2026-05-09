@@ -1,7 +1,7 @@
 # Reference Intake Plan
 
-1. Define input abstractions for text and document sources.
-2. Implement reference-list segmentation for text-like inputs.
-3. Add DOCX extraction.
-4. Add PDF text extraction.
-5. Add OCR/scanned-document strategy after baseline fixtures pass.
+1. Define input abstractions for text and document sources. Implemented with `IntakeDocument` and `IntakeSourceKind`.
+2. Implement reference-list segmentation for text-like inputs. Implemented for pasted text, plain text, and Markdown reference sections.
+3. Add DOCX extraction. Adapter pending; DOCX sources now emit an explicit capability diagnostic.
+4. Add PDF text extraction. Adapter pending; PDF text-layer sources now emit an explicit capability diagnostic.
+5. Add OCR/scanned-document strategy after baseline fixtures pass. Implemented as an explicit OCR-required diagnostic pending adapter integration.
