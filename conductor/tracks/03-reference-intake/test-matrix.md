@@ -4,6 +4,6 @@
 | --- | --- |
 | Pasted bibliography | Entries are separated and original text is preserved. |
 | Markdown document | Reference section and body citations are detected. |
-| DOCX manuscript | References and in-text citations are extracted without style dependence. |
-| PDF text | Text-layer references are extracted with provenance. |
-| Scanned PDF | OCR path is queued or handled according to configured capability. |
+| DOCX manuscript | Adapter-required diagnostic is emitted until DOCX extraction is wired. |
+| PDF text | Adapter-required diagnostic is emitted until PDF text-layer extraction is wired. |
+| Scanned PDF | OCR-required diagnostic is emitted until OCR extraction is wired. |

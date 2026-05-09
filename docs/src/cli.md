@@ -5,10 +5,11 @@ The initial Rust binary is planned around a small, stable command surface first:
 - `sourceright init`
 - `sourceright validate-csl`
 - `sourceright report`
+- `sourceright export`
 - `sourceright mcp`
 - `sourceright mcp status`
 
-`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes.
+`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes. `export` writes clean XML, ENW, RIS, BibLaTeX, and YAML outputs from the workspace CSL file.
 
 `mcp` remains a placeholder entry point for the future local MCP server. Plain `sourceright mcp` prints the current MCP status but exits non-zero because it does not start a server. `sourceright mcp status` and `sourceright mcp --status` print the same honest status output and exit successfully for scripts that need to check readiness.
 
@@ -17,6 +18,7 @@ Each implemented command supports command-specific help:
 - `sourceright init --help`
 - `sourceright validate-csl --help`
 - `sourceright report --help`
+- `sourceright export --help`
 - `sourceright mcp --help`
 
 The planned workflow command family remains:
@@ -25,7 +27,6 @@ The planned workflow command family remains:
 - `sourceright normalize`
 - `sourceright verify`
 - `sourceright review`
-- `sourceright export`
 - `sourceright pipeline`
 
 Commands that return structured data support deterministic JSON for the implemented surfaces. Human-readable output remains useful for local use, while CI and agent workflows can depend on stable machine-readable results, exit codes, and file paths. The CLI rejects unexpected extra arguments with command-specific usage hints.
@@ -61,3 +62,13 @@ sourceright report [--json|--mcp-resource] [.sourceright-directory]
 ```
 
 Default Markdown output renders the editor-facing audit report. `--json` emits compact `sourceright.reference_report.v1` JSON with summary counters and stable issue records. `--mcp-resource` wraps the JSON report as an MCP-ready resource envelope at `sourceright://reports/reference-integrity`.
+
+## `export` contract
+
+Usage:
+
+```text
+sourceright export [--all|--format <format>] [.sourceright-directory]
+```
+
+The default is the full export suite. Supported format names are `yaml`, `xml`, `ris`, `enw`, and `biblatex`. The command writes deterministic files into the workspace `exports` directory and prints the written paths.

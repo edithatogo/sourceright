@@ -1,6 +1,6 @@
 {
   "id": "03-reference-intake",
-  "status": "planned",
+  "status": "in_progress",
   "priority": "high",
   "owned_paths": ["src/", "tests/fixtures/"],
   "dependencies": ["04-csl-canonical-model", "05-verification-sidecar"]

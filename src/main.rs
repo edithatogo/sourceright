@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 use std::path::PathBuf;
 
 use serde::Serialize;
-use sourceright::SourcerightWorkspace;
+use sourceright::{ExportFormat, SourcerightWorkspace};
 
 fn main() {
     if let Err(error) = run(std::env::args().skip(1)) {
@@ -87,6 +87,20 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                         .map_err(|error| error.to_string())?;
                     println!("{}", serde_json::to_string(&resource)?);
                 }
+            }
+        }
+        Some("export") => {
+            if maybe_print_command_help("export", &mut args, EXPORT_HELP)? {
+                return Ok(());
+            }
+
+            let options = parse_export_args(args)?;
+            let workspace = SourcerightWorkspace::from_root(options.workspace_root);
+            let paths = workspace
+                .write_exports(options.format)
+                .map_err(|error| error.to_string())?;
+            for path in paths {
+                println!("{}", path.display());
             }
         }
         Some("mcp") => match args.pop_front().as_deref() {
@@ -182,6 +196,33 @@ fn parse_report_args(args: VecDeque<String>) -> Result<ReportOptions, CliError> 
     })
 }
 
+fn parse_export_args(mut args: VecDeque<String>) -> Result<ExportOptions, CliError> {
+    let mut format = None;
+
+    if args.front().is_some_and(|arg| arg == "--format") {
+        args.pop_front();
+        let value = required_arg("export", args.pop_front(), "format name")?;
+        format = Some(ExportFormat::parse(&value).ok_or_else(|| {
+            CliError::usage(format!(
+                "unsupported export format: {value}\nrun `sourceright export --help` for usage"
+            ))
+        })?);
+    } else if args.front().is_some_and(|arg| arg == "--all") {
+        args.pop_front();
+    }
+
+    let workspace_root = args
+        .pop_front()
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from(".sourceright"));
+    reject_extra_args("export", &args)?;
+
+    Ok(ExportOptions {
+        workspace_root,
+        format,
+    })
+}
+
 fn required_arg<T>(command: &str, value: Option<T>, label: &str) -> Result<T, CliError> {
     value.ok_or_else(|| {
         CliError::usage(format!(
@@ -221,6 +262,12 @@ enum ReportFormat {
     Markdown,
     Json,
     McpResource,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ExportOptions {
+    workspace_root: PathBuf,
+    format: Option<ExportFormat>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -327,12 +374,14 @@ Usage:
   sourceright init [document-or-directory]
   sourceright validate-csl [--json] <references.csl.json>
   sourceright report [--json|--mcp-resource] [.sourceright-directory]
+  sourceright export [--all|--format <format>] [.sourceright-directory]
   sourceright mcp [status|--status]
 
 Commands:
   init          Create or confirm a local .sourceright workspace.
   validate-csl  Validate canonical CSL JSON and print deterministic diagnostics.
   report        Print a reference integrity report from a .sourceright workspace.
+  export        Write clean reference exports from canonical CSL JSON.
   mcp           Show MCP implementation status; server mode is not implemented yet.
 
 Run `sourceright <command> --help` for command-specific usage.";
@@ -379,6 +428,19 @@ Output:
   `--json` prints compact `sourceright.reference_report.v1` JSON.
   `--mcp-resource` prints the MCP-ready JSON resource envelope.";
 
+const EXPORT_HELP: &str = "sourceright export
+
+Write clean reference exports from an existing workspace.
+
+Usage:
+  sourceright export [--all|--format <format>] [.sourceright-directory]
+
+Formats:
+  yaml, xml, ris, enw, biblatex
+
+Default:
+  Writes the full export suite to the workspace exports directory.";
+
 const MCP_HELP: &str = "sourceright mcp
 
 Report MCP server implementation status.
@@ -404,6 +466,7 @@ implemented_read_only_surfaces:
   - sourceright validate-csl <references.csl.json>
   - sourceright report --json [.sourceright-directory]
   - sourceright report --mcp-resource [.sourceright-directory]
+  - sourceright export --all [.sourceright-directory]
 resource_uris:
   - sourceright://reports/reference-integrity
   - sourceright://workspaces/local/review-queue
@@ -461,6 +524,25 @@ mod tests {
         assert_eq!(json.format, ReportFormat::Json);
         assert_eq!(resource.format, ReportFormat::McpResource);
         assert_eq!(json.workspace_root, PathBuf::from(".sourceright"));
+    }
+
+    #[test]
+    fn export_accepts_single_format_or_full_suite() {
+        let one = parse_export_args(VecDeque::from(vec![
+            "--format".to_string(),
+            "ris".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse single export");
+        let all = parse_export_args(VecDeque::from(vec![
+            "--all".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse full export");
+
+        assert_eq!(one.format, Some(ExportFormat::Ris));
+        assert_eq!(all.format, None);
+        assert_eq!(one.workspace_root, PathBuf::from(".sourceright"));
     }
 
     #[test]

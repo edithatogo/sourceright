@@ -16,7 +16,7 @@ citation managers, static review workflows, and human audit steps.
 
 Exports use clean reference data and do not expose internal verification sidecar fields unless a diagnostic export is explicitly requested.
 
-No Rust source, workflow, or CI behavior is specified by this planning pass.
+The current Rust implementation covers clean export generation and structural checks. Richer parser-backed round trips can be added later without changing the clean export boundary.
 
 ## Shared requirements
 

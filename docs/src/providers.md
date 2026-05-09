@@ -17,6 +17,16 @@ Provider work must be testable without live network access. Each provider should
 
 HTTP clients should be mockable behind the provider boundary. Unit tests should use local fixtures or explicit mock responses; live provider checks, if added later, should be opt-in and excluded from the default test path.
 
+## Implemented Core
+
+The Rust core currently includes the provider result model and fixture-friendly helpers for:
+
+- Crossref work normalization from JSON payloads into sidecar `ProviderCandidate` records.
+- DOI resolution evidence that records reachability, final target, or deterministic error metadata without changing canonical CSL fields.
+- Provider error evidence for malformed responses and unavailable provider states.
+
+The remaining providers in the roadmap should reuse this result shape and keep their default tests fixture-backed.
+
 ## Merge Rule
 
 Provider results are candidates with provenance. They must not silently overwrite canonical references. Any proposed change to canonical fields must be represented as a sidecar candidate, conflict, or explicit merge decision with source attribution.

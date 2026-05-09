@@ -3,13 +3,13 @@
 | Scenario | Expected result |
 | --- | --- |
 | Crossref DOI lookup | Exact provider candidate is recorded with DOI metadata, confidence inputs, and Crossref provenance. |
-| Crossref bibliographic lookup | Ranked candidates are returned with confidence and enough source detail to explain the ranking. |
+| Crossref bibliographic lookup | Initial fixture-backed work normalization records ranked-candidate-ready confidence and source detail; live query adapter remains pending. |
 | DOI resolution success | DOI reachability, redirect chain, and final target are recorded without replacing canonical citation fields. |
 | DOI resolution failure | Deterministic error metadata is recorded as validation evidence. |
-| DataCite lookup | Dataset, software, preprint, or non-journal scholarly metadata is normalized into candidate output. |
-| OpenAlex enrichment | Work graph identifiers, venue context, authorship context, and citation metadata are attached as enrichment evidence. |
-| PubMed/NCBI lookup | PMID/PMCID evidence is attached for biomedical references without removing DOI provenance. |
-| ORCID enrichment | Author identity candidates are linked to already-matched works and do not create work matches by themselves. |
+| DataCite lookup | Pending provider adapter reusing `AcademicProviderResult`. |
+| OpenAlex enrichment | Pending provider adapter reusing `AcademicProviderResult`. |
+| PubMed/NCBI lookup | Pending provider adapter reusing `AcademicProviderResult`. |
+| ORCID enrichment | Pending provider adapter reusing `AcademicProviderResult`. |
 | Provider no-match | A no-match result is recorded deterministically without creating an empty canonical update. |
 | Ambiguous provider match | Multiple candidates are preserved with ranking/confidence instead of choosing silently. |
 | Provider rate-limit or outage | Deterministic retry/error metadata is recorded from fixture-backed tests. |
