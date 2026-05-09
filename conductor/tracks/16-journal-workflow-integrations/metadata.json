@@ -1,0 +1,7 @@
+{
+  "id": "16-journal-workflow-integrations",
+  "status": "planned",
+  "priority": "medium",
+  "owned_paths": ["src/", "docs/src/journal-integrations.md", "conductor/tracks/16-journal-workflow-integrations/"],
+  "dependencies": ["03-reference-intake", "09-in-text-citation-reconciliation", "12-cli-and-mcp", "15-reference-reporting"]
+}
