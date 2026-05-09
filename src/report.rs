@@ -12,6 +12,10 @@ pub struct ReferenceReport {
     pub review_queue_count: usize,
     pub unresolved_count: usize,
     pub conflict_count: usize,
+    pub ai_risk_issue_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub info_count: usize,
     pub issues: Vec<ReferenceReportIssue>,
 }
 
@@ -22,6 +26,7 @@ impl ReferenceReport {
         for diagnostic in csl.validate() {
             issues.push(ReferenceReportIssue {
                 severity: ReferenceReportSeverity::Error,
+                category: category_for_issue_code(&diagnostic.code),
                 reference_id: reference_id_from_path(csl, &diagnostic.path),
                 code: diagnostic.code,
                 message: diagnostic.message,
@@ -34,6 +39,7 @@ impl ReferenceReport {
             if !seen_ids.insert(item.id.clone()) {
                 issues.push(ReferenceReportIssue {
                     severity: ReferenceReportSeverity::Error,
+                    category: ReferenceReportCategory::CslIntegrity,
                     reference_id: Some(item.id.clone()),
                     code: "report.duplicate_id".to_string(),
                     message: "Duplicate CSL item id; downstream verification and exports need stable unique ids".to_string(),
@@ -44,6 +50,7 @@ impl ReferenceReport {
             if item.doi.as_deref().unwrap_or_default().trim().is_empty() {
                 issues.push(ReferenceReportIssue {
                     severity: ReferenceReportSeverity::Warning,
+                    category: ReferenceReportCategory::Identifier,
                     reference_id: Some(item.id.clone()),
                     code: "report.missing_doi".to_string(),
                     message: "Reference has no DOI in canonical CSL JSON".to_string(),
@@ -58,6 +65,7 @@ impl ReferenceReport {
                     {
                         issues.push(ReferenceReportIssue {
                             severity: ReferenceReportSeverity::Warning,
+                            category: ReferenceReportCategory::VerificationCoverage,
                             reference_id: Some(item.id.clone()),
                             code: "report.unverified_reference".to_string(),
                             message: "Reference has no provider candidate or manual review state"
@@ -69,6 +77,7 @@ impl ReferenceReport {
                     if !verification.conflicts.is_empty() {
                         issues.push(ReferenceReportIssue {
                             severity: ReferenceReportSeverity::Warning,
+                            category: ReferenceReportCategory::ProviderConflict,
                             reference_id: Some(item.id.clone()),
                             code: "report.provider_conflict".to_string(),
                             message: "Reference has unresolved provider conflict metadata"
@@ -83,6 +92,7 @@ impl ReferenceReport {
                     ) {
                         issues.push(ReferenceReportIssue {
                             severity: ReferenceReportSeverity::Info,
+                            category: ReferenceReportCategory::ManualReview,
                             reference_id: Some(item.id.clone()),
                             code: "report.manual_review_needed".to_string(),
                             message: format!(
@@ -95,6 +105,7 @@ impl ReferenceReport {
                 }
                 None => issues.push(ReferenceReportIssue {
                     severity: ReferenceReportSeverity::Warning,
+                    category: ReferenceReportCategory::VerificationCoverage,
                     reference_id: Some(item.id.clone()),
                     code: "report.missing_sidecar_entry".to_string(),
                     message: "Reference has no matching verification sidecar entry".to_string(),
@@ -137,12 +148,30 @@ impl ReferenceReport {
             .map(|verification| verification.conflicts.len())
             .sum();
 
+        let ai_risk_issue_count = issues.iter().filter(|issue| issue.ai_risk_signal).count();
+        let error_count = issues
+            .iter()
+            .filter(|issue| issue.severity == ReferenceReportSeverity::Error)
+            .count();
+        let warning_count = issues
+            .iter()
+            .filter(|issue| issue.severity == ReferenceReportSeverity::Warning)
+            .count();
+        let info_count = issues
+            .iter()
+            .filter(|issue| issue.severity == ReferenceReportSeverity::Info)
+            .count();
+
         Self {
             total_references: csl.items.len(),
             verified_references,
             review_queue_count,
             unresolved_count,
             conflict_count,
+            ai_risk_issue_count,
+            error_count,
+            warning_count,
+            info_count,
             issues,
         }
     }
@@ -153,13 +182,17 @@ impl ReferenceReport {
         markdown.push_str("This report identifies reference integrity risks, including patterns commonly seen in AI-assisted citation errors. It is an audit report, not an automatic correction record.\n\n");
         markdown.push_str("## Summary\n\n");
         markdown.push_str(&format!(
-            "- Total references: {}\n- References with provider candidates: {}\n- Manual review queue: {}\n- Unresolved reviews: {}\n- Provider conflicts: {}\n- Issues: {}\n\n",
+            "- Total references: {}\n- References with provider candidates: {}\n- Manual review queue: {}\n- Unresolved reviews: {}\n- Provider conflicts: {}\n- Issues: {}\n- AI-risk issue signals: {}\n- Severity totals: {} error, {} warning, {} info\n\n",
             self.total_references,
             self.verified_references,
             self.review_queue_count,
             self.unresolved_count,
             self.conflict_count,
-            self.issues.len()
+            self.issues.len(),
+            self.ai_risk_issue_count,
+            self.error_count,
+            self.warning_count,
+            self.info_count
         ));
 
         markdown.push_str("## Issues\n\n");
@@ -174,8 +207,13 @@ impl ReferenceReport {
                     ""
                 };
                 markdown.push_str(&format!(
-                    "- `{:?}` `{}` `{}`: {}{}\n",
-                    issue.severity, reference, issue.code, issue.message, ai_signal
+                    "- `{}` `{}` `{}` `{}`: {}{}\n",
+                    issue.severity.as_str(),
+                    issue.category.as_str(),
+                    reference,
+                    issue.code,
+                    issue.message,
+                    ai_signal
                 ));
             }
         }
@@ -187,6 +225,7 @@ impl ReferenceReport {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ReferenceReportIssue {
     pub severity: ReferenceReportSeverity,
+    pub category: ReferenceReportCategory,
     pub reference_id: Option<String>,
     pub code: String,
     pub message: String,
@@ -199,6 +238,50 @@ pub enum ReferenceReportSeverity {
     Info,
     Warning,
     Error,
+}
+
+impl ReferenceReportSeverity {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Info => "info",
+            Self::Warning => "warning",
+            Self::Error => "error",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ReferenceReportCategory {
+    CslIntegrity,
+    Identifier,
+    VerificationCoverage,
+    ProviderConflict,
+    ManualReview,
+    SidecarBoundary,
+}
+
+impl ReferenceReportCategory {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::CslIntegrity => "csl_integrity",
+            Self::Identifier => "identifier",
+            Self::VerificationCoverage => "verification_coverage",
+            Self::ProviderConflict => "provider_conflict",
+            Self::ManualReview => "manual_review",
+            Self::SidecarBoundary => "sidecar_boundary",
+        }
+    }
+}
+
+fn category_for_issue_code(code: &str) -> ReferenceReportCategory {
+    match code {
+        "csl.sidecar_field" => ReferenceReportCategory::SidecarBoundary,
+        "csl.id.empty" | "csl.type.empty" | "csl.title.empty" => {
+            ReferenceReportCategory::CslIntegrity
+        }
+        _ => ReferenceReportCategory::CslIntegrity,
+    }
 }
 
 fn reference_id_from_path(csl: &CslDocument, path: &str) -> Option<String> {
@@ -239,17 +322,25 @@ mod tests {
 
         assert_eq!(report.total_references, 1);
         assert_eq!(report.verified_references, 0);
+        assert_eq!(report.ai_risk_issue_count, 2);
+        assert_eq!(report.error_count, 0);
+        assert_eq!(report.warning_count, 2);
+        assert_eq!(report.info_count, 0);
         assert!(
             report
                 .issues
                 .iter()
-                .any(|issue| issue.code == "report.missing_doi" && issue.ai_risk_signal)
+                .any(|issue| issue.code == "report.missing_doi"
+                    && issue.category == ReferenceReportCategory::Identifier
+                    && issue.ai_risk_signal)
         );
         assert!(
             report
                 .issues
                 .iter()
-                .any(|issue| issue.code == "report.unverified_reference" && issue.ai_risk_signal)
+                .any(|issue| issue.code == "report.unverified_reference"
+                    && issue.category == ReferenceReportCategory::VerificationCoverage
+                    && issue.ai_risk_signal)
         );
     }
 
@@ -284,5 +375,37 @@ mod tests {
         assert_eq!(report.verified_references, 1);
         assert_eq!(report.conflict_count, 1);
         assert!(report.to_markdown().contains("Provider conflicts: 1"));
+        assert!(report.to_markdown().contains("AI-risk issue signals: 1"));
+        assert!(
+            report
+                .to_markdown()
+                .contains("`warning` `provider_conflict`")
+        );
+    }
+
+    #[test]
+    fn report_categorizes_csl_sidecar_boundary_violations() {
+        let csl = CslDocument {
+            items: vec![CslItem {
+                id: "doe-2025".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Boundary check".to_string()),
+                doi: Some("10.1234/example".to_string()),
+                extra: BTreeMap::from([("confidence".to_string(), json!(0.9))]),
+            }],
+        };
+        let sidecar = VerificationSidecar::empty();
+
+        let report = ReferenceReport::from_documents(&csl, &sidecar);
+
+        assert_eq!(report.error_count, 1);
+        assert_eq!(report.warning_count, 1);
+        assert_eq!(report.ai_risk_issue_count, 2);
+        assert!(report.issues.iter().any(|issue| {
+            issue.code == "csl.sidecar_field"
+                && issue.category == ReferenceReportCategory::SidecarBoundary
+                && issue.severity == ReferenceReportSeverity::Error
+                && issue.reference_id.as_deref() == Some("doe-2025")
+        }));
     }
 }

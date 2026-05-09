@@ -85,8 +85,10 @@ Minimum validation expectations:
 
 - The top-level JSON value is an array.
 - Each item is an object with non-empty `id` and `type`.
-- IDs are unique within the file.
+- IDs are trimmed, whitespace-normalized, and unique within the file after normalization.
 - Item `type` is a valid CSL type or an explicitly diagnosed unsupported type.
+- Item `type` uses canonical lower-case CSL spelling before downstream matching.
+- Titles are trimmed and whitespace-normalized so provider comparisons and reports are stable.
 - Names use CSL name arrays where applicable.
 - Dates use CSL date structures such as `date-parts`, not display-formatted date strings when structured data is available.
 - DOI values are normalized enough for matching while preserving the identifier value.
@@ -99,3 +101,12 @@ Validation failures should not be hidden by export generation. Exports should on
 Standardisation and cleaning may update CSL fields when the result is more accurate and style-neutral. Examples include normalizing DOI casing, moving journal names into `container-title`, converting display dates into CSL date parts, and separating author names into CSL name objects.
 
 Cleaning decisions that need an audit trail should also record sidecar evidence. The CSL file should show the current best canonical reference; the sidecar should explain why Sourceright trusts it, where it came from, and what conflicts or manual decisions remain.
+
+The Rust model exposes focused normalization helpers for the fields used most often in provider verification:
+
+- `normalize_identifier` trims and collapses whitespace without changing case.
+- `normalize_item_type` trims, collapses whitespace, and lowercases CSL item types.
+- `normalize_title` trims and collapses whitespace for stable title matching and reporting.
+- `normalize_doi` strips common DOI URL/prefix wrappers and lowercases the identifier value.
+
+`CslItem::normalized` and `CslDocument::normalized` return cleaned copies while preserving unknown CSL payload fields in `extra`.
