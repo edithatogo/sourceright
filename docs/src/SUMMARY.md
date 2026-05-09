@@ -8,6 +8,7 @@
 - [Provider Strategy](providers.md)
 - [Canonical CSL Model](csl-model.md)
 - [Verification Sidecar](verification-sidecar.md)
+- [Reference Reporting](reporting.md)
 - [Exports](exports.md)
 - [Publishing Plan](publishing.md)
 - [Manual Review](manual-review.md)

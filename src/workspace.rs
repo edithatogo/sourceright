@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 use thiserror::Error;
 
 use crate::csl::{CslDocument, validate_csl_json};
+use crate::report::ReferenceReport;
 use crate::sidecar::VerificationSidecar;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -72,6 +73,12 @@ impl SourcerightWorkspace {
             })
             .collect())
     }
+
+    pub fn reference_report_markdown(&self) -> Result<String, WorkspaceError> {
+        let csl: CslDocument = read_json(&self.references_csl_json)?;
+        let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
+        Ok(ReferenceReport::from_documents(&csl, &sidecar).to_markdown())
+    }
 }
 
 fn write_json_if_missing<T: serde::Serialize>(
@@ -85,6 +92,11 @@ fn write_json_if_missing<T: serde::Serialize>(
     let json = serde_json::to_string_pretty(value)?;
     fs::write(path, format!("{json}\n"))?;
     Ok(())
+}
+
+fn read_json<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, WorkspaceError> {
+    let input = fs::read_to_string(path)?;
+    Ok(serde_json::from_str(&input)?)
 }
 
 #[derive(Debug, Error)]
@@ -110,5 +122,19 @@ mod tests {
         assert!(workspace.verification_sidecar_json.exists());
         assert!(workspace.review_queue_jsonl.exists());
         assert!(workspace.exports_dir.is_dir());
+    }
+
+    #[test]
+    fn report_reads_workspace_and_returns_markdown() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+
+        let report = workspace
+            .reference_report_markdown()
+            .expect("generate reference report");
+
+        assert!(report.contains("Sourceright Reference Report"));
+        assert!(report.contains("Total references: 0"));
     }
 }

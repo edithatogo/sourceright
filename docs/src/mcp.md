@@ -11,6 +11,7 @@ Planned tools:
 - `references.verify`
 - `references.review_queue`
 - `references.export`
+- `references.report`
 - `pipeline.run`
 
 Planned resources:
@@ -20,6 +21,7 @@ Planned resources:
 - Verification sidecar.
 - Review queue.
 - Citation reconciliation report.
+- Reference integrity report.
 - Export manifest.
 
 Planned prompts:
@@ -29,4 +31,4 @@ Planned prompts:
 - Conflict explanation.
 - Provider comparison.
 
-The first useful MCP increment should be read-only and local-file based: validate CSL JSON, report diagnostics, and describe the unavailable pipeline tools without side effects. Write-capable tools should wait until the CLI pipeline commands have stable input and output contracts.
+The first useful MCP increment should be read-only and local-file based: validate CSL JSON, generate reference integrity reports, report diagnostics, and describe the unavailable pipeline tools without side effects. Write-capable tools should wait until the CLI pipeline commands have stable input and output contracts.

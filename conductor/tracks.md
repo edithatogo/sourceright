@@ -1,6 +1,6 @@
 # Sourceright Conductor Tracks
 
-Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work.
+Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; track 15 adds reporting as a first-class audit surface; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work.
 
 | Track | Status | Purpose |
 | --- | --- | --- |
@@ -19,3 +19,4 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 12 CLI and MCP | in_progress | CLI command family and MCP server tools/resources/prompts. |
 | 13 Legal citations | roadmap | Future legal citation model and public legal citation APIs. |
 | 14 Claim/source/provenance | roadmap | Future claim extraction, source linkage, evidence graphs, and provenance. |
+| 15 Reference reporting | in_progress | Reference integrity and AI-related citation-error reports. |
