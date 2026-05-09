@@ -220,6 +220,63 @@ impl ReferenceReport {
 
         markdown
     }
+
+    pub fn to_json_output(&self) -> ReferenceReportJsonOutput {
+        ReferenceReportJsonOutput {
+            schema_version: REFERENCE_REPORT_SCHEMA_VERSION.to_string(),
+            report_type: "reference_integrity".to_string(),
+            summary: ReferenceReportSummary {
+                total_references: self.total_references,
+                verified_references: self.verified_references,
+                review_queue_count: self.review_queue_count,
+                unresolved_count: self.unresolved_count,
+                conflict_count: self.conflict_count,
+                ai_risk_issue_count: self.ai_risk_issue_count,
+                error_count: self.error_count,
+                warning_count: self.warning_count,
+                info_count: self.info_count,
+            },
+            issues: self.issues.clone(),
+        }
+    }
+
+    pub fn to_mcp_resource(&self) -> ReferenceReportResource {
+        ReferenceReportResource {
+            uri: "sourceright://reports/reference-integrity".to_string(),
+            mime_type: "application/json".to_string(),
+            data: self.to_json_output(),
+        }
+    }
+}
+
+pub const REFERENCE_REPORT_SCHEMA_VERSION: &str = "sourceright.reference_report.v1";
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReferenceReportJsonOutput {
+    pub schema_version: String,
+    pub report_type: String,
+    pub summary: ReferenceReportSummary,
+    pub issues: Vec<ReferenceReportIssue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReferenceReportSummary {
+    pub total_references: usize,
+    pub verified_references: usize,
+    pub review_queue_count: usize,
+    pub unresolved_count: usize,
+    pub conflict_count: usize,
+    pub ai_risk_issue_count: usize,
+    pub error_count: usize,
+    pub warning_count: usize,
+    pub info_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReferenceReportResource {
+    pub uri: String,
+    pub mime_type: String,
+    pub data: ReferenceReportJsonOutput,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -407,5 +464,63 @@ mod tests {
                 && issue.severity == ReferenceReportSeverity::Error
                 && issue.reference_id.as_deref() == Some("doe-2025")
         }));
+    }
+
+    #[test]
+    fn report_serializes_stable_json_output_model() {
+        let csl = CslDocument {
+            items: vec![CslItem {
+                id: "smith-2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("A plausible but unchecked paper".to_string()),
+                doi: None,
+                extra: BTreeMap::new(),
+            }],
+        };
+        let sidecar = VerificationSidecar::empty();
+
+        let report = ReferenceReport::from_documents(&csl, &sidecar);
+        let output = report.to_json_output();
+        let serialized = serde_json::to_value(&output).expect("serialize report json output");
+
+        assert_eq!(
+            serialized["schema_version"],
+            "sourceright.reference_report.v1"
+        );
+        assert_eq!(serialized["report_type"], "reference_integrity");
+        assert_eq!(serialized["summary"]["total_references"], 1);
+        assert_eq!(serialized["summary"]["warning_count"], 2);
+        assert_eq!(serialized["issues"][0]["severity"], "warning");
+        assert_eq!(serialized["issues"][0]["category"], "identifier");
+    }
+
+    #[test]
+    fn report_exposes_mcp_ready_json_resource_data() {
+        let report = ReferenceReport {
+            total_references: 0,
+            verified_references: 0,
+            review_queue_count: 0,
+            unresolved_count: 0,
+            conflict_count: 0,
+            ai_risk_issue_count: 0,
+            error_count: 0,
+            warning_count: 0,
+            info_count: 0,
+            issues: Vec::new(),
+        };
+
+        let resource = report.to_mcp_resource();
+        let serialized = serde_json::to_value(&resource).expect("serialize report resource");
+
+        assert_eq!(
+            serialized["uri"],
+            "sourceright://reports/reference-integrity"
+        );
+        assert_eq!(serialized["mime_type"], "application/json");
+        assert_eq!(
+            serialized["data"]["schema_version"],
+            "sourceright.reference_report.v1"
+        );
+        assert_eq!(serialized["data"]["summary"]["total_references"], 0);
     }
 }

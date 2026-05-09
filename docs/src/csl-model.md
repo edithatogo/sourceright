@@ -110,3 +110,5 @@ The Rust model exposes focused normalization helpers for the fields used most of
 - `normalize_doi` strips common DOI URL/prefix wrappers and lowercases the identifier value.
 
 `CslItem::normalized` and `CslDocument::normalized` return cleaned copies while preserving unknown CSL payload fields in `extra`.
+
+`parse_csl_json` is the canonical parser entrypoint for CSL JSON text. `format_csl_json` is the canonical formatter entrypoint for write paths: it emits pretty-printed JSON with deterministic struct-field order, sorted unknown CSL payload keys, and a final newline so repeated read/write cycles are stable.

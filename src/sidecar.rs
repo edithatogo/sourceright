@@ -18,6 +18,49 @@ impl VerificationSidecar {
             references: BTreeMap::new(),
         }
     }
+
+    pub fn review_queue_entries(&self) -> Vec<ReviewQueueEntry> {
+        self.references
+            .iter()
+            .filter(|(_, verification)| verification.requires_review_queue())
+            .map(|(id, verification)| ReviewQueueEntry::from_reference(id, verification))
+            .collect()
+    }
+
+    pub fn to_review_queue_jsonl(&self) -> serde_json::Result<String> {
+        let mut jsonl = String::new();
+
+        for entry in self.review_queue_entries() {
+            jsonl.push_str(&serde_json::to_string(&entry)?);
+            jsonl.push('\n');
+        }
+
+        Ok(jsonl)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ReviewQueueEntry {
+    pub id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extraction: Option<ExtractionProvenance>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub provider_candidates: Vec<ProviderCandidate>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub conflicts: Vec<Value>,
+    pub review_status: ReviewStatus,
+}
+
+impl ReviewQueueEntry {
+    fn from_reference(id: &str, verification: &ReferenceVerification) -> Self {
+        Self {
+            id: id.to_string(),
+            extraction: verification.extraction.clone(),
+            provider_candidates: verification.provider_candidates.clone(),
+            conflicts: verification.conflicts.clone(),
+            review_status: verification.review_status.clone(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -371,5 +414,63 @@ mod tests {
         assert!(ReviewStatus::Unresolved.requires_review_queue());
         assert!(!ReviewStatus::NotRequired.requires_review_queue());
         assert!(!ReviewStatus::Resolved.requires_review_queue());
+    }
+
+    #[test]
+    fn review_queue_jsonl_is_derived_and_sorted_by_reference_id() {
+        let mut sidecar = VerificationSidecar::empty();
+        sidecar.references.insert(
+            "zeta-queued".to_string(),
+            ReferenceVerification {
+                extraction: Some(ExtractionProvenance {
+                    source: "input.docx".to_string(),
+                    original_text: Some("Zeta queued reference".to_string()),
+                    span: Some("paragraph:2".to_string()),
+                }),
+                provider_candidates: vec![ProviderCandidate {
+                    provider: "crossref".to_string(),
+                    confidence: 0.42,
+                    retrieved_at: "2026-05-09T00:00:00Z".to_string(),
+                    data: json!({"DOI": "10.0000/zeta"}),
+                }],
+                conflicts: vec![json!({
+                    "field": "issued",
+                    "severity": "review",
+                    "provider": "crossref"
+                })],
+                review_status: ReviewStatus::Queued,
+                ..ReferenceVerification::default()
+            },
+        );
+        sidecar.references.insert(
+            "alpha-unresolved".to_string(),
+            ReferenceVerification {
+                review_status: ReviewStatus::Unresolved,
+                ..ReferenceVerification::default()
+            },
+        );
+        sidecar.references.insert(
+            "middle-resolved".to_string(),
+            ReferenceVerification {
+                review_status: ReviewStatus::Resolved,
+                ..ReferenceVerification::default()
+            },
+        );
+
+        let jsonl = sidecar
+            .to_review_queue_jsonl()
+            .expect("serialize review queue jsonl");
+        let lines = jsonl.lines().collect::<Vec<_>>();
+
+        assert_eq!(lines.len(), 2);
+        assert_eq!(
+            lines[0],
+            r#"{"id":"alpha-unresolved","review_status":"unresolved"}"#
+        );
+        assert_eq!(
+            lines[1],
+            r#"{"id":"zeta-queued","extraction":{"source":"input.docx","original_text":"Zeta queued reference","span":"paragraph:2"},"provider_candidates":[{"provider":"crossref","confidence":0.42,"retrieved_at":"2026-05-09T00:00:00Z","data":{"DOI":"10.0000/zeta"}}],"conflicts":[{"field":"issued","provider":"crossref","severity":"review"}],"review_status":"queued"}"#
+        );
+        assert!(jsonl.ends_with('\n'));
     }
 }

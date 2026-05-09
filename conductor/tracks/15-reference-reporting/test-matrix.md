@@ -10,3 +10,5 @@
 | CSL boundary violation | Error issue is emitted and marked as an AI-risk signal. |
 | Report summary totals | Markdown summary includes AI-risk-signal and severity totals. |
 | Issue categorization | Issues include stable categories for CSL integrity, identifiers, verification coverage, provider conflicts, manual review, and CSL/sidecar boundary violations. |
+| JSON output model | Serialized report includes schema version, report type, summary counters, and stable issue records. |
+| MCP report resource | Report can be exposed as an `application/json` resource at `sourceright://reports/reference-integrity`. |
