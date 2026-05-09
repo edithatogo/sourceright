@@ -112,3 +112,13 @@ The Rust model exposes focused normalization helpers for the fields used most of
 `CslItem::normalized` and `CslDocument::normalized` return cleaned copies while preserving unknown CSL payload fields in `extra`.
 
 `parse_csl_json` is the canonical parser entrypoint for CSL JSON text. `format_csl_json` is the canonical formatter entrypoint for write paths: it emits pretty-printed JSON with deterministic struct-field order, sorted unknown CSL payload keys, and a final newline so repeated read/write cycles are stable.
+
+## Migration Hooks
+
+The Rust core includes an explicit migration surface for records produced by older or looser import paths:
+
+- `migrate_csl_json` parses CSL JSON, normalizes supported canonical fields, and returns the migrated document plus a change list and remaining diagnostics.
+- `migrate_csl_document` performs the same migration on an already parsed `CslDocument`.
+- Migration changes use stable codes such as `csl.migration.id_normalized`, `csl.migration.type_normalized`, `csl.migration.title_normalized`, and `csl.migration.doi_normalized`.
+
+The migration path does not silently approve bad records. It normalizes the fields Sourceright can normalize safely, preserves unknown CSL payload fields, then validates the migrated document so unresolved issues still appear as deterministic diagnostics.

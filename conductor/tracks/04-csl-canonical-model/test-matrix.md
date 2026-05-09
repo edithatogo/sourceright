@@ -9,3 +9,4 @@
 | Style-specific input | Normalizes into style-neutral CSL fields while preserving unknown CSL payload fields. |
 | Verification metadata | Is rejected or moved to the sidecar boundary. |
 | Canonical read/write formatting | Parses CSL JSON through the canonical entrypoint and writes deterministic, newline-terminated pretty JSON with stable key ordering. |
+| Legacy migration hook | Normalizes legacy IDs, types, titles, and DOI prefixes while reporting stable migration change codes and remaining diagnostics. |

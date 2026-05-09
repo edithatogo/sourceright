@@ -243,6 +243,67 @@ pub fn format_csl_json(document: &CslDocument) -> Result<String, serde_json::Err
     Ok(format!("{json}\n"))
 }
 
+pub fn migrate_csl_document(document: &CslDocument) -> CslMigrationReport {
+    let mut normalized = document.clone();
+    let mut changes = Vec::new();
+
+    for (index, item) in document.items.iter().enumerate() {
+        let normalized_id = normalize_identifier(&item.id);
+        if normalized_id != item.id {
+            changes.push(CslMigrationChange::new(
+                format!("$[{index}].id"),
+                "csl.migration.id_normalized",
+                "Normalized CSL item id whitespace",
+            ));
+        }
+
+        let normalized_type = normalize_item_type(&item.item_type);
+        if normalized_type != item.item_type {
+            changes.push(CslMigrationChange::new(
+                format!("$[{index}].type"),
+                "csl.migration.type_normalized",
+                "Normalized CSL item type spelling",
+            ));
+        }
+
+        if let Some(title) = item.title.as_deref() {
+            let normalized_title = normalize_title(title);
+            if normalized_title != title {
+                changes.push(CslMigrationChange::new(
+                    format!("$[{index}].title"),
+                    "csl.migration.title_normalized",
+                    "Normalized CSL title whitespace",
+                ));
+            }
+        }
+
+        if let Some(doi) = item.doi.as_deref() {
+            let normalized_doi = normalize_doi(doi);
+            if !normalized_doi.is_empty() && normalized_doi != doi {
+                changes.push(CslMigrationChange::new(
+                    format!("$[{index}].DOI"),
+                    "csl.migration.doi_normalized",
+                    "Normalized DOI for provider matching",
+                ));
+            }
+        }
+    }
+
+    normalized.normalize_in_place();
+    let diagnostics = normalized.validate();
+
+    CslMigrationReport {
+        document: normalized,
+        diagnostics,
+        changes,
+    }
+}
+
+pub fn migrate_csl_json(input: &str) -> Result<CslMigrationReport, serde_json::Error> {
+    let document = parse_csl_json(input)?;
+    Ok(migrate_csl_document(&document))
+}
+
 pub fn normalize_identifier(value: &str) -> String {
     collapse_whitespace(value).to_string()
 }
@@ -272,6 +333,30 @@ pub fn normalize_doi(value: &str) -> String {
 
 fn collapse_whitespace(value: &str) -> String {
     value.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CslMigrationReport {
+    pub document: CslDocument,
+    pub diagnostics: Vec<ValidationDiagnostic>,
+    pub changes: Vec<CslMigrationChange>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CslMigrationChange {
+    pub path: String,
+    pub code: String,
+    pub message: String,
+}
+
+impl CslMigrationChange {
+    fn new(path: impl Into<String>, code: impl Into<String>, message: impl Into<String>) -> Self {
+        Self {
+            path: path.into(),
+            code: code.into(),
+            message: message.into(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -466,5 +551,33 @@ mod tests {
         let second = format_csl_json(&reparsed).expect("reformat CSL JSON");
 
         assert_eq!(first, second);
+    }
+
+    #[test]
+    fn migration_normalizes_legacy_records_and_reports_changes() {
+        let report = migrate_csl_json(
+            r#"[{"id":" smith   2024 ","type":"ARTICLE-JOURNAL","title":"  Example   Title ","DOI":"https://doi.org/10.1000/ABC"}]"#,
+        )
+        .expect("migrate CSL JSON");
+
+        let item = &report.document.items[0];
+        assert_eq!(item.id, "smith 2024");
+        assert_eq!(item.item_type, "article-journal");
+        assert_eq!(item.title.as_deref(), Some("Example Title"));
+        assert_eq!(item.doi.as_deref(), Some("10.1000/abc"));
+        assert!(report.diagnostics.is_empty());
+        assert_eq!(
+            report
+                .changes
+                .iter()
+                .map(|change| change.code.as_str())
+                .collect::<Vec<_>>(),
+            [
+                "csl.migration.id_normalized",
+                "csl.migration.type_normalized",
+                "csl.migration.title_normalized",
+                "csl.migration.doi_normalized",
+            ]
+        );
     }
 }

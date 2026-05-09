@@ -37,6 +37,51 @@ impl VerificationSidecar {
 
         Ok(jsonl)
     }
+
+    pub fn validate(&self) -> Vec<SidecarDiagnostic> {
+        let mut diagnostics = Vec::new();
+
+        if self.schema_version != SIDECAR_SCHEMA_VERSION {
+            diagnostics.push(SidecarDiagnostic::new(
+                "sidecar.schema_version.unsupported",
+                "$.schema_version",
+                "Verification sidecar schema_version is not supported by this Sourceright build.",
+            ));
+        }
+
+        for (id, verification) in &self.references {
+            if id.trim().is_empty() {
+                diagnostics.push(SidecarDiagnostic::new(
+                    "sidecar.reference_id.empty",
+                    "$.references",
+                    "Verification sidecar reference ids must not be empty.",
+                ));
+            }
+
+            for issue in verification.invariant_issues() {
+                diagnostics.push(SidecarDiagnostic::new(
+                    issue.code,
+                    format!("$.references.{id}"),
+                    issue.message,
+                ));
+            }
+        }
+
+        diagnostics
+    }
+}
+
+pub fn parse_verification_sidecar_json(
+    input: &str,
+) -> Result<VerificationSidecar, serde_json::Error> {
+    serde_json::from_str(input)
+}
+
+pub fn format_verification_sidecar_json(
+    sidecar: &VerificationSidecar,
+) -> Result<String, serde_json::Error> {
+    let json = serde_json::to_string_pretty(sidecar)?;
+    Ok(format!("{json}\n"))
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -276,6 +321,23 @@ impl SidecarInvariantIssue {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SidecarDiagnostic {
+    pub code: String,
+    pub path: String,
+    pub message: String,
+}
+
+impl SidecarDiagnostic {
+    fn new(code: impl Into<String>, path: impl Into<String>, message: impl Into<String>) -> Self {
+        Self {
+            code: code.into(),
+            path: path.into(),
+            message: message.into(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReviewStatusTransitionError {
     pub from: ReviewStatus,
@@ -472,5 +534,49 @@ mod tests {
             r#"{"id":"zeta-queued","extraction":{"source":"input.docx","original_text":"Zeta queued reference","span":"paragraph:2"},"provider_candidates":[{"provider":"crossref","confidence":0.42,"retrieved_at":"2026-05-09T00:00:00Z","data":{"DOI":"10.0000/zeta"}}],"conflicts":[{"field":"issued","provider":"crossref","severity":"review"}],"review_status":"queued"}"#
         );
         assert!(jsonl.ends_with('\n'));
+    }
+
+    #[test]
+    fn sidecar_parse_format_and_validate_are_stable() {
+        let input = r#"{"references":{"smith-2024":{"provider_candidates":[{"provider":"crossref","confidence":0.8,"retrieved_at":"2026-05-09T00:00:00Z","data":{"DOI":"10.0000/example"}}],"review_status":"not_required"}},"schema_version":"sourceright.verification.v1"}"#;
+
+        let sidecar = parse_verification_sidecar_json(input).expect("parse sidecar");
+        let formatted = format_verification_sidecar_json(&sidecar).expect("format sidecar");
+        let reparsed = parse_verification_sidecar_json(&formatted).expect("reparse sidecar");
+
+        assert_eq!(sidecar, reparsed);
+        assert!(formatted.ends_with('\n'));
+        assert!(sidecar.validate().is_empty());
+    }
+
+    #[test]
+    fn sidecar_validation_reports_schema_and_reference_invariants() {
+        let sidecar = VerificationSidecar {
+            schema_version: "sourceright.verification.v0".to_string(),
+            references: BTreeMap::from([(
+                "broken".to_string(),
+                ReferenceVerification {
+                    provider_candidates: vec![ProviderCandidate {
+                        provider: "".to_string(),
+                        confidence: 2.0,
+                        retrieved_at: "".to_string(),
+                        data: Value::Null,
+                    }],
+                    ..ReferenceVerification::default()
+                },
+            )]),
+        };
+
+        let diagnostics = sidecar.validate();
+        assert_eq!(
+            diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            [
+                "sidecar.schema_version.unsupported",
+                "sidecar.provider_candidate.invalid",
+            ]
+        );
     }
 }

@@ -13,7 +13,8 @@ Make Sourceright useful as a reference integrity audit tool, including for ident
 ## Outputs
 
 - Markdown report from `sourceright report`.
-- Later JSON report for CI, MCP clients, and downstream dashboards.
+- JSON report from `sourceright report --json` for CI, MCP clients, and downstream dashboards.
+- MCP-ready resource envelope from `sourceright report --mcp-resource`.
 
 ## Boundaries
 

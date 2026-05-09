@@ -7,7 +7,7 @@ The `sourceright report` command generates a Markdown report from a Sourceright 
 ## Current command
 
 ```text
-sourceright report [.sourceright-directory]
+sourceright report [--json|--mcp-resource] [.sourceright-directory]
 ```
 
 The current report reads:
@@ -24,6 +24,8 @@ It reports:
 - Provider conflict count.
 - Issue, AI-risk-signal, and severity totals.
 - Issue list with stable issue codes and categories.
+
+Markdown is the default output. `--json` prints the compact report JSON model. `--mcp-resource` prints the MCP-ready JSON resource envelope for clients that want a resource-shaped payload before server mode exists.
 
 ## JSON output model
 

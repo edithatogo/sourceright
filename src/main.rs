@@ -65,17 +65,29 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 return Ok(());
             }
 
-            let workspace_root = args
-                .pop_front()
-                .map(PathBuf::from)
-                .unwrap_or_else(|| PathBuf::from(".sourceright"));
-            reject_extra_args("report", &args)?;
+            let options = parse_report_args(args)?;
 
-            let workspace = SourcerightWorkspace::from_root(workspace_root);
-            let report = workspace
-                .reference_report_markdown()
-                .map_err(|error| error.to_string())?;
-            println!("{report}");
+            let workspace = SourcerightWorkspace::from_root(options.workspace_root);
+            match options.format {
+                ReportFormat::Markdown => {
+                    let report = workspace
+                        .reference_report_markdown()
+                        .map_err(|error| error.to_string())?;
+                    println!("{report}");
+                }
+                ReportFormat::Json => {
+                    let report = workspace
+                        .reference_report_json()
+                        .map_err(|error| error.to_string())?;
+                    println!("{}", serde_json::to_string(&report)?);
+                }
+                ReportFormat::McpResource => {
+                    let resource = workspace
+                        .reference_report_mcp_resource()
+                        .map_err(|error| error.to_string())?;
+                    println!("{}", serde_json::to_string(&resource)?);
+                }
+            }
         }
         Some("mcp") => match args.pop_front().as_deref() {
             Some("--help") | Some("-h") => {
@@ -147,6 +159,29 @@ fn parse_validate_csl_args(args: VecDeque<String>) -> Result<ValidateCslOptions,
     Ok(ValidateCslOptions { path, json })
 }
 
+fn parse_report_args(args: VecDeque<String>) -> Result<ReportOptions, CliError> {
+    let mut format = ReportFormat::Markdown;
+    let mut workspace_root = None;
+
+    for arg in args {
+        match arg.as_str() {
+            "--json" => format = ReportFormat::Json,
+            "--mcp-resource" => format = ReportFormat::McpResource,
+            _ if workspace_root.is_none() => workspace_root = Some(PathBuf::from(arg)),
+            _ => {
+                return Err(CliError::usage(format!(
+                    "unexpected argument for `report`: {arg}\nrun `sourceright report --help` for usage"
+                )));
+            }
+        }
+    }
+
+    Ok(ReportOptions {
+        workspace_root: workspace_root.unwrap_or_else(|| PathBuf::from(".sourceright")),
+        format,
+    })
+}
+
 fn required_arg<T>(command: &str, value: Option<T>, label: &str) -> Result<T, CliError> {
     value.ok_or_else(|| {
         CliError::usage(format!(
@@ -173,6 +208,19 @@ fn print_help() {
 struct ValidateCslOptions {
     path: PathBuf,
     json: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ReportOptions {
+    workspace_root: PathBuf,
+    format: ReportFormat,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ReportFormat {
+    Markdown,
+    Json,
+    McpResource,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -257,6 +305,12 @@ impl From<&str> for CliError {
     }
 }
 
+impl From<serde_json::Error> for CliError {
+    fn from(error: serde_json::Error) -> Self {
+        Self::usage(error.to_string())
+    }
+}
+
 impl std::fmt::Display for CliError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.message.fmt(formatter)
@@ -272,7 +326,7 @@ Usage:
   sourceright --version
   sourceright init [document-or-directory]
   sourceright validate-csl [--json] <references.csl.json>
-  sourceright report [.sourceright-directory]
+  sourceright report [--json|--mcp-resource] [.sourceright-directory]
   sourceright mcp [status|--status]
 
 Commands:
@@ -315,10 +369,15 @@ const REPORT_HELP: &str = "sourceright report
 Print a reference integrity report from an existing workspace.
 
 Usage:
-  sourceright report [.sourceright-directory]
+  sourceright report [--json|--mcp-resource] [.sourceright-directory]
 
 Default:
-  Uses `.sourceright` when no directory is supplied.";
+  Uses `.sourceright` when no directory is supplied.
+
+Output:
+  Markdown by default.
+  `--json` prints compact `sourceright.reference_report.v1` JSON.
+  `--mcp-resource` prints the MCP-ready JSON resource envelope.";
 
 const MCP_HELP: &str = "sourceright mcp
 
@@ -338,13 +397,16 @@ const MCP_STATUS: &str = "Sourceright MCP status
 server_mode: not-implemented
 transport: none
 server_started: false
-available_tools: 0
-available_resources: 0
+available_tools: 2
+available_resources: 2
 available_prompts: 0
-planned_first_increment: read-only local CSL validation and reference reporting
-recommended_today:
+implemented_read_only_surfaces:
   - sourceright validate-csl <references.csl.json>
-  - sourceright report [.sourceright-directory]
+  - sourceright report --json [.sourceright-directory]
+  - sourceright report --mcp-resource [.sourceright-directory]
+resource_uris:
+  - sourceright://reports/reference-integrity
+  - sourceright://workspaces/local/review-queue
 message: MCP server mode is planned but not implemented yet.";
 
 #[cfg(test)]
@@ -384,6 +446,24 @@ mod tests {
     }
 
     #[test]
+    fn report_accepts_json_and_mcp_resource_formats() {
+        let json = parse_report_args(VecDeque::from(vec![
+            "--json".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse json report args");
+        let resource = parse_report_args(VecDeque::from(vec![
+            "--mcp-resource".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse mcp resource report args");
+
+        assert_eq!(json.format, ReportFormat::Json);
+        assert_eq!(resource.format, ReportFormat::McpResource);
+        assert_eq!(json.workspace_root, PathBuf::from(".sourceright"));
+    }
+
+    #[test]
     fn validate_csl_json_output_is_stable_machine_readable() {
         let output = ValidateCslOutput::new(
             std::path::Path::new("references.csl.json"),
@@ -409,6 +489,7 @@ mod tests {
     fn mcp_status_is_explicitly_not_a_server() {
         assert!(MCP_STATUS.contains("server_mode: not-implemented"));
         assert!(MCP_STATUS.contains("server_started: false"));
-        assert!(MCP_STATUS.contains("available_tools: 0"));
+        assert!(MCP_STATUS.contains("available_tools: 2"));
+        assert!(MCP_STATUS.contains("sourceright://reports/reference-integrity"));
     }
 }

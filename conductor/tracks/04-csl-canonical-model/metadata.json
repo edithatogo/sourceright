@@ -1,6 +1,6 @@
 {
   "id": "04-csl-canonical-model",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owned_paths": ["src/", "tests/fixtures/"],
   "dependencies": ["01-product-roadmap"]
