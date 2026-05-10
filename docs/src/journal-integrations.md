@@ -6,15 +6,18 @@ The integration target is a citation-integrity screening service, not an automat
 
 ## Current Integration Surface
 
-The current core can already support a platform adapter through:
+The current core can support a platform adapter through:
 
 - `sourceright validate-csl --json`.
 - `sourceright report --json`.
 - `sourceright report --mcp-resource`.
+- `sourceright citations <manuscript.txt>`.
+- `sourceright review queue`.
+- `sourceright journal-screen`.
 - `sourceright export`.
 - JSON-ready report and sidecar models in the Rust library.
 
-The remaining platform work is adapter glue: retrieving submission files, running extraction, storing reports, and returning editor-facing or author-facing summaries.
+The remaining platform work is adapter glue: retrieving submission files, running extraction, storing reports, and returning editor-facing or author-facing summaries. The Rust contract already models OJS, generic webhooks, ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager as screening platform targets.
 
 ## OJS First
 

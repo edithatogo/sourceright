@@ -15,21 +15,23 @@ Each track lives under `conductor/tracks/NN-name/` and contains:
 
 ## Roadmap tracks
 
-1. Public repo infrastructure.
-2. Product roadmap.
-3. Legacy workflow audit.
-4. Reference intake.
-5. CSL canonical model.
-6. Verification sidecar.
-7. Academic providers.
-8. Standardisation and cleaning.
-9. Conflict resolution.
-10. In-text citation reconciliation.
-11. Manual agent review.
-12. Export suite.
-13. CLI and MCP.
-14. Legal citations.
-15. Claim/source/provenance roadmap.
+0. Public repo infrastructure.
+1. Product roadmap.
+2. Legacy workflow audit.
+3. Reference intake.
+4. CSL canonical model.
+5. Verification sidecar.
+6. Academic providers.
+7. Standardisation and cleaning.
+8. Conflict resolution.
+9. In-text citation reconciliation.
+10. Manual agent review.
+11. Export suite.
+12. CLI and MCP.
+13. Legal citations.
+14. Claim/source/provenance roadmap.
+15. Reference reporting.
+16. Journal workflow integrations.
 
 ## Validation expectations
 
@@ -39,4 +41,5 @@ Each track lives under `conductor/tracks/NN-name/` and contains:
 - Every public command or MCP tool emits deterministic JSON when requested.
 - Every export format has generation tests and reparse or structural checks where practical.
 - Manual review queues preserve original extracted text, provider candidates, diffs, confidence, and decisions.
+- Journal screening reports produce editor-facing summaries and author-facing checklists without asserting AI generation.
 - Legal citation support is modelled separately from academic CSL where required.

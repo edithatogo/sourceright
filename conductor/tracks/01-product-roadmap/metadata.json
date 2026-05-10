@@ -1,6 +1,6 @@
 {
   "id": "01-product-roadmap",
-  "status": "planned",
+  "status": "completed",
   "priority": "highest",
   "owned_paths": ["conductor/", "README.md", "docs/"],
   "dependencies": ["00-public-repo-infrastructure"]

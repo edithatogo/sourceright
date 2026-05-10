@@ -3,8 +3,11 @@ pub mod conflict;
 pub mod csl;
 pub mod export;
 pub mod intake;
+pub mod journal;
 pub mod providers;
+pub mod reconcile;
 pub mod report;
+pub mod review;
 pub mod sidecar;
 pub mod workspace;
 
@@ -25,16 +28,29 @@ pub use intake::{
     InTextCitationCandidate, IntakeDiagnostic, IntakeDocument, IntakeResult, IntakeSourceKind,
     ReferenceCandidate, extract_in_text_citations, extract_intake, extract_references_from_text,
 };
+pub use journal::{
+    JOURNAL_SCREENING_SCHEMA_VERSION, JournalPlatform, JournalScreeningReport,
+    JournalScreeningRequest, JournalScreeningStatus, screen_journal_submission,
+};
 pub use providers::{
     AcademicProvider, AcademicProviderResult, ProviderErrorEvidence, ProviderResultStatus,
     crossref_candidate_from_work, datacite_candidate_from_work, doi_resolution_evidence,
     openalex_candidate_from_work, orcid_author_candidate_from_record, provider_error,
     pubmed_candidate_from_record,
 };
+pub use reconcile::{
+    CitationMatch, CitationMatchConfidence, CitationOccurrence, CitationReconciliationIssue,
+    CitationReconciliationIssueType, CitationReconciliationReport, CitationStyle,
+    extract_citation_occurrences, reconcile_citations,
+};
 pub use report::{
     REFERENCE_REPORT_SCHEMA_VERSION, ReferenceReport, ReferenceReportCategory,
     ReferenceReportIssue, ReferenceReportJsonOutput, ReferenceReportResource,
     ReferenceReportSeverity, ReferenceReportSummary,
+};
+pub use review::{
+    ReviewDecisionImport, ReviewImportError, ReviewImportReport, ReviewPartition,
+    apply_review_decisions, partition_review_queue,
 };
 pub use sidecar::{
     ExtractionProvenance, ProviderCandidate, ReferenceVerification, ReviewDecision,

@@ -1,8 +1,9 @@
 use std::collections::VecDeque;
+use std::fs;
 use std::path::PathBuf;
 
 use serde::Serialize;
-use sourceright::{ExportFormat, SourcerightWorkspace};
+use sourceright::{ExportFormat, JournalPlatform, ReviewDecisionImport, SourcerightWorkspace};
 
 fn main() {
     if let Err(error) = run(std::env::args().skip(1)) {
@@ -104,6 +105,95 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 .conflict_resolution_report()
                 .map_err(|error| error.to_string())?;
             println!("{}", report.to_markdown());
+        }
+        Some("citations") => {
+            if maybe_print_command_help("citations", &mut args, CITATIONS_HELP)? {
+                return Ok(());
+            }
+
+            let manuscript = required_arg("citations", args.pop_front(), "manuscript text path")?;
+            let workspace_root = args
+                .pop_front()
+                .map(PathBuf::from)
+                .unwrap_or_else(|| PathBuf::from(".sourceright"));
+            reject_extra_args("citations", &args)?;
+
+            let text = fs::read_to_string(manuscript).map_err(|error| error.to_string())?;
+            let report = SourcerightWorkspace::from_root(workspace_root)
+                .citation_reconciliation_report(&text)
+                .map_err(|error| error.to_string())?;
+            println!("{}", report.to_markdown());
+        }
+        Some("review") => match args.pop_front().as_deref() {
+            Some("--help") | Some("-h") => {
+                reject_extra_args("review", &args)?;
+                println!("{REVIEW_HELP}");
+            }
+            Some("queue") => {
+                let workspace_root = args
+                    .pop_front()
+                    .map(PathBuf::from)
+                    .unwrap_or_else(|| PathBuf::from(".sourceright"));
+                reject_extra_args("review queue", &args)?;
+                let workspace = SourcerightWorkspace::from_root(workspace_root);
+                workspace
+                    .refresh_review_queue()
+                    .map_err(|error| error.to_string())?;
+                let jsonl = fs::read_to_string(&workspace.review_queue_jsonl)
+                    .map_err(|error| error.to_string())?;
+                print!("{jsonl}");
+            }
+            Some("partitions") => {
+                let options = parse_review_partitions_args(args)?;
+                let partitions = SourcerightWorkspace::from_root(options.workspace_root)
+                    .review_queue_partitions(options.max_entries)
+                    .map_err(|error| error.to_string())?;
+                println!("{}", serde_json::to_string(&partitions)?);
+            }
+            Some("import-decisions") => {
+                let decisions_path = required_arg(
+                    "review import-decisions",
+                    args.pop_front(),
+                    "decisions JSON path",
+                )?;
+                let workspace_root = args
+                    .pop_front()
+                    .map(PathBuf::from)
+                    .unwrap_or_else(|| PathBuf::from(".sourceright"));
+                reject_extra_args("review import-decisions", &args)?;
+                let decisions_json =
+                    fs::read_to_string(decisions_path).map_err(|error| error.to_string())?;
+                let decisions: Vec<ReviewDecisionImport> = serde_json::from_str(&decisions_json)?;
+                let report = SourcerightWorkspace::from_root(workspace_root)
+                    .import_review_decisions(&decisions)
+                    .map_err(|error| error.to_string())?;
+                println!("{}", serde_json::to_string(&report)?);
+            }
+            Some(arg) => {
+                return Err(CliError::usage(format!(
+                    "unexpected argument for `review`: {arg}\nrun `sourceright review --help` for usage"
+                )));
+            }
+            None => {
+                return Err(CliError::usage(
+                    "review requires `queue`, `partitions`, or `import-decisions`\nrun `sourceright review --help` for usage",
+                ));
+            }
+        },
+        Some("journal-screen") => {
+            if maybe_print_command_help("journal-screen", &mut args, JOURNAL_SCREEN_HELP)? {
+                return Ok(());
+            }
+
+            let options = parse_journal_screen_args(args)?;
+            let report = SourcerightWorkspace::from_root(options.workspace_root)
+                .journal_screening_report(
+                    options.submission_id,
+                    options.platform,
+                    options.manuscript_label,
+                )
+                .map_err(|error| error.to_string())?;
+            println!("{}", serde_json::to_string(&report)?);
         }
         Some("export") => {
             if maybe_print_command_help("export", &mut args, EXPORT_HELP)? {
@@ -243,6 +333,82 @@ fn parse_export_args(mut args: VecDeque<String>) -> Result<ExportOptions, CliErr
     })
 }
 
+fn parse_review_partitions_args(
+    mut args: VecDeque<String>,
+) -> Result<ReviewPartitionsOptions, CliError> {
+    let mut max_entries = 10;
+    if args.front().is_some_and(|arg| arg == "--size") {
+        args.pop_front();
+        let value = required_arg("review partitions", args.pop_front(), "partition size")?;
+        max_entries = value.parse::<usize>().map_err(|_| {
+            CliError::usage(
+                "review partitions requires --size to be a positive integer\nrun `sourceright review --help` for usage",
+            )
+        })?;
+    }
+    let workspace_root = args
+        .pop_front()
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from(".sourceright"));
+    reject_extra_args("review partitions", &args)?;
+    Ok(ReviewPartitionsOptions {
+        workspace_root,
+        max_entries,
+    })
+}
+
+fn parse_journal_screen_args(mut args: VecDeque<String>) -> Result<JournalScreenOptions, CliError> {
+    let mut platform = JournalPlatform::GenericWebhook;
+    let mut submission_id = "local-submission".to_string();
+    let mut manuscript_label = "manuscript".to_string();
+
+    while let Some(arg) = args.front() {
+        match arg.as_str() {
+            "--platform" => {
+                args.pop_front();
+                let value = required_arg("journal-screen", args.pop_front(), "platform")?;
+                platform = parse_journal_platform(&value)?;
+            }
+            "--submission-id" => {
+                args.pop_front();
+                submission_id = required_arg("journal-screen", args.pop_front(), "submission id")?;
+            }
+            "--manuscript" => {
+                args.pop_front();
+                manuscript_label =
+                    required_arg("journal-screen", args.pop_front(), "manuscript label")?;
+            }
+            _ => break,
+        }
+    }
+
+    let workspace_root = args
+        .pop_front()
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from(".sourceright"));
+    reject_extra_args("journal-screen", &args)?;
+    Ok(JournalScreenOptions {
+        workspace_root,
+        platform,
+        submission_id,
+        manuscript_label,
+    })
+}
+
+fn parse_journal_platform(value: &str) -> Result<JournalPlatform, CliError> {
+    match value {
+        "generic-webhook" | "generic_webhook" => Ok(JournalPlatform::GenericWebhook),
+        "ojs" => Ok(JournalPlatform::Ojs),
+        "scholarone" => Ok(JournalPlatform::ScholarOne),
+        "editorial-manager" | "editorial_manager" => Ok(JournalPlatform::EditorialManager),
+        "ejournalpress" | "e-journal-press" => Ok(JournalPlatform::EJournalPress),
+        "manuscript-manager" | "manuscript_manager" => Ok(JournalPlatform::ManuscriptManager),
+        _ => Err(CliError::usage(format!(
+            "unsupported journal platform: {value}\nrun `sourceright journal-screen --help` for usage"
+        ))),
+    }
+}
+
 fn required_arg<T>(command: &str, value: Option<T>, label: &str) -> Result<T, CliError> {
     value.ok_or_else(|| {
         CliError::usage(format!(
@@ -288,6 +454,20 @@ enum ReportFormat {
 struct ExportOptions {
     workspace_root: PathBuf,
     format: Option<ExportFormat>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ReviewPartitionsOptions {
+    workspace_root: PathBuf,
+    max_entries: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct JournalScreenOptions {
+    workspace_root: PathBuf,
+    platform: JournalPlatform,
+    submission_id: String,
+    manuscript_label: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -395,6 +575,9 @@ Usage:
   sourceright validate-csl [--json] <references.csl.json>
   sourceright report [--json|--mcp-resource] [.sourceright-directory]
   sourceright conflicts [.sourceright-directory]
+  sourceright citations <manuscript.txt> [.sourceright-directory]
+  sourceright review queue|partitions|import-decisions ...
+  sourceright journal-screen [options] [.sourceright-directory]
   sourceright export [--all|--format <format>] [.sourceright-directory]
   sourceright mcp [status|--status]
 
@@ -403,6 +586,9 @@ Commands:
   validate-csl  Validate canonical CSL JSON and print deterministic diagnostics.
   report        Print a reference integrity report from a .sourceright workspace.
   conflicts     Explain deterministic provider merge and conflict decisions.
+  citations     Reconcile in-text citations against canonical references.
+  review        Inspect review queues, partition work, and import decisions.
+  journal-screen  Produce a platform-neutral journal citation-screening report.
   export        Write clean reference exports from canonical CSL JSON.
   mcp           Show MCP implementation status; server mode is not implemented yet.
 
@@ -465,6 +651,38 @@ Behavior:
   High-confidence provider values may fill missing canonical fields.
   Disagreements with existing canonical values are preserved as review conflicts.";
 
+const CITATIONS_HELP: &str = "sourceright citations
+
+Reconcile in-text citations against canonical references.
+
+Usage:
+  sourceright citations <manuscript.txt> [.sourceright-directory]
+
+Output:
+  Prints a Markdown citation reconciliation report.";
+
+const REVIEW_HELP: &str = "sourceright review
+
+Inspect review queues, partition work, and import decisions.
+
+Usage:
+  sourceright review queue [.sourceright-directory]
+  sourceright review partitions [--size <n>] [.sourceright-directory]
+  sourceright review import-decisions <decisions.json> [.sourceright-directory]
+
+Decision import:
+  Expects a JSON array of {reference_id, decision, reviewer, decided_at, status, notes?}.";
+
+const JOURNAL_SCREEN_HELP: &str = "sourceright journal-screen
+
+Produce a platform-neutral journal citation-screening report.
+
+Usage:
+  sourceright journal-screen [--platform <platform>] [--submission-id <id>] [--manuscript <label>] [.sourceright-directory]
+
+Platforms:
+  generic-webhook, ojs, scholarone, editorial-manager, ejournalpress, manuscript-manager";
+
 const EXPORT_HELP: &str = "sourceright export
 
 Write clean reference exports from an existing workspace.
@@ -498,17 +716,23 @@ const MCP_STATUS: &str = "Sourceright MCP status
 server_mode: not-implemented
 transport: none
 server_started: false
-available_tools: 2
-available_resources: 2
+available_tools: 6
+available_resources: 4
 available_prompts: 0
 implemented_read_only_surfaces:
   - sourceright validate-csl <references.csl.json>
   - sourceright report --json [.sourceright-directory]
   - sourceright report --mcp-resource [.sourceright-directory]
+  - sourceright conflicts [.sourceright-directory]
+  - sourceright citations <manuscript.txt> [.sourceright-directory]
+  - sourceright review queue|partitions|import-decisions
+  - sourceright journal-screen [.sourceright-directory]
   - sourceright export --all [.sourceright-directory]
 resource_uris:
   - sourceright://reports/reference-integrity
+  - sourceright://reports/citation-reconciliation
   - sourceright://workspaces/local/review-queue
+  - sourceright://reports/journal-screening
 message: MCP server mode is planned but not implemented yet.";
 
 #[cfg(test)]
@@ -578,6 +802,37 @@ mod tests {
     }
 
     #[test]
+    fn review_partitions_accepts_size_and_workspace() {
+        let options = parse_review_partitions_args(VecDeque::from(vec![
+            "--size".to_string(),
+            "3".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse review partitions");
+
+        assert_eq!(options.max_entries, 3);
+        assert_eq!(options.workspace_root, PathBuf::from(".sourceright"));
+    }
+
+    #[test]
+    fn journal_screen_options_parse_platform_and_submission_metadata() {
+        let options = parse_journal_screen_args(VecDeque::from(vec![
+            "--platform".to_string(),
+            "ojs".to_string(),
+            "--submission-id".to_string(),
+            "SUB-1".to_string(),
+            "--manuscript".to_string(),
+            "manuscript.docx".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse journal screen args");
+
+        assert_eq!(options.platform, JournalPlatform::Ojs);
+        assert_eq!(options.submission_id, "SUB-1");
+        assert_eq!(options.manuscript_label, "manuscript.docx");
+    }
+
+    #[test]
     fn export_accepts_single_format_or_full_suite() {
         let one = parse_export_args(VecDeque::from(vec![
             "--format".to_string(),
@@ -632,7 +887,7 @@ mod tests {
     fn mcp_status_is_explicitly_not_a_server() {
         assert!(MCP_STATUS.contains("server_mode: not-implemented"));
         assert!(MCP_STATUS.contains("server_started: false"));
-        assert!(MCP_STATUS.contains("available_tools: 2"));
+        assert!(MCP_STATUS.contains("available_tools: 6"));
         assert!(MCP_STATUS.contains("sourceright://reports/reference-integrity"));
     }
 }

@@ -7,8 +7,13 @@ use thiserror::Error;
 use crate::conflict::ConflictResolutionReport;
 use crate::csl::{CslDocument, format_csl_json, validate_csl_json};
 use crate::export::{ExportArtifact, ExportFormat, export_document, export_suite};
+use crate::journal::{JournalPlatform, JournalScreeningReport, JournalScreeningRequest};
+use crate::reconcile::CitationReconciliationReport;
 use crate::report::{ReferenceReport, ReferenceReportJsonOutput, ReferenceReportResource};
-use crate::sidecar::{VerificationSidecar, format_verification_sidecar_json};
+use crate::review::{ReviewDecisionImport, ReviewImportReport, ReviewPartition};
+use crate::sidecar::{
+    VerificationSidecar, format_verification_sidecar_json, parse_verification_sidecar_json,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SourcerightWorkspace {
@@ -133,6 +138,56 @@ impl SourcerightWorkspace {
         let csl: CslDocument = read_json(&self.references_csl_json)?;
         let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
         Ok(crate::conflict::resolve_conflicts(&csl, &sidecar))
+    }
+
+    pub fn citation_reconciliation_report(
+        &self,
+        manuscript_text: &str,
+    ) -> Result<CitationReconciliationReport, WorkspaceError> {
+        let csl: CslDocument = read_json(&self.references_csl_json)?;
+        Ok(crate::reconcile::reconcile_citations(manuscript_text, &csl))
+    }
+
+    pub fn review_queue_partitions(
+        &self,
+        max_entries: usize,
+    ) -> Result<Vec<ReviewPartition>, WorkspaceError> {
+        let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
+        Ok(crate::review::partition_review_queue(&sidecar, max_entries))
+    }
+
+    pub fn import_review_decisions(
+        &self,
+        decisions: &[ReviewDecisionImport],
+    ) -> Result<ReviewImportReport, WorkspaceError> {
+        let input = fs::read_to_string(&self.verification_sidecar_json)?;
+        let mut sidecar = parse_verification_sidecar_json(&input)?;
+        let report = crate::review::apply_review_decisions(&mut sidecar, decisions);
+        fs::write(
+            &self.verification_sidecar_json,
+            format_verification_sidecar_json(&sidecar)?,
+        )?;
+        fs::write(&self.review_queue_jsonl, sidecar.to_review_queue_jsonl()?)?;
+        Ok(report)
+    }
+
+    pub fn journal_screening_report(
+        &self,
+        submission_id: String,
+        platform: JournalPlatform,
+        manuscript_label: String,
+    ) -> Result<JournalScreeningReport, WorkspaceError> {
+        let csl: CslDocument = read_json(&self.references_csl_json)?;
+        let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
+        Ok(crate::journal::screen_journal_submission(
+            JournalScreeningRequest {
+                submission_id,
+                platform,
+                manuscript_label,
+            },
+            &csl,
+            &sidecar,
+        ))
     }
 }
 
@@ -278,5 +333,75 @@ mod tests {
             Some("10.1000/example")
         );
         assert_eq!(report.decisions.len(), 1);
+    }
+
+    #[test]
+    fn citation_reconciliation_report_reads_workspace_references() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            r#"[{"id":"smith-2024","type":"article-journal","title":"Trial","author":[{"family":"Smith"}]}]"#,
+        )
+        .expect("write references");
+
+        let report = workspace
+            .citation_reconciliation_report("Text cites (Smith, 2024).")
+            .expect("reconcile citations");
+
+        assert_eq!(report.matches[0].reference_id, "smith-2024");
+    }
+
+    #[test]
+    fn review_decision_import_updates_sidecar_and_queue() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.verification_sidecar_json,
+            r#"{"schema_version":"sourceright.verification.v1","references":{"queued":{"review_status":"queued"}}}"#,
+        )
+        .expect("write sidecar");
+
+        let report = workspace
+            .import_review_decisions(&[ReviewDecisionImport {
+                reference_id: "queued".to_string(),
+                decision: "accepted".to_string(),
+                reviewer: "agent:test".to_string(),
+                decided_at: "2026-05-10T00:00:00Z".to_string(),
+                status: crate::sidecar::ReviewStatus::Resolved,
+                notes: None,
+            }])
+            .expect("import decisions");
+
+        assert_eq!(report.applied, 1);
+        assert_eq!(
+            fs::read_to_string(&workspace.review_queue_jsonl).expect("read queue"),
+            ""
+        );
+    }
+
+    #[test]
+    fn journal_screening_report_reads_workspace() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            r#"[{"id":"smith-2024","type":"article-journal","title":"Trial"}]"#,
+        )
+        .expect("write references");
+
+        let report = workspace
+            .journal_screening_report(
+                "SUB-1".to_string(),
+                JournalPlatform::Ojs,
+                "manuscript.docx".to_string(),
+            )
+            .expect("screen submission");
+
+        assert_eq!(report.submission_id, "SUB-1");
+        assert_eq!(report.platform, JournalPlatform::Ojs);
     }
 }

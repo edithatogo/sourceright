@@ -5,11 +5,15 @@ The initial Rust binary is planned around a small, stable command surface first:
 - `sourceright init`
 - `sourceright validate-csl`
 - `sourceright report`
+- `sourceright conflicts`
+- `sourceright citations`
+- `sourceright review`
+- `sourceright journal-screen`
 - `sourceright export`
 - `sourceright mcp`
 - `sourceright mcp status`
 
-`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes. `export` writes clean XML, ENW, RIS, BibLaTeX, and YAML outputs from the workspace CSL file.
+`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes. `conflicts` explains deterministic provider merge decisions. `citations` reconciles manuscript citations against reference-list entries. `review` inspects and imports manual review work. `journal-screen` produces a platform-neutral editorial screening report. `export` writes clean XML, ENW, RIS, BibLaTeX, and YAML outputs from the workspace CSL file.
 
 `mcp` remains a placeholder entry point for the future local MCP server. Plain `sourceright mcp` prints the current MCP status but exits non-zero because it does not start a server. `sourceright mcp status` and `sourceright mcp --status` print the same honest status output and exit successfully for scripts that need to check readiness.
 
@@ -18,6 +22,10 @@ Each implemented command supports command-specific help:
 - `sourceright init --help`
 - `sourceright validate-csl --help`
 - `sourceright report --help`
+- `sourceright conflicts --help`
+- `sourceright citations --help`
+- `sourceright review --help`
+- `sourceright journal-screen --help`
 - `sourceright export --help`
 - `sourceright mcp --help`
 
@@ -26,7 +34,6 @@ The planned workflow command family remains:
 - `sourceright extract`
 - `sourceright normalize`
 - `sourceright verify`
-- `sourceright review`
 - `sourceright pipeline`
 
 Commands that return structured data support deterministic JSON for the implemented surfaces. Human-readable output remains useful for local use, while CI and agent workflows can depend on stable machine-readable results, exit codes, and file paths. The CLI rejects unexpected extra arguments with command-specific usage hints.
@@ -62,6 +69,38 @@ sourceright report [--json|--mcp-resource] [.sourceright-directory]
 ```
 
 Default Markdown output renders the editor-facing audit report. `--json` emits compact `sourceright.reference_report.v1` JSON with summary counters and stable issue records. `--mcp-resource` wraps the JSON report as an MCP-ready resource envelope at `sourceright://reports/reference-integrity`.
+
+## `citations` contract
+
+Usage:
+
+```text
+sourceright citations <manuscript.txt> [.sourceright-directory]
+```
+
+The command reads manuscript text, detects initial author-date and numeric citation forms, matches them against workspace CSL references, and prints a Markdown report covering missing references, uncited references, duplicate citations, ambiguous author matches, and numeric-order issues.
+
+## `review` contract
+
+Usage:
+
+```text
+sourceright review queue [.sourceright-directory]
+sourceright review partitions [--size <n>] [.sourceright-directory]
+sourceright review import-decisions <decisions.json> [.sourceright-directory]
+```
+
+`queue` refreshes and prints `review-queue.jsonl`. `partitions` emits stable JSON partitions that can be handed to agents or subagents. `import-decisions` accepts a JSON array of review decisions, records them in `references.verification.json`, and refreshes the queue.
+
+## `journal-screen` contract
+
+Usage:
+
+```text
+sourceright journal-screen [--platform <platform>] [--submission-id <id>] [--manuscript <label>] [.sourceright-directory]
+```
+
+Supported platform labels are `generic-webhook`, `ojs`, `scholarone`, `editorial-manager`, `ejournalpress`, and `manuscript-manager`. The command emits `sourceright.journal_screening.v1` JSON for editorial workflow adapters.
 
 ## `export` contract
 

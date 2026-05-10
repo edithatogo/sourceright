@@ -12,7 +12,7 @@ document/text
   -> references.csl.json
   -> standardisation, cleaning, verification, enrichment
   -> references.verification.json and review-queue.jsonl
-  -> reference integrity report
+  -> conflict resolution, citation reconciliation, and reference integrity reports
   -> XML, ENW, RIS, BibLaTeX, and YAML exports
 ```
 
@@ -22,6 +22,7 @@ document/text
 - Provider-backed verification through Crossref first, then DOI resolution, DataCite, OpenAlex, PubMed/NCBI, and ORCID where useful.
 - In-text citation reconciliation against reference-list entries.
 - Manual review queues designed for human and agent/subagent verification.
+- Platform-neutral journal screening outputs for editorial workflows, with OJS as the first public integration target.
 - Reference reports for citation integrity auditing and AI-related citation-error signals.
 - CLI and MCP server interfaces over the same Rust core.
 - Future legal citation verification with a separate legal citation model and public legal citation APIs.
@@ -31,7 +32,7 @@ See [conductor/tracks.md](conductor/tracks.md) for the implementation track map.
 
 ## Current Status
 
-This is an initial scaffold. The production core is expected to be Rust. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
+The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, and journal screening contracts. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
 
 ## Planned Distribution
 

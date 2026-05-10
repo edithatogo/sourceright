@@ -28,9 +28,11 @@ Sourceright is reference verification infrastructure for documents, agents, and 
 4. Standardise, clean, deduplicate, and validate records.
 5. Query academic providers such as Crossref, DOI resolution, DataCite, OpenAlex, PubMed/NCBI, and ORCID where useful.
 6. Record provenance, confidence, provider matches, conflicts, and manual-review status in a verification sidecar.
-7. Reconcile in-text citations against the reference list.
-8. Move uncertain records to an agent/manual review queue.
-9. Export verified references to XML, ENW, RIS, BibLaTeX, and YAML.
+7. Resolve safe provider/canonical conflicts without silent overwrites.
+8. Reconcile in-text citations against the reference list.
+9. Move uncertain records to an agent/manual review queue.
+10. Generate reference integrity and journal screening reports.
+11. Export verified references to XML, ENW, RIS, BibLaTeX, and YAML.
 
 ## Success Criteria
 
@@ -38,5 +40,6 @@ Sourceright is reference verification infrastructure for documents, agents, and 
 - Sourceright can expose the same reference workflow over MCP.
 - A document can be converted into CSL JSON plus verification metadata and downstream export files.
 - Automated verification is deterministic, auditable, and safe to hand to agents for manual review.
+- Journals can consume the same local workflow as a citation-integrity screening contract without asserting that errors are AI-generated.
 - Legal citation and broader claim/source/provenance work are explicit roadmap tracks with clear boundaries.
 - The legacy `humanizer-next` workflow is audited before behaviour is ported, replaced, or discarded.
