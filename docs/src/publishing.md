@@ -19,6 +19,9 @@ The CLI should publish through:
 The crate metadata is prepared for crates.io and docs.rs. Real crates.io
 publication is handled by the manual `Publish crate` workflow, which should be
 protected by the `crates-io` environment and a `CARGO_REGISTRY_TOKEN` secret.
+The release workflow also runs `cargo package --locked`,
+`cargo publish --dry-run --locked`, and `cargo deny check advisories bans sources duplicates`
+before any GitHub release is cut.
 
 ## MCP
 
@@ -32,10 +35,32 @@ still useful for Rust installation but is not the MCP registry package target.
 The release workflow builds and pushes `ghcr.io/edithatogo/sourceright-mcp`
 on version tags. The manual `Publish MCP registry metadata` workflow uses
 GitHub OIDC and `mcp-publisher` to submit `server.json` after the image exists.
+The Docker image carries matching Open Containers metadata so registry scans
+can tie the container back to the source repository and declared MCP server
+name.
 
-Smithery URL publishing requires Streamable HTTP, so Sourceright should use a
-local MCPB bundle there until an HTTP transport exists. Glama can index an
-open-source repository when it can build, run, and introspect the MCP server.
+### Smithery
+
+Smithery URL publishing requires Streamable HTTP, so Sourceright should use an
+MCPB/local distribution path there until an HTTP transport exists.
+
+When Smithery URL publishing is ready, set up a project configuration and expose
+`sourceright mcp` under the required command surface. Until then, keep Smithery
+readiness documented as a future distribution mode.
+
+### Glama
+
+Glama indexing is driven by repository scanning, and ownership for org-hosted repos
+is typically asserted via `glama.json`.
+
+Add `glama.json` at repository root and keep the repository publicly discoverable
+with license metadata so Glama can complete install-readiness checks.
+
+Current Glama requirements to track:
+
+- `glama.json` present with valid schema and maintainer handle.
+- Public `LICENSE`.
+- MCP metadata discoverable from repository files and release artifacts.
 
 An npm launcher package is a later convenience layer only if MCP clients
 benefit from `npx` installation. It should invoke the Rust binary rather than
@@ -43,10 +68,24 @@ reimplementing reference verification.
 
 ## Documentation
 
-The current documentation stack is mdBook, built by GitHub Pages. Starlight on
-Astro is a reasonable later product-site option, but it should replace mdBook
-only if the migration includes navigation, deployment, and CI parity. Until
-then, mdBook remains the source of truth.
+The current documentation stack is the Starlight/Astro site under
+`docs-site/`, built by GitHub Pages. mdBook remains a fallback and historical
+reference, but the public docs target is now the Astro build.
+
+Track 30 owns the Starlight/Astro migration and deployment parity work. Keep
+the fallback mdBook surface only while it is useful for regression comparison.
+
+The operational sequence for live release work is documented in
+[Release Runbook](release-runbook.md), while the coverage floor and docs
+cutover notes are captured in [Coverage Reporting](coverage-reporting.md) and
+[Docs Cutover](docs-cutover.md).
+
+Tag creation with a `v*.*.*` release tag automatically starts the crate publish
+and MCP registry workflows. The manual dispatch entries remain for controlled
+retries.
+
+Documentation and contributor checks also run typo validation through
+`typos.toml`, so new public text should be reviewed with the same bar as code.
 
 ## Release Gates
 
@@ -60,3 +99,4 @@ Release candidates should pass:
 - Dependency policy checks.
 - Fixture-based benchmark checks.
 - MCP metadata and OCI image checks before registry submission.
+- Glama metadata validity (`glama.json`) and MCP distribution checks.

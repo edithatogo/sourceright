@@ -1,6 +1,6 @@
 {
   "id": "26-ci-supply-chain-hardening",
-  "status": "planned",
+  "status": "completed",
   "priority": "high",
   "owned_paths": [
     ".github/workflows/",

@@ -1,0 +1,37 @@
+schema_version: sourceright.benchmark_tasks.v1
+runner_status: scaffold_only
+live_network: false
+workspace_crate: false
+tasks:
+  - id: csl-validation-large
+    surface: validate-csl
+    fixture: fixtures/references-large.csl.json
+    baseline: baselines/csl-validation-large.txt
+    measures: [latency]
+    performance:
+      max_duration_ms: 1000
+      enforce: false
+  - id: sidecar-validation-large
+    surface: sidecar
+    fixture: fixtures/workspace-stress/references.verification.json
+    baseline: baselines/sidecar-validation-large.txt
+    measures: [latency]
+    performance:
+      max_duration_ms: 1200
+      enforce: false
+  - id: reference-report-large
+    surface: report
+    fixture: fixtures/workspace-stress
+    baseline: baselines/reference-report-large.json
+    measures: [latency]
+    performance:
+      max_duration_ms: 4000
+      enforce: true
+  - id: export-suite-large
+    surface: export
+    fixture: fixtures/workspace-stress
+    baseline: baselines/export-suite-large.txt
+    measures: [latency]
+    performance:
+      max_duration_ms: 4000
+      enforce: true

@@ -1,6 +1,6 @@
 {
   "id": "28-docs-and-discoverability",
-  "status": "planned",
+  "status": "completed",
   "priority": "medium",
   "owned_paths": [
     "docs/src/",

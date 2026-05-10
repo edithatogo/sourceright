@@ -16,4 +16,10 @@ name = "validate_csl"
 path = "fuzz_targets/validate_csl.rs"
 test = false
 doc = false
+
+[[bin]]
+name = "validate_sidecar"
+path = "fuzz_targets/validate_sidecar.rs"
+test = false
+doc = false
 bench = false

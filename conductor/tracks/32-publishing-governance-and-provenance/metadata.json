@@ -1,0 +1,20 @@
+{
+  "id": "32-publishing-governance-and-provenance",
+  "status": "completed",
+  "priority": "medium",
+  "owned_paths": [
+    ".github/workflows/release*.yml",
+    ".github/workflows/publish-crate.yml",
+    ".github/workflows/publish-mcp-registry.yml",
+    "renovate.json",
+    "Cargo.toml",
+    "docs/src/publishing.md",
+    "SECURITY.md",
+    "conductor/tracks/32-publishing-governance-and-provenance/"
+  ],
+  "dependencies": [
+    "25-release-and-registry-readiness",
+    "27-mcp-distribution",
+    "31-quality-assurance-hardening"
+  ]
+}

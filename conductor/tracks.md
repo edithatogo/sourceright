@@ -1,6 +1,6 @@
 # Sourceright Conductor Tracks
 
-Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; track 15 adds reporting as a first-class audit surface; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work; track 16 covers journal workflow integrations; tracks 17-29 cover deferred runtime, provider, sync, benchmark, recency-evidence, CLI, release, CI, MCP distribution, docs, and performance-hardening work from the ZIP audit and SOTA review.
+Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; track 15 adds reporting as a first-class audit surface; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work; track 16 covers journal workflow integrations; tracks 17-29 now cover the runtime, provider, sync, benchmark, recency-evidence, CLI, release, CI, MCP distribution, docs, and performance-hardening work that were deferred from the ZIP audit and SOTA review; tracks 30-32 extend the roadmap into a Starlight/Astro docs site, measurable QA hardening, and publication/provenance automation; tracks 33-35 finish the broader operational roadmap with live public publishing, measurable coverage evidence, and the final docs cutover.
 
 | Track | Status | Purpose |
 | --- | --- | --- |
@@ -29,8 +29,14 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 22 Benchmark runner automation | completed | Executable fixture-backed benchmark runner with deterministic baseline comparison. |
 | 23 Provider-backed recency evidence | completed | Retraction, correction, preprint, superseded-guideline, and age evidence surfaced in policy/reporting. |
 | 24 CLI entrypoint integration | completed | First-class CLI/help/docs integration for the bench and citation-sync entrypoints plus a final repo-wide consistency pass. |
-| 25 Release and registry readiness | planned | Crates.io, GitHub Release, package metadata, and registry-readiness gates before public publication. |
-| 26 CI supply-chain hardening | planned | Stricter CI gates for dependency risk, docs, command smoke tests, coverage, linting, and release provenance. |
-| 27 MCP distribution | planned | Registry-ready MCP metadata and packaging for official MCP registry, Smithery, Glama, and local stdio installs. |
-| 28 Docs and discoverability | planned | Docs build validation, command references, install pages, and a decision on mdBook versus Starlight/Astro. |
-| 29 Performance and robustness | planned | Profiling, deterministic benchmark thresholds, fuzzing, and larger fixture stress coverage. |
+| 25 Release and registry readiness | completed | Crates.io, GitHub Release, package metadata, and registry-readiness gates before public publication. |
+| 26 CI supply-chain hardening | completed | Stricter CI gates for dependency risk, docs, command smoke tests, coverage, linting, and release provenance. |
+| 27 MCP distribution | completed | Registry-ready MCP metadata and packaging for official MCP registry, Smithery, Glama, and local stdio installs. |
+| 28 Docs and discoverability | completed | Docs build validation, command references, install pages, and a decision on mdBook versus Starlight/Astro. |
+| 29 Performance and robustness | completed | Profiling, deterministic benchmark thresholds, fuzzing, and larger fixture stress coverage. |
+| 30 Starlight Astro docs site | completed | Replace mdBook with a Starlight/Astro documentation site with CI, search, and deployment parity. |
+| 31 Quality assurance hardening | completed | Coverage thresholds, mutation testing, property tests, load tests, edge tests, and end-to-end verification. |
+| 32 Publishing governance and provenance | completed | Release provenance, attestation, dependency governance, and registry publication automation. |
+| 33 Public release and registry submission | planned | Execute the live crates.io, GitHub Release, GHCR, official MCP registry, Smithery, and Glama publication sequence. |
+| 34 Coverage verification and reporting | planned | Make the 90 percent coverage floor measurable, reproducible, and visible in hooks, CI, and reports. |
+| 35 Public docs cutover and launch | planned | Finalise the Starlight/Astro docs migration, redirects, and archive cutover for the public site. |

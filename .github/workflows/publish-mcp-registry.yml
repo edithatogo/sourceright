@@ -1,6 +1,9 @@
 name: Publish MCP registry metadata
 
 on:
+  push:
+    tags:
+      - "v*.*.*"
   workflow_dispatch:
 
 permissions:
@@ -21,6 +24,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Validate server metadata
+        run: |
+          python3 - <<'PY'
+          import json
+          with open("server.json", "r", encoding="utf-8") as handle:
+              data = json.load(handle)
+          assert data["name"] == "io.github.edithatogo/sourceright"
+          assert data["packages"][0]["transport"]["type"] == "stdio"
+          PY
+      - name: Verify clean tree
+        shell: bash
+        run: test -z "$(git status --porcelain --untracked-files=no)"
       - name: Download mcp-publisher
         run: |
           curl -L "https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher

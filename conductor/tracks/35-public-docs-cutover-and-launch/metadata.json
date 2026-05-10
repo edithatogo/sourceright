@@ -1,0 +1,21 @@
+{
+  "id": "35-public-docs-cutover-and-launch",
+  "status": "planned",
+  "priority": "medium",
+  "owned_paths": [
+    "docs-site/",
+    "docs/src/",
+    "book.toml",
+    ".github/workflows/pages.yml",
+    ".github/workflows/ci.yml",
+    "README.md",
+    "docs/src/publishing.md",
+    "docs/src/SUMMARY.md",
+    "conductor/tracks/35-public-docs-cutover-and-launch/"
+  ],
+  "dependencies": [
+    "28-docs-and-discoverability",
+    "30-starlight-astro-docs-site",
+    "33-public-release-and-registry-submission"
+  ]
+}

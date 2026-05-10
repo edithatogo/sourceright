@@ -13,8 +13,15 @@ cargo test
 cargo check --locked
 cargo run --bin sourceright -- bench
 cargo package --locked
-cargo deny check advisories bans sources
+cargo publish --dry-run --locked
+cargo deny check advisories bans sources duplicates
+typos --config typos.toml
+cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 90
+cargo mutants --workspace
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 90
 ```
+
+To enable the checked-in Git hook, run `git config core.hooksPath .githooks`.
 
 ## Pull requests
 
@@ -24,6 +31,8 @@ cargo deny check advisories bans sources
 - Do not add live network requirements to unit tests; use mocks or recorded fixtures.
 - Run `cargo publish --dry-run --locked` before any crates.io publication.
 - Keep docs and command help aligned when adding public CLI or MCP surfaces.
+- Keep coverage above 90 percent and prefer property-based tests for invariants.
+- Keep the pre-commit hook and `scripts/verify.ps1` aligned with the same 90 percent floor used by CI.
 
 ## Legacy material
 

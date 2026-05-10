@@ -1,6 +1,7 @@
 # Summary
 
 - [Overview](index.md)
+- [Installation](installation.md)
 - [Reference Workflow](workflow.md)
 - [Legacy Audit](legacy-audit.md)
 - [CLI Plan](cli.md)
@@ -21,6 +22,9 @@
 - [Policy Engine](policy-engine.md)
 - [Style And Recency](style-and-recency.md)
 - [Publishing Plan](publishing.md)
+- [Release Runbook](release-runbook.md)
+- [Coverage Reporting](coverage-reporting.md)
+- [Docs Cutover](docs-cutover.md)
 - [Manual Review](manual-review.md)
 - [Legal Roadmap](legal-roadmap.md)
 - [Claim and Provenance Roadmap](claim-provenance-roadmap.md)

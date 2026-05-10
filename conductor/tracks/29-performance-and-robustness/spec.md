@@ -13,9 +13,17 @@ Move Sourceright from correctness-only fixture checks toward measured performanc
 
 ## Outputs
 
-- Benchmark metric guidance.
+- Benchmark metric guidance and explicit metric interpretation for correctness-vs-latency
+  tasks.
 - Scheduled/manual fuzz and performance workflows.
-- Larger fixture coverage.
+- Larger fixture coverage for parser, sidecar, reference-report, and export paths.
+
+## Measurement Model
+
+- `correctness` tasks compare against checked-in baselines.
+- `latency` tasks record `duration_ms` and can be paired with `performance` to
+  enforce a maximum duration.
+- `performance` gates are only applied when `latency` is included in `measures`.
 
 ## Boundaries
 

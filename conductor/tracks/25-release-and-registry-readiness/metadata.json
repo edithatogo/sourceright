@@ -1,6 +1,6 @@
 {
   "id": "25-release-and-registry-readiness",
-  "status": "planned",
+  "status": "completed",
   "priority": "high",
   "owned_paths": [
     "Cargo.toml",

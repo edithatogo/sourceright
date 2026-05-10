@@ -1,6 +1,9 @@
 name: Publish crate
 
 on:
+  push:
+    tags:
+      - "v*.*.*"
   workflow_dispatch:
 
 permissions:
@@ -20,8 +23,17 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Install Rust
         uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+      - name: Package crate
+        run: cargo package --locked
+      - name: Check dependency policy
+        run: cargo deny check advisories bans sources duplicates
       - name: Verify package
         run: cargo package --locked
+      - name: Verify clean tree
+        shell: bash
+        run: test -z "$(git status --porcelain --untracked-files=no)"
       - name: Publish dry run
         run: cargo publish --dry-run --locked
         env:

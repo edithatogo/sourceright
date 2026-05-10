@@ -2,6 +2,17 @@ name: Robustness
 
 on:
   workflow_dispatch:
+    inputs:
+      run_fuzz:
+        description: "Run parser fuzz smoke suite"
+        required: false
+        type: boolean
+        default: true
+      run_stress:
+        description: "Run stress benchmark suite"
+        required: false
+        type: boolean
+        default: true
   schedule:
     - cron: "53 4 * * 3"
 
@@ -13,8 +24,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  benchmark-smoke:
+    name: CLI benchmark smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+      - name: Run benchmark smoke
+        run: cargo run --locked --bin sourceright -- bench --json
+
   fuzz:
-    name: CSL fuzz smoke
+    if: github.event_name == 'schedule' || inputs.run_fuzz
+    name: parser fuzz smoke
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,4 +49,48 @@ jobs:
       - name: Install cargo-fuzz
         run: cargo install cargo-fuzz --locked
       - name: Run bounded fuzz smoke
-        run: cargo +nightly fuzz run validate_csl -- -max_total_time=30
+        run: |
+          cargo +nightly fuzz run validate_csl -- -max_total_time=30
+          cargo +nightly fuzz run validate_sidecar -- -max_total_time=30
+
+  stress-bench:
+    if: github.event_name == 'schedule' || inputs.run_stress
+    name: scheduled robustness gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+      - name: Run stress benchmarks and write metrics
+        run: |
+          mkdir -p sourceright-bench/metrics
+          cargo run --locked --bin sourceright -- bench --manifest sourceright-bench/tasks-stress.yaml --json \
+            > sourceright-bench/metrics/robustness-stress-$(date -u +%Y%m%d-%H%M%S).json
+          python3 - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+
+          path = sorted(Path("sourceright-bench/metrics").glob("robustness-stress-*.json"))[-1]
+          report = json.loads(path.read_text(encoding="utf-8"))
+
+          csv_path = path.with_suffix(".csv")
+          with csv_path.open("w", encoding="utf-8", newline="") as handle:
+              writer = csv.writer(handle)
+              writer.writerow(["id", "baseline", "passed", "duration_ms"])
+              for task in report.get("task_results", []):
+                  writer.writerow([
+                      task.get("id", ""),
+                      task.get("baseline", ""),
+                      task.get("passed", ""),
+                      task.get("duration_ms", ""),
+                  ])
+          PY
+      - name: Upload stress metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: robustness-stress-metrics
+          path: |
+            sourceright-bench/metrics/robustness-stress-*.json
+            sourceright-bench/metrics/robustness-stress-*.csv

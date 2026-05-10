@@ -1,0 +1,2 @@
+valid
+no diagnostics

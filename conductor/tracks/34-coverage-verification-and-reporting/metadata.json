@@ -1,0 +1,21 @@
+{
+  "id": "34-coverage-verification-and-reporting",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": [
+    ".github/workflows/coverage.yml",
+    ".githooks/pre-commit",
+    ".pre-commit-config.yaml",
+    "scripts/",
+    "tests/",
+    "README.md",
+    "CONTRIBUTING.md",
+    "docs/src/benchmarks.md",
+    "conductor/tracks/34-coverage-verification-and-reporting/"
+  ],
+  "dependencies": [
+    "26-ci-supply-chain-hardening",
+    "29-performance-and-robustness",
+    "31-quality-assurance-hardening"
+  ]
+}

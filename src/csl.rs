@@ -328,7 +328,7 @@ pub fn normalize_doi(value: &str) -> String {
     } else {
         value.as_str()
     };
-    value.trim_start_matches('/').to_ascii_lowercase()
+    value.trim_start_matches('/').trim().to_ascii_lowercase()
 }
 
 fn collapse_whitespace(value: &str) -> String {

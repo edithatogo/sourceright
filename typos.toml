@@ -1,0 +1,13 @@
+[default.extend-words]
+crate = "crate"
+GitHub = "GitHub"
+MCP = "MCP"
+mdBook = "mdBook"
+Zotero = "Zotero"
+
+[files]
+extend-exclude = [
+    "target",
+    "book",
+    "dist",
+]

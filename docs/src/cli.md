@@ -24,6 +24,10 @@ The initial Rust binary is planned around a small, stable command surface first:
 
 `mcp` starts the local MCP server. `sourceright mcp` brings up the server runtime, while `sourceright mcp status` and `sourceright mcp --status` remain read-only status checks for scripts that need to inspect readiness without starting a server. `sourceright mcp status --json` and `sourceright mcp --json` print a compact machine-readable readiness envelope. `sourceright mcp tools --json`, `sourceright mcp resources --json`, and `sourceright mcp prompts --json` remain read-only inspection surfaces. The server also exposes validated plugin discovery through `plugins.list` and `sourceright://plugins/registry`. The server also exposes dry-run write tools for workspace init, review decision import, and export writes; those tools default to plan mode and only mutate when `apply: true` is passed.
 
+The public release path assumes `cargo package --locked` and
+`cargo publish --dry-run --locked` have already passed before `cargo publish`
+is invoked manually.
+
 Each implemented command supports command-specific help:
 
 - `sourceright init --help`

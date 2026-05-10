@@ -6,6 +6,12 @@ on:
       - "Cargo.toml"
       - "Cargo.lock"
       - ".github/workflows/release*.yml"
+      - ".github/workflows/publish-crate.yml"
+      - "deny.toml"
+      - "typos.toml"
+      - "docs/src/**"
+      - "server.json"
+      - "Dockerfile"
       - "src/**"
   workflow_dispatch:
 
@@ -24,8 +30,12 @@ jobs:
         run: cargo build --release --locked
       - name: Package crate
         run: cargo package --locked
+      - name: Dependency policy
+        run: cargo deny check advisories bans sources duplicates
       - name: Publish dry run
         run: cargo publish --dry-run --locked
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
       - name: CLI release smoke
         shell: bash
         run: |

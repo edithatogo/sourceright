@@ -6,7 +6,8 @@
   "dependencyDashboard": false,
   "enabledManagers": [
     "cargo",
-    "github-actions"
+    "github-actions",
+    "npm"
   ],
   "labels": [
     "dependencies"

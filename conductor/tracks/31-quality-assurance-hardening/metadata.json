@@ -1,0 +1,20 @@
+{
+  "id": "31-quality-assurance-hardening",
+  "status": "completed",
+  "priority": "high",
+  "owned_paths": [
+    "Cargo.toml",
+    "tests/",
+    "src/",
+    "fuzz/",
+    ".github/workflows/coverage.yml",
+    ".github/workflows/mutation.yml",
+    ".github/workflows/robustness.yml",
+    "sourceright-bench/",
+    "conductor/tracks/31-quality-assurance-hardening/"
+  ],
+  "dependencies": [
+    "26-ci-supply-chain-hardening",
+    "29-performance-and-robustness"
+  ]
+}

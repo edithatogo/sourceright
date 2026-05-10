@@ -1,0 +1,145 @@
+{
+  "schema_version": "sourceright.verification.v1",
+  "references": {
+    "smith-2024": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-1",
+            "title": ["Benchmark reference 1"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2025": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-2",
+            "title": ["Benchmark reference 2"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2026": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-3",
+            "title": ["Benchmark reference 3"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2027": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-4",
+            "title": ["Benchmark reference 4"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2028": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-5",
+            "title": ["Benchmark reference 5"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2029": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-6",
+            "title": ["Benchmark reference 6"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2030": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-7",
+            "title": ["Benchmark reference 7"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2031": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-8",
+            "title": ["Benchmark reference 8"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2032": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-9",
+            "title": ["Benchmark reference 9"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "smith-2033": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark-10",
+            "title": ["Benchmark reference 10"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    }
+  }
+}

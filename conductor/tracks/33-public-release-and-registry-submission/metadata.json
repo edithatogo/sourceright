@@ -1,0 +1,23 @@
+{
+  "id": "33-public-release-and-registry-submission",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": [
+    ".github/workflows/release.yml",
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/publish-crate.yml",
+    ".github/workflows/publish-mcp-registry.yml",
+    "Dockerfile",
+    "server.json",
+    "glama.json",
+    "README.md",
+    "docs/src/publishing.md",
+    "SECURITY.md",
+    "conductor/tracks/33-public-release-and-registry-submission/"
+  ],
+  "dependencies": [
+    "25-release-and-registry-readiness",
+    "27-mcp-distribution",
+    "32-publishing-governance-and-provenance"
+  ]
+}

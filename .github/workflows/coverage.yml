@@ -24,4 +24,10 @@ jobs:
       - name: Install cargo-llvm-cov
         run: cargo install cargo-llvm-cov --locked
       - name: Generate coverage
-        run: cargo llvm-cov --locked --all-targets --summary-only
+        shell: bash
+        run: cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 90 | tee coverage-report.txt
+      - name: Upload coverage summary
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: coverage-summary
+          path: coverage-report.txt

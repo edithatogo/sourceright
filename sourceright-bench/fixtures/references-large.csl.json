@@ -1,0 +1,62 @@
+[
+  {
+    "id": "smith-2024",
+    "type": "article-journal",
+    "title": "Benchmark reference 1",
+    "DOI": "10.1234/benchmark-1"
+  },
+  {
+    "id": "smith-2025",
+    "type": "article-journal",
+    "title": "Benchmark reference 2",
+    "DOI": "10.1234/benchmark-2"
+  },
+  {
+    "id": "smith-2026",
+    "type": "article-journal",
+    "title": "Benchmark reference 3",
+    "DOI": "10.1234/benchmark-3"
+  },
+  {
+    "id": "smith-2027",
+    "type": "article-journal",
+    "title": "Benchmark reference 4",
+    "DOI": "10.1234/benchmark-4"
+  },
+  {
+    "id": "smith-2028",
+    "type": "article-journal",
+    "title": "Benchmark reference 5",
+    "DOI": "10.1234/benchmark-5"
+  },
+  {
+    "id": "smith-2029",
+    "type": "article-journal",
+    "title": "Benchmark reference 6",
+    "DOI": "10.1234/benchmark-6"
+  },
+  {
+    "id": "smith-2030",
+    "type": "article-journal",
+    "title": "Benchmark reference 7",
+    "DOI": "10.1234/benchmark-7"
+  },
+  {
+    "id": "smith-2031",
+    "type": "article-journal",
+    "title": "Benchmark reference 8",
+    "DOI": "10.1234/benchmark-8"
+  },
+  {
+    "id": "smith-2032",
+    "type": "article-journal",
+    "title": "Benchmark reference 9",
+    "DOI": "10.1234/benchmark-9"
+  },
+  {
+    "id": "smith-2033",
+    "type": "article-journal",
+    "title": "Benchmark reference 10",
+    "DOI": "10.1234/benchmark-10"
+  }
+]

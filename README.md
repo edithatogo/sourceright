@@ -56,8 +56,27 @@ logs or remote fixture snapshots.
 - `sourceright mcp` server mode.
 - GitHub Releases with platform binaries, checksums, and provenance artifacts.
 - crates.io package after release dry runs pass.
-- OCI MCP image metadata for the official MCP Registry.
+- OCI MCP image metadata for the official MCP Registry via `server.json` +
+  `Dockerfile` labels.
+- Smithery readiness (Streamable HTTP first; MCPB/local path until then).
+- Glama ownership metadata via `glama.json`.
 - Thin adapter packages only where native tool ecosystems require them.
+- Track 30 owns the Starlight/Astro docs-site migration and Pages deployment.
+- Track 31 is reserved for coverage, mutation, property, load, edge, integration, and end-to-end test hardening.
+- Track 32 is reserved for publishing governance and provenance automation.
+- Track 33 covers live publication to crates.io, GitHub Releases, and registries.
+- Track 34 covers coverage measurement and reporting until the 90 percent floor is reproducible.
+- Track 35 covers the final public docs cutover and launch.
+- See `docs/src/release-runbook.md`, `docs/src/coverage-reporting.md`, and `docs/src/docs-cutover.md` for the operational sequence behind those tracks.
+- `v*.*.*` tags now auto-start the crate publish and MCP registry workflows.
+
+### Distribution metadata files
+
+- `server.json` (`io.github.edithatogo/sourceright`)
+- `Dockerfile` labels:
+  - `io.modelcontextprotocol.server.name`
+  - `org.opencontainers.image.source`
+- `glama.json`
 
 ## Development
 
@@ -68,8 +87,16 @@ cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo run --bin sourceright -- bench
 cargo package --locked
-cargo deny check advisories bans sources
+cargo publish --dry-run --locked
+cargo deny check advisories bans sources duplicates
+typos --config typos.toml
+cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 90
+cargo mutants --workspace
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 90
 ```
+
+Coverage stays gated above 90 percent in CI and in the checked-in pre-commit
+hook.
 
 ## License
 

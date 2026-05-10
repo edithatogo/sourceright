@@ -33,6 +33,26 @@ tasks:
     fixture: fixtures/workspace
     baseline: baselines/export-suite-basic.txt
     measures: [correctness]
+  - id: csl-validation-stress
+    surface: validate-csl
+    fixture: fixtures/references-large.csl.json
+    baseline: baselines/csl-validation-stress.txt
+    measures: [correctness, latency]
+  - id: sidecar-validation-stress
+    surface: sidecar
+    fixture: fixtures/references-large.verification.json
+    baseline: baselines/sidecar-validation-stress.txt
+    measures: [correctness, latency]
+  - id: reference-report-stress
+    surface: report
+    fixture: fixtures/stress-workspace
+    baseline: baselines/reference-report-stress.json
+    measures: [correctness, latency]
+  - id: export-suite-stress
+    surface: export
+    fixture: fixtures/stress-workspace
+    baseline: baselines/export-suite-stress.txt
+    measures: [correctness, latency]
   - id: legal-citation-basic
     surface: legal
     fixture: fixtures/legal-text.txt

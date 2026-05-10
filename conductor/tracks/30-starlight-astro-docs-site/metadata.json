@@ -1,0 +1,17 @@
+{
+  "id": "30-starlight-astro-docs-site",
+  "status": "completed",
+  "priority": "high",
+  "owned_paths": [
+    "docs/src/",
+    "book.toml",
+    "README.md",
+    "docs-site/",
+    ".github/workflows/pages.yml",
+    "conductor/tracks/30-starlight-astro-docs-site/"
+  ],
+  "dependencies": [
+    "28-docs-and-discoverability",
+    "25-release-and-registry-readiness"
+  ]
+}
