@@ -1,4 +1,5 @@
 pub mod cleaning;
+pub mod conflict;
 pub mod csl;
 pub mod export;
 pub mod intake;
@@ -8,6 +9,10 @@ pub mod sidecar;
 pub mod workspace;
 
 pub use cleaning::{CleaningReport, CleaningTransformation, DuplicateGroup, standardize_document};
+pub use conflict::{
+    ConflictResolutionAction, ConflictResolutionDecision, ConflictResolutionPolicy,
+    ConflictResolutionReport, resolve_conflicts, resolve_conflicts_with_policy,
+};
 pub use csl::{
     CslDocument, CslItem, CslMigrationChange, CslMigrationReport, ValidationDiagnostic,
     format_csl_json, migrate_csl_document, migrate_csl_json, normalize_doi, normalize_identifier,

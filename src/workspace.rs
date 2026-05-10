@@ -4,6 +4,7 @@ use std::path::{Path, PathBuf};
 
 use thiserror::Error;
 
+use crate::conflict::ConflictResolutionReport;
 use crate::csl::{CslDocument, format_csl_json, validate_csl_json};
 use crate::export::{ExportArtifact, ExportFormat, export_document, export_suite};
 use crate::report::{ReferenceReport, ReferenceReportJsonOutput, ReferenceReportResource};
@@ -127,6 +128,12 @@ impl SourcerightWorkspace {
         let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
         Ok(ReferenceReport::from_documents(&csl, &sidecar))
     }
+
+    pub fn conflict_resolution_report(&self) -> Result<ConflictResolutionReport, WorkspaceError> {
+        let csl: CslDocument = read_json(&self.references_csl_json)?;
+        let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
+        Ok(crate::conflict::resolve_conflicts(&csl, &sidecar))
+    }
 }
 
 fn write_text_if_missing(path: &Path, value: &str) -> Result<(), WorkspaceError> {
@@ -244,5 +251,32 @@ mod tests {
                 .expect("read ris")
                 .contains("DO  - 10.1000/example")
         );
+    }
+
+    #[test]
+    fn conflict_resolution_report_reads_workspace_evidence() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            r#"[{"id":"smith-2024","type":"article-journal","title":"Trial"}]"#,
+        )
+        .expect("write references");
+        fs::write(
+            &workspace.verification_sidecar_json,
+            r#"{"schema_version":"sourceright.verification.v1","references":{"smith-2024":{"provider_candidates":[{"provider":"crossref","confidence":0.98,"retrieved_at":"2026-05-10T00:00:00Z","data":{"DOI":"10.1000/example"}}],"review_status":"not_required"}}}"#,
+        )
+        .expect("write sidecar");
+
+        let report = workspace
+            .conflict_resolution_report()
+            .expect("read conflict report");
+
+        assert_eq!(
+            report.document.items[0].doi.as_deref(),
+            Some("10.1000/example")
+        );
+        assert_eq!(report.decisions.len(), 1);
     }
 }

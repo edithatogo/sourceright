@@ -89,6 +89,22 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 }
             }
         }
+        Some("conflicts") => {
+            if maybe_print_command_help("conflicts", &mut args, CONFLICTS_HELP)? {
+                return Ok(());
+            }
+
+            let workspace_root = args
+                .pop_front()
+                .map(PathBuf::from)
+                .unwrap_or_else(|| PathBuf::from(".sourceright"));
+            reject_extra_args("conflicts", &args)?;
+
+            let report = SourcerightWorkspace::from_root(workspace_root)
+                .conflict_resolution_report()
+                .map_err(|error| error.to_string())?;
+            println!("{}", report.to_markdown());
+        }
         Some("export") => {
             if maybe_print_command_help("export", &mut args, EXPORT_HELP)? {
                 return Ok(());
@@ -378,6 +394,7 @@ Usage:
   sourceright init [document-or-directory]
   sourceright validate-csl [--json] <references.csl.json>
   sourceright report [--json|--mcp-resource] [.sourceright-directory]
+  sourceright conflicts [.sourceright-directory]
   sourceright export [--all|--format <format>] [.sourceright-directory]
   sourceright mcp [status|--status]
 
@@ -385,6 +402,7 @@ Commands:
   init          Create or confirm a local .sourceright workspace.
   validate-csl  Validate canonical CSL JSON and print deterministic diagnostics.
   report        Print a reference integrity report from a .sourceright workspace.
+  conflicts     Explain deterministic provider merge and conflict decisions.
   export        Write clean reference exports from canonical CSL JSON.
   mcp           Show MCP implementation status; server mode is not implemented yet.
 
@@ -431,6 +449,21 @@ Output:
   Markdown by default.
   `--json` prints compact `sourceright.reference_report.v1` JSON.
   `--mcp-resource` prints the MCP-ready JSON resource envelope.";
+
+const CONFLICTS_HELP: &str = "sourceright conflicts
+
+Explain deterministic provider merge and conflict decisions.
+
+Usage:
+  sourceright conflicts [.sourceright-directory]
+
+Default:
+  Uses `.sourceright` when no directory is supplied.
+
+Behavior:
+  Prints a Markdown conflict-resolution report.
+  High-confidence provider values may fill missing canonical fields.
+  Disagreements with existing canonical values are preserved as review conflicts.";
 
 const EXPORT_HELP: &str = "sourceright export
 
@@ -530,6 +563,18 @@ mod tests {
         assert_eq!(json.format, ReportFormat::Json);
         assert_eq!(resource.format, ReportFormat::McpResource);
         assert_eq!(json.workspace_root, PathBuf::from(".sourceright"));
+    }
+
+    #[test]
+    fn conflicts_command_rejects_extra_arguments() {
+        let args = VecDeque::from(vec!["one".to_string()]);
+        let error = reject_extra_args("conflicts", &args).expect_err("unexpected argument");
+
+        assert!(
+            error
+                .to_string()
+                .contains("unexpected argument for `conflicts`")
+        );
     }
 
     #[test]

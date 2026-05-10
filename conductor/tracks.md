@@ -12,7 +12,7 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 05 Verification sidecar | completed | Store provenance, provider matches, confidence, conflicts, and review state. |
 | 06 Academic providers | completed | Normalize Crossref, DOI resolver, DataCite, OpenAlex, PubMed/NCBI, and ORCID provider evidence. |
 | 07 Standardisation cleaning | completed | Normalize fields, identifiers, duplicates, names, containers, and style-independent reference data. |
-| 08 Conflict resolution | planned | Deterministic provider merge and unresolved-conflict workflow. |
+| 08 Conflict resolution | completed | Deterministic provider merge, unresolved-conflict preservation, and explainable conflict reports. |
 | 09 In-text citation reconciliation | planned | Match body citations to references and report missing/uncited/order issues. |
 | 10 Manual agent review | planned | Agent/subagent manual verification queues after automated checks. |
 | 11 Export suite | completed | XML, ENW, RIS, BibLaTeX, and YAML outputs with validation. |
