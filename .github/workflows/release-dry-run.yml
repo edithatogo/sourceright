@@ -24,3 +24,10 @@ jobs:
         run: cargo build --release --locked
       - name: Package crate
         run: cargo package --locked
+      - name: Publish dry run
+        run: cargo publish --dry-run --locked
+      - name: CLI release smoke
+        shell: bash
+        run: |
+          cargo run --release --locked --bin sourceright -- --version
+          cargo run --release --locked --bin sourceright -- bench

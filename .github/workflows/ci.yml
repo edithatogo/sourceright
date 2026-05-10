@@ -37,6 +37,14 @@ jobs:
         run: cargo test --locked
       - name: Check
         run: cargo check --locked
+      - name: CLI smoke
+        shell: bash
+        run: |
+          cargo run --locked --bin sourceright -- --version
+          cargo run --locked --bin sourceright -- --help
+          cargo run --locked --bin sourceright -- mcp --json
+          cargo run --locked --bin sourceright -- plugins validate --json
+          cargo run --locked --bin sourceright -- bench
 
   docs:
     name: Docs build
@@ -50,3 +58,18 @@ jobs:
         run: cargo install mdbook --locked
       - name: Build docs
         run: mdbook build
+      - name: Rust docs
+        run: RUSTDOCFLAGS="-D warnings" cargo doc --locked --no-deps
+
+  dependency-policy:
+    name: Dependency policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+      - name: Check dependency policy
+        run: cargo deny check advisories bans sources

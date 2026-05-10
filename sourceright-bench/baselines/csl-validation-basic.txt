@@ -1,1 +1,2 @@
 valid
+no diagnostics

@@ -1,0 +1,7 @@
+{
+  "id": "21-citation-manager-live-sync",
+  "status": "completed",
+  "priority": "medium",
+  "owned_paths": ["src/", "docs/src/exports.md", "docs/src/citation-manager-sync.md", "conductor/tracks/21-citation-manager-live-sync/"],
+  "dependencies": ["11-export-suite", "18-mcp-write-tools-audit-dry-run"]
+}

@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::csl::{CslDocument, CslItem};
+use crate::sidecar::{ProviderCandidate, VerificationSidecar};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SourcerightPolicy {
@@ -74,6 +75,58 @@ pub enum PolicyIssueSeverity {
 }
 
 pub fn evaluate_policy(document: &CslDocument, policy: &SourcerightPolicy) -> PolicyReport {
+    let issues = base_policy_issues(document, policy);
+    PolicyReport {
+        schema_version: "sourceright.policy_report.v1".to_string(),
+        policy_id: policy.policy_id.clone(),
+        issues,
+    }
+}
+
+pub fn evaluate_policy_with_verification(
+    document: &CslDocument,
+    sidecar: &VerificationSidecar,
+    policy: &SourcerightPolicy,
+) -> PolicyReport {
+    let mut issues = base_policy_issues(document, policy);
+    issues.extend(provider_backed_recency_issues(document, sidecar, policy));
+
+    PolicyReport {
+        schema_version: "sourceright.policy_report.v1".to_string(),
+        policy_id: policy.policy_id.clone(),
+        issues,
+    }
+}
+
+pub fn provider_backed_recency_issues(
+    document: &CslDocument,
+    sidecar: &VerificationSidecar,
+    policy: &SourcerightPolicy,
+) -> Vec<PolicyIssue> {
+    let mut issues = Vec::new();
+    let mut seen = std::collections::BTreeSet::<(String, String)>::new();
+
+    for item in &document.items {
+        let Some(verification) = sidecar.references.get(&item.id) else {
+            continue;
+        };
+        for candidate in &verification.provider_candidates {
+            for finding in candidate_recency_findings(&item.id, candidate, policy) {
+                let key = (
+                    finding.reference_id.clone().unwrap_or_default(),
+                    finding.code.clone(),
+                );
+                if seen.insert(key) {
+                    issues.push(finding);
+                }
+            }
+        }
+    }
+
+    issues
+}
+
+fn base_policy_issues(document: &CslDocument, policy: &SourcerightPolicy) -> Vec<PolicyIssue> {
     let mut issues = Vec::new();
 
     if policy.schema_version != "sourceright.policy.v1" {
@@ -129,10 +182,128 @@ pub fn evaluate_policy(document: &CslDocument, policy: &SourcerightPolicy) -> Po
         });
     }
 
-    PolicyReport {
-        schema_version: "sourceright.policy_report.v1".to_string(),
-        policy_id: policy.policy_id.clone(),
-        issues,
+    issues
+}
+
+fn candidate_recency_findings(
+    reference_id: &str,
+    candidate: &ProviderCandidate,
+    policy: &SourcerightPolicy,
+) -> Vec<PolicyIssue> {
+    let payload = candidate.data.to_string().to_ascii_lowercase();
+    let mut findings = Vec::new();
+
+    if payload.contains("retract") {
+        findings.push(PolicyIssue {
+            severity: PolicyIssueSeverity::Error,
+            reference_id: Some(reference_id.to_string()),
+            code: "policy.recency.provider.retraction".to_string(),
+            message: "Provider evidence suggests the record is retracted and should be reviewed."
+                .to_string(),
+        });
+    }
+
+    if payload.contains("expression of concern") || payload.contains("expressions of concern") {
+        findings.push(PolicyIssue {
+            severity: PolicyIssueSeverity::Warning,
+            reference_id: Some(reference_id.to_string()),
+            code: "policy.recency.provider.expression_of_concern".to_string(),
+            message:
+                "Provider evidence reports an expression of concern and should be treated conservatively."
+                    .to_string(),
+        });
+    }
+
+    if payload.contains("erratum") || payload.contains("correction") {
+        findings.push(PolicyIssue {
+            severity: PolicyIssueSeverity::Info,
+            reference_id: Some(reference_id.to_string()),
+            code: "policy.recency.provider.correction".to_string(),
+            message:
+                "Provider evidence reports a correction or erratum; review the linked record for context."
+                    .to_string(),
+        });
+    }
+
+    if payload.contains("preprint") {
+        findings.push(PolicyIssue {
+            severity: PolicyIssueSeverity::Info,
+            reference_id: Some(reference_id.to_string()),
+            code: "policy.recency.provider.preprint".to_string(),
+            message:
+                "Provider evidence identifies a preprint record rather than a final published version."
+                    .to_string(),
+        });
+    }
+
+    if payload.contains("supersed") {
+        findings.push(PolicyIssue {
+            severity: PolicyIssueSeverity::Warning,
+            reference_id: Some(reference_id.to_string()),
+            code: "policy.recency.provider.superseded_guideline".to_string(),
+            message: "Provider evidence suggests this guideline or record has been superseded."
+                .to_string(),
+        });
+    }
+
+    if let Some(year) = candidate_publication_year(&candidate.data)
+        && policy.recency.current_year.saturating_sub(year)
+            > policy.recency.publication_age_warning_years.unwrap_or(0)
+    {
+        findings.push(PolicyIssue {
+            severity: PolicyIssueSeverity::Warning,
+            reference_id: Some(reference_id.to_string()),
+            code: "policy.recency.provider.publication_age".to_string(),
+            message: format!(
+                "Provider evidence indicates a publication year of {year}, which is older than the configured warning threshold."
+            ),
+        });
+    }
+
+    findings
+}
+
+fn candidate_publication_year(value: &serde_json::Value) -> Option<u16> {
+    match value {
+        serde_json::Value::Object(map) => {
+            for key in ["publication_year", "publicationYear", "year"] {
+                if let Some(year) = map.get(key).and_then(value_to_year) {
+                    return Some(year);
+                }
+            }
+            for nested_key in ["published", "issued", "publication", "date"] {
+                if let Some(year) = map.get(nested_key).and_then(candidate_publication_year) {
+                    return Some(year);
+                }
+            }
+            for nested in map.values() {
+                if let Some(year) = candidate_publication_year(nested) {
+                    return Some(year);
+                }
+            }
+            None
+        }
+        serde_json::Value::Array(items) => items
+            .iter()
+            .find_map(candidate_publication_year)
+            .or_else(|| items.first().and_then(value_to_year)),
+        _ => value_to_year(value),
+    }
+}
+
+fn value_to_year(value: &serde_json::Value) -> Option<u16> {
+    match value {
+        serde_json::Value::Number(number) => {
+            number.as_u64().and_then(|year| u16::try_from(year).ok())
+        }
+        serde_json::Value::String(text) => text
+            .trim()
+            .parse::<u16>()
+            .ok()
+            .filter(|year| (1000..=3000).contains(year)),
+        serde_json::Value::Array(items) => items.iter().find_map(value_to_year),
+        serde_json::Value::Object(map) => map.values().find_map(value_to_year),
+        serde_json::Value::Bool(_) | serde_json::Value::Null => None,
     }
 }
 
@@ -173,6 +344,7 @@ mod tests {
     use serde_json::json;
 
     use super::*;
+    use crate::sidecar::{ProviderCandidate, ReferenceVerification, VerificationSidecar};
 
     #[test]
     fn doi_policy_warns_for_doi_capable_reference_without_doi() {
@@ -213,6 +385,51 @@ mod tests {
                 .issues
                 .iter()
                 .any(|issue| issue.code == "policy.recency.publication_age")
+        );
+    }
+
+    #[test]
+    fn provider_backed_recency_evidence_is_classified() {
+        let document = CslDocument {
+            items: vec![CslItem {
+                id: "retracted-2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Retracted paper".to_string()),
+                doi: Some("10.1234/retracted".to_string()),
+                extra: Default::default(),
+            }],
+        };
+        let mut sidecar = VerificationSidecar::empty();
+        sidecar.references.insert(
+            "retracted-2024".to_string(),
+            ReferenceVerification {
+                provider_candidates: vec![ProviderCandidate {
+                    provider: "crossref".to_string(),
+                    confidence: 0.9,
+                    retrieved_at: "2026-05-10T00:00:00Z".to_string(),
+                    data: json!({"status": "retracted", "publication_year": 2012}),
+                }],
+                ..ReferenceVerification::default()
+            },
+        );
+
+        let report = evaluate_policy_with_verification(
+            &document,
+            &sidecar,
+            &SourcerightPolicy::journal_vancouver(),
+        );
+
+        assert!(
+            report
+                .issues
+                .iter()
+                .any(|issue| issue.code == "policy.recency.provider.retraction")
+        );
+        assert!(
+            report
+                .issues
+                .iter()
+                .any(|issue| issue.code == "policy.recency.provider.publication_age")
         );
     }
 }

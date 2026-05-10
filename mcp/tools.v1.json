@@ -1,6 +1,6 @@
 {
   "schema_version": "sourceright.mcp_tools.v1",
-  "server_status": "planned_read_only",
+  "server_status": "local_stdio_server",
   "tools": [
     {
       "name": "mcp.status",
@@ -85,6 +85,41 @@
         "format": "ris"
       },
       "output_contract": "sourceright.export_manifest.v1"
+    },
+    {
+      "name": "plugins.list",
+      "read_only": true,
+      "input": {},
+      "output_contract": "sourceright.plugin_registry_report.v1"
+    },
+    {
+      "name": "workspace.init",
+      "read_only": false,
+      "input": {
+        "workspace": ".sourceright",
+        "apply": false
+      },
+      "output_contract": "sourceright.mcp_write_plan.v1"
+    },
+    {
+      "name": "review.import_decisions",
+      "read_only": false,
+      "input": {
+        "workspace": ".sourceright",
+        "apply": false,
+        "decisions": []
+      },
+      "output_contract": "sourceright.mcp_write_plan.v1"
+    },
+    {
+      "name": "exports.write",
+      "read_only": false,
+      "input": {
+        "workspace": ".sourceright",
+        "apply": false,
+        "format": "ris"
+      },
+      "output_contract": "sourceright.mcp_write_plan.v1"
     }
   ]
 }

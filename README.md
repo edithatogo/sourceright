@@ -34,12 +34,29 @@ See [conductor/tracks.md](conductor/tracks.md) for the implementation track map.
 
 The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
 
+## CLI
+
+```text
+sourceright init [document-or-directory]
+sourceright validate-csl [--json] <references.csl.json>
+sourceright report [--json|--mcp-resource] [.sourceright-directory]
+sourceright export --preview --all [.sourceright-directory]
+sourceright bench [--json]
+sourceright citation-sync [--preview|--apply] [.sourceright-directory]
+sourceright mcp
+```
+
+`bench` runs the checked-in fixture suite without live providers. `citation-sync`
+defaults to preview mode and requires explicit `--apply` before writing audit
+logs or remote fixture snapshots.
+
 ## Planned Distribution
 
 - `sourceright` CLI binary.
 - `sourceright mcp` server mode.
 - GitHub Releases with platform binaries, checksums, and provenance artifacts.
-- crates.io package once the public API is stable.
+- crates.io package after release dry runs pass.
+- OCI MCP image metadata for the official MCP Registry.
 - Thin adapter packages only where native tool ecosystems require them.
 
 ## Development
@@ -49,6 +66,9 @@ cargo check
 cargo test
 cargo fmt --check
 cargo clippy --all-targets -- -D warnings
+cargo run --bin sourceright -- bench
+cargo package --locked
+cargo deny check advisories bans sources
 ```
 
 ## License

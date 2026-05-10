@@ -44,6 +44,25 @@ Each future adapter should add success, no-match, ambiguous-match, rate-limit,
 outage, malformed-response, and conflicting-metadata fixtures before any live
 network behavior is enabled.
 
+## Live Adapter Policy
+
+Live provider adapters are opt-in. The Rust core now exposes live smoke helpers
+for Unpaywall, OpenCitations, arXiv, Europe PMC, repository records, and a
+generic bring-your-own-key hook. They default to skipped unless both
+`SOURCERIGHT_LIVE_PROVIDERS=1` and `SOURCERIGHT_LIVE_PROVIDER_SMOKE=1` are set.
+
+Required or optional credentials are read from:
+
+- `UNPAYWALL_EMAIL`
+- `OPENCITATIONS_ACCESS_TOKEN`
+- `EUROPE_PMC_EMAIL`
+- `SOURCERIGHT_REPOSITORY_PMID`
+- `SOURCERIGHT_BYO_KEY`
+
+The adapters write only provider evidence and do not touch canonical CSL JSON.
+Default tests stay fixture-backed and the live smoke helpers report skipped
+states with explicit reasons when credentials or opt-in flags are missing.
+
 ## Merge Rule
 
 Provider results are candidates with provenance. They must not silently overwrite canonical references. Any proposed change to canonical fields must be represented as a sidecar candidate, conflict, or explicit merge decision with source attribution.

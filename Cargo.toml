@@ -2,19 +2,43 @@
 name = "sourceright"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.94"
 description = "Reference verification infrastructure for academic and legal citation workflows."
 license = "MIT OR Apache-2.0"
-publish = false
 repository = "https://github.com/edithatogo/sourceright"
 homepage = "https://edithatogo.github.io/sourceright/"
 documentation = "https://edithatogo.github.io/sourceright/"
 readme = "README.md"
 keywords = ["citations", "references", "csl", "mcp", "verification"]
 categories = ["command-line-utilities", "text-processing"]
+include = [
+    "src/**",
+    "mcp/**",
+    "plugins/**",
+    "schemas/**",
+    "examples/**",
+    "fixtures/**",
+    "provider-fixtures/**",
+    "sourceright-bench/**",
+    "docs/src/**",
+    "book.toml",
+    "README.md",
+    "LICENSE-APACHE",
+    "LICENSE-MIT",
+    "CITATION.cff",
+    "SECURITY.md",
+]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
+serde_yaml = "0.9.34"
+reqwest = { version = "0.12.24", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+toml = "0.8.19"
 thiserror = "2.0.17"
 
 [dev-dependencies]

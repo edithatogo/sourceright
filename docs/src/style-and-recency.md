@@ -16,3 +16,7 @@ Retraction, correction, superseded-guideline, and repository-deposit checks need
 provider-backed evidence before they should affect reports. Until then, they
 belong in policy documents and plugin manifests rather than silent automated
 decisions.
+
+Once provider-backed evidence is available, Sourceright can surface it as
+editor-facing recency and integrity signals while keeping the canonical CSL
+record unchanged.

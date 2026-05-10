@@ -1,12 +1,17 @@
 # MCP Server Plan
 
-`sourceright mcp` is currently a status surface. It does not start a server.
+`sourceright mcp` starts the local server runtime.
 
-The next MCP increment should be read-only, local-file based, and contract-first.
-The manifests under `mcp/` define the initial tools, resources, and prompts
-without implying that transport is implemented.
+Read-only inspection commands stay separate from server startup. `sourceright
+mcp status` and the manifest subcommands are for status and contract
+inspection, not for mutating state or changing transport behavior.
 
-Initial read-only tools:
+The next MCP increment should stay local-file based, contract-first, and
+auditable. The manifests under `mcp/` define the current tools, resources, and
+prompts, including dry-run write tools that require explicit `apply: true`
+before they mutate workspace files.
+
+Current read-only tools:
 
 - validate CSL JSON;
 - generate a reference integrity report;
@@ -17,6 +22,7 @@ Initial read-only tools:
 - build a claim/source provenance report;
 - evaluate deterministic style and recency policy checks;
 - preview export artifacts.
+- discover validated plugin manifests and execution gates.
 
-Write-capable tools should wait until schema validation, audit logs, dry-run
-semantics, and manual review workflows are stable.
+Write-capable tools should remain dry-run by default, require explicit apply,
+and keep audit logs alongside any workspace mutation.

@@ -1,0 +1,7 @@
+{
+  "id": "22-benchmark-runner-automation",
+  "status": "completed",
+  "priority": "medium",
+  "owned_paths": ["sourceright-bench/", "fixtures/", "docs/src/benchmarks.md", "conductor/tracks/22-benchmark-runner-automation/"],
+  "dependencies": ["11-export-suite", "13-legal-citations", "14-claim-source-provenance", "16-journal-workflow-integrations"]
+}

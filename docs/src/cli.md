@@ -13,13 +13,16 @@ The initial Rust binary is planned around a small, stable command surface first:
 - `sourceright provenance`
 - `sourceright policy`
 - `sourceright export`
+- `sourceright plugins`
+- `sourceright bench`
+- `sourceright citation-sync`
 - `sourceright mcp`
 - `sourceright mcp status`
 - `sourceright mcp tools|resources|prompts`
 
-`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes. `conflicts` explains deterministic provider merge decisions. `citations` reconciles manuscript citations against reference-list entries. `review` inspects and imports manual review work. `journal-screen` produces a platform-neutral editorial screening report. `legal` extracts legal citation records into a separate legal model. `provenance` builds a claim/source graph without asserting claim truth. `policy` evaluates deterministic style and recency checks against canonical CSL JSON. `export` writes clean XML, ENW, RIS, BibLaTeX, and YAML outputs from the workspace CSL file, or prints a dry-run export manifest with `--preview`.
+`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes. `conflicts` explains deterministic provider merge decisions. `citations` reconciles manuscript citations against reference-list entries. `review` inspects and imports manual review work. `journal-screen` produces a platform-neutral editorial screening report. `legal` extracts legal citation records into a separate legal model. `provenance` builds a claim/source graph without asserting claim truth. `policy` evaluates deterministic style and recency checks against canonical CSL JSON. `export` writes clean XML, ENW, RIS, BibLaTeX, and YAML outputs from the workspace CSL file, or prints a dry-run export manifest with `--preview`. `bench` runs deterministic fixture-backed benchmark tasks. `citation-sync` previews or applies Zotero-first citation-manager sync plans with audit logging and conflict reporting.
 
-`mcp` remains a placeholder entry point for the future local MCP server. Plain `sourceright mcp` prints the current MCP status but exits non-zero because it does not start a server. `sourceright mcp status` and `sourceright mcp --status` print the same honest status output and exit successfully for scripts that need to check readiness. `sourceright mcp status --json` and `sourceright mcp --json` print a compact machine-readable readiness envelope. `sourceright mcp tools --json`, `sourceright mcp resources --json`, and `sourceright mcp prompts --json` print compact copies of the checked-in MCP manifests.
+`mcp` starts the local MCP server. `sourceright mcp` brings up the server runtime, while `sourceright mcp status` and `sourceright mcp --status` remain read-only status checks for scripts that need to inspect readiness without starting a server. `sourceright mcp status --json` and `sourceright mcp --json` print a compact machine-readable readiness envelope. `sourceright mcp tools --json`, `sourceright mcp resources --json`, and `sourceright mcp prompts --json` remain read-only inspection surfaces. The server also exposes validated plugin discovery through `plugins.list` and `sourceright://plugins/registry`. The server also exposes dry-run write tools for workspace init, review decision import, and export writes; those tools default to plan mode and only mutate when `apply: true` is passed.
 
 Each implemented command supports command-specific help:
 
@@ -34,6 +37,9 @@ Each implemented command supports command-specific help:
 - `sourceright provenance --help`
 - `sourceright policy --help`
 - `sourceright export --help`
+- `sourceright plugins --help`
+- `sourceright bench --help`
+- `sourceright citation-sync --help`
 - `sourceright mcp --help`
 
 The planned workflow command family remains:
@@ -154,3 +160,48 @@ sourceright export --preview --all [.sourceright-directory]
 ```
 
 Exports are opt-in. The command does not write files unless a single `--format` or explicit `--all` is supplied. Supported format names are `yaml`, `xml`, `ris`, `enw`, and `biblatex`. The command writes deterministic files into the workspace `exports` directory and prints the written paths. With `--preview`, it prints compact `sourceright.export_manifest.v1` JSON and does not create export files.
+
+## `plugins` contract
+
+Usage:
+
+```text
+sourceright plugins [validate] [--json]
+```
+
+The command discovers `plugins/registry.toml` and the manifests under
+`plugins/manifests/`. It validates the manifest structure, reports provenance
+metadata, and surfaces trust gating without executing plugin code. `--json`
+prints compact `sourceright.plugin_registry_report.v1` JSON. `validate` exits
+non-zero if the discovered registry contains invalid manifests.
+
+## `bench` contract
+
+Usage:
+
+```text
+sourceright bench [--json] [--manifest <tasks.yaml>]
+sourceright bench [--json] <tasks.yaml>
+```
+
+The command defaults to `sourceright-bench/tasks.yaml`, runs fixture-backed
+tasks, and compares outputs against checked-in baselines. It does not call live
+providers, citation-manager APIs, or journal systems. Human-readable output is
+a pass/fail summary; `--json` emits compact `sourceright.benchmark_run.v1`
+JSON.
+
+## `citation-sync` contract
+
+Usage:
+
+```text
+sourceright citation-sync [--preview|--apply] [--remote-fixture <remote.json>] [--audit-log <audit.jsonl>] [.sourceright-directory]
+```
+
+The command defaults to `.sourceright` and preview mode. `--apply` is required
+before audit logs or remote fixture updates are written. Live Zotero transport
+is opt-in through `SOURCERIGHT_ZOTERO_API_URL`,
+`SOURCERIGHT_ZOTERO_API_KEY`, `SOURCERIGHT_ZOTERO_LIBRARY_ID`, and optional
+`SOURCERIGHT_ZOTERO_LIBRARY_TYPE`. Conflicts are reported in
+`sourceright.citation_sync.v1` JSON and do not silently overwrite canonical
+CSL data.

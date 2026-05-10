@@ -1,0 +1,7 @@
+{
+  "id": "19-runtime-plugin-loading",
+  "status": "completed",
+  "priority": "medium",
+  "owned_paths": ["src/", "plugins/", "docs/src/plugins.md", "conductor/tracks/19-runtime-plugin-loading/"],
+  "dependencies": ["03-reference-intake", "06-academic-providers", "12-cli-and-mcp"]
+}

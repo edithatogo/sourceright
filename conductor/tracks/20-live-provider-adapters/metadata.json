@@ -1,0 +1,7 @@
+{
+  "id": "20-live-provider-adapters",
+  "status": "completed",
+  "priority": "high",
+  "owned_paths": ["src/", "fixtures/", "docs/src/providers.md", "conductor/tracks/20-live-provider-adapters/"],
+  "dependencies": ["06-academic-providers", "05-verification-sidecar", "08-conflict-resolution"]
+}

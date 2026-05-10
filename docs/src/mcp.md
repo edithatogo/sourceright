@@ -1,33 +1,46 @@
 # MCP Plan
 
-The initial Rust CLI includes `sourceright mcp` as a placeholder command. Until server mode is implemented, it fails clearly rather than pretending to expose tools.
+The Rust CLI uses `sourceright mcp` to start the local MCP server.
 
-The placeholder also provides a status-only path:
+The public local install target is the same binary used by the CLI:
 
-- `sourceright mcp` prints status and exits non-zero because no MCP server is started.
-- `sourceright mcp status` prints status and exits successfully.
+```text
+sourceright mcp
+```
+
+For registry and marketplace distribution, Sourceright keeps stdio as the
+first transport. The repository includes `server.json` metadata for the
+official MCP Registry using the GitHub namespace
+`io.github.edithatogo/sourceright` and an OCI package target for scanners that
+need a reproducible build artifact.
+
+The inspection paths remain available for scripts and adapters:
+
+- `sourceright mcp status` prints status without changing server state.
 - `sourceright mcp --status` is an alias for `status`.
 - `sourceright mcp status --json` and `sourceright mcp --json` print machine-readable readiness status.
-- `sourceright mcp tools --json`, `sourceright mcp resources --json`, and `sourceright mcp prompts --json` print compact copies of the checked-in MCP manifests.
+- `sourceright mcp tools --json`, `sourceright mcp resources --json`, and `sourceright mcp prompts --json` remain read-only and print compact copies of the checked-in MCP manifests.
+- The MCP server also exposes validated plugin discovery through `plugins.list`
+  and `sourceright://plugins/registry`.
 
-Current status output is intentionally conservative: server mode is `not-implemented`, transport is `none`, and no MCP server is started. It also reports the read-only surfaces already implemented in the Rust core and CLI so adapters can target the stable contracts without implying server transport is available.
-
-The JSON status envelope includes `server_mode`, `transport`, `server_started`,
+Status output is intentionally conservative and is meant for inspection rather than mutation. The JSON status envelope includes `server_mode`, `transport`, `server_started`,
 tool/resource/prompt counts, implemented read-only surfaces, resource URIs, and
 a readiness message. It is intended for wrappers and agents that should not
 parse the human-readable status text.
 
-The manifest commands are intentionally read-only. They expose `mcp/tools.v1.json`,
+The manifest commands are intentionally inspection-only. They expose `mcp/tools.v1.json`,
 `mcp/resources.v1.json`, and `mcp/prompts.v1.json` through the CLI so early
 MCP adapters can bind to the declared contracts without requiring server
 transport or direct repository file access.
 
-The planned MCP server should expose the same Rust core as the CLI once the reference pipeline is available. The first contracts now available for reuse are:
+The MCP server exposes the same Rust core as the CLI. The first contracts now available for reuse are:
 
 - `validate-csl --json`, which returns a deterministic local-file validation envelope with `ok`, `path`, and `diagnostics` fields and uses exit code `1` for validation findings.
 - `report --json`, which returns `sourceright.reference_report.v1`.
 - `report --mcp-resource`, which returns the report resource envelope at `sourceright://reports/reference-integrity`.
 - `export --preview --format <format>` and `export --preview --all`, which return `sourceright.export_manifest.v1` without writing export files.
+- `workspace.init`, `review.import_decisions`, and `exports.write`, which default to dry-run change plans and only mutate when `apply: true` is provided.
+- `plugins.list`, which returns the validated repository plugin catalog and its execution gates.
 
 Planned tools:
 
@@ -56,4 +69,10 @@ Planned prompts:
 - Conflict explanation.
 - Provider comparison.
 
-The first useful MCP increment should be read-only and local-file based: validate CSL JSON, generate reference integrity reports, report diagnostics, expose the derived review queue resource, and describe unavailable pipeline tools without side effects. Write-capable tools should wait until the CLI pipeline commands have stable input and output contracts.
+The first useful MCP increment should remain local-file based and auditable: validate CSL JSON, generate reference integrity reports, report diagnostics, expose the derived review queue resource, and allow explicit dry-run or apply flows for workspace init, review decision imports, and export writes. Additional write-capable tools should continue to wait until their CLI pipeline counterparts have stable input and output contracts.
+
+Smithery URL publishing requires a Streamable HTTP endpoint, so the current
+stdio server is better suited to local MCPB-style distribution there until an
+HTTP transport is added. Glama and similar indexes can inspect the open-source
+repository and OCI packaging path, but default operation must remain local and
+credential-free.

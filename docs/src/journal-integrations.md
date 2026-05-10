@@ -30,6 +30,10 @@ Useful OJS outputs include:
 - Author-facing checklist where enabled.
 - Machine-readable JSON report for later workflow automation.
 
+Recency and integrity evidence from providers should remain conservative: a
+retraction or expression of concern should surface as a review signal, not as an
+assertion about claim truth or AI authorship.
+
 ## Enterprise Adapters
 
 ScholarOne, Editorial Manager, eJournalPress, Manuscript Manager, and similar editorial systems should initially be handled through adapter contracts or generic batch/webhook workflows. Live integrations should wait for platform API access, vendor documentation, or publisher test environments.

@@ -9,6 +9,13 @@ cargo fmt --check
 cargo clippy --all-targets -- -D warnings
 cargo test
 cargo check --locked
+cargo run --bin sourceright -- bench
+cargo package --locked
+cargo deny check advisories bans sources
 ```
 
 Keep provider tests deterministic and avoid live network requirements in unit tests.
+
+Release candidates should also pass `cargo publish --dry-run --locked` from a
+clean tree. CI runs mdBook, Rust docs, dependency policy, security, and command
+smoke checks.

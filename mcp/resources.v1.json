@@ -35,6 +35,11 @@
       "uri": "sourceright://reports/policy",
       "mime_type": "application/json",
       "contract": "sourceright.policy_report.v1"
+    },
+    {
+      "uri": "sourceright://plugins/registry",
+      "mime_type": "application/json",
+      "contract": "sourceright.plugin_registry_report.v1"
     }
   ]
 }

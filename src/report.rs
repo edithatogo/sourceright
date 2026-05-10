@@ -3,6 +3,9 @@ use std::collections::BTreeSet;
 use serde::{Deserialize, Serialize};
 
 use crate::csl::CslDocument;
+use crate::policy::{
+    PolicyIssue, PolicyIssueSeverity, SourcerightPolicy, provider_backed_recency_issues,
+};
 use crate::sidecar::{ReviewStatus, VerificationSidecar};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -112,6 +115,12 @@ impl ReferenceReport {
                     ai_risk_signal: true,
                 }),
             }
+        }
+
+        for issue in
+            provider_backed_recency_issues(csl, sidecar, &SourcerightPolicy::journal_vancouver())
+        {
+            issues.push(reference_report_issue_from_policy_issue(issue));
         }
 
         let verified_references = csl
@@ -315,6 +324,7 @@ pub enum ReferenceReportCategory {
     VerificationCoverage,
     ProviderConflict,
     ManualReview,
+    RecencyEvidence,
     SidecarBoundary,
 }
 
@@ -326,12 +336,16 @@ impl ReferenceReportCategory {
             Self::VerificationCoverage => "verification_coverage",
             Self::ProviderConflict => "provider_conflict",
             Self::ManualReview => "manual_review",
+            Self::RecencyEvidence => "recency_evidence",
             Self::SidecarBoundary => "sidecar_boundary",
         }
     }
 }
 
 fn category_for_issue_code(code: &str) -> ReferenceReportCategory {
+    if code.starts_with("policy.recency.") {
+        return ReferenceReportCategory::RecencyEvidence;
+    }
     match code {
         "csl.sidecar_field" => ReferenceReportCategory::SidecarBoundary,
         "csl.id.empty" | "csl.type.empty" | "csl.title.empty" => {
@@ -349,6 +363,23 @@ fn reference_id_from_path(csl: &CslDocument, path: &str) -> Option<String> {
     csl.items.get(index).map(|item| item.id.clone())
 }
 
+fn reference_report_issue_from_policy_issue(issue: PolicyIssue) -> ReferenceReportIssue {
+    let severity = match issue.severity {
+        PolicyIssueSeverity::Info => ReferenceReportSeverity::Info,
+        PolicyIssueSeverity::Warning => ReferenceReportSeverity::Warning,
+        PolicyIssueSeverity::Error => ReferenceReportSeverity::Error,
+    };
+
+    ReferenceReportIssue {
+        severity,
+        category: category_for_issue_code(&issue.code),
+        reference_id: issue.reference_id,
+        code: issue.code,
+        message: issue.message,
+        ai_risk_signal: true,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::BTreeMap;
@@ -357,7 +388,7 @@ mod tests {
 
     use super::*;
     use crate::csl::CslItem;
-    use crate::sidecar::{ProviderCandidate, ReferenceVerification};
+    use crate::sidecar::{ProviderCandidate, ReferenceVerification, VerificationSidecar};
 
     #[test]
     fn report_flags_unverified_missing_doi_references_as_ai_risk_signals() {
@@ -437,6 +468,44 @@ mod tests {
             report
                 .to_markdown()
                 .contains("`warning` `provider_conflict`")
+        );
+    }
+
+    #[test]
+    fn report_surfaces_provider_backed_recency_evidence() {
+        let csl = CslDocument {
+            items: vec![CslItem {
+                id: "retracted-2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Retracted paper".to_string()),
+                doi: Some("10.1234/retracted".to_string()),
+                extra: BTreeMap::new(),
+            }],
+        };
+        let mut sidecar = VerificationSidecar::empty();
+        sidecar.references.insert(
+            "retracted-2024".to_string(),
+            ReferenceVerification {
+                provider_candidates: vec![ProviderCandidate {
+                    provider: "crossref".to_string(),
+                    confidence: 0.93,
+                    retrieved_at: "2026-05-10T00:00:00Z".to_string(),
+                    data: json!({"status": "retracted", "publication_year": 2011}),
+                }],
+                ..ReferenceVerification::default()
+            },
+        );
+
+        let report = ReferenceReport::from_documents(&csl, &sidecar);
+
+        assert!(report.issues.iter().any(|issue| issue.category
+            == ReferenceReportCategory::RecencyEvidence
+            && issue.code == "policy.recency.provider.retraction"));
+        assert!(
+            report
+                .issues
+                .iter()
+                .any(|issue| issue.code == "policy.recency.provider.publication_age")
         );
     }
 

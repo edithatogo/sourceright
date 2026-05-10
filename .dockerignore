@@ -1,0 +1,13 @@
+.git
+.github
+.cache
+.cargo
+.serena
+.tmp
+target
+target*
+book
+dist
+legacy
+streamlit_app
+github_pages_demo

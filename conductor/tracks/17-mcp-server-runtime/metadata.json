@@ -1,0 +1,7 @@
+{
+  "id": "17-mcp-server-runtime",
+  "status": "completed",
+  "priority": "high",
+  "owned_paths": ["src/", "docs/src/mcp.md", "conductor/tracks/17-mcp-server-runtime/"],
+  "dependencies": ["12-cli-and-mcp", "15-reference-reporting"]
+}

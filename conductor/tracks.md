@@ -1,6 +1,6 @@
 # Sourceright Conductor Tracks
 
-Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; track 15 adds reporting as a first-class audit surface; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work; track 16 covers journal workflow integrations.
+Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; track 15 adds reporting as a first-class audit surface; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work; track 16 covers journal workflow integrations; tracks 17-29 cover deferred runtime, provider, sync, benchmark, recency-evidence, CLI, release, CI, MCP distribution, docs, and performance-hardening work from the ZIP audit and SOTA review.
 
 | Track | Status | Purpose |
 | --- | --- | --- |
@@ -21,3 +21,16 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 14 Claim/source/provenance | completed | Claim/source graph, citation links, and document-level provenance issue reports. |
 | 15 Reference reporting | completed | Reference integrity and AI-related citation-error reports. |
 | 16 Journal workflow integrations | completed | OJS-first and platform-neutral editorial submission screening contracts. |
+| 17 MCP server runtime | completed | Actual local MCP server transport for existing read-only MCP contracts. |
+| 18 MCP write tools audit dry-run | completed | Write-capable MCP tools gated by dry-run plans, schema validation, audit logs, and explicit apply. |
+| 19 Runtime plugin loading | completed | Safe runtime plugin discovery, manifest validation, and capability loading. |
+| 20 Live provider adapters | completed | Opt-in live provider adapters that write sidecar evidence without mutating canonical CSL. |
+| 21 Citation manager live sync | completed | Zotero-first live sync with preview, audit logs, conflicts, and explicit apply. |
+| 22 Benchmark runner automation | completed | Executable fixture-backed benchmark runner with deterministic baseline comparison. |
+| 23 Provider-backed recency evidence | completed | Retraction, correction, preprint, superseded-guideline, and age evidence surfaced in policy/reporting. |
+| 24 CLI entrypoint integration | completed | First-class CLI/help/docs integration for the bench and citation-sync entrypoints plus a final repo-wide consistency pass. |
+| 25 Release and registry readiness | planned | Crates.io, GitHub Release, package metadata, and registry-readiness gates before public publication. |
+| 26 CI supply-chain hardening | planned | Stricter CI gates for dependency risk, docs, command smoke tests, coverage, linting, and release provenance. |
+| 27 MCP distribution | planned | Registry-ready MCP metadata and packaging for official MCP registry, Smithery, Glama, and local stdio installs. |
+| 28 Docs and discoverability | planned | Docs build validation, command references, install pages, and a decision on mdBook versus Starlight/Astro. |
+| 29 Performance and robustness | planned | Profiling, deterministic benchmark thresholds, fuzzing, and larger fixture stress coverage. |

@@ -1,0 +1,7 @@
+{
+  "id": "23-provider-backed-recency-evidence",
+  "status": "completed",
+  "priority": "medium",
+  "owned_paths": ["src/", "docs/src/reporting.md", "docs/src/journal-integrations.md", "conductor/tracks/23-provider-backed-recency-evidence/"],
+  "dependencies": ["20-live-provider-adapters", "15-reference-reporting", "16-journal-workflow-integrations"]
+}

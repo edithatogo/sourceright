@@ -69,3 +69,10 @@ Report issues include a category as well as severity:
 - `sidecar_boundary`: verification metadata found inside clean CSL JSON.
 
 The Markdown summary also includes AI-risk-signal and severity totals so an editor can quickly distinguish hard CSL errors, likely audit risks, and ordinary manual-review workload.
+
+## Provider-Backed Recency Evidence
+
+When provider candidates carry evidence for retraction, correction, expression
+of concern, preprint status, superseded guidance, or publication age, Sourceright
+surfaces those as conservative report issues. The evidence stays in the
+verification layer and does not overwrite canonical CSL.

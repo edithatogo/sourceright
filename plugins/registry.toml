@@ -1,7 +1,7 @@
 [registry]
 schema_version = "sourceright.plugin-registry.v1"
 generated_for = "sourceright.current-repo-plan.v5"
-runtime_loading = false
+runtime_loading = true
 
 [[plugins]]
 id = "provider.crossref"

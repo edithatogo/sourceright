@@ -1,0 +1,12 @@
+{
+  "resultList": {
+    "result": [
+      {
+        "doi": "10.1000/example",
+        "title": "Trial paper",
+        "pmid": "123456",
+        "pmcid": "PMC123456"
+      }
+    ]
+  }
+}

@@ -1,3 +1,5 @@
+pub mod bench;
+pub mod citation_sync;
 pub mod cleaning;
 pub mod conflict;
 pub mod csl;
@@ -5,6 +7,7 @@ pub mod export;
 pub mod intake;
 pub mod journal;
 pub mod legal;
+pub mod plugins;
 pub mod policy;
 pub mod provenance;
 pub mod providers;
@@ -14,6 +17,14 @@ pub mod review;
 pub mod sidecar;
 pub mod workspace;
 
+pub use bench::{
+    BENCHMARK_MANIFEST_SCHEMA_VERSION, BenchmarkDiff, BenchmarkManifest, BenchmarkMeasure,
+    BenchmarkRunReport, BenchmarkTask, BenchmarkTaskResult, run_benchmark_suite,
+};
+pub use citation_sync::{
+    CitationSyncAction, CitationSyncAuditEntry, CitationSyncConfig, CitationSyncError,
+    CitationSyncReport, RemoteCitationRecord, run_citation_sync,
+};
 pub use cleaning::{CleaningReport, CleaningTransformation, DuplicateGroup, standardize_document};
 pub use conflict::{
     ConflictResolutionAction, ConflictResolutionDecision, ConflictResolutionPolicy,
@@ -41,6 +52,7 @@ pub use legal::{
     LegalCitationType, LegalProvider, LegalProviderCandidate, analyze_legal_citations,
     extract_legal_citations,
 };
+pub use plugins::{PluginRegistryReport, discover_plugins, discover_plugins_from};
 pub use policy::{
     DoiPolicy, PolicyIssue, PolicyIssueSeverity, PolicyReport, RecencyPolicy, ReferenceOrderPolicy,
     SourcerightPolicy, evaluate_policy,

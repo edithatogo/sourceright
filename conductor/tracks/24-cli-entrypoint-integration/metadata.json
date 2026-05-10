@@ -1,0 +1,17 @@
+{
+  "id": "24-cli-entrypoint-integration",
+  "status": "completed",
+  "priority": "high",
+  "owned_paths": [
+    "src/main.rs",
+    "src/bin/",
+    "docs/src/",
+    "conductor/tracks/24-cli-entrypoint-integration/"
+  ],
+  "dependencies": [
+    "12-cli-and-mcp",
+    "21-citation-manager-live-sync",
+    "22-benchmark-runner-automation",
+    "23-provider-backed-recency-evidence"
+  ]
+}

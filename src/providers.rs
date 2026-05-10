@@ -21,6 +21,12 @@ pub enum AcademicProvider {
     OpenAlex,
     PubMed,
     Orcid,
+    Unpaywall,
+    OpenCitations,
+    Arxiv,
+    EuropePmc,
+    RepositoryRecords,
+    LicensedByoKey,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -289,7 +295,7 @@ pub fn doi_resolution_evidence(
     }
 }
 
-fn provider_candidate_from_fields(
+pub(crate) fn provider_candidate_from_fields(
     provider: AcademicProvider,
     provider_name: &str,
     retrieved_at: &str,
@@ -336,7 +342,7 @@ pub fn provider_error(
     }
 }
 
-fn confidence_for_candidate(canonical: &CslItem, doi: &str, title: &str) -> f64 {
+pub(crate) fn confidence_for_candidate(canonical: &CslItem, doi: &str, title: &str) -> f64 {
     let canonical_doi = canonical
         .doi
         .as_deref()

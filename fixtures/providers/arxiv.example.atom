@@ -1,0 +1,12 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:arxiv="http://arxiv.org/schemas/atom">
+  <entry>
+    <id>http://arxiv.org/abs/2401.12345v1</id>
+    <updated>2024-01-01T00:00:00Z</updated>
+    <published>2024-01-01T00:00:00Z</published>
+    <title>Trial paper</title>
+    <summary>Preprint abstract.</summary>
+    <arxiv:doi>10.1000/example</arxiv:doi>
+    <arxiv:primary_category term="cs.CL" />
+    <category term="cs.CL" />
+  </entry>
+</feed>

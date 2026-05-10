@@ -1,0 +1,15 @@
+{
+  "id": "26-ci-supply-chain-hardening",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": [
+    ".github/workflows/",
+    "deny.toml",
+    "typos.toml",
+    "CONTRIBUTING.md",
+    "conductor/tracks/26-ci-supply-chain-hardening/"
+  ],
+  "dependencies": [
+    "25-release-and-registry-readiness"
+  ]
+}

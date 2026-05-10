@@ -1,7 +1,7 @@
 # Plugin Authoring
 
-Sourceright plugin manifests are contract documents first. They should explain
-what a plugin can do without implying that the current Rust binary can load it.
+Sourceright plugin manifests are contract documents first. They explain what a
+plugin can do without implying that Sourceright will execute it by default.
 
 ## Manifest Rules
 
@@ -17,8 +17,8 @@ Every manifest should include:
 - output contracts that match the schemas in `schemas/`.
 
 Provider plugins must not overwrite canonical CSL fields silently. They should
-emit candidates, conflicts, provenance, confidence inputs, or review issues that
-can be stored in the verification sidecar or derived reports.
+emit candidates, conflicts, provenance, confidence inputs, or review issues
+that can be stored in the verification sidecar or derived reports.
 
 Citation-manager and export plugins should start with dry-run manifests and file
 contracts before any direct sync implementation. Journal plugins should consume
@@ -30,3 +30,7 @@ about author intent.
 Default plugin tests should be fixture-backed and deterministic. Live API checks
 can exist later, but they must be opt-in and excluded from normal local and CI
 test paths.
+
+Runtime loading validates manifests before they are exposed. A manifest that
+fails registry validation should be fixed in the plugin files rather than
+worked around in code.

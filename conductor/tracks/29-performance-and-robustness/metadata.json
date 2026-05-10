@@ -1,0 +1,16 @@
+{
+  "id": "29-performance-and-robustness",
+  "status": "planned",
+  "priority": "medium",
+  "owned_paths": [
+    "sourceright-bench/",
+    "fuzz/",
+    ".github/workflows/",
+    "docs/src/benchmarks.md",
+    "conductor/tracks/29-performance-and-robustness/"
+  ],
+  "dependencies": [
+    "22-benchmark-runner-automation",
+    "26-ci-supply-chain-hardening"
+  ]
+}

@@ -1,7 +1,8 @@
 # Plugin Registry
 
-The registry in `plugins/registry.toml` is a documentation and planning
-surface. It does not enable runtime dynamic loading yet.
+The registry in `plugins/registry.toml` is now a runtime discovery surface.
+Sourceright validates the listed manifests at load time and exposes the
+validated catalog through `sourceright plugins` and the MCP discovery surface.
 
 Registry entries point to manifests under `plugins/manifests/`. Each manifest
 declares a plugin category, capability summary, authentication expectations,
@@ -29,8 +30,9 @@ contracts without requiring credentials or live network access in normal tests.
 
 ## Runtime Status
 
-Runtime plugin support remains future work. Before Sourceright loads plugins at
-runtime, it needs:
+Runtime plugin discovery is implemented. Execution remains gated by explicit
+trust policy and future capability enablement. Before Sourceright executes
+plugins at runtime, it still needs:
 
 - manifest validation wired into CI;
 - signed or pinned plugin provenance;

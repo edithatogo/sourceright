@@ -1,0 +1,19 @@
+{
+  "id": "27-mcp-distribution",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": [
+    "server.json",
+    "Dockerfile",
+    ".dockerignore",
+    ".github/workflows/publish-mcp-registry.yml",
+    "docs/src/mcp.md",
+    "docs/src/publishing.md",
+    "conductor/tracks/27-mcp-distribution/"
+  ],
+  "dependencies": [
+    "17-mcp-server-runtime",
+    "18-mcp-write-tools-audit-dry-run",
+    "25-release-and-registry-readiness"
+  ]
+}

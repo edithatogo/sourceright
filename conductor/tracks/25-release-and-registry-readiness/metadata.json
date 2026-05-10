@@ -1,0 +1,15 @@
+{
+  "id": "25-release-and-registry-readiness",
+  "status": "planned",
+  "priority": "high",
+  "owned_paths": [
+    "Cargo.toml",
+    ".github/workflows/release*.yml",
+    ".github/workflows/publish-crate.yml",
+    "docs/src/publishing.md",
+    "conductor/tracks/25-release-and-registry-readiness/"
+  ],
+  "dependencies": [
+    "24-cli-entrypoint-integration"
+  ]
+}
