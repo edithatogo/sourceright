@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.plugin-manifest.schema.json",
+  "title": "Sourceright plugin manifest",
+  "type": "object",
+  "required": ["plugin"],
+  "additionalProperties": true,
+  "properties": {
+    "plugin": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "category",
+        "status",
+        "plugin_api",
+        "license_profile"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "category": {
+          "enum": [
+            "provider",
+            "citation-manager",
+            "journal",
+            "repository",
+            "legal",
+            "matcher",
+            "recency",
+            "relevance",
+            "extraction",
+            "export",
+            "demo"
+          ]
+        },
+        "status": { "type": "string", "minLength": 1 },
+        "plugin_api": { "const": "sourceright.plugin.v1" },
+        "license_profile": {
+          "enum": ["open", "byo_key", "licensed_data", "local_only", "mixed"]
+        },
+        "summary": { "type": "string" }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "required": { "type": "boolean" },
+        "mode": { "type": "string" },
+        "env": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "network": { "type": "boolean" },
+        "default_enabled": { "type": "boolean" },
+        "live_tests_default": { "type": "boolean" }
+      }
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "reads": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "writes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

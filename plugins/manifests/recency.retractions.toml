@@ -1,0 +1,22 @@
+[plugin]
+id = "recency.retractions"
+name = "Retraction and recency checks"
+category = "recency"
+status = "planned"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "mixed"
+summary = "Policy-aware checks for retractions, corrections, stale guidance, and publication age."
+
+[auth]
+required = false
+mode = "public_api_or_byo_key"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json", "sourceright.policy.v1"]
+writes = ["sourceright.reference_report.v1", "sourceright.verification.v1"]

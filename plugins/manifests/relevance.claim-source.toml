@@ -1,0 +1,22 @@
+[plugin]
+id = "relevance.claim-source"
+name = "Claim/source relevance review"
+category = "relevance"
+status = "planned"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "local_only"
+summary = "Review claim/source linkage without asserting whether a claim is true."
+
+[auth]
+required = false
+mode = "none"
+env = []
+
+[runtime]
+network = false
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["document_text", "references.csl.json"]
+writes = ["sourceright.provenance_report"]

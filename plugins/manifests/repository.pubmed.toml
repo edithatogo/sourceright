@@ -1,0 +1,22 @@
+[plugin]
+id = "repository.pubmed"
+name = "PubMed repository lookup"
+category = "repository"
+status = "core_normalizer"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "PMID/PMCID enrichment and repository identity evidence for biomedical references."
+
+[auth]
+required = false
+mode = "public_api"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.verification.v1"]

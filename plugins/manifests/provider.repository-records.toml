@@ -1,0 +1,22 @@
+[plugin]
+id = "provider.repository-records"
+name = "Repository record providers"
+category = "provider"
+status = "planned_public_api"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "mixed"
+summary = "Repository reference evidence for Zenodo, OSF, Figshare, and Dataverse records."
+
+[auth]
+required = false
+mode = "public_api_or_byo_key"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.verification.v1"]

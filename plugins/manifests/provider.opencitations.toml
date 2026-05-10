@@ -1,0 +1,22 @@
+[plugin]
+id = "provider.opencitations"
+name = "OpenCitations provider"
+category = "provider"
+status = "planned_public_api"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Citation graph evidence for DOI-linked scholarly works."
+
+[auth]
+required = false
+mode = "public_api"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.verification.v1"]

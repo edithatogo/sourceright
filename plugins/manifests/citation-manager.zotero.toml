@@ -1,0 +1,22 @@
+[plugin]
+id = "citation-manager.zotero"
+name = "Zotero sync"
+category = "citation-manager"
+status = "planned_adapter"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Dry-run first profile for exporting or syncing verified references to Zotero."
+
+[auth]
+required = true
+mode = "byo_api_key_or_local_file"
+env = ["ZOTERO_API_KEY"]
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json", "sourceright.verification.v1"]
+writes = ["sourceright.sync_manifest.v1"]

@@ -1,0 +1,22 @@
+[plugin]
+id = "export.citation-files"
+name = "Citation file exporters"
+category = "export"
+status = "core_exporter"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "local_only"
+summary = "YAML, XML, RIS, ENW, and BibLaTeX file outputs generated from canonical CSL JSON."
+
+[auth]
+required = false
+mode = "local_file"
+env = []
+
+[runtime]
+network = false
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.export_manifest.v1", "references.yaml", "references.xml", "references.ris", "references.enw", "references.bib"]

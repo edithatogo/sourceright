@@ -1,0 +1,22 @@
+[plugin]
+id = "extraction.docx-pdf"
+name = "DOCX/PDF extraction adapter"
+category = "extraction"
+status = "planned_adapter"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "mixed"
+summary = "Document text and reference extraction adapter for DOCX, PDF text layers, and later OCR."
+
+[auth]
+required = false
+mode = "local_file"
+env = []
+
+[runtime]
+network = false
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["document_files"]
+writes = ["references.csl.json", "sourceright.verification.v1"]

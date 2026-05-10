@@ -1,0 +1,26 @@
+[plugin]
+id = "provider.dimensions"
+name = "Dimensions provider"
+category = "provider"
+status = "planned_byo_key"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "licensed_data"
+summary = "Licensed scholarly metadata enrichment for callers with their own Dimensions access."
+
+[auth]
+required = true
+mode = "byo_api_key"
+env = ["DIMENSIONS_API_KEY"]
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[cache]
+policy = "respect licence and caller cache configuration"
+retention = "licensed_data_restricted"
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.verification.v1"]

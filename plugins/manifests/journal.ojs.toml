@@ -1,0 +1,22 @@
+[plugin]
+id = "journal.ojs"
+name = "Open Journal Systems integration"
+category = "journal"
+status = "planned_adapter"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "OJS-first editorial screening integration using Sourceright journal reports."
+
+[auth]
+required = true
+mode = "platform_session_or_api"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["submission_files", "sourceright.reference_report.v1"]
+writes = ["sourceright.journal_screening.v1"]

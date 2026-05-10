@@ -1,0 +1,22 @@
+[plugin]
+id = "provider.arxiv"
+name = "arXiv provider"
+category = "provider"
+status = "planned_public_api"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Preprint identity and version evidence for arXiv records."
+
+[auth]
+required = false
+mode = "public_api"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.verification.v1"]

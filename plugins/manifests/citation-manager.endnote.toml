@@ -1,0 +1,22 @@
+[plugin]
+id = "citation-manager.endnote"
+name = "EndNote file export"
+category = "citation-manager"
+status = "planned_adapter"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "local_only"
+summary = "Profile for EndNote-oriented ENW/RIS exports and future local sync handoff."
+
+[auth]
+required = false
+mode = "local_file"
+env = []
+
+[runtime]
+network = false
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.export_manifest.v1", "references.enw", "references.ris"]

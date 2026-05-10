@@ -1,0 +1,22 @@
+[plugin]
+id = "provider.unpaywall"
+name = "Unpaywall provider"
+category = "provider"
+status = "planned_public_api"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Open-access location and repository evidence keyed primarily by DOI."
+
+[auth]
+required = false
+mode = "polite-mailto-recommended"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.verification.v1"]

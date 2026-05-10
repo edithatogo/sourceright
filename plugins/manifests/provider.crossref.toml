@@ -1,0 +1,26 @@
+[plugin]
+id = "provider.crossref"
+name = "Crossref provider"
+category = "provider"
+status = "core_normalizer"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Normalize Crossref work payloads into provider candidates and sidecar evidence."
+
+[auth]
+required = false
+mode = "polite-mailto-recommended"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[cache]
+policy = "cache raw responses only when caller config permits"
+retention = "caller_controlled"
+
+[contracts]
+reads = ["references.csl.json"]
+writes = ["sourceright.verification.v1"]

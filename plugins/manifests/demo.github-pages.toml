@@ -1,0 +1,22 @@
+[plugin]
+id = "demo.github-pages"
+name = "GitHub Pages demo"
+category = "demo"
+status = "planned"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Static demo surface for reference reports and journal-screening outputs."
+
+[auth]
+required = false
+mode = "none"
+env = []
+
+[runtime]
+network = false
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["sourceright.reference_report.v1", "sourceright.journal_screening.v1"]
+writes = ["static_site_assets"]

@@ -1,0 +1,22 @@
+[plugin]
+id = "matcher.local-bibliographic"
+name = "Local bibliographic matcher"
+category = "matcher"
+status = "planned"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "local_only"
+summary = "Deterministic local matching and ranking over extracted references and provider candidates."
+
+[auth]
+required = false
+mode = "none"
+env = []
+
+[runtime]
+network = false
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["references.csl.json", "sourceright.verification.v1"]
+writes = ["sourceright.verification.v1"]

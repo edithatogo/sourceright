@@ -1,0 +1,104 @@
+[registry]
+schema_version = "sourceright.plugin-registry.v1"
+generated_for = "sourceright.current-repo-plan.v5"
+runtime_loading = false
+
+[[plugins]]
+id = "provider.crossref"
+manifest = "plugins/manifests/provider.crossref.toml"
+status = "core_normalizer"
+
+[[plugins]]
+id = "provider.dimensions"
+manifest = "plugins/manifests/provider.dimensions.toml"
+status = "planned_byo_key"
+
+[[plugins]]
+id = "provider.scopus"
+manifest = "plugins/manifests/provider.scopus.toml"
+status = "planned_byo_key"
+
+[[plugins]]
+id = "provider.web-of-science"
+manifest = "plugins/manifests/provider.web-of-science.toml"
+status = "planned_byo_key"
+
+[[plugins]]
+id = "provider.unpaywall"
+manifest = "plugins/manifests/provider.unpaywall.toml"
+status = "planned_public_api"
+
+[[plugins]]
+id = "provider.opencitations"
+manifest = "plugins/manifests/provider.opencitations.toml"
+status = "planned_public_api"
+
+[[plugins]]
+id = "provider.arxiv"
+manifest = "plugins/manifests/provider.arxiv.toml"
+status = "planned_public_api"
+
+[[plugins]]
+id = "provider.europepmc"
+manifest = "plugins/manifests/provider.europepmc.toml"
+status = "planned_public_api"
+
+[[plugins]]
+id = "provider.repository-records"
+manifest = "plugins/manifests/provider.repository-records.toml"
+status = "planned_public_api"
+
+[[plugins]]
+id = "citation-manager.zotero"
+manifest = "plugins/manifests/citation-manager.zotero.toml"
+status = "planned_adapter"
+
+[[plugins]]
+id = "citation-manager.endnote"
+manifest = "plugins/manifests/citation-manager.endnote.toml"
+status = "planned_adapter"
+
+[[plugins]]
+id = "journal.ojs"
+manifest = "plugins/manifests/journal.ojs.toml"
+status = "planned_adapter"
+
+[[plugins]]
+id = "repository.pubmed"
+manifest = "plugins/manifests/repository.pubmed.toml"
+status = "core_normalizer"
+
+[[plugins]]
+id = "legal.courtlistener"
+manifest = "plugins/manifests/legal.courtlistener.toml"
+status = "planned_public_api"
+
+[[plugins]]
+id = "matcher.local-bibliographic"
+manifest = "plugins/manifests/matcher.local-bibliographic.toml"
+status = "planned"
+
+[[plugins]]
+id = "recency.retractions"
+manifest = "plugins/manifests/recency.retractions.toml"
+status = "planned"
+
+[[plugins]]
+id = "relevance.claim-source"
+manifest = "plugins/manifests/relevance.claim-source.toml"
+status = "planned"
+
+[[plugins]]
+id = "extraction.docx-pdf"
+manifest = "plugins/manifests/extraction.docx-pdf.toml"
+status = "planned_adapter"
+
+[[plugins]]
+id = "export.citation-files"
+manifest = "plugins/manifests/export.citation-files.toml"
+status = "core_exporter"
+
+[[plugins]]
+id = "demo.github-pages"
+manifest = "plugins/manifests/demo.github-pages.toml"
+status = "planned"

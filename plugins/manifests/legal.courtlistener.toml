@@ -1,0 +1,22 @@
+[plugin]
+id = "legal.courtlistener"
+name = "CourtListener legal provider"
+category = "legal"
+status = "planned_public_api"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Public legal citation lookup candidate for US case law workflows."
+
+[auth]
+required = false
+mode = "public_api_or_optional_key"
+env = ["COURTLISTENER_API_KEY"]
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["sourceright.legal_citation_report"]
+writes = ["sourceright.legal_citation_report"]
