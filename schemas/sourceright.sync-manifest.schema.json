@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.sync-manifest.schema.json",
+  "title": "Sourceright citation-manager sync manifest",
+  "type": "object",
+  "required": ["schema_version", "profile_id", "mode", "source", "actions"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "sourceright.sync_manifest.v1" },
+    "profile_id": { "type": "string", "minLength": 1 },
+    "mode": { "enum": ["dry_run", "write_files", "api_sync"] },
+    "source": {
+      "type": "object",
+      "required": ["references_csl_json"],
+      "additionalProperties": false,
+      "properties": {
+        "references_csl_json": { "type": "string", "minLength": 1 },
+        "verification_sidecar_json": { "type": "string" }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/action" }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "cache": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "action": {
+      "type": "object",
+      "required": ["action", "target"],
+      "additionalProperties": true,
+      "properties": {
+        "action": {
+          "enum": ["export_file", "import_file", "create_item", "update_item", "skip"]
+        },
+        "target": { "type": "string", "minLength": 1 },
+        "format": { "enum": ["yaml", "xml", "ris", "enw", "biblatex", "csl_json"] },
+        "dry_run": { "type": "boolean" },
+        "reference_id": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

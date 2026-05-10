@@ -1,0 +1,24 @@
+{
+  "schema_version": "sourceright.sync_manifest.v1",
+  "profile_id": "zotero",
+  "mode": "dry_run",
+  "source": {
+    "references_csl_json": ".sourceright/references.csl.json",
+    "verification_sidecar_json": ".sourceright/references.verification.json"
+  },
+  "actions": [
+    {
+      "action": "export_file",
+      "target": ".sourceright/exports/references.ris",
+      "format": "ris",
+      "dry_run": true,
+      "reason": "Initial file handoff before live API sync."
+    }
+  ],
+  "privacy": {
+    "store_credentials": false
+  },
+  "cache": {
+    "remote_metadata": "caller_approved_only"
+  }
+}

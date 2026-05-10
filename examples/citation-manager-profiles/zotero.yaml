@@ -1,0 +1,12 @@
+schema_version: sourceright.citation_manager_profile.v1
+profile_id: zotero
+adapter_family: api_and_file
+default_mode: dry_run
+auth:
+  required_for_api_sync: true
+  env: [ZOTERO_API_KEY]
+file_formats: [ris, biblatex, csl_json]
+sync_manifest: sourceright.sync_manifest.v1
+privacy:
+  store_credentials: false
+  cache_remote_metadata: caller_approved_only

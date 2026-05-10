@@ -1,0 +1,12 @@
+schema_version: sourceright.citation_manager_profile.v1
+profile_id: covidence
+adapter_family: file
+default_mode: dry_run
+auth:
+  required_for_api_sync: false
+  env: []
+file_formats: [ris]
+sync_manifest: sourceright.sync_manifest.v1
+privacy:
+  store_credentials: false
+  cache_remote_metadata: no_remote_metadata
