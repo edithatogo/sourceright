@@ -1,0 +1,12 @@
+schema_version: sourceright.policy.v1
+policy_id: repository-deposit
+label: Repository deposit policy
+style:
+  reference_order: alphabetical
+  doi_policy: required_if_available
+recency:
+  publication_age_warning_years: 15
+  requires_retraction_check: true
+review:
+  preprint_policy: allowed
+  retracted_citation_policy: review_required

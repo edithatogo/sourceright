@@ -1,0 +1,12 @@
+schema_version: sourceright.policy.v1
+policy_id: preprint-review
+label: Preprint review policy
+style:
+  reference_order: unspecified
+  doi_policy: optional
+recency:
+  publication_age_warning_years: 5
+  requires_retraction_check: true
+review:
+  preprint_policy: review_required
+  retracted_citation_policy: review_required

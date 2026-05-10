@@ -5,6 +5,7 @@ pub mod export;
 pub mod intake;
 pub mod journal;
 pub mod legal;
+pub mod policy;
 pub mod provenance;
 pub mod providers;
 pub mod reconcile;
@@ -38,6 +39,10 @@ pub use legal::{
     LegalCitationIssue, LegalCitationIssueType, LegalCitationRecord, LegalCitationReport,
     LegalCitationType, LegalProvider, LegalProviderCandidate, analyze_legal_citations,
     extract_legal_citations,
+};
+pub use policy::{
+    DoiPolicy, PolicyIssue, PolicyIssueSeverity, PolicyReport, RecencyPolicy, ReferenceOrderPolicy,
+    SourcerightPolicy, evaluate_policy,
 };
 pub use provenance::{
     ClaimNode, ClaimSourceLink, ClaimSourceLinkType, EvidenceGraph, ProvenanceIssue,

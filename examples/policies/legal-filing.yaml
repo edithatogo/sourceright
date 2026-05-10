@@ -1,0 +1,10 @@
+schema_version: sourceright.policy.v1
+policy_id: legal-filing
+label: Legal filing citation review
+style:
+  reference_order: unspecified
+  doi_policy: not_required
+recency:
+  requires_retraction_check: false
+review:
+  legal_provider_policy: public_provider_candidate_required
