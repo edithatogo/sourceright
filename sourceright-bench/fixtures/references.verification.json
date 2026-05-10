@@ -1,0 +1,19 @@
+{
+  "schema_version": "sourceright.verification.v1",
+  "references": {
+    "smith-2024": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.95,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/benchmark",
+            "title": ["Benchmark reference"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    }
+  }
+}

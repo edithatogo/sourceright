@@ -1,0 +1,5 @@
+Benchmarking text cites Smith (2024).
+
+References
+
+Smith J. Benchmark reference. Journal. 2024.

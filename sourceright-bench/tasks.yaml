@@ -1,0 +1,50 @@
+schema_version: sourceright.benchmark_tasks.v1
+runner_status: scaffold_only
+live_network: false
+workspace_crate: false
+tasks:
+  - id: csl-validation-basic
+    surface: validate-csl
+    fixture: fixtures/references.csl.json
+    baseline: baselines/csl-validation-basic.txt
+    measures: [correctness]
+  - id: sidecar-validation-basic
+    surface: sidecar
+    fixture: fixtures/references.verification.json
+    baseline: baselines/sidecar-validation-basic.txt
+    measures: [correctness]
+  - id: reference-report-basic
+    surface: report
+    fixture: fixtures/workspace
+    baseline: baselines/reference-report-basic.json
+    measures: [correctness, latency]
+  - id: citation-reconciliation-basic
+    surface: citations
+    fixture: fixtures/manuscript.txt
+    baseline: baselines/citation-reconciliation-basic.md
+    measures: [correctness]
+  - id: review-queue-basic
+    surface: review-queue
+    fixture: fixtures/workspace
+    baseline: baselines/review-queue-basic.jsonl
+    measures: [correctness]
+  - id: export-suite-basic
+    surface: export
+    fixture: fixtures/workspace
+    baseline: baselines/export-suite-basic.txt
+    measures: [correctness]
+  - id: legal-citation-basic
+    surface: legal
+    fixture: fixtures/legal-text.txt
+    baseline: baselines/legal-citation-basic.json
+    measures: [correctness]
+  - id: provenance-basic
+    surface: provenance
+    fixture: fixtures/claim-source-text.txt
+    baseline: baselines/provenance-basic.json
+    measures: [correctness]
+  - id: journal-screen-basic
+    surface: journal-screen
+    fixture: fixtures/workspace
+    baseline: baselines/journal-screen-basic.json
+    measures: [correctness]

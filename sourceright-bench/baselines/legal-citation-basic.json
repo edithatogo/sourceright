@@ -1,0 +1,24 @@
+{
+  "records": [
+    {
+      "id": "legal-0001",
+      "citation_text": "[2016] HCA 1",
+      "citation_type": "case",
+      "jurisdiction": "AU",
+      "court": "HCA",
+      "year": 2016,
+      "neutral_citation": "[2016] HCA 1",
+      "pinpoint": null,
+      "source_span": "line:1",
+      "providers": [
+        {
+          "provider": "austlii",
+          "confidence": 0.75,
+          "identifier": "2016 HCA 1",
+          "url": null
+        }
+      ]
+    }
+  ],
+  "issues": []
+}

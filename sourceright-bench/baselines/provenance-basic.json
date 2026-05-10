@@ -1,0 +1,36 @@
+{
+  "graph": {
+    "claims": [
+      {
+        "id": "claim-0001",
+        "text": "Benchmarking can identify citation-integrity issues (Smith, 2024)",
+        "span": "line:1"
+      },
+      {
+        "id": "claim-0002",
+        "text": "Unsupported claims should be flagged",
+        "span": "line:1"
+      }
+    ],
+    "sources": [
+      {
+        "id": "source-0001",
+        "citation_text": "(Smith, 2024)",
+        "span": "line:1:53-65"
+      }
+    ],
+    "links": [
+      {
+        "claim_id": "claim-0001",
+        "source_id": "source-0001",
+        "link_type": "citation_support"
+      },
+      {
+        "claim_id": "claim-0002",
+        "source_id": "source-0001",
+        "link_type": "citation_support"
+      }
+    ]
+  },
+  "issues": []
+}
