@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.policy-report.schema.json",
+  "title": "Sourceright policy report",
+  "type": "object",
+  "required": ["schema_version", "policy_id", "issues"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "sourceright.policy_report.v1" },
+    "policy_id": { "type": "string", "minLength": 1 },
+    "issues": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/issue" }
+    }
+  },
+  "$defs": {
+    "issue": {
+      "type": "object",
+      "required": ["severity", "reference_id", "code", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "severity": { "enum": ["info", "warning", "error"] },
+        "reference_id": { "type": ["string", "null"] },
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

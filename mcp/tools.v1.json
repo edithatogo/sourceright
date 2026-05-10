@@ -61,6 +61,15 @@
       "output_contract": "sourceright.provenance_report"
     },
     {
+      "name": "references.policy",
+      "read_only": true,
+      "input": {
+        "references_csl_json": "references.csl.json",
+        "policy_json": "policy.json"
+      },
+      "output_contract": "sourceright.policy_report.v1"
+    },
+    {
       "name": "exports.preview",
       "read_only": true,
       "input": {

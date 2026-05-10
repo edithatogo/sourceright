@@ -15,6 +15,7 @@ Initial read-only tools:
 - screen a journal submission;
 - analyze legal citations;
 - build a claim/source provenance report;
+- evaluate deterministic style and recency policy checks;
 - preview export artifacts.
 
 Write-capable tools should wait until schema validation, audit logs, dry-run

@@ -30,6 +30,11 @@
       "uri": "sourceright://reports/claim-source-provenance",
       "mime_type": "application/json",
       "contract": "sourceright.provenance_report"
+    },
+    {
+      "uri": "sourceright://reports/policy",
+      "mime_type": "application/json",
+      "contract": "sourceright.policy_report.v1"
     }
   ]
 }

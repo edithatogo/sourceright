@@ -3,7 +3,10 @@ use std::fs;
 use std::path::PathBuf;
 
 use serde::Serialize;
-use sourceright::{ExportFormat, JournalPlatform, ReviewDecisionImport, SourcerightWorkspace};
+use sourceright::{
+    ExportFormat, JournalPlatform, ReviewDecisionImport, SourcerightPolicy, SourcerightWorkspace,
+    evaluate_policy, parse_csl_json,
+};
 
 fn main() {
     if let Err(error) = run(std::env::args().skip(1)) {
@@ -215,6 +218,25 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             reject_extra_args("provenance", &args)?;
             let text = fs::read_to_string(path).map_err(|error| error.to_string())?;
             let report = sourceright::analyze_claim_source_provenance(&text);
+            println!("{}", serde_json::to_string(&report)?);
+        }
+        Some("policy") => {
+            if maybe_print_command_help("policy", &mut args, POLICY_HELP)? {
+                return Ok(());
+            }
+
+            let options = parse_policy_args(args)?;
+            let csl_json = fs::read_to_string(options.references_csl_json)
+                .map_err(|error| error.to_string())?;
+            let document = parse_csl_json(&csl_json)?;
+            let policy = if let Some(policy_path) = options.policy_json {
+                let policy_json =
+                    fs::read_to_string(policy_path).map_err(|error| error.to_string())?;
+                serde_json::from_str(&policy_json)?
+            } else {
+                SourcerightPolicy::journal_vancouver()
+            };
+            let report = evaluate_policy(&document, &policy);
             println!("{}", serde_json::to_string(&report)?);
         }
         Some("export") => {
@@ -431,6 +453,31 @@ fn parse_journal_platform(value: &str) -> Result<JournalPlatform, CliError> {
     }
 }
 
+fn parse_policy_args(mut args: VecDeque<String>) -> Result<PolicyOptions, CliError> {
+    let mut policy_json = None;
+
+    if args.front().is_some_and(|arg| arg == "--policy") {
+        args.pop_front();
+        policy_json = Some(required_arg(
+            "policy",
+            args.pop_front(),
+            "policy JSON path",
+        )?);
+    }
+
+    let references_csl_json = required_arg(
+        "policy",
+        args.pop_front().map(PathBuf::from),
+        "path to references.csl.json",
+    )?;
+    reject_extra_args("policy", &args)?;
+
+    Ok(PolicyOptions {
+        references_csl_json,
+        policy_json: policy_json.map(PathBuf::from),
+    })
+}
+
 fn required_arg<T>(command: &str, value: Option<T>, label: &str) -> Result<T, CliError> {
     value.ok_or_else(|| {
         CliError::usage(format!(
@@ -490,6 +537,12 @@ struct JournalScreenOptions {
     platform: JournalPlatform,
     submission_id: String,
     manuscript_label: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct PolicyOptions {
+    references_csl_json: PathBuf,
+    policy_json: Option<PathBuf>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -602,6 +655,7 @@ Usage:
   sourceright journal-screen [options] [.sourceright-directory]
   sourceright legal <legal-text.txt>
   sourceright provenance <document-text.txt>
+  sourceright policy [--policy <policy.json>] <references.csl.json>
   sourceright export [--all|--format <format>] [.sourceright-directory]
   sourceright mcp [status|--status]
 
@@ -615,6 +669,7 @@ Commands:
   journal-screen  Produce a platform-neutral journal citation-screening report.
   legal         Extract and model legal citations separately from CSL.
   provenance    Build a claim/source provenance graph from document text.
+  policy        Evaluate deterministic style and recency policy checks.
   export        Write clean reference exports from canonical CSL JSON.
   mcp           Show MCP implementation status; server mode is not implemented yet.
 
@@ -729,6 +784,19 @@ Usage:
 Output:
   Prints compact JSON with claims, detected citation source nodes, links, and provenance issues.";
 
+const POLICY_HELP: &str = "sourceright policy
+
+Evaluate deterministic style and recency policy checks over canonical CSL JSON.
+
+Usage:
+  sourceright policy [--policy <policy.json>] <references.csl.json>
+
+Default:
+  Uses the built-in journal-vancouver policy when no policy JSON is supplied.
+
+Output:
+  Prints compact `sourceright.policy_report.v1` JSON.";
+
 const EXPORT_HELP: &str = "sourceright export
 
 Write clean reference exports from an existing workspace.
@@ -762,8 +830,8 @@ const MCP_STATUS: &str = "Sourceright MCP status
 server_mode: not-implemented
 transport: none
 server_started: false
-available_tools: 8
-available_resources: 6
+available_tools: 9
+available_resources: 7
 available_prompts: 0
 implemented_read_only_surfaces:
   - sourceright validate-csl <references.csl.json>
@@ -775,6 +843,7 @@ implemented_read_only_surfaces:
   - sourceright journal-screen [.sourceright-directory]
   - sourceright legal <legal-text.txt>
   - sourceright provenance <document-text.txt>
+  - sourceright policy <references.csl.json>
   - sourceright export --all [.sourceright-directory]
 resource_uris:
   - sourceright://reports/reference-integrity
@@ -783,6 +852,7 @@ resource_uris:
   - sourceright://reports/journal-screening
   - sourceright://reports/legal-citations
   - sourceright://reports/claim-source-provenance
+  - sourceright://reports/policy
 message: MCP server mode is planned but not implemented yet.";
 
 #[cfg(test)]
@@ -896,6 +966,22 @@ mod tests {
     }
 
     #[test]
+    fn policy_accepts_optional_json_policy_and_csl_path() {
+        let options = parse_policy_args(VecDeque::from(vec![
+            "--policy".to_string(),
+            "policy.json".to_string(),
+            "references.csl.json".to_string(),
+        ]))
+        .expect("parse policy args");
+
+        assert_eq!(options.policy_json, Some(PathBuf::from("policy.json")));
+        assert_eq!(
+            options.references_csl_json,
+            PathBuf::from("references.csl.json")
+        );
+    }
+
+    #[test]
     fn export_accepts_single_format_or_full_suite() {
         let one = parse_export_args(VecDeque::from(vec![
             "--format".to_string(),
@@ -950,7 +1036,7 @@ mod tests {
     fn mcp_status_is_explicitly_not_a_server() {
         assert!(MCP_STATUS.contains("server_mode: not-implemented"));
         assert!(MCP_STATUS.contains("server_started: false"));
-        assert!(MCP_STATUS.contains("available_tools: 8"));
+        assert!(MCP_STATUS.contains("available_tools: 9"));
         assert!(MCP_STATUS.contains("sourceright://reports/reference-integrity"));
     }
 }

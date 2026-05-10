@@ -27,6 +27,8 @@ models change.
   exported YAML/XML files themselves continue to use `sourceright.export.v1`.
 - `sourceright.policy.schema.json`: journal or workflow policy inputs for later
   style, recency, and integrity checks.
+- `sourceright.policy-report.schema.json`: deterministic policy-check report
+  output.
 
 ## Compatibility Rules
 
@@ -40,6 +42,7 @@ Schema versions match current Rust constants where those constants exist:
 - `sourceright.reference_report.v1`
 - `sourceright.journal_screening.v1`
 - `sourceright.export.v1`
+- `sourceright.policy_report.v1`
 
 The legal citation and provenance reports currently do not emit a top-level
 `schema_version`, so their schemas describe the live output shape without
