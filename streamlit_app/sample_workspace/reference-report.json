@@ -1,0 +1,25 @@
+{
+  "schema_version": "sourceright.reference_report.v1",
+  "report_type": "reference_integrity",
+  "summary": {
+    "total_references": 2,
+    "verified_references": 1,
+    "review_queue_count": 1,
+    "unresolved_count": 0,
+    "conflict_count": 0,
+    "ai_risk_issue_count": 1,
+    "error_count": 0,
+    "warning_count": 1,
+    "info_count": 0
+  },
+  "issues": [
+    {
+      "severity": "warning",
+      "category": "verification_coverage",
+      "reference_id": "unverified-2023",
+      "code": "verification.missing_provider_evidence",
+      "message": "Reference has no provider evidence yet.",
+      "ai_risk_signal": true
+    }
+  ]
+}

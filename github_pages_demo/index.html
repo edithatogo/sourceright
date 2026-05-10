@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sourceright reference integrity demo</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <p class="eyebrow">Sourceright demo</p>
+        <h1>Reference integrity report</h1>
+        <p id="status">Loading sample report</p>
+      </section>
+
+      <section class="metrics" aria-label="Report summary" id="metrics"></section>
+
+      <section class="layout">
+        <article>
+          <h2>Open Issues</h2>
+          <div id="issues" class="issue-list"></div>
+        </article>
+        <article>
+          <h2>Journal Screening</h2>
+          <dl id="journal" class="journal"></dl>
+        </article>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
