@@ -258,6 +258,15 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 reject_extra_args("mcp", &args)?;
                 println!("{MCP_HELP}");
             }
+            Some("tools") => {
+                print_mcp_manifest("mcp tools", args, MCP_TOOLS_MANIFEST)?;
+            }
+            Some("resources") => {
+                print_mcp_manifest("mcp resources", args, MCP_RESOURCES_MANIFEST)?;
+            }
+            Some("prompts") => {
+                print_mcp_manifest("mcp prompts", args, MCP_PROMPTS_MANIFEST)?;
+            }
             Some("status") | Some("--status") => {
                 print_mcp_status(args)?;
             }
@@ -296,6 +305,21 @@ fn print_mcp_status(mut args: VecDeque<String>) -> Result<(), CliError> {
         reject_extra_args("mcp status", &args)?;
         println!("{MCP_STATUS}");
     }
+    Ok(())
+}
+
+fn print_mcp_manifest(
+    command: &str,
+    mut args: VecDeque<String>,
+    manifest: &str,
+) -> Result<(), CliError> {
+    if args.front().is_some_and(|arg| arg == "--json") {
+        args.pop_front();
+    }
+    reject_extra_args(command, &args)?;
+
+    let json: serde_json::Value = serde_json::from_str(manifest)?;
+    println!("{}", serde_json::to_string(&json)?);
     Ok(())
 }
 
@@ -725,6 +749,7 @@ Usage:
   sourceright policy [--policy <policy.json>] <references.csl.json>
   sourceright export [--all|--format <format>] [.sourceright-directory]
   sourceright mcp [status|--status]
+  sourceright mcp tools|resources|prompts [--json]
 
 Commands:
   init          Create or confirm a local .sourceright workspace.
@@ -894,6 +919,8 @@ Behavior:
   `sourceright mcp` prints the placeholder status and exits non-zero because no
   MCP server is started.
   `sourceright mcp status` prints the same status and exits successfully.
+  `sourceright mcp tools|resources|prompts --json` prints compact read-only
+  manifest JSON for adapter development.
   `--json` prints a compact machine-readable readiness envelope.";
 
 const MCP_STATUS: &str = "Sourceright MCP status
@@ -924,6 +951,10 @@ resource_uris:
   - sourceright://reports/claim-source-provenance
   - sourceright://reports/policy
 message: MCP server mode is planned but not implemented yet.";
+
+const MCP_TOOLS_MANIFEST: &str = include_str!("../mcp/tools.v1.json");
+const MCP_RESOURCES_MANIFEST: &str = include_str!("../mcp/resources.v1.json");
+const MCP_PROMPTS_MANIFEST: &str = include_str!("../mcp/prompts.v1.json");
 
 #[cfg(test)]
 mod tests {
@@ -1113,5 +1144,42 @@ mod tests {
         assert_eq!(json["server_mode"], "not-implemented");
         assert_eq!(json["server_started"], false);
         assert_eq!(json["available_tools"], 10);
+    }
+
+    #[test]
+    fn mcp_manifests_are_valid_json() {
+        let tools: serde_json::Value =
+            serde_json::from_str(MCP_TOOLS_MANIFEST).expect("tools manifest is valid JSON");
+        let resources: serde_json::Value =
+            serde_json::from_str(MCP_RESOURCES_MANIFEST).expect("resources manifest is valid JSON");
+        let prompts: serde_json::Value =
+            serde_json::from_str(MCP_PROMPTS_MANIFEST).expect("prompts manifest is valid JSON");
+
+        assert_eq!(tools["schema_version"], "sourceright.mcp_tools.v1");
+        assert_eq!(resources["schema_version"], "sourceright.mcp_resources.v1");
+        assert_eq!(prompts["schema_version"], "sourceright.mcp_prompts.v1");
+    }
+
+    #[test]
+    fn mcp_manifest_commands_accept_optional_json_flag() {
+        print_mcp_manifest(
+            "mcp tools",
+            VecDeque::from(vec!["--json".to_string()]),
+            MCP_TOOLS_MANIFEST,
+        )
+        .expect("print tools manifest");
+
+        let error = print_mcp_manifest(
+            "mcp tools",
+            VecDeque::from(vec!["--yaml".to_string()]),
+            MCP_TOOLS_MANIFEST,
+        )
+        .expect_err("reject unsupported manifest flag");
+
+        assert!(
+            error
+                .to_string()
+                .contains("unexpected argument for `mcp tools`")
+        );
     }
 }
