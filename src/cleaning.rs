@@ -105,6 +105,17 @@ fn normalize_item(
     }
 
     normalize_pages(item, &reference_id, transformations);
+    normalize_string_extra(
+        item,
+        &reference_id,
+        transformations,
+        "container-title",
+        false,
+    );
+    normalize_string_extra(item, &reference_id, transformations, "publisher", false);
+    normalize_issn(item, &reference_id, transformations);
+    normalize_isbn(item, &reference_id, transformations);
+    normalize_names(item, &reference_id, transformations);
     normalize_issued_date(item, &reference_id, sidecar, transformations);
 }
 
@@ -151,8 +162,115 @@ fn normalize_pages(
     }
 }
 
+fn normalize_string_extra(
+    item: &mut CslItem,
+    reference_id: &str,
+    transformations: &mut Vec<CleaningTransformation>,
+    field: &str,
+    requires_review: bool,
+) {
+    let Some(Value::String(before)) = item.extra.get(field).cloned() else {
+        return;
+    };
+    let after = normalize_title(&before);
+    if before != after {
+        transformations.push(CleaningTransformation {
+            reference_id: reference_id.to_string(),
+            field: field.to_string(),
+            before,
+            after: after.clone(),
+            requires_review,
+        });
+        item.extra.insert(field.to_string(), Value::String(after));
+    }
+}
+
+fn normalize_issn(
+    item: &mut CslItem,
+    reference_id: &str,
+    transformations: &mut Vec<CleaningTransformation>,
+) {
+    normalize_identifier_extra(item, reference_id, transformations, "ISSN", |value| {
+        let raw = value.replace([' ', '-'], "").to_ascii_uppercase();
+        if raw.len() == 8 {
+            format!("{}-{}", &raw[0..4], &raw[4..8])
+        } else {
+            normalize_title(value)
+        }
+    });
+}
+
+fn normalize_isbn(
+    item: &mut CslItem,
+    reference_id: &str,
+    transformations: &mut Vec<CleaningTransformation>,
+) {
+    normalize_identifier_extra(item, reference_id, transformations, "ISBN", |value| {
+        value
+            .chars()
+            .filter(|ch| !ch.is_whitespace() && *ch != '-' && *ch != '–' && *ch != '—')
+            .collect::<String>()
+            .to_ascii_uppercase()
+    });
+}
+
+fn normalize_identifier_extra(
+    item: &mut CslItem,
+    reference_id: &str,
+    transformations: &mut Vec<CleaningTransformation>,
+    field: &str,
+    normalize: impl Fn(&str) -> String,
+) {
+    let Some(Value::String(before)) = item.extra.get(field).cloned() else {
+        return;
+    };
+    let after = normalize(&before);
+    if before != after {
+        transformations.push(CleaningTransformation {
+            reference_id: reference_id.to_string(),
+            field: field.to_string(),
+            before,
+            after: after.clone(),
+            requires_review: false,
+        });
+        item.extra.insert(field.to_string(), Value::String(after));
+    }
+}
+
+fn normalize_names(
+    item: &mut CslItem,
+    reference_id: &str,
+    transformations: &mut Vec<CleaningTransformation>,
+) {
+    let Some(Value::Array(names)) = item.extra.get_mut("author") else {
+        return;
+    };
+
+    for (index, name) in names.iter_mut().enumerate() {
+        let Some(object) = name.as_object_mut() else {
+            continue;
+        };
+        for part in ["family", "given"] {
+            let Some(Value::String(before)) = object.get(part).cloned() else {
+                continue;
+            };
+            let after = normalize_title(&before);
+            if before != after {
+                transformations.push(CleaningTransformation {
+                    reference_id: reference_id.to_string(),
+                    field: format!("author[{index}].{part}"),
+                    before,
+                    after: after.clone(),
+                    requires_review: false,
+                });
+                object.insert(part.to_string(), Value::String(after));
+            }
+        }
+    }
+}
+
 fn normalize_issued_date(
-    item: &CslItem,
+    item: &mut CslItem,
     reference_id: &str,
     sidecar: &mut VerificationSidecar,
     transformations: &mut Vec<CleaningTransformation>,
@@ -174,6 +292,10 @@ fn normalize_issued_date(
         after: format!("{{\"date-parts\":[[{year}]]}}"),
         requires_review: true,
     });
+    item.extra.insert(
+        "issued".to_string(),
+        serde_json::json!({"date-parts": [[year.parse::<u16>().expect("validated year")]]}),
+    );
     sidecar
         .references
         .entry(reference_id.to_string())
@@ -236,6 +358,48 @@ mod tests {
     }
 
     #[test]
+    fn container_identifiers_and_author_names_are_normalized() {
+        let document = CslDocument {
+            items: vec![CslItem {
+                id: "book".to_string(),
+                item_type: "book".to_string(),
+                title: Some("Book".to_string()),
+                doi: None,
+                extra: BTreeMap::from([
+                    (
+                        "container-title".to_string(),
+                        Value::String("  Example   Journal ".to_string()),
+                    ),
+                    ("ISSN".to_string(), Value::String("1234 567X".to_string())),
+                    (
+                        "ISBN".to_string(),
+                        Value::String("978-1-4028-9462-6".to_string()),
+                    ),
+                    (
+                        "author".to_string(),
+                        serde_json::json!([{"family": " Smith ", "given": " Jane   Q. "}]),
+                    ),
+                ]),
+            }],
+        };
+
+        let report = standardize_document(&document, &VerificationSidecar::empty());
+        let item = &report.document.items[0];
+
+        assert_eq!(
+            item.extra["container-title"],
+            Value::String("Example Journal".to_string())
+        );
+        assert_eq!(item.extra["ISSN"], Value::String("1234-567X".to_string()));
+        assert_eq!(
+            item.extra["ISBN"],
+            Value::String("9781402894626".to_string())
+        );
+        assert_eq!(item.extra["author"][0]["family"], "Smith");
+        assert_eq!(item.extra["author"][0]["given"], "Jane Q.");
+    }
+
+    #[test]
     fn duplicate_records_are_grouped_and_queued_for_review() {
         let document = CslDocument {
             items: vec![
@@ -284,6 +448,10 @@ mod tests {
         let report = standardize_document(&document, &VerificationSidecar::empty());
 
         assert!(report.transformations[0].requires_review);
+        assert_eq!(
+            report.document.items[0].extra["issued"],
+            serde_json::json!({"date-parts": [[2024]]})
+        );
         assert_eq!(
             report.sidecar.references["date-risk"].review_status,
             ReviewStatus::Queued

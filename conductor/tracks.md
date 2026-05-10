@@ -7,11 +7,11 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 00 Public repo infrastructure | completed | Public GitHub repo, license, CI/CD, Pages, security, release plumbing. |
 | 01 Product roadmap | planned | Product boundaries, v1 academic workflow, later legal and claim/provenance roadmap. |
 | 02 Legacy audit | completed | Audit imported `humanizer-next` behavior, fixtures, and reusable ideas. |
-| 03 Reference intake | in_progress | Extract references from text, Markdown, DOCX, then PDF/OCR. |
+| 03 Reference intake | completed | Extract references from text, Markdown, DOCX-adapter text, PDF text layers, and OCR-gated scans. |
 | 04 CSL canonical model | completed | Use CSL JSON as the canonical reference data model. |
 | 05 Verification sidecar | completed | Store provenance, provider matches, confidence, conflicts, and review state. |
-| 06 Academic providers | in_progress | Crossref first, then DOI, DataCite, OpenAlex, PubMed/NCBI, ORCID. |
-| 07 Standardisation cleaning | in_progress | Normalize fields, identifiers, duplicates, and style-independent reference data. |
+| 06 Academic providers | completed | Normalize Crossref, DOI resolver, DataCite, OpenAlex, PubMed/NCBI, and ORCID provider evidence. |
+| 07 Standardisation cleaning | completed | Normalize fields, identifiers, duplicates, names, containers, and style-independent reference data. |
 | 08 Conflict resolution | planned | Deterministic provider merge and unresolved-conflict workflow. |
 | 09 In-text citation reconciliation | planned | Match body citations to references and report missing/uncited/order issues. |
 | 10 Manual agent review | planned | Agent/subagent manual verification queues after automated checks. |

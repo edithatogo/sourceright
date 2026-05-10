@@ -55,10 +55,26 @@ pub fn extract_intake(document: &IntakeDocument) -> IntakeResult {
             let reference_start = markdown_reference_start(&document.text);
             extract_text_like(&document.source, &document.text, reference_start)
         }
+        IntakeSourceKind::Docx if !document.text.trim().is_empty() => {
+            let mut result = extract_text_like(&document.source, &document.text, None);
+            result.diagnostics.push(IntakeDiagnostic {
+                code: "intake.docx.adapter_text_used".to_string(),
+                message: "DOCX adapter supplied extracted text; Sourceright preserved the source as DOCX provenance.".to_string(),
+            });
+            result
+        }
         IntakeSourceKind::Docx => unsupported(
             "intake.docx.requires_extractor",
             "DOCX extraction requires an adapter; plain text extracted from DOCX can be passed as text.",
         ),
+        IntakeSourceKind::PdfText if !document.text.trim().is_empty() => {
+            let mut result = extract_text_like(&document.source, &document.text, None);
+            result.diagnostics.push(IntakeDiagnostic {
+                code: "intake.pdf.text_layer_used".to_string(),
+                message: "PDF text-layer adapter supplied extracted text; source spans are line-based in the extracted text.".to_string(),
+            });
+            result
+        }
         IntakeSourceKind::PdfText => unsupported(
             "intake.pdf.requires_text_layer_extractor",
             "PDF text extraction requires an adapter; extracted text can be passed as plain text.",
@@ -176,12 +192,25 @@ fn starts_new_reference(line: &str) -> bool {
 
 fn strip_reference_marker(entry: &str) -> String {
     let entry = entry.trim_start_matches("- ").trim_start_matches("* ");
+    if let Some(stripped) = strip_bracket_marker(entry) {
+        return stripped;
+    }
     if let Some((number, rest)) = entry.split_once('.')
         && number.trim().parse::<usize>().is_ok()
     {
         return rest.trim().to_string();
     }
     entry.to_string()
+}
+
+fn strip_bracket_marker(entry: &str) -> Option<String> {
+    let rest = entry.strip_prefix('[')?;
+    let (marker, rest) = rest.split_once(']')?;
+    marker
+        .trim()
+        .parse::<usize>()
+        .is_ok()
+        .then(|| rest.trim_start_matches('.').trim().to_string())
 }
 
 fn looks_like_reference(entry: &str) -> bool {
@@ -267,5 +296,38 @@ mod tests {
 
         assert!(result.references.is_empty());
         assert_eq!(result.diagnostics[0].code, "intake.ocr.required");
+    }
+
+    #[test]
+    fn docx_adapter_text_is_segmented_with_docx_provenance() {
+        let document = IntakeDocument {
+            source: "submission.docx".to_string(),
+            kind: IntakeSourceKind::Docx,
+            text: "[1] Smith J. Trial paper. Journal. doi:10.1/example".to_string(),
+        };
+
+        let result = extract_intake(&document);
+
+        assert_eq!(result.references.len(), 1);
+        assert_eq!(
+            result.references[0].text,
+            "Smith J. Trial paper. Journal. doi:10.1/example"
+        );
+        assert_eq!(result.references[0].source, "submission.docx");
+        assert_eq!(result.diagnostics[0].code, "intake.docx.adapter_text_used");
+    }
+
+    #[test]
+    fn pdf_text_layer_adapter_text_is_segmented() {
+        let document = IntakeDocument {
+            source: "submission.pdf".to_string(),
+            kind: IntakeSourceKind::PdfText,
+            text: "1. Doe J. Dataset paper. Journal. https://doi.org/10.2/data".to_string(),
+        };
+
+        let result = extract_intake(&document);
+
+        assert_eq!(result.references.len(), 1);
+        assert_eq!(result.diagnostics[0].code, "intake.pdf.text_layer_used");
     }
 }

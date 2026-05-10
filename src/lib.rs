@@ -22,7 +22,9 @@ pub use intake::{
 };
 pub use providers::{
     AcademicProvider, AcademicProviderResult, ProviderErrorEvidence, ProviderResultStatus,
-    crossref_candidate_from_work, doi_resolution_evidence, provider_error,
+    crossref_candidate_from_work, datacite_candidate_from_work, doi_resolution_evidence,
+    openalex_candidate_from_work, orcid_author_candidate_from_record, provider_error,
+    pubmed_candidate_from_record,
 };
 pub use report::{
     REFERENCE_REPORT_SCHEMA_VERSION, ReferenceReport, ReferenceReportCategory,
