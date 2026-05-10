@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.mcp-status.schema.json",
+  "title": "Sourceright MCP status",
+  "type": "object",
+  "required": [
+    "server_mode",
+    "transport",
+    "server_started",
+    "available_tools",
+    "available_resources",
+    "available_prompts",
+    "implemented_read_only_surfaces",
+    "resource_uris",
+    "message"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "server_mode": { "const": "not-implemented" },
+    "transport": { "const": "none" },
+    "server_started": { "const": false },
+    "available_tools": { "type": "integer", "minimum": 0 },
+    "available_resources": { "type": "integer", "minimum": 0 },
+    "available_prompts": { "type": "integer", "minimum": 0 },
+    "implemented_read_only_surfaces": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "resource_uris": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "message": { "type": "string" }
+  }
+}

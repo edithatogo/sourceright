@@ -259,8 +259,11 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 println!("{MCP_HELP}");
             }
             Some("status") | Some("--status") => {
-                reject_extra_args("mcp status", &args)?;
-                println!("{MCP_STATUS}");
+                print_mcp_status(args)?;
+            }
+            Some("--json") => {
+                reject_extra_args("mcp --json", &args)?;
+                println!("{}", serde_json::to_string(&McpStatusOutput::current())?);
             }
             Some(arg) => {
                 return Err(CliError::usage(format!(
@@ -281,6 +284,18 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
         }
     }
 
+    Ok(())
+}
+
+fn print_mcp_status(mut args: VecDeque<String>) -> Result<(), CliError> {
+    if args.front().is_some_and(|arg| arg == "--json") {
+        args.pop_front();
+        reject_extra_args("mcp status", &args)?;
+        println!("{}", serde_json::to_string(&McpStatusOutput::current())?);
+    } else {
+        reject_extra_args("mcp status", &args)?;
+        println!("{MCP_STATUS}");
+    }
     Ok(())
 }
 
@@ -572,6 +587,58 @@ impl ValidateCslOutput {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+struct McpStatusOutput {
+    server_mode: &'static str,
+    transport: &'static str,
+    server_started: bool,
+    available_tools: usize,
+    available_resources: usize,
+    available_prompts: usize,
+    implemented_read_only_surfaces: Vec<&'static str>,
+    resource_uris: Vec<&'static str>,
+    message: &'static str,
+}
+
+impl McpStatusOutput {
+    fn current() -> Self {
+        let implemented_read_only_surfaces = vec![
+            "sourceright validate-csl <references.csl.json>",
+            "sourceright report --json [.sourceright-directory]",
+            "sourceright report --mcp-resource [.sourceright-directory]",
+            "sourceright conflicts [.sourceright-directory]",
+            "sourceright citations <manuscript.txt> [.sourceright-directory]",
+            "sourceright review queue|partitions|import-decisions",
+            "sourceright journal-screen [.sourceright-directory]",
+            "sourceright legal <legal-text.txt>",
+            "sourceright provenance <document-text.txt>",
+            "sourceright policy <references.csl.json>",
+            "sourceright export --all [.sourceright-directory]",
+        ];
+        let resource_uris = vec![
+            "sourceright://reports/reference-integrity",
+            "sourceright://reports/citation-reconciliation",
+            "sourceright://workspaces/local/review-queue",
+            "sourceright://reports/journal-screening",
+            "sourceright://reports/legal-citations",
+            "sourceright://reports/claim-source-provenance",
+            "sourceright://reports/policy",
+        ];
+
+        Self {
+            server_mode: "not-implemented",
+            transport: "none",
+            server_started: false,
+            available_tools: 10,
+            available_resources: 7,
+            available_prompts: 0,
+            implemented_read_only_surfaces,
+            resource_uris,
+            message: "MCP server mode is planned but not implemented yet.",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 struct ValidateCslDiagnostic {
     code: String,
     path: String,
@@ -820,17 +887,20 @@ Usage:
   sourceright mcp
   sourceright mcp status
   sourceright mcp --status
+  sourceright mcp status --json
+  sourceright mcp --json
 
 Behavior:
   `sourceright mcp` prints the placeholder status and exits non-zero because no
   MCP server is started.
-  `sourceright mcp status` prints the same status and exits successfully.";
+  `sourceright mcp status` prints the same status and exits successfully.
+  `--json` prints a compact machine-readable readiness envelope.";
 
 const MCP_STATUS: &str = "Sourceright MCP status
 server_mode: not-implemented
 transport: none
 server_started: false
-available_tools: 9
+available_tools: 10
 available_resources: 7
 available_prompts: 0
 implemented_read_only_surfaces:
@@ -1036,7 +1106,12 @@ mod tests {
     fn mcp_status_is_explicitly_not_a_server() {
         assert!(MCP_STATUS.contains("server_mode: not-implemented"));
         assert!(MCP_STATUS.contains("server_started: false"));
-        assert!(MCP_STATUS.contains("available_tools: 9"));
+        assert!(MCP_STATUS.contains("available_tools: 10"));
         assert!(MCP_STATUS.contains("sourceright://reports/reference-integrity"));
+
+        let json = serde_json::to_value(McpStatusOutput::current()).expect("serialize status");
+        assert_eq!(json["server_mode"], "not-implemented");
+        assert_eq!(json["server_started"], false);
+        assert_eq!(json["available_tools"], 10);
     }
 }

@@ -29,6 +29,8 @@ models change.
   style, recency, and integrity checks.
 - `sourceright.policy-report.schema.json`: deterministic policy-check report
   output.
+- `sourceright.mcp-status.schema.json`: machine-readable readiness output for
+  the MCP placeholder/status surface.
 
 ## Compatibility Rules
 

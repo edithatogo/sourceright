@@ -3,6 +3,14 @@
   "server_status": "planned_read_only",
   "tools": [
     {
+      "name": "mcp.status",
+      "read_only": true,
+      "input": {
+        "format": "json"
+      },
+      "output_contract": "sourceright.mcp_status.v1"
+    },
+    {
       "name": "references.validate_csl",
       "read_only": true,
       "input": {

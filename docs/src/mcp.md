@@ -7,8 +7,14 @@ The placeholder also provides a status-only path:
 - `sourceright mcp` prints status and exits non-zero because no MCP server is started.
 - `sourceright mcp status` prints status and exits successfully.
 - `sourceright mcp --status` is an alias for `status`.
+- `sourceright mcp status --json` and `sourceright mcp --json` print machine-readable readiness status.
 
 Current status output is intentionally conservative: server mode is `not-implemented`, transport is `none`, and no MCP server is started. It also reports the read-only surfaces already implemented in the Rust core and CLI so adapters can target the stable contracts without implying server transport is available.
+
+The JSON status envelope includes `server_mode`, `transport`, `server_started`,
+tool/resource/prompt counts, implemented read-only surfaces, resource URIs, and
+a readiness message. It is intended for wrappers and agents that should not
+parse the human-readable status text.
 
 The planned MCP server should expose the same Rust core as the CLI once the reference pipeline is available. The first contracts now available for reuse are:
 
