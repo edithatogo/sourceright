@@ -17,7 +17,7 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 10 Manual agent review | completed | Agent/subagent manual verification queues after automated checks. |
 | 11 Export suite | completed | XML, ENW, RIS, BibLaTeX, and YAML outputs with validation. |
 | 12 CLI and MCP | completed | CLI command family and MCP server tools/resources/prompts. |
-| 13 Legal citations | roadmap | Future legal citation model and public legal citation APIs. |
-| 14 Claim/source/provenance | roadmap | Future claim extraction, source linkage, evidence graphs, and provenance. |
+| 13 Legal citations | completed | Separate legal citation model with jurisdiction/provider hints and legal review issues. |
+| 14 Claim/source/provenance | completed | Claim/source graph, citation links, and document-level provenance issue reports. |
 | 15 Reference reporting | completed | Reference integrity and AI-related citation-error reports. |
 | 16 Journal workflow integrations | completed | OJS-first and platform-neutral editorial submission screening contracts. |

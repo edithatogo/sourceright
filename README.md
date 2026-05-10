@@ -25,14 +25,14 @@ document/text
 - Platform-neutral journal screening outputs for editorial workflows, with OJS as the first public integration target.
 - Reference reports for citation integrity auditing and AI-related citation-error signals.
 - CLI and MCP server interfaces over the same Rust core.
-- Future legal citation verification with a separate legal citation model and public legal citation APIs.
-- Later claim/source/provenance workflows once reference verification is reliable.
+- Legal citation analysis with a separate legal citation model and public-provider slots.
+- Claim/source/provenance graphs built over detected citation support without asserting claim truth.
 
 See [conductor/tracks.md](conductor/tracks.md) for the implementation track map.
 
 ## Current Status
 
-The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, and journal screening contracts. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
+The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
 
 ## Planned Distribution
 

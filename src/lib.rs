@@ -4,6 +4,8 @@ pub mod csl;
 pub mod export;
 pub mod intake;
 pub mod journal;
+pub mod legal;
+pub mod provenance;
 pub mod providers;
 pub mod reconcile;
 pub mod report;
@@ -31,6 +33,16 @@ pub use intake::{
 pub use journal::{
     JOURNAL_SCREENING_SCHEMA_VERSION, JournalPlatform, JournalScreeningReport,
     JournalScreeningRequest, JournalScreeningStatus, screen_journal_submission,
+};
+pub use legal::{
+    LegalCitationIssue, LegalCitationIssueType, LegalCitationRecord, LegalCitationReport,
+    LegalCitationType, LegalProvider, LegalProviderCandidate, analyze_legal_citations,
+    extract_legal_citations,
+};
+pub use provenance::{
+    ClaimNode, ClaimSourceLink, ClaimSourceLinkType, EvidenceGraph, ProvenanceIssue,
+    ProvenanceIssueType, ProvenanceReport, SourceNode, analyze_claim_source_provenance,
+    build_evidence_graph,
 };
 pub use providers::{
     AcademicProvider, AcademicProviderResult, ProviderErrorEvidence, ProviderResultStatus,

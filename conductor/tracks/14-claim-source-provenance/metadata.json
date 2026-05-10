@@ -1,6 +1,6 @@
 {
   "id": "14-claim-source-provenance",
-  "status": "roadmap",
+  "status": "completed",
   "priority": "medium",
   "owned_paths": ["conductor/tracks/14-claim-source-provenance/"],
   "dependencies": ["09-in-text-citation-reconciliation", "10-manual-agent-review"]

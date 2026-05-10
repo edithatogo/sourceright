@@ -195,6 +195,28 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 .map_err(|error| error.to_string())?;
             println!("{}", serde_json::to_string(&report)?);
         }
+        Some("legal") => {
+            if maybe_print_command_help("legal", &mut args, LEGAL_HELP)? {
+                return Ok(());
+            }
+
+            let path = required_arg("legal", args.pop_front(), "text path")?;
+            reject_extra_args("legal", &args)?;
+            let text = fs::read_to_string(path).map_err(|error| error.to_string())?;
+            let report = sourceright::analyze_legal_citations(&text);
+            println!("{}", serde_json::to_string(&report)?);
+        }
+        Some("provenance") => {
+            if maybe_print_command_help("provenance", &mut args, PROVENANCE_HELP)? {
+                return Ok(());
+            }
+
+            let path = required_arg("provenance", args.pop_front(), "text path")?;
+            reject_extra_args("provenance", &args)?;
+            let text = fs::read_to_string(path).map_err(|error| error.to_string())?;
+            let report = sourceright::analyze_claim_source_provenance(&text);
+            println!("{}", serde_json::to_string(&report)?);
+        }
         Some("export") => {
             if maybe_print_command_help("export", &mut args, EXPORT_HELP)? {
                 return Ok(());
@@ -578,6 +600,8 @@ Usage:
   sourceright citations <manuscript.txt> [.sourceright-directory]
   sourceright review queue|partitions|import-decisions ...
   sourceright journal-screen [options] [.sourceright-directory]
+  sourceright legal <legal-text.txt>
+  sourceright provenance <document-text.txt>
   sourceright export [--all|--format <format>] [.sourceright-directory]
   sourceright mcp [status|--status]
 
@@ -589,6 +613,8 @@ Commands:
   citations     Reconcile in-text citations against canonical references.
   review        Inspect review queues, partition work, and import decisions.
   journal-screen  Produce a platform-neutral journal citation-screening report.
+  legal         Extract and model legal citations separately from CSL.
+  provenance    Build a claim/source provenance graph from document text.
   export        Write clean reference exports from canonical CSL JSON.
   mcp           Show MCP implementation status; server mode is not implemented yet.
 
@@ -683,6 +709,26 @@ Usage:
 Platforms:
   generic-webhook, ojs, scholarone, editorial-manager, ejournalpress, manuscript-manager";
 
+const LEGAL_HELP: &str = "sourceright legal
+
+Extract and model legal citations separately from academic CSL JSON.
+
+Usage:
+  sourceright legal <legal-text.txt>
+
+Output:
+  Prints compact JSON with legal citation records, jurisdiction/provider hints, and review issues.";
+
+const PROVENANCE_HELP: &str = "sourceright provenance
+
+Build a claim/source provenance graph from document text.
+
+Usage:
+  sourceright provenance <document-text.txt>
+
+Output:
+  Prints compact JSON with claims, detected citation source nodes, links, and provenance issues.";
+
 const EXPORT_HELP: &str = "sourceright export
 
 Write clean reference exports from an existing workspace.
@@ -716,8 +762,8 @@ const MCP_STATUS: &str = "Sourceright MCP status
 server_mode: not-implemented
 transport: none
 server_started: false
-available_tools: 6
-available_resources: 4
+available_tools: 8
+available_resources: 6
 available_prompts: 0
 implemented_read_only_surfaces:
   - sourceright validate-csl <references.csl.json>
@@ -727,12 +773,16 @@ implemented_read_only_surfaces:
   - sourceright citations <manuscript.txt> [.sourceright-directory]
   - sourceright review queue|partitions|import-decisions
   - sourceright journal-screen [.sourceright-directory]
+  - sourceright legal <legal-text.txt>
+  - sourceright provenance <document-text.txt>
   - sourceright export --all [.sourceright-directory]
 resource_uris:
   - sourceright://reports/reference-integrity
   - sourceright://reports/citation-reconciliation
   - sourceright://workspaces/local/review-queue
   - sourceright://reports/journal-screening
+  - sourceright://reports/legal-citations
+  - sourceright://reports/claim-source-provenance
 message: MCP server mode is planned but not implemented yet.";
 
 #[cfg(test)]
@@ -833,6 +883,19 @@ mod tests {
     }
 
     #[test]
+    fn legal_and_provenance_commands_require_input_paths() {
+        let legal = required_arg("legal", Option::<String>::None, "text path")
+            .expect_err("legal path required")
+            .to_string();
+        let provenance = required_arg("provenance", Option::<String>::None, "text path")
+            .expect_err("provenance path required")
+            .to_string();
+
+        assert!(legal.contains("legal requires text path"));
+        assert!(provenance.contains("provenance requires text path"));
+    }
+
+    #[test]
     fn export_accepts_single_format_or_full_suite() {
         let one = parse_export_args(VecDeque::from(vec![
             "--format".to_string(),
@@ -887,7 +950,7 @@ mod tests {
     fn mcp_status_is_explicitly_not_a_server() {
         assert!(MCP_STATUS.contains("server_mode: not-implemented"));
         assert!(MCP_STATUS.contains("server_started: false"));
-        assert!(MCP_STATUS.contains("available_tools: 6"));
+        assert!(MCP_STATUS.contains("available_tools: 8"));
         assert!(MCP_STATUS.contains("sourceright://reports/reference-integrity"));
     }
 }

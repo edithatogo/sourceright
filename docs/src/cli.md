@@ -9,11 +9,13 @@ The initial Rust binary is planned around a small, stable command surface first:
 - `sourceright citations`
 - `sourceright review`
 - `sourceright journal-screen`
+- `sourceright legal`
+- `sourceright provenance`
 - `sourceright export`
 - `sourceright mcp`
 - `sourceright mcp status`
 
-`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes. `conflicts` explains deterministic provider merge decisions. `citations` reconciles manuscript citations against reference-list entries. `review` inspects and imports manual review work. `journal-screen` produces a platform-neutral editorial screening report. `export` writes clean XML, ENW, RIS, BibLaTeX, and YAML outputs from the workspace CSL file.
+`init` creates or confirms the local Sourceright workspace layout and prints the workspace path. `validate-csl` validates canonical CSL JSON input and returns deterministic diagnostics suitable for agents and CI. `validate-csl --json` emits a compact machine-readable envelope with `ok`, `path`, and `diagnostics` fields. `report` produces a reference integrity report that can identify AI-related citation-error signals without claiming authorship or intent; `report --json` and `report --mcp-resource` expose the same report through machine-readable envelopes. `conflicts` explains deterministic provider merge decisions. `citations` reconciles manuscript citations against reference-list entries. `review` inspects and imports manual review work. `journal-screen` produces a platform-neutral editorial screening report. `legal` extracts legal citation records into a separate legal model. `provenance` builds a claim/source graph without asserting claim truth. `export` writes clean XML, ENW, RIS, BibLaTeX, and YAML outputs from the workspace CSL file.
 
 `mcp` remains a placeholder entry point for the future local MCP server. Plain `sourceright mcp` prints the current MCP status but exits non-zero because it does not start a server. `sourceright mcp status` and `sourceright mcp --status` print the same honest status output and exit successfully for scripts that need to check readiness.
 
@@ -26,6 +28,8 @@ Each implemented command supports command-specific help:
 - `sourceright citations --help`
 - `sourceright review --help`
 - `sourceright journal-screen --help`
+- `sourceright legal --help`
+- `sourceright provenance --help`
 - `sourceright export --help`
 - `sourceright mcp --help`
 
@@ -101,6 +105,26 @@ sourceright journal-screen [--platform <platform>] [--submission-id <id>] [--man
 ```
 
 Supported platform labels are `generic-webhook`, `ojs`, `scholarone`, `editorial-manager`, `ejournalpress`, and `manuscript-manager`. The command emits `sourceright.journal_screening.v1` JSON for editorial workflow adapters.
+
+## `legal` contract
+
+Usage:
+
+```text
+sourceright legal <legal-text.txt>
+```
+
+The command emits compact JSON with legal citation records, jurisdiction/provider hints, and review issues. Legal records are not forced into CSL JSON.
+
+## `provenance` contract
+
+Usage:
+
+```text
+sourceright provenance <document-text.txt>
+```
+
+The command emits compact JSON with claim nodes, detected citation source nodes, claim/source links, and provenance issues. This report describes evidence linkage; it does not assert whether a claim is true.
 
 ## `export` contract
 
