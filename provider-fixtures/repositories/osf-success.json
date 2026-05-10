@@ -1,0 +1,6 @@
+{
+  "provider": "osf",
+  "identifier": "osf.io/abc12",
+  "title": "Example OSF project",
+  "resource_type": "preprint"
+}

@@ -1,0 +1,9 @@
+{
+  "doi": "10.1234/example",
+  "is_oa": true,
+  "best_oa_location": {
+    "url": "https://example.org/article.pdf",
+    "host_type": "repository",
+    "license": "cc-by"
+  }
+}

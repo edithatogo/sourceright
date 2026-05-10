@@ -1,0 +1,6 @@
+{
+  "provider": "dataverse",
+  "doi": "10.7910/DVN/EXAMPLE",
+  "title": "Example Dataverse dataset",
+  "resource_type": "dataset"
+}

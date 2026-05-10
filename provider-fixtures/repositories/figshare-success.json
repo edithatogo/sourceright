@@ -1,0 +1,6 @@
+{
+  "provider": "figshare",
+  "doi": "10.6084/m9.figshare.1234567",
+  "title": "Example Figshare item",
+  "resource_type": "dataset"
+}

@@ -27,6 +27,23 @@ The Rust core currently includes the provider result model and fixture-friendly 
 
 The remaining providers in the roadmap should reuse this result shape and keep their default tests fixture-backed.
 
+## Expansion Fixtures
+
+The next provider families are tracked under `provider-fixtures/` and the plugin
+registry. They are not live adapters yet:
+
+- Crossmark or Retraction Watch-style status evidence.
+- Unpaywall open-access location evidence.
+- OpenCitations citation graph evidence.
+- arXiv preprint identity evidence.
+- Europe PMC biomedical repository evidence.
+- Zenodo, OSF, Figshare, and Dataverse repository references.
+- Dimensions, Scopus, and Web of Science as BYO-key/licensed-data plugins.
+
+Each future adapter should add success, no-match, ambiguous-match, rate-limit,
+outage, malformed-response, and conflicting-metadata fixtures before any live
+network behavior is enabled.
+
 ## Merge Rule
 
 Provider results are candidates with provenance. They must not silently overwrite canonical references. Any proposed change to canonical fields must be represented as a sidecar candidate, conflict, or explicit merge decision with source attribution.

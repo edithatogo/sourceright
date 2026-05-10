@@ -1,0 +1,11 @@
+{
+  "id": "arXiv:2401.00001",
+  "title": "Example preprint reference",
+  "versions": [
+    {
+      "version": "v1",
+      "created": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "doi": "10.48550/arXiv.2401.00001"
+}
