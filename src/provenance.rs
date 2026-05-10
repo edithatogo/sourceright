@@ -157,7 +157,7 @@ fn link_claims_to_sources(
     let mut links = Vec::new();
     for claim in claims {
         for (index, citation) in citations.iter().enumerate() {
-            if claim.span.split(':').last() == citation.span.split(':').nth(1)
+            if claim.span.split(':').next_back() == citation.span.split(':').nth(1)
                 || claim.text.contains(&citation.text)
             {
                 links.push(ClaimSourceLink {

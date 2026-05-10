@@ -108,19 +108,19 @@ pub fn reconcile_citations(text: &str, references: &CslDocument) -> CitationReco
     let mut last_numeric = 0;
 
     for occurrence in &occurrences {
-        if occurrence.style == CitationStyle::Numeric {
-            if let Ok(number) = occurrence.key.parse::<usize>() {
-                if number < last_numeric {
-                    issues.push(CitationReconciliationIssue {
-                        issue_type: CitationReconciliationIssueType::NumericOrder,
-                        reference_id: None,
-                        citation_text: Some(occurrence.text.clone()),
-                        message: "Numeric citation appears after a higher numbered citation."
-                            .to_string(),
-                    });
-                }
-                last_numeric = last_numeric.max(number);
+        if occurrence.style == CitationStyle::Numeric
+            && let Ok(number) = occurrence.key.parse::<usize>()
+        {
+            if number < last_numeric {
+                issues.push(CitationReconciliationIssue {
+                    issue_type: CitationReconciliationIssueType::NumericOrder,
+                    reference_id: None,
+                    citation_text: Some(occurrence.text.clone()),
+                    message: "Numeric citation appears after a higher numbered citation."
+                        .to_string(),
+                });
             }
+            last_numeric = last_numeric.max(number);
         }
 
         match reference_index.match_occurrence(occurrence) {
