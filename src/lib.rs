@@ -25,7 +25,8 @@ pub use csl::{
     normalize_item_type, normalize_title, parse_csl_json, validate_csl_json,
 };
 pub use export::{
-    EXPORT_SCHEMA_VERSION, ExportArtifact, ExportFormat, export_document, export_suite,
+    EXPORT_MANIFEST_SCHEMA_VERSION, EXPORT_SCHEMA_VERSION, ExportArtifact, ExportFormat,
+    ExportManifest, ExportManifestArtifact, ExportManifestSource, export_document, export_suite,
 };
 pub use intake::{
     InTextCitationCandidate, IntakeDiagnostic, IntakeDocument, IntakeResult, IntakeSourceKind,

@@ -27,6 +27,7 @@ The planned MCP server should expose the same Rust core as the CLI once the refe
 - `validate-csl --json`, which returns a deterministic local-file validation envelope with `ok`, `path`, and `diagnostics` fields and uses exit code `1` for validation findings.
 - `report --json`, which returns `sourceright.reference_report.v1`.
 - `report --mcp-resource`, which returns the report resource envelope at `sourceright://reports/reference-integrity`.
+- `export --preview --format <format>` and `export --preview --all`, which return `sourceright.export_manifest.v1` without writing export files.
 
 Planned tools:
 

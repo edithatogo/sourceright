@@ -32,6 +32,8 @@ The implemented Rust exporter writes:
 
 Exports are opt-in. `sourceright export --format <yaml|xml|ris|enw|biblatex> [.sourceright-directory]` writes a single requested format. `sourceright export --all [.sourceright-directory]` writes the full suite. Running `sourceright export` without `--format` or `--all` is a usage error so screening workflows do not create citation-manager files accidentally.
 
+Dry-run previews are also explicit: `sourceright export --preview --format <format> [.sourceright-directory]` and `sourceright export --preview --all [.sourceright-directory]` print compact `sourceright.export_manifest.v1` JSON listing the selected output files, content types, and source CSL path without creating export files.
+
 ## Format criteria
 
 ### XML

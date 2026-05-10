@@ -6,7 +6,10 @@ use thiserror::Error;
 
 use crate::conflict::ConflictResolutionReport;
 use crate::csl::{CslDocument, format_csl_json, validate_csl_json};
-use crate::export::{ExportArtifact, ExportFormat, export_document, export_suite};
+use crate::export::{
+    EXPORT_MANIFEST_SCHEMA_VERSION, EXPORT_SCHEMA_VERSION, ExportArtifact, ExportFormat,
+    ExportManifest, ExportManifestArtifact, ExportManifestSource, export_document, export_suite,
+};
 use crate::journal::{JournalPlatform, JournalScreeningReport, JournalScreeningRequest};
 use crate::reconcile::CitationReconciliationReport;
 use crate::report::{ReferenceReport, ReferenceReportJsonOutput, ReferenceReportResource};
@@ -126,6 +129,32 @@ impl SourcerightWorkspace {
             paths.push(path);
         }
         Ok(paths)
+    }
+
+    pub fn export_manifest(
+        &self,
+        format: Option<ExportFormat>,
+    ) -> Result<ExportManifest, WorkspaceError> {
+        let artifacts = self.export_references(format)?;
+        Ok(ExportManifest {
+            schema_version: EXPORT_MANIFEST_SCHEMA_VERSION.to_string(),
+            source: ExportManifestSource {
+                references_csl_json: self.references_csl_json.display().to_string(),
+                verification_sidecar_json: self.verification_sidecar_json.display().to_string(),
+            },
+            artifacts: artifacts
+                .into_iter()
+                .map(|artifact| {
+                    let path = self.exports_dir.join(&artifact.filename);
+                    ExportManifestArtifact {
+                        format: artifact.format,
+                        filename: path.display().to_string(),
+                        content_type: artifact.format.content_type().to_string(),
+                        schema_version: EXPORT_SCHEMA_VERSION.to_string(),
+                    }
+                })
+                .collect(),
+        })
     }
 
     pub fn reference_report(&self) -> Result<ReferenceReport, WorkspaceError> {
@@ -306,6 +335,28 @@ mod tests {
                 .expect("read ris")
                 .contains("DO  - 10.1000/example")
         );
+    }
+
+    #[test]
+    fn export_manifest_previews_outputs_without_writing_files() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            r#"[{"id":"smith-2024","type":"article-journal","title":"Trial"}]"#,
+        )
+        .expect("write references");
+
+        let manifest = workspace
+            .export_manifest(Some(ExportFormat::Ris))
+            .expect("preview export manifest");
+
+        assert_eq!(manifest.schema_version, "sourceright.export_manifest.v1");
+        assert_eq!(manifest.artifacts.len(), 1);
+        assert_eq!(manifest.artifacts[0].format, ExportFormat::Ris);
+        assert!(manifest.artifacts[0].filename.ends_with("references.ris"));
+        assert!(!workspace.exports_dir.join("references.ris").exists());
     }
 
     #[test]

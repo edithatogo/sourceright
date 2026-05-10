@@ -4,6 +4,7 @@ use serde_json::Value;
 use crate::csl::{CslDocument, CslItem};
 
 pub const EXPORT_SCHEMA_VERSION: &str = "sourceright.export.v1";
+pub const EXPORT_MANIFEST_SCHEMA_VERSION: &str = "sourceright.export_manifest.v1";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -36,6 +37,16 @@ impl ExportFormat {
             _ => None,
         }
     }
+
+    pub fn content_type(self) -> &'static str {
+        match self {
+            Self::Yaml => "application/x-yaml",
+            Self::Xml => "application/xml",
+            Self::Ris => "application/x-research-info-systems",
+            Self::Enw => "application/x-endnote-refer",
+            Self::Biblatex => "application/x-bibtex",
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -43,6 +54,27 @@ pub struct ExportArtifact {
     pub format: ExportFormat,
     pub filename: String,
     pub content: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ExportManifest {
+    pub schema_version: String,
+    pub source: ExportManifestSource,
+    pub artifacts: Vec<ExportManifestArtifact>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ExportManifestSource {
+    pub references_csl_json: String,
+    pub verification_sidecar_json: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ExportManifestArtifact {
+    pub format: ExportFormat,
+    pub filename: String,
+    pub content_type: String,
+    pub schema_version: String,
 }
 
 pub fn export_document(document: &CslDocument, format: ExportFormat) -> ExportArtifact {

@@ -246,11 +246,18 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
 
             let options = parse_export_args(args)?;
             let workspace = SourcerightWorkspace::from_root(options.workspace_root);
-            let paths = workspace
-                .write_exports(options.format)
-                .map_err(|error| error.to_string())?;
-            for path in paths {
-                println!("{}", path.display());
+            if options.preview {
+                let manifest = workspace
+                    .export_manifest(options.format)
+                    .map_err(|error| error.to_string())?;
+                println!("{}", serde_json::to_string(&manifest)?);
+            } else {
+                let paths = workspace
+                    .write_exports(options.format)
+                    .map_err(|error| error.to_string())?;
+                for path in paths {
+                    println!("{}", path.display());
+                }
             }
         }
         Some("mcp") => match args.pop_front().as_deref() {
@@ -387,18 +394,44 @@ fn parse_report_args(args: VecDeque<String>) -> Result<ReportOptions, CliError> 
 
 fn parse_export_args(mut args: VecDeque<String>) -> Result<ExportOptions, CliError> {
     let mut format = None;
+    let mut selected = false;
+    let mut preview = false;
 
-    if args.front().is_some_and(|arg| arg == "--format") {
-        args.pop_front();
-        let value = required_arg("export", args.pop_front(), "format name")?;
-        format = Some(ExportFormat::parse(&value).ok_or_else(|| {
-            CliError::usage(format!(
-                "unsupported export format: {value}\nrun `sourceright export --help` for usage"
-            ))
-        })?);
-    } else if args.front().is_some_and(|arg| arg == "--all") {
-        args.pop_front();
-    } else {
+    while let Some(arg) = args.front() {
+        match arg.as_str() {
+            "--preview" => {
+                preview = true;
+                args.pop_front();
+            }
+            "--format" => {
+                if selected {
+                    return Err(CliError::usage(
+                        "export accepts only one of `--format <format>` or `--all`\nrun `sourceright export --help` for usage",
+                    ));
+                }
+                args.pop_front();
+                let value = required_arg("export", args.pop_front(), "format name")?;
+                format = Some(ExportFormat::parse(&value).ok_or_else(|| {
+                    CliError::usage(format!(
+                        "unsupported export format: {value}\nrun `sourceright export --help` for usage"
+                    ))
+                })?);
+                selected = true;
+            }
+            "--all" => {
+                if selected {
+                    return Err(CliError::usage(
+                        "export accepts only one of `--format <format>` or `--all`\nrun `sourceright export --help` for usage",
+                    ));
+                }
+                args.pop_front();
+                selected = true;
+            }
+            _ => break,
+        }
+    }
+
+    if !selected {
         return Err(CliError::usage(
             "export requires `--format <format>` or `--all`\nrun `sourceright export --help` for usage",
         ));
@@ -413,6 +446,7 @@ fn parse_export_args(mut args: VecDeque<String>) -> Result<ExportOptions, CliErr
     Ok(ExportOptions {
         workspace_root,
         format,
+        preview,
     })
 }
 
@@ -562,6 +596,7 @@ enum ReportFormat {
 struct ExportOptions {
     workspace_root: PathBuf,
     format: Option<ExportFormat>,
+    preview: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -900,8 +935,10 @@ Formats:
   yaml, xml, ris, enw, biblatex
 
 Behavior:
-  `--format <format>` writes one explicitly requested format.
-  `--all` writes the full export suite.
+  `--format <format>` selects one explicitly requested format.
+  `--all` selects the full export suite.
+  `--preview` prints compact `sourceright.export_manifest.v1` JSON without
+  writing files.
   No export files are written unless a format or `--all` is requested.";
 
 const MCP_HELP: &str = "sourceright mcp
@@ -1098,7 +1135,23 @@ mod tests {
 
         assert_eq!(one.format, Some(ExportFormat::Ris));
         assert_eq!(all.format, None);
+        assert!(!one.preview);
         assert_eq!(one.workspace_root, PathBuf::from(".sourceright"));
+    }
+
+    #[test]
+    fn export_preview_selects_artifacts_without_write_mode() {
+        let options = parse_export_args(VecDeque::from(vec![
+            "--preview".to_string(),
+            "--format".to_string(),
+            "ris".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse preview export");
+
+        assert!(options.preview);
+        assert_eq!(options.format, Some(ExportFormat::Ris));
+        assert_eq!(options.workspace_root, PathBuf::from(".sourceright"));
     }
 
     #[test]
