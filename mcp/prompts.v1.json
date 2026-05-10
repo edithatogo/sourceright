@@ -1,0 +1,25 @@
+{
+  "schema_version": "sourceright.mcp_prompts.v1",
+  "prompts": [
+    {
+      "name": "manual_reference_review",
+      "purpose": "Guide manual review of queued references using CSL and sidecar evidence."
+    },
+    {
+      "name": "citation_integrity_explanation",
+      "purpose": "Explain reference report issues without claiming author intent."
+    },
+    {
+      "name": "provider_conflict_explanation",
+      "purpose": "Explain provider/canonical conflicts and the no-silent-overwrite rule."
+    },
+    {
+      "name": "legal_citation_review",
+      "purpose": "Review separate legal citation records and jurisdiction/provider issues."
+    },
+    {
+      "name": "claim_source_provenance_review",
+      "purpose": "Review claim/source linkage without claim-truth scoring."
+    }
+  ]
+}

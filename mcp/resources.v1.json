@@ -1,0 +1,35 @@
+{
+  "schema_version": "sourceright.mcp_resources.v1",
+  "resources": [
+    {
+      "uri": "sourceright://reports/reference-integrity",
+      "mime_type": "application/json",
+      "contract": "sourceright.reference_report.v1"
+    },
+    {
+      "uri": "sourceright://reports/citation-reconciliation",
+      "mime_type": "text/markdown",
+      "contract": "sourceright.citation_reconciliation_report"
+    },
+    {
+      "uri": "sourceright://workspaces/local/review-queue",
+      "mime_type": "application/jsonl",
+      "contract": "sourceright.review_queue.jsonl"
+    },
+    {
+      "uri": "sourceright://reports/journal-screening",
+      "mime_type": "application/json",
+      "contract": "sourceright.journal_screening.v1"
+    },
+    {
+      "uri": "sourceright://reports/legal-citations",
+      "mime_type": "application/json",
+      "contract": "sourceright.legal_citation_report"
+    },
+    {
+      "uri": "sourceright://reports/claim-source-provenance",
+      "mime_type": "application/json",
+      "contract": "sourceright.provenance_report"
+    }
+  ]
+}

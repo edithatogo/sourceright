@@ -1,0 +1,73 @@
+{
+  "schema_version": "sourceright.mcp_tools.v1",
+  "server_status": "planned_read_only",
+  "tools": [
+    {
+      "name": "references.validate_csl",
+      "read_only": true,
+      "input": {
+        "path": "references.csl.json"
+      },
+      "output_contract": "sourceright.validate_csl_output"
+    },
+    {
+      "name": "references.report",
+      "read_only": true,
+      "input": {
+        "workspace": ".sourceright"
+      },
+      "output_contract": "sourceright.reference_report.v1"
+    },
+    {
+      "name": "references.review_queue",
+      "read_only": true,
+      "input": {
+        "workspace": ".sourceright"
+      },
+      "output_contract": "sourceright.review_queue.jsonl"
+    },
+    {
+      "name": "references.citations",
+      "read_only": true,
+      "input": {
+        "manuscript": "manuscript.txt",
+        "workspace": ".sourceright"
+      },
+      "output_contract": "sourceright.citation_reconciliation_report"
+    },
+    {
+      "name": "journal.screen_submission",
+      "read_only": true,
+      "input": {
+        "workspace": ".sourceright",
+        "platform": "generic-webhook"
+      },
+      "output_contract": "sourceright.journal_screening.v1"
+    },
+    {
+      "name": "legal.analyze_citations",
+      "read_only": true,
+      "input": {
+        "path": "legal-text.txt"
+      },
+      "output_contract": "sourceright.legal_citation_report"
+    },
+    {
+      "name": "provenance.analyze_claim_sources",
+      "read_only": true,
+      "input": {
+        "path": "document-text.txt"
+      },
+      "output_contract": "sourceright.provenance_report"
+    },
+    {
+      "name": "exports.preview",
+      "read_only": true,
+      "input": {
+        "workspace": ".sourceright",
+        "format": "ris"
+      },
+      "output_contract": "sourceright.export_manifest.v1"
+    }
+  ]
+}
