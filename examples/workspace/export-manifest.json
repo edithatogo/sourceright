@@ -1,0 +1,17 @@
+{
+  "schema_version": "sourceright.export_manifest.v1",
+  "source": {
+    "references_csl_json": ".sourceright/references.csl.json",
+    "verification_sidecar_json": ".sourceright/references.verification.json"
+  },
+  "artifacts": [
+    {
+      "format": "ris",
+      "filename": ".sourceright/exports/references.ris"
+    },
+    {
+      "format": "biblatex",
+      "filename": ".sourceright/exports/references.bib"
+    }
+  ]
+}

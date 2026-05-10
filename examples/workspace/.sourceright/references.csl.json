@@ -1,0 +1,13 @@
+[
+  {
+    "id": "smith-2024",
+    "type": "article-journal",
+    "title": "Example verified reference",
+    "DOI": "10.1234/example"
+  },
+  {
+    "id": "unverified-2023",
+    "type": "article-journal",
+    "title": "Example reference needing review"
+  }
+]

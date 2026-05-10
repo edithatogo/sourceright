@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.policy.schema.json",
+  "title": "Sourceright policy",
+  "type": "object",
+  "required": ["schema_version", "policy_id"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": { "const": "sourceright.policy.v1" },
+    "policy_id": { "type": "string", "minLength": 1 },
+    "label": { "type": "string" },
+    "style": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "citation_style": { "type": "string" },
+        "reference_order": {
+          "enum": ["appearance", "alphabetical", "unspecified"]
+        },
+        "doi_policy": {
+          "enum": ["required_if_available", "optional", "not_required"]
+        }
+      }
+    },
+    "recency": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "publication_age_warning_years": { "type": "integer", "minimum": 0 },
+        "guideline_age_warning_years": { "type": "integer", "minimum": 0 },
+        "requires_retraction_check": { "type": "boolean" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "preprint_policy": {
+          "enum": ["allowed", "review_required", "disallowed"]
+        },
+        "retracted_citation_policy": {
+          "enum": ["review_required", "disallowed"]
+        }
+      }
+    }
+  }
+}

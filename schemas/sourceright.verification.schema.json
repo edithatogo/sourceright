@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.verification.schema.json",
+  "title": "Sourceright verification sidecar",
+  "type": "object",
+  "required": ["schema_version", "references"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "sourceright.verification.v1" },
+    "references": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/reference_verification" }
+    }
+  },
+  "$defs": {
+    "reference_verification": {
+      "type": "object",
+      "required": ["review_status"],
+      "additionalProperties": false,
+      "properties": {
+        "extraction": { "$ref": "#/$defs/extraction_provenance" },
+        "provider_candidates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/provider_candidate" },
+          "default": []
+        },
+        "conflicts": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": true },
+          "default": []
+        },
+        "review_status": { "$ref": "#/$defs/review_status" },
+        "review_decisions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/review_decision" },
+          "default": []
+        }
+      }
+    },
+    "extraction_provenance": {
+      "type": "object",
+      "required": ["source"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "original_text": { "type": "string" },
+        "span": { "type": "string" }
+      }
+    },
+    "provider_candidate": {
+      "type": "object",
+      "required": ["provider", "confidence", "retrieved_at", "data"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "retrieved_at": { "type": "string", "minLength": 1 },
+        "data": {}
+      }
+    },
+    "review_status": {
+      "enum": ["not_required", "queued", "in_progress", "resolved", "unresolved"]
+    },
+    "review_decision": {
+      "type": "object",
+      "required": ["decision", "reviewer", "decided_at"],
+      "additionalProperties": false,
+      "properties": {
+        "decision": { "type": "string", "minLength": 1 },
+        "reviewer": { "type": "string", "minLength": 1 },
+        "decided_at": { "type": "string", "minLength": 1 },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.provenance-report.schema.json",
+  "title": "Sourceright claim/source provenance report",
+  "type": "object",
+  "required": ["graph", "issues"],
+  "additionalProperties": false,
+  "properties": {
+    "graph": {
+      "type": "object",
+      "required": ["claims", "sources", "links"],
+      "additionalProperties": false,
+      "properties": {
+        "claims": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/claim" }
+        },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source" }
+        },
+        "links": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/link" }
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/issue" }
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": ["id", "text", "span"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string" },
+        "span": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "citation_text", "span"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "citation_text": { "type": "string" },
+        "span": { "type": "string" }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["claim_id", "source_id", "link_type"],
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": { "type": "string", "minLength": 1 },
+        "source_id": { "type": "string", "minLength": 1 },
+        "link_type": {
+          "enum": ["citation_support", "quote_support", "needs_review"]
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "required": ["issue_type", "claim_id", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "issue_type": {
+          "enum": [
+            "unsupported_claim",
+            "quote_without_citation",
+            "weak_source_link"
+          ]
+        },
+        "claim_id": { "type": "string" },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

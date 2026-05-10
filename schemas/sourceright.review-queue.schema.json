@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.review-queue.schema.json",
+  "title": "Sourceright review queue entry",
+  "description": "Schema for one JSONL line emitted by review queue surfaces.",
+  "type": "object",
+  "required": ["id", "review_status"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "extraction": {
+      "$ref": "sourceright.verification.schema.json#/$defs/extraction_provenance"
+    },
+    "provider_candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "sourceright.verification.schema.json#/$defs/provider_candidate"
+      },
+      "default": []
+    },
+    "conflicts": {
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": true },
+      "default": []
+    },
+    "review_status": {
+      "$ref": "sourceright.verification.schema.json#/$defs/review_status"
+    }
+  }
+}

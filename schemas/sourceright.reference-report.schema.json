@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.reference-report.schema.json",
+  "title": "Sourceright reference integrity report",
+  "oneOf": [
+    { "$ref": "#/$defs/report" },
+    { "$ref": "#/$defs/mcp_resource" }
+  ],
+  "$defs": {
+    "report": {
+      "type": "object",
+      "required": ["schema_version", "report_type", "summary", "issues"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "sourceright.reference_report.v1" },
+        "report_type": { "type": "string", "minLength": 1 },
+        "summary": { "$ref": "#/$defs/summary" },
+        "issues": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/issue" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "total_references",
+        "verified_references",
+        "review_queue_count",
+        "unresolved_count",
+        "conflict_count",
+        "ai_risk_issue_count",
+        "error_count",
+        "warning_count",
+        "info_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total_references": { "type": "integer", "minimum": 0 },
+        "verified_references": { "type": "integer", "minimum": 0 },
+        "review_queue_count": { "type": "integer", "minimum": 0 },
+        "unresolved_count": { "type": "integer", "minimum": 0 },
+        "conflict_count": { "type": "integer", "minimum": 0 },
+        "ai_risk_issue_count": { "type": "integer", "minimum": 0 },
+        "error_count": { "type": "integer", "minimum": 0 },
+        "warning_count": { "type": "integer", "minimum": 0 },
+        "info_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "required": [
+        "severity",
+        "category",
+        "reference_id",
+        "code",
+        "message",
+        "ai_risk_signal"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "severity": { "enum": ["info", "warning", "error"] },
+        "category": {
+          "enum": [
+            "csl_integrity",
+            "identifier",
+            "verification_coverage",
+            "provider_conflict",
+            "manual_review",
+            "sidecar_boundary"
+          ]
+        },
+        "reference_id": { "type": ["string", "null"] },
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "ai_risk_signal": { "type": "boolean" }
+      }
+    },
+    "mcp_resource": {
+      "type": "object",
+      "required": ["uri", "mime_type", "data"],
+      "additionalProperties": false,
+      "properties": {
+        "uri": { "const": "sourceright://reports/reference-integrity" },
+        "mime_type": { "const": "application/json" },
+        "data": { "$ref": "#/$defs/report" }
+      }
+    }
+  }
+}

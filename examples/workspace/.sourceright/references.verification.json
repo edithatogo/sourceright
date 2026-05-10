@@ -1,0 +1,27 @@
+{
+  "schema_version": "sourceright.verification.v1",
+  "references": {
+    "smith-2024": {
+      "provider_candidates": [
+        {
+          "provider": "crossref",
+          "confidence": 0.98,
+          "retrieved_at": "2026-05-10T00:00:00Z",
+          "data": {
+            "DOI": "10.1234/example",
+            "title": ["Example verified reference"]
+          }
+        }
+      ],
+      "review_status": "not_required"
+    },
+    "unverified-2023": {
+      "extraction": {
+        "source": "examples/workspace/manuscript.txt",
+        "original_text": "Unverified reference. Journal. 2023.",
+        "span": "references:2"
+      },
+      "review_status": "queued"
+    }
+  }
+}

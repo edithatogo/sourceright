@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.journal-screening.schema.json",
+  "title": "Sourceright journal screening report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "submission_id",
+    "platform",
+    "status",
+    "editorial_summary",
+    "author_action_checklist",
+    "reference_report"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "sourceright.journal_screening.v1" },
+    "submission_id": { "type": "string", "minLength": 1 },
+    "platform": {
+      "enum": [
+        "generic_webhook",
+        "ojs",
+        "scholar_one",
+        "editorial_manager",
+        "e_journal_press",
+        "manuscript_manager"
+      ]
+    },
+    "status": {
+      "enum": [
+        "accepted",
+        "screened",
+        "blocked_for_extraction",
+        "screened_with_warnings",
+        "screened_with_errors"
+      ]
+    },
+    "editorial_summary": { "type": "string" },
+    "author_action_checklist": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "reference_report": {
+      "$ref": "sourceright.reference-report.schema.json#/$defs/report"
+    }
+  }
+}
