@@ -8,7 +8,7 @@ diagnostic data only where explicitly requested.
 
 ## Work plan
 
-1. Define the export command contract. Completed with `sourceright export [--all|--format <format>] [.sourceright-directory]`.
+1. Define the export command contract. Completed with opt-in `sourceright export --format <format> [.sourceright-directory]` and `sourceright export --all [.sourceright-directory]`; no files are written without an explicit output selection.
    - Accept canonical CSL JSON input.
    - Support selecting one format or writing the full suite.
    - Use deterministic filenames, stable record ordering, and explicit

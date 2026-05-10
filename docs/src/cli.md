@@ -68,7 +68,8 @@ Default Markdown output renders the editor-facing audit report. `--json` emits c
 Usage:
 
 ```text
-sourceright export [--all|--format <format>] [.sourceright-directory]
+sourceright export --format <format> [.sourceright-directory]
+sourceright export --all [.sourceright-directory]
 ```
 
-The default is the full export suite. Supported format names are `yaml`, `xml`, `ris`, `enw`, and `biblatex`. The command writes deterministic files into the workspace `exports` directory and prints the written paths.
+Exports are opt-in. The command does not write files unless a single `--format` or explicit `--all` is supplied. Supported format names are `yaml`, `xml`, `ris`, `enw`, and `biblatex`. The command writes deterministic files into the workspace `exports` directory and prints the written paths.

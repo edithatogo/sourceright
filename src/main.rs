@@ -209,6 +209,10 @@ fn parse_export_args(mut args: VecDeque<String>) -> Result<ExportOptions, CliErr
         })?);
     } else if args.front().is_some_and(|arg| arg == "--all") {
         args.pop_front();
+    } else {
+        return Err(CliError::usage(
+            "export requires `--format <format>` or `--all`\nrun `sourceright export --help` for usage",
+        ));
     }
 
     let workspace_root = args
@@ -438,8 +442,10 @@ Usage:
 Formats:
   yaml, xml, ris, enw, biblatex
 
-Default:
-  Writes the full export suite to the workspace exports directory.";
+Behavior:
+  `--format <format>` writes one explicitly requested format.
+  `--all` writes the full export suite.
+  No export files are written unless a format or `--all` is requested.";
 
 const MCP_HELP: &str = "sourceright mcp
 
@@ -543,6 +549,16 @@ mod tests {
         assert_eq!(one.format, Some(ExportFormat::Ris));
         assert_eq!(all.format, None);
         assert_eq!(one.workspace_root, PathBuf::from(".sourceright"));
+    }
+
+    #[test]
+    fn export_requires_explicit_format_or_all() {
+        let error = parse_export_args(VecDeque::from(vec![".sourceright".to_string()]))
+            .expect_err("export should require explicit output selection")
+            .to_string();
+
+        assert!(error.contains("export requires `--format <format>` or `--all`"));
+        assert!(error.contains("sourceright export --help"));
     }
 
     #[test]
