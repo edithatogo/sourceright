@@ -30,7 +30,7 @@ The implemented Rust exporter writes:
 - `references.enw`
 - `references.bib`
 
-`sourceright export --all [.sourceright-directory]` writes the full suite. `sourceright export --format <yaml|xml|ris|enw|biblatex> [.sourceright-directory]` writes a single format.
+Exports are opt-in. `sourceright export --format <yaml|xml|ris|enw|biblatex> [.sourceright-directory]` writes a single requested format. `sourceright export --all [.sourceright-directory]` writes the full suite. Running `sourceright export` without `--format` or `--all` is a usage error so screening workflows do not create citation-manager files accidentally.
 
 ## Format criteria
 
