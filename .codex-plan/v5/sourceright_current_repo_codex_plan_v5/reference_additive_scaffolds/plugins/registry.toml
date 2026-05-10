@@ -1,0 +1,23 @@
+# Reference registry scaffold. Adapt after repo inspection.
+[registry]
+schema_version = "sourceright.plugin-registry.v1"
+
+[[plugins]]
+id = "provider.crossref"
+manifest = "plugins/manifests/provider.crossref.toml"
+status = "implemented_or_planned_after_audit"
+
+[[plugins]]
+id = "provider.dimensions"
+manifest = "plugins/manifests/provider.dimensions.toml"
+status = "planned_byo_key"
+
+[[plugins]]
+id = "citation-manager.zotero"
+manifest = "plugins/manifests/citation-manager.zotero.toml"
+status = "planned"
+
+[[plugins]]
+id = "legal.courtlistener"
+manifest = "plugins/manifests/legal.courtlistener.toml"
+status = "planned"

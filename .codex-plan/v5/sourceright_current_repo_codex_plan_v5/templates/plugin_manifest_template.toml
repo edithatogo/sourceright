@@ -1,0 +1,27 @@
+# Template only. Do not copy blindly without checking current repo conventions.
+[plugin]
+id = "provider.example"
+name = "Example Provider"
+kind = "provider"
+version = "0.1.0"
+plugin_api = "sourceright.plugin.v1"
+status = "planned"
+license_profile = "open | byo_key | licensed_data"
+auth = "none | api_key | oauth | institutional"
+
+[capabilities]
+reference_lookup = true
+identifier_resolution = false
+retraction_status = false
+recency_status = false
+citation_manager_sync = false
+legal_authority_lookup = false
+
+[privacy]
+sends_reference_text = true
+sends_document_text = false
+cache_policy = "fixture_only | metadata_hash_only | provider_terms"
+
+[testing]
+live_network_tests = false
+fixture_backed = true

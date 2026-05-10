@@ -1,0 +1,16 @@
+{
+  "schema_version": "sourceright.reference_report.v1",
+  "summary": {
+    "references": 3,
+    "verified": 2,
+    "needs_review": 1
+  },
+  "issues": [
+    {
+      "reference_id": "ref-003",
+      "severity": "warning",
+      "category": "provider_conflict",
+      "message": "Candidate metadata differs across providers."
+    }
+  ]
+}

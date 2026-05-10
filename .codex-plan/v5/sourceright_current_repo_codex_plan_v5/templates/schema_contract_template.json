@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/example.schema.json",
+  "title": "Sourceright Example Schema Contract",
+  "type": "object",
+  "description": "Template only. Codex should align real schemas to current Rust models and docs.",
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version"
+  ],
+  "additionalProperties": true
+}

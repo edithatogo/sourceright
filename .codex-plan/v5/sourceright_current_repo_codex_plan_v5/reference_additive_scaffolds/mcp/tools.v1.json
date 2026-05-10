@@ -1,0 +1,22 @@
+{
+  "schema_version": "sourceright.mcp_tools.v1",
+  "mode": "read_only_first",
+  "tools": [
+    {
+      "name": "references.validate_csl",
+      "mutates": false
+    },
+    {
+      "name": "references.report",
+      "mutates": false
+    },
+    {
+      "name": "references.review_queue",
+      "mutates": false
+    },
+    {
+      "name": "references.export_preview",
+      "mutates": false
+    }
+  ]
+}

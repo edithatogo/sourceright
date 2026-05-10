@@ -1,0 +1,49 @@
+version: sourceright.codex-plan.v5
+stance: current_repo_is_source_of_truth
+bulk_apply_overlay: false
+split_workspace_now: false
+slices:
+  - id: "00"
+    name: inspect-current-repo
+    prompt: codex/prompts/00-inspect-current-repo.md
+    modifies_files: false
+  - id: "01"
+    name: baseline-checks
+    prompt: codex/prompts/01-baseline-checks.md
+    modifies_files: false_or_minimal
+  - id: "02"
+    name: schema-contracts
+    prompt: codex/prompts/02-schema-contracts.md
+    modifies_files: true
+  - id: "03"
+    name: plugin-registry
+    prompt: codex/prompts/03-plugin-registry.md
+    modifies_files: true
+  - id: "04"
+    name: demonstrators
+    prompt: codex/prompts/04-demonstrators.md
+    modifies_files: true
+  - id: "05"
+    name: benchmark-harness
+    prompt: codex/prompts/05-benchmark-harness.md
+    modifies_files: true
+  - id: "06"
+    name: policy-style-recency
+    prompt: codex/prompts/06-policy-style-recency.md
+    modifies_files: true
+  - id: "07"
+    name: provider-fixture-expansion
+    prompt: codex/prompts/07-provider-fixture-expansion.md
+    modifies_files: true
+  - id: "08"
+    name: citation-manager-profiles
+    prompt: codex/prompts/08-citation-manager-profiles.md
+    modifies_files: true
+  - id: "09"
+    name: mcp-readonly-plan
+    prompt: codex/prompts/09-mcp-readonly-plan.md
+    modifies_files: true
+  - id: "10"
+    name: final-review
+    prompt: codex/prompts/10-final-review.md
+    modifies_files: false_or_minimal

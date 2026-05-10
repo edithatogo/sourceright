@@ -1,0 +1,18 @@
+# Template only. Adapt to the current policy schema after Codex inspects the repo.
+schema_version: sourceright.policy.v1
+policy_id: example-journal-vancouver
+kind: journal
+citation:
+  family: numeric_citation_sequence
+  order: first_citation_order
+references:
+  doi_policy: required_if_available
+  allow_preprints: true
+  max_references: 80
+integrity:
+  retracted_citation_policy: review_required
+  provider_conflict_policy: review_required
+recency:
+  enabled: true
+  warning_after_years: 8
+  field_specific: []

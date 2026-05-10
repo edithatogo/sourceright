@@ -1,0 +1,13 @@
+[plugin]
+id = "provider.crossref"
+name = "Crossref"
+kind = "provider"
+version = "0.1.0"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+auth = "none_or_polite_email"
+
+[capabilities]
+reference_lookup = true
+identifier_resolution = true
+retraction_status = true

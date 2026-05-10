@@ -1,0 +1,16 @@
+schema_version: sourceright.benchmark_tasks.v1
+tasks:
+  - id: csl_validation
+    status: scaffold
+  - id: sidecar_validation
+    status: scaffold
+  - id: reference_report_generation
+    status: scaffold
+  - id: citation_reconciliation
+    status: scaffold
+  - id: legal_citation_extraction
+    status: scaffold
+  - id: provenance_graph_extraction
+    status: scaffold
+  - id: export_correctness
+    status: scaffold
