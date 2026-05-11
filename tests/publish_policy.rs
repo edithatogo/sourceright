@@ -14,7 +14,8 @@ fn tag_creation_triggers_release_publishing_workflows() {
 
     assert!(release.contains("push:\n    tags:"));
     assert!(crate_publish.contains("push:\n    tags:"));
-    assert!(mcp_publish.contains("push:\n    tags:"));
-    assert!(runbook.contains("automatically"));
-    assert!(publishing.contains("automatically starts the crate publish"));
+    assert!(mcp_publish.contains("workflow_run:"));
+    assert!(mcp_publish.contains("workflows: [\"Release\"]"));
+    assert!(runbook.contains("MCP registry workflow follows the release workflow completion"));
+    assert!(publishing.contains("follows the release workflow completion"));
 }

@@ -84,8 +84,8 @@ cutover notes are captured in [Coverage Reporting](coverage-reporting.md) and
 [Docs Cutover](docs-cutover.md).
 
 Tag creation with a `v*.*.*` release tag automatically starts the crate publish
-and MCP registry workflows. The manual dispatch entries remain for controlled
-retries.
+workflow, and the MCP registry workflow follows the release workflow
+completion. The manual dispatch entries remain for controlled retries.
 
 Documentation and contributor checks also run typo validation through
 `typos.toml`, so new public text should be reviewed with the same bar as code.
