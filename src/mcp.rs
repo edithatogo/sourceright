@@ -1405,7 +1405,7 @@ mod tests {
                 }
             }))
             .expect("status response");
-        assert!(response_text(&status).contains("server_mode: stdio"));
+        assert!(response_text(&status).contains("\"server_mode\":\"stdio\""));
 
         let validate = runtime
             .handle_message(json!({

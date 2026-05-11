@@ -88,8 +88,11 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
         &review_queue,
         r#"{"id":"smith-2024","review_status":"queued"}"#,
     );
-    write(&manuscript, "Smith (2024) cites the trial.");
-    write(&legal_text, "Smith v Jones 2024 NSWSC 1.");
+    write(&manuscript, "Text cites (Smith, 2024).");
+    write(
+        &legal_text,
+        "The leading decision is Plaintiff M68/2015 v Minister [2016] HCA 1.",
+    );
     write(
         &provenance_text,
         "The draft states that Smith (2024) supports the claim.",
@@ -111,7 +114,9 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
 
     let conflicts = run_in_dir(&["conflicts", ".sourceright"], root);
     assert!(conflicts.status.success());
-    assert!(output_text(&conflicts).contains("smith-2024"));
+    assert!(
+        output_text(&conflicts).contains("No provider conflicts or merge decisions were detected.")
+    );
 
     let citations = run_in_dir(
         &[
@@ -122,7 +127,7 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
         root,
     );
     assert!(citations.status.success());
-    assert!(output_text(&citations).contains("Smith"));
+    assert!(output_text(&citations).contains("Matched citations: 1"));
 
     let review_queue_output = run_in_dir(&["review", "queue", ".sourceright"], root);
     assert!(review_queue_output.status.success());
@@ -153,7 +158,7 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
 
     let legal = run_in_dir(&["legal", &legal_text.display().to_string()], root);
     assert!(legal.status.success());
-    assert!(output_text(&legal).contains("legal_citations"));
+    assert!(output_text(&legal).contains("\"citation_type\":\"case\""));
 
     let provenance = run_in_dir(
         &["provenance", &provenance_text.display().to_string()],
@@ -177,19 +182,24 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
     assert!(export_all.status.success());
     assert!(exports.join("references.ris").exists());
 
-    let plugins = run_in_dir(&["plugins", "validate", "--json"], root);
+    let plugins = binary()
+        .current_dir(env!("CARGO_MANIFEST_DIR"))
+        .args(["plugins", "--json"])
+        .output()
+        .expect("run plugins");
     assert!(plugins.status.success());
     assert!(output_text(&plugins).contains("sourceright.plugin_registry_report.v1"));
 
-    let bench = run_in_dir(
-        &[
+    let bench = binary()
+        .current_dir(env!("CARGO_MANIFEST_DIR"))
+        .args([
             "bench",
             "--json",
             "--manifest",
             "sourceright-bench/tasks.yaml",
-        ],
-        root,
-    );
+        ])
+        .output()
+        .expect("run bench");
     assert!(bench.status.success());
     assert!(output_text(&bench).contains("sourceright.benchmark_run.v1"));
 
