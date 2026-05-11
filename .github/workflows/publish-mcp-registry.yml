@@ -86,8 +86,25 @@ jobs:
       - name: Publish metadata
         run: ./mcp-publisher publish
       - name: Generate release status
-        shell: pwsh
-        run: '& "${{ github.workspace }}/scripts/release-status.ps1" -Surface mcp-registry -Outcome submitted -OutputPath release-status.md'
+        shell: bash
+        run: |
+          tag_value="${GITHUB_REF_NAME:-local}"
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          release_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${tag_value}"
+          image_ref="ghcr.io/edithatogo/sourceright-mcp:${tag_value}"
+          cat > release-status.md <<EOF
+          # Release status
+
+          - Surface: mcp-registry
+          - Outcome: submitted
+          - Tag: ${tag_value}
+          - Workflow run: ${run_url}
+          - GitHub release: ${release_url}
+          - OCI image: ${image_ref}
+          - Crate publish: tag-triggered publish-crate workflow
+          - MCP registry publish: tag-triggered publish-mcp-registry workflow
+          - Evidence: checksums, attestations, and clean-tree validation
+          EOF
       - name: Upload release status
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
