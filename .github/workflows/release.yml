@@ -191,26 +191,8 @@ jobs:
           files: dist/*
           generate_release_notes: true
       - name: Generate release status
-        shell: bash
-        run: |
-          tag_value="${GITHUB_REF_NAME:-local}"
-          release_version="${GITHUB_REF_NAME#v}"
-          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          release_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${tag_value}"
-          image_ref="ghcr.io/edithatogo/sourceright-mcp:${release_version}"
-          cat > release-status.md <<EOF
-          # Release status
-
-          - Surface: release
-          - Outcome: published
-          - Tag: ${tag_value}
-          - Workflow run: ${run_url}
-          - GitHub release: ${release_url}
-          - OCI image: ${image_ref}
-          - Crate publish: tag-triggered publish-crate workflow
-          - MCP registry publish: tag-triggered publish-mcp-registry workflow
-          - Evidence: checksums, attestations, and clean-tree validation
-          EOF
+        shell: pwsh
+        run: .\scripts\release-status.ps1 -Surface release -Outcome published -Tag $env:GITHUB_REF_NAME -OutputPath release-status.md
       - name: Upload release status
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:

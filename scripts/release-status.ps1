@@ -18,7 +18,12 @@ $releaseUrl = if ($env:GITHUB_SERVER_URL -and $env:GITHUB_REPOSITORY -and $Tag) 
 }
 
 $tagValue = if ($Tag) { $Tag } else { "local" }
-$imageRef = "ghcr.io/edithatogo/sourceright-mcp:$tagValue"
+if ($tagValue.StartsWith("v")) {
+    $releaseVersion = $tagValue.Substring(1)
+} else {
+    $releaseVersion = $tagValue
+}
+$imageRef = "ghcr.io/edithatogo/sourceright-mcp:$releaseVersion"
 
 $lines = @(
     "# Release status",
