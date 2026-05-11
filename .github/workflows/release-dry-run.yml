@@ -33,7 +33,7 @@ jobs:
       - name: Dependency policy
         run: |
           cargo deny check advisories bans sources
-          cargo tree -d --locked
+          cargo tree -d --locked --target x86_64-unknown-linux-gnu
       - name: Publish dry run
         run: cargo publish --dry-run --locked
         env:

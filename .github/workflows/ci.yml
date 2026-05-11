@@ -83,7 +83,7 @@ jobs:
       - name: Check dependency policy
         run: |
           cargo deny check advisories bans sources
-          cargo tree -d --locked
+          cargo tree -d --locked --target x86_64-unknown-linux-gnu
 
   typos:
     name: Typos

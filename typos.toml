@@ -4,6 +4,8 @@ GitHub = "GitHub"
 MCP = "MCP"
 mdBook = "mdBook"
 Zotero = "Zotero"
+THES = "THES"
+supersed = "supersed"
 
 [files]
 extend-exclude = [

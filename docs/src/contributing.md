@@ -12,7 +12,7 @@ cargo check --locked
 cargo run --bin sourceright -- bench
 cargo package --locked
 cargo deny check advisories bans sources
-cargo tree -d --locked
+cargo tree -d --locked --target x86_64-unknown-linux-gnu
 ```
 
 Keep provider tests deterministic and avoid live network requirements in unit tests.
