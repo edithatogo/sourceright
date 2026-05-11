@@ -5,7 +5,8 @@ fn read(path: &str) -> String {
 }
 
 #[test]
-fn dependency_policy_uses_cargo_deny_for_advisories_bans_and_sources_plus_cargo_tree_for_duplicates() {
+fn dependency_policy_uses_cargo_deny_for_advisories_bans_and_sources_plus_cargo_tree_for_duplicates()
+ {
     let release = read(".github/workflows/release.yml");
     let publish_crate = read(".github/workflows/publish-crate.yml");
     let release_dry_run = read(".github/workflows/release-dry-run.yml");

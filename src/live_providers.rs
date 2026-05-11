@@ -529,7 +529,7 @@ fn fetch_json(
     headers: Option<[(&str, &str); 1]>,
 ) -> Result<Value, String> {
     let client = reqwest::blocking::Client::builder()
-        .user_agent("sourceright/0.1.0")
+        .user_agent(concat!("sourceright/", env!("CARGO_PKG_VERSION")))
         .timeout(std::time::Duration::from_secs(timeout_secs))
         .build()
         .map_err(|error| error.to_string())?;
@@ -545,7 +545,7 @@ fn fetch_json(
 
 fn fetch_text(endpoint: &Url, timeout_secs: u64) -> Result<String, String> {
     let client = reqwest::blocking::Client::builder()
-        .user_agent("sourceright/0.1.0")
+        .user_agent(concat!("sourceright/", env!("CARGO_PKG_VERSION")))
         .timeout(std::time::Duration::from_secs(timeout_secs))
         .build()
         .map_err(|error| error.to_string())?;

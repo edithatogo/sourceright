@@ -1313,7 +1313,7 @@ mod tests {
                 "params": {
                     "protocolVersion": "2025-11-25",
                     "capabilities": {},
-                    "clientInfo": { "name": "test", "version": "0.1.0" }
+                    "clientInfo": { "name": "test", "version": env!("CARGO_PKG_VERSION") }
                 }
             }))
             .expect("response");

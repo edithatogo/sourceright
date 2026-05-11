@@ -7,11 +7,11 @@
     "url": "https://github.com/edithatogo/sourceright",
     "source": "github"
   },
-  "version": "0.1.0",
+  "version": "0.1.4",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/edithatogo/sourceright-mcp:0.1.0",
+      "identifier": "ghcr.io/edithatogo/sourceright-mcp:0.1.4",
       "transport": {
         "type": "stdio"
       }
