@@ -147,6 +147,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Derive release version
+        id: release-version
+        shell: bash
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - name: Build and push image
         id: build-image
         uses: docker/build-push-action@v6
@@ -154,10 +158,10 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }}
+            ghcr.io/edithatogo/sourceright-mcp:${{ steps.release-version.outputs.version }}
             ghcr.io/edithatogo/sourceright-mcp:latest
           labels: |
-            org.opencontainers.image.version=${{ github.ref_name }}
+            org.opencontainers.image.version=${{ steps.release-version.outputs.version }}
       - name: Push image
         run: echo "Image pushed by build-push-action"
       - name: Generate image attestation
@@ -190,9 +194,10 @@ jobs:
         shell: bash
         run: |
           tag_value="${GITHUB_REF_NAME:-local}"
+          release_version="${GITHUB_REF_NAME#v}"
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           release_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${tag_value}"
-          image_ref="ghcr.io/edithatogo/sourceright-mcp:${tag_value}"
+          image_ref="ghcr.io/edithatogo/sourceright-mcp:${release_version}"
           cat > release-status.md <<EOF
           # Release status
 

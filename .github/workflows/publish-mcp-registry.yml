@@ -89,9 +89,10 @@ jobs:
         shell: bash
         run: |
           tag_value="${GITHUB_REF_NAME:-local}"
+          release_version="${GITHUB_REF_NAME#v}"
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           release_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${tag_value}"
-          image_ref="ghcr.io/edithatogo/sourceright-mcp:${tag_value}"
+          image_ref="ghcr.io/edithatogo/sourceright-mcp:${release_version}"
           cat > release-status.md <<EOF
           # Release status
 
