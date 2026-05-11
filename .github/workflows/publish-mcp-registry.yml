@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   id-token: write
+  packages: read
 
 concurrency:
   group: publish-mcp-registry
@@ -36,6 +37,24 @@ jobs:
       - name: Verify clean tree
         shell: bash
         run: test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Wait for MCP image
+        shell: bash
+        run: |
+          for attempt in $(seq 1 30); do
+            if docker manifest inspect ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }} >/dev/null 2>&1; then
+              exit 0
+            fi
+            echo "Waiting for ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }} (attempt ${attempt}/30)"
+            sleep 20
+          done
+          echo "Timed out waiting for ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }}"
+          exit 1
       - name: Download mcp-publisher
         run: |
           curl -L "https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
