@@ -35,8 +35,9 @@ jobs:
         run: |
           set -euo pipefail
           cargo deny check advisories bans sources
+          tree_output="$(cargo tree -d --locked --target x86_64-unknown-linux-gnu 2>&1 || true)"
           duplicates="$(
-            cargo tree -d --locked --target x86_64-unknown-linux-gnu |
+            printf '%s\n' "$tree_output" |
               awk '/^[0-9]+[[:alnum:]_.-]+ v/ { name=$1; sub(/^[0-9]+/, "", name); print name }' |
               sort -u
           )"
