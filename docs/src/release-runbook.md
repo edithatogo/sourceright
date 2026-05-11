@@ -15,8 +15,9 @@ policy checks, and explicit publication approval.
 7. Publish the GitHub Release only after the artifacts are staged.
 8. Submit the MCP metadata only after the image and labels match the manifest.
 
-On `v*.*.*` tags, the crate publish and MCP registry workflows now run
-automatically; the manual dispatch path remains available as an override.
+On `v*.*.*` tags, the crate publish workflow now runs automatically and the
+MCP registry workflow follows the release workflow completion; the manual
+dispatch path remains available as an override.
 
 ## Evidence
 

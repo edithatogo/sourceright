@@ -35,8 +35,9 @@ registry-ready path is the OCI image declared in `server.json`; crates.io is
 still useful for Rust installation but is not the MCP registry package target.
 
 The release workflow builds and pushes `ghcr.io/edithatogo/sourceright-mcp`
-on version tags. The manual `Publish MCP registry metadata` workflow uses
-GitHub OIDC and `mcp-publisher` to submit `server.json` after the image exists.
+on version tags. The `Publish MCP registry metadata` workflow now follows the
+release workflow completion so it can submit `server.json` after the image
+exists. Manual dispatch remains available for controlled retries.
 The Docker image carries matching Open Containers metadata so registry scans
 can tie the container back to the source repository and declared MCP server
 name.

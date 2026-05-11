@@ -1,9 +1,9 @@
 name: Publish MCP registry metadata
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -22,9 +22,21 @@ jobs:
     environment: mcp-registry
     env:
       MCP_PUBLISHER_VERSION: v1.7.8
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     steps:
+      - name: Resolve source ref
+        id: source-ref
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "ref=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          ref: ${{ steps.source-ref.outputs.ref }}
       - name: Validate server metadata
         run: |
           python3 - <<'PY'
@@ -34,6 +46,17 @@ jobs:
           assert data["name"] == "io.github.edithatogo/sourceright"
           assert data["packages"][0]["transport"]["type"] == "stdio"
           PY
+      - name: Read release version
+        id: version
+        shell: bash
+        run: |
+          version="$(python3 - <<'PY'
+          import json
+          with open("server.json", "r", encoding="utf-8") as handle:
+              print(json.load(handle)["version"])
+          PY
+          )"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Verify clean tree
         shell: bash
         run: test -z "$(git status --porcelain --untracked-files=no)"
@@ -47,13 +70,13 @@ jobs:
         shell: bash
         run: |
           for attempt in $(seq 1 30); do
-            if docker manifest inspect ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }} >/dev/null 2>&1; then
+            if docker manifest inspect ghcr.io/edithatogo/sourceright-mcp:${{ steps.version.outputs.version }} >/dev/null 2>&1; then
               exit 0
             fi
-            echo "Waiting for ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }} (attempt ${attempt}/30)"
+            echo "Waiting for ghcr.io/edithatogo/sourceright-mcp:${{ steps.version.outputs.version }} (attempt ${attempt}/30)"
             sleep 20
           done
-          echo "Timed out waiting for ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }}"
+          echo "Timed out waiting for ghcr.io/edithatogo/sourceright-mcp:${{ steps.version.outputs.version }}"
           exit 1
       - name: Download mcp-publisher
         run: |

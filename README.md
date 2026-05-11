@@ -74,7 +74,7 @@ logs or remote fixture snapshots.
 - Track 34 covers coverage measurement and reporting until the 90 percent floor is reproducible.
 - Track 35 covers the final public docs cutover and launch.
 - See `docs/src/release-runbook.md`, `docs/src/coverage-reporting.md`, and `docs/src/docs-cutover.md` for the operational sequence behind those tracks.
-- `v*.*.*` tags now auto-start the crate publish and MCP registry workflows.
+- `v*.*.*` tags now auto-start the crate publish workflow, and the MCP registry workflow follows the release workflow completion.
 
 ### Distribution metadata files
 
