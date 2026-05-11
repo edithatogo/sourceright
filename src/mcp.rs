@@ -1302,6 +1302,387 @@ impl From<serde_json::Error> for RpcError {
 mod tests {
     use super::*;
 
+    fn response_text(response: &Value) -> &str {
+        response["result"]["content"][0]["text"]
+            .as_str()
+            .expect("text result")
+    }
+
+    fn seeded_workspace() -> (tempfile::TempDir, SourcerightWorkspace) {
+        let tempdir = tempfile::tempdir().expect("workspace");
+        let workspace = SourcerightWorkspace::from_root(tempdir.path().join(".sourceright"));
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            r#"[{"id":"smith-2024","type":"article-journal","title":"Benchmark reference","author":[{"family":"Smith"}],"DOI":"10.1234/benchmark"}]"#,
+        )
+        .expect("write csl");
+        fs::write(
+            &workspace.verification_sidecar_json,
+            r#"{"schema_version":"sourceright.verification.v1","references":{"smith-2024":{"review_status":"queued"}}}"#,
+        )
+        .expect("write sidecar");
+        fs::write(
+            tempdir.path().join("manuscript.txt"),
+            "Smith (2024) cites the benchmark reference.",
+        )
+        .expect("write manuscript");
+        fs::write(
+            tempdir.path().join("legal.txt"),
+            "Smith v Jones 2024 NSWSC 1.",
+        )
+        .expect("write legal text");
+        fs::write(
+            tempdir.path().join("provenance.txt"),
+            "The draft states that Smith (2024) supports the claim.",
+        )
+        .expect("write provenance text");
+        (tempdir, workspace)
+    }
+
+    #[test]
+    fn runtime_handles_initialize_manifest_queries_and_protocol_errors() {
+        let mut runtime = McpRuntime::new(PathBuf::from(".sourceright"));
+
+        let initialize = runtime.handle_line(
+            r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25"}}"#,
+        );
+        assert_eq!(initialize.len(), 1);
+        assert_eq!(initialize[0]["result"]["serverInfo"]["name"], SERVER_NAME);
+        assert_eq!(initialize[0]["result"]["capabilities"]["tools"], json!({}));
+
+        let tools = runtime.handle_line(r#"{"jsonrpc":"2.0","id":2,"method":"tools/list"}"#);
+        assert_eq!(tools[0]["result"]["tools"].as_array().unwrap().len(), 14);
+
+        let resources =
+            runtime.handle_line(r#"{"jsonrpc":"2.0","id":3,"method":"resources/list"}"#);
+        assert_eq!(
+            resources[0]["result"]["resources"]
+                .as_array()
+                .unwrap()
+                .len(),
+            8
+        );
+
+        let prompts = runtime.handle_line(r#"{"jsonrpc":"2.0","id":4,"method":"prompts/list"}"#);
+        assert_eq!(prompts[0]["result"]["prompts"].as_array().unwrap().len(), 5);
+
+        let notification = runtime.handle_message(json!({
+            "jsonrpc": "2.0",
+            "method": "notifications/initialized"
+        }));
+        assert!(notification.is_none());
+
+        let parse_error = runtime.handle_line("not json");
+        assert_eq!(parse_error[0]["error"]["code"], -32700);
+
+        let unknown = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 9,
+                "method": "unknown.method"
+            }))
+            .expect("response");
+        assert_eq!(unknown["error"]["code"], -32601);
+    }
+
+    #[test]
+    fn runtime_handles_core_tools_resources_prompts_and_writes() {
+        let (tempdir, workspace) = seeded_workspace();
+        let mut runtime = McpRuntime {
+            workspace: workspace.clone(),
+            initialized: true,
+        };
+
+        let status = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 10,
+                "method": "tools/call",
+                "params": {
+                    "name": "mcp.status",
+                    "arguments": {}
+                }
+            }))
+            .expect("status response");
+        assert!(response_text(&status).contains("server_mode: stdio"));
+
+        let validate = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 11,
+                "method": "tools/call",
+                "params": {
+                    "name": "references.validate_csl",
+                    "arguments": { "path": workspace.references_csl_json.display().to_string() }
+                }
+            }))
+            .expect("validate response");
+        assert!(response_text(&validate).contains("\"ok\":true"));
+
+        let report = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 12,
+                "method": "tools/call",
+                "params": {
+                    "name": "references.report",
+                    "arguments": { "workspace": workspace.root.display().to_string() }
+                }
+            }))
+            .expect("report response");
+        assert!(response_text(&report).contains("smith-2024"));
+
+        let review_queue = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 13,
+                "method": "tools/call",
+                "params": {
+                    "name": "references.review_queue",
+                    "arguments": { "workspace": workspace.root.display().to_string() }
+                }
+            }))
+            .expect("review queue response");
+        assert!(response_text(&review_queue).contains("smith-2024"));
+
+        let citations = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 14,
+                "method": "tools/call",
+                "params": {
+                    "name": "references.citations",
+                    "arguments": {
+                        "manuscript": tempdir.path().join("manuscript.txt").display().to_string(),
+                        "workspace": workspace.root.display().to_string()
+                    }
+                }
+            }))
+            .expect("citations response");
+        assert!(response_text(&citations).contains("Smith"));
+
+        let journal = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 15,
+                "method": "tools/call",
+                "params": {
+                    "name": "journal.screen_submission",
+                    "arguments": {
+                        "workspace": workspace.root.display().to_string(),
+                        "submission_id": "SUB-1",
+                        "platform": "ojs",
+                        "manuscript_label": "manuscript.docx"
+                    }
+                }
+            }))
+            .expect("journal response");
+        assert!(response_text(&journal).contains("\"submission_id\":\"SUB-1\""));
+
+        let legal = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 16,
+                "method": "tools/call",
+                "params": {
+                    "name": "legal.analyze_citations",
+                    "arguments": { "path": tempdir.path().join("legal.txt").display().to_string() }
+                }
+            }))
+            .expect("legal response");
+        assert!(response_text(&legal).contains("legal_citations"));
+
+        let provenance = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 17,
+                "method": "tools/call",
+                "params": {
+                    "name": "provenance.analyze_claim_sources",
+                    "arguments": { "path": tempdir.path().join("provenance.txt").display().to_string() }
+                }
+            }))
+            .expect("provenance response");
+        assert!(response_text(&provenance).contains("claim"));
+
+        let policy = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 18,
+                "method": "tools/call",
+                "params": {
+                    "name": "references.policy",
+                    "arguments": {}
+                }
+            }))
+            .expect("policy response");
+        assert!(response_text(&policy).contains("sourceright.policy_report.v1"));
+
+        let exports_preview = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 19,
+                "method": "tools/call",
+                "params": {
+                    "name": "exports.preview",
+                    "arguments": { "workspace": workspace.root.display().to_string() }
+                }
+            }))
+            .expect("exports preview response");
+        assert!(response_text(&exports_preview).contains("sourceright.export_manifest.v1"));
+
+        let plugins = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 20,
+                "method": "tools/call",
+                "params": {
+                    "name": "plugins.list",
+                    "arguments": {}
+                }
+            }))
+            .expect("plugins response");
+        assert!(response_text(&plugins).contains("sourceright.plugin_registry_report.v1"));
+
+        let workspace_init_dry_run = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 21,
+                "method": "tools/call",
+                "params": {
+                    "name": "workspace.init",
+                    "arguments": { "workspace": workspace.root.display().to_string() }
+                }
+            }))
+            .expect("workspace init dry-run");
+        let dry_run: Value = serde_json::from_str(response_text(&workspace_init_dry_run))
+            .expect("parse dry-run payload");
+        assert_eq!(dry_run["apply_requested"], false);
+        assert_eq!(dry_run["applied"], false);
+
+        let workspace_init_apply = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 22,
+                "method": "tools/call",
+                "params": {
+                    "name": "workspace.init",
+                    "arguments": { "workspace": workspace.root.display().to_string(), "apply": true }
+                }
+            }))
+            .expect("workspace init apply");
+        let apply: Value = serde_json::from_str(response_text(&workspace_init_apply))
+            .expect("parse apply payload");
+        assert!(apply["applied"].as_bool().expect("applied flag"));
+        assert!(workspace.root.join(MCP_AUDIT_LOG_NAME).exists());
+
+        let review_decisions = vec![sourceright::ReviewDecisionImport {
+            reference_id: "smith-2024".to_string(),
+            decision: "accepted".to_string(),
+            reviewer: "tester".to_string(),
+            decided_at: "2026-05-11T00:00:00Z".to_string(),
+            status: crate::sidecar::ReviewStatus::Resolved,
+            notes: None,
+        }];
+        let review_decisions_value =
+            serde_json::to_value(&review_decisions).expect("serialize decisions");
+        let review_import_preview = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 23,
+                "method": "tools/call",
+                "params": {
+                    "name": "review.import_decisions",
+                    "arguments": {
+                        "workspace": workspace.root.display().to_string(),
+                        "decisions": review_decisions_value
+                    }
+                }
+            }))
+            .expect("review import preview");
+        let preview: Value = serde_json::from_str(response_text(&review_import_preview))
+            .expect("parse preview payload");
+        assert_eq!(preview["apply_requested"], false);
+
+        let review_import_apply = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 24,
+                "method": "tools/call",
+                "params": {
+                    "name": "review.import_decisions",
+                    "arguments": {
+                        "workspace": workspace.root.display().to_string(),
+                        "decisions": serde_json::to_value(&review_decisions).expect("serialize decisions"),
+                        "apply": true
+                    }
+                }
+            }))
+            .expect("review import apply");
+        let import_apply: Value = serde_json::from_str(response_text(&review_import_apply))
+            .expect("parse import payload");
+        assert!(import_apply["applied"].as_bool().expect("applied flag"));
+
+        let exports_write = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 25,
+                "method": "tools/call",
+                "params": {
+                    "name": "exports.write",
+                    "arguments": { "workspace": workspace.root.display().to_string(), "apply": true }
+                }
+            }))
+            .expect("exports write");
+        let write: Value =
+            serde_json::from_str(response_text(&exports_write)).expect("parse write payload");
+        assert!(write["applied"].as_bool().expect("applied flag"));
+        assert!(workspace.exports_dir.join("references.ris").exists());
+
+        let reference_resource = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 26,
+                "method": "resources/read",
+                "params": { "uri": "sourceright://reports/reference-integrity" }
+            }))
+            .expect("resource read");
+        assert!(response_text(&reference_resource).contains("reference-integrity"));
+
+        let review_queue_resource = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 27,
+                "method": "resources/read",
+                "params": { "uri": "sourceright://workspaces/local/review-queue" }
+            }))
+            .expect("review queue resource");
+        assert!(response_text(&review_queue_resource).contains("smith-2024"));
+
+        let plugins_resource = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 28,
+                "method": "resources/read",
+                "params": { "uri": "sourceright://plugins/registry" }
+            }))
+            .expect("plugins resource");
+        assert!(response_text(&plugins_resource).contains("provider.crossref"));
+
+        let prompt = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 29,
+                "method": "prompts/get",
+                "params": {
+                    "name": "provider_conflict_explanation",
+                    "arguments": { "reference_id": "smith-2024" }
+                }
+            }))
+            .expect("prompt response");
+        assert!(response_text(&prompt).contains("provider/canonical conflicts"));
+    }
     #[test]
     fn initialize_advertises_read_only_capabilities() {
         let mut runtime = McpRuntime::new(PathBuf::from(".sourceright"));
