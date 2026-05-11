@@ -27,9 +27,26 @@ jobs:
       - name: Package crate
         run: cargo package --locked
       - name: Check dependency policy
+        shell: bash
         run: |
+          set -euo pipefail
           cargo deny check advisories bans sources
-          cargo tree -d --locked --target x86_64-unknown-linux-gnu
+          duplicates="$(
+            cargo tree -d --locked --target x86_64-unknown-linux-gnu |
+              awk '/^[0-9]+[[:alnum:]_.-]+ v/ { name=$1; sub(/^[0-9]+/, "", name); print name }' |
+              sort -u
+          )"
+          for duplicate in $duplicates; do
+            case "$duplicate" in
+              wit-bindgen)
+                echo "Ignoring known target-specific duplicate: $duplicate"
+                ;;
+              *)
+                echo "Unexpected duplicate dependency: $duplicate"
+                exit 1
+                ;;
+            esac
+          done
       - name: Verify clean tree
         shell: bash
         run: test -z "$(git status --porcelain --untracked-files=no)"

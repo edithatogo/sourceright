@@ -22,6 +22,8 @@ protected by the `crates-io` environment and a `CARGO_REGISTRY_TOKEN` secret.
 The release workflow also runs `cargo package --locked`,
 `cargo publish --dry-run --locked`, `cargo deny check advisories bans sources`,
 and `cargo tree -d --locked --target x86_64-unknown-linux-gnu` before any GitHub release is cut.
+The duplicate check ignores the known `wit-bindgen` split that comes from the
+WASI support crates; any other duplicate should still fail the gate.
 
 ## MCP
 
@@ -100,4 +102,4 @@ Release candidates should pass:
 - Fixture-based benchmark checks.
 - MCP metadata and OCI image checks before registry submission.
 - Glama metadata validity (`glama.json`) and MCP distribution checks.
-- Duplicate-dependency checks via `cargo tree -d --locked --target x86_64-unknown-linux-gnu`.
+- Duplicate-dependency checks via `cargo tree -d --locked --target x86_64-unknown-linux-gnu`, with the known `wit-bindgen` split ignored.
