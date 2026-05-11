@@ -37,7 +37,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 serde_yaml = "0.9.34"
-reqwest = { version = "0.12.24", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+reqwest = { version = "0.12.24", default-features = false, features = ["blocking", "json", "native-tls"] }
 toml = "0.8.19"
 thiserror = "2.0.17"
 
