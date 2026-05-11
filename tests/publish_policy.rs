@@ -17,6 +17,7 @@ fn tag_creation_triggers_release_publishing_workflows() {
     let publishing = squash_whitespace(&read("docs/src/publishing.md"));
 
     assert!(release.contains("push:\n    tags:"));
+    assert!(release.contains("pattern: sourceright-*"));
     assert!(crate_publish.contains("push:\n    tags:"));
     assert!(mcp_publish.contains("workflow_run:"));
     assert!(mcp_publish.contains("workflows: [\"Release\"]"));
