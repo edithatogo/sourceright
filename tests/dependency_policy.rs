@@ -12,6 +12,7 @@ fn dependency_policy_uses_cargo_deny_for_advisories_bans_and_sources_plus_cargo_
     let release_dry_run = read(".github/workflows/release-dry-run.yml");
     let ci = read(".github/workflows/ci.yml");
     let release_check = read("scripts/release-check.ps1");
+    let deny = read("deny.toml");
     let publishing = read("docs/src/publishing.md");
 
     for workflow in [&release, &publish_crate, &release_dry_run, &ci] {
@@ -21,6 +22,7 @@ fn dependency_policy_uses_cargo_deny_for_advisories_bans_and_sources_plus_cargo_
 
     assert!(release_check.contains("cargo deny check advisories bans sources"));
     assert!(release_check.contains("cargo tree -d --locked --target x86_64-unknown-linux-gnu"));
+    assert!(deny.contains("wit-bindgen"));
     assert!(publishing.contains("cargo deny check advisories bans sources"));
     assert!(publishing.contains("cargo tree -d --locked --target x86_64-unknown-linux-gnu"));
 }

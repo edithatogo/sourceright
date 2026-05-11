@@ -103,4 +103,7 @@ Release candidates should pass:
 - Fixture-based benchmark checks.
 - MCP metadata and OCI image checks before registry submission.
 - Glama metadata validity (`glama.json`) and MCP distribution checks.
-- Duplicate-dependency checks via `cargo tree -d --locked --target x86_64-unknown-linux-gnu`, with the known `wit-bindgen` split ignored.
+- Duplicate-dependency checks via `cargo deny check advisories bans sources`
+  with `deny.toml` skipping the known `wit-bindgen` split, plus
+  `cargo tree -d --locked --target x86_64-unknown-linux-gnu` as a secondary
+  duplicate scan.
