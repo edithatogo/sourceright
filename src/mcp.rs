@@ -1582,7 +1582,7 @@ mod tests {
             decision: "accepted".to_string(),
             reviewer: "tester".to_string(),
             decided_at: "2026-05-11T00:00:00Z".to_string(),
-            status: crate::sidecar::ReviewStatus::Resolved,
+            status: sourceright::sidecar::ReviewStatus::Resolved,
             notes: None,
         }];
         let review_decisions_value =
