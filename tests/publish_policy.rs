@@ -4,13 +4,17 @@ fn read(path: &str) -> String {
     fs::read_to_string(path).expect("fixture should be present")
 }
 
+fn squash_whitespace(text: &str) -> String {
+    text.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
 #[test]
 fn tag_creation_triggers_release_publishing_workflows() {
     let release = read(".github/workflows/release.yml");
     let crate_publish = read(".github/workflows/publish-crate.yml");
     let mcp_publish = read(".github/workflows/publish-mcp-registry.yml");
-    let runbook = read("docs/src/release-runbook.md");
-    let publishing = read("docs/src/publishing.md");
+    let runbook = squash_whitespace(&read("docs/src/release-runbook.md"));
+    let publishing = squash_whitespace(&read("docs/src/publishing.md"));
 
     assert!(release.contains("push:\n    tags:"));
     assert!(crate_publish.contains("push:\n    tags:"));
