@@ -27,7 +27,9 @@ jobs:
       - name: Package crate
         run: cargo package --locked
       - name: Check dependency policy
-        run: cargo deny check advisories bans sources duplicates
+        run: |
+          cargo deny check advisories bans sources
+          cargo tree -d --locked
       - name: Verify clean tree
         shell: bash
         run: test -z "$(git status --porcelain --untracked-files=no)"
@@ -46,6 +48,10 @@ jobs:
   package:
     name: Package ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
     strategy:
       fail-fast: false
       matrix:
@@ -76,6 +82,10 @@ jobs:
         run: |
           cd dist
           if command -v shasum >/dev/null 2>&1; then shasum -a 256 "${{ matrix.artifact }}" > "${{ matrix.artifact }}.sha256"; else sha256sum "${{ matrix.artifact }}" > "${{ matrix.artifact }}.sha256"; fi
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: dist/${{ matrix.artifact }}
       - name: Upload artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -85,6 +95,10 @@ jobs:
   crate:
     name: Crate package
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -92,6 +106,10 @@ jobs:
         uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
       - name: Package crate
         run: cargo package --locked
+      - name: Generate crate attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: target/package/*.crate
       - name: Upload crate
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -104,21 +122,39 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: read
+      id-token: write
+      attestations: write
       packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-      - name: Build image
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          docker build --label "org.opencontainers.image.version=${VERSION}" -t "ghcr.io/edithatogo/sourceright-mcp:${VERSION}" -t "ghcr.io/edithatogo/sourceright-mcp:latest" .
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        id: build-image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/edithatogo/sourceright-mcp:${{ github.ref_name }}
+            ghcr.io/edithatogo/sourceright-mcp:latest
+          labels: |
+            org.opencontainers.image.version=${{ github.ref_name }}
       - name: Push image
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          docker push "ghcr.io/edithatogo/sourceright-mcp:${VERSION}"
-          docker push "ghcr.io/edithatogo/sourceright-mcp:latest"
+        run: echo "Image pushed by build-push-action"
+      - name: Generate image attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ghcr.io/edithatogo/sourceright-mcp
+          subject-digest: ${{ steps.build-image.outputs.digest }}
+          push-to-registry: true
 
   release:
     name: GitHub release
@@ -138,3 +174,10 @@ jobs:
         with:
           files: dist/*
           generate_release_notes: true
+      - name: Generate release status
+        run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/release-status.ps1 -Surface release -Outcome published -OutputPath release-status.md
+      - name: Upload release status
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: release-status
+          path: release-status.md

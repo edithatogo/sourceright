@@ -22,6 +22,10 @@ On supported coverage toolchains, the script runs formatting, linting, tests,
 and the coverage gate together so the reported number reflects the same state
 the CI gate checks.
 
+The authoritative numeric report is generated on `ubuntu-latest` by the
+scheduled coverage workflow and is uploaded as `coverage-status.md` alongside
+the summary text report.
+
 ## Caveat
 
 The Windows toolchain in this environment cannot currently produce a fresh

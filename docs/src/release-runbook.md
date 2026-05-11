@@ -22,8 +22,10 @@ automatically; the manual dispatch path remains available as an override.
 
 - Release notes generated from the tag.
 - Checksum files for the platform binaries.
+- Artifact attestations for the binaries and crate package where supported.
 - Dry-run logs for crate publication.
 - Registry submission evidence for MCP distribution.
+- `release-status.md` from each tag-triggered publish workflow.
 
 ## Notes
 

@@ -12,10 +12,11 @@ cargo check --locked
 cargo run --bin sourceright -- bench
 cargo package --locked
 cargo deny check advisories bans sources
+cargo tree -d --locked
 ```
 
 Keep provider tests deterministic and avoid live network requirements in unit tests.
 
 Release candidates should also pass `cargo publish --dry-run --locked` from a
-clean tree. CI runs mdBook, Rust docs, dependency policy, security, and command
-smoke checks.
+clean tree. CI runs the Astro docs site, Rust docs, dependency policy,
+security, and command smoke checks.

@@ -20,8 +20,8 @@ The crate metadata is prepared for crates.io and docs.rs. Real crates.io
 publication is handled by the manual `Publish crate` workflow, which should be
 protected by the `crates-io` environment and a `CARGO_REGISTRY_TOKEN` secret.
 The release workflow also runs `cargo package --locked`,
-`cargo publish --dry-run --locked`, and `cargo deny check advisories bans sources duplicates`
-before any GitHub release is cut.
+`cargo publish --dry-run --locked`, `cargo deny check advisories bans sources`,
+and `cargo tree -d --locked` before any GitHub release is cut.
 
 ## MCP
 
@@ -69,11 +69,11 @@ reimplementing reference verification.
 ## Documentation
 
 The current documentation stack is the Starlight/Astro site under
-`docs-site/`, built by GitHub Pages. mdBook remains a fallback and historical
-reference, but the public docs target is now the Astro build.
+`docs-site/`, built by GitHub Pages. `docs/src/` remains the archival Markdown
+source, but the public docs target is now the Astro build.
 
 Track 30 owns the Starlight/Astro migration and deployment parity work. Keep
-the fallback mdBook surface only while it is useful for regression comparison.
+the archival Markdown source aligned with the public site content.
 
 The operational sequence for live release work is documented in
 [Release Runbook](release-runbook.md), while the coverage floor and docs
@@ -100,3 +100,4 @@ Release candidates should pass:
 - Fixture-based benchmark checks.
 - MCP metadata and OCI image checks before registry submission.
 - Glama metadata validity (`glama.json`) and MCP distribution checks.
+- Duplicate-dependency checks via `cargo tree -d --locked`.

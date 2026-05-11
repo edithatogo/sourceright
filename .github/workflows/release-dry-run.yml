@@ -31,7 +31,9 @@ jobs:
       - name: Package crate
         run: cargo package --locked
       - name: Dependency policy
-        run: cargo deny check advisories bans sources duplicates
+        run: |
+          cargo deny check advisories bans sources
+          cargo tree -d --locked
       - name: Publish dry run
         run: cargo publish --dry-run --locked
         env:

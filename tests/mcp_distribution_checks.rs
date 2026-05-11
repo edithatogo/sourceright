@@ -109,7 +109,7 @@ fn release_workflow_declares_oci_version_label() {
     let release_workflow = read_repo_file(".github/workflows/release.yml");
 
     assert!(
-        release_workflow.contains("--label \"org.opencontainers.image.version=${VERSION}\""),
+        release_workflow.contains("org.opencontainers.image.version=${{ github.ref_name }}"),
         "release workflow should label OCI image with version",
     );
 }

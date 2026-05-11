@@ -11,4 +11,7 @@ These pages describe the day-to-day operator surface:
 - [MCP](mcp)
 - [Publishing](publishing)
 - [Benchmarks](benchmarks)
+- [Release Status](../release-status)
+- [Coverage Status](coverage-status)
+- [Operations Status](operations-status)
 - [Contributing](contributing)

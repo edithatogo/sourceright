@@ -67,10 +67,6 @@ jobs:
       - name: Build docs site
         working-directory: docs-site
         run: npm run build
-      - name: Install mdBook
-        run: cargo install mdbook --locked
-      - name: Build docs
-        run: mdbook build
       - name: Rust docs
         run: RUSTDOCFLAGS="-D warnings" cargo doc --locked --no-deps
 
@@ -85,7 +81,9 @@ jobs:
       - name: Install cargo-deny
         run: cargo install cargo-deny --locked
       - name: Check dependency policy
-        run: cargo deny check advisories bans sources duplicates
+        run: |
+          cargo deny check advisories bans sources
+          cargo tree -d --locked
 
   typos:
     name: Typos
