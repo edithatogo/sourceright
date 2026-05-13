@@ -1,7 +1,8 @@
 # Sourceright Benchmark Harness
 
-This directory is a benchmark scaffold, not a Rust workspace crate. It records
-deterministic benchmark tasks for the currently implemented CLI/core surfaces.
+This directory is a technical-preview benchmark harness, not a Rust workspace
+crate. It records deterministic internal regression tasks for the currently
+implemented CLI/core surfaces.
 
 No task should require live provider calls, API keys, ML/NLP dependencies, or
 network access. Fixtures should be small, public-domain or self-authored, and

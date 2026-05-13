@@ -1,0 +1,19 @@
+{
+  "id": "37-live-core-provider-verification",
+  "status": "in_progress",
+  "priority": "high",
+  "owned_paths": [
+    "src/providers.rs",
+    "src/live_providers.rs",
+    "provider-fixtures/",
+    "fixtures/providers/",
+    "docs/src/providers.md",
+    "docs/src/verification-sidecar.md",
+    "conductor/tracks/37-live-core-provider-verification/"
+  ],
+  "dependencies": [
+    "05-verification-sidecar",
+    "06-academic-providers",
+    "20-live-provider-adapters"
+  ]
+}

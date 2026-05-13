@@ -1,3 +1,8 @@
+//! Canonical CSL JSON data structures, validation, and normalization helpers.
+//!
+//! Sourceright keeps bibliographic records in CSL JSON and stores verification
+//! metadata in the sidecar instead of mutating the canonical record set.
+
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
@@ -58,6 +63,7 @@ const SUPPORTED_ITEM_TYPES: &[&str] = &[
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CslItem {
+    /// A stable item identifier used to join CSL data to verification records.
     pub id: String,
     #[serde(rename = "type")]
     pub item_type: String,
@@ -95,14 +101,17 @@ impl CslItem {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct CslDocument {
+    /// Canonical CSL items in document order.
     pub items: Vec<CslItem>,
 }
 
 impl CslDocument {
+    /// Returns an empty CSL document.
     pub fn empty() -> Self {
         Self { items: Vec::new() }
     }
 
+    /// Validates ids, titles, DOIs, item types, and sidecar boundary fields.
     pub fn validate(&self) -> Vec<ValidationDiagnostic> {
         let mut diagnostics = Vec::new();
         let mut seen_ids = BTreeMap::<String, usize>::new();
@@ -214,8 +223,11 @@ impl CslDocument {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ValidationDiagnostic {
+    /// Stable validation code.
     pub code: String,
+    /// JSON path to the affected value.
     pub path: String,
+    /// Human-readable diagnostic message.
     pub message: String,
 }
 
@@ -229,20 +241,39 @@ impl ValidationDiagnostic {
     }
 }
 
+/// Validates CSL JSON input and returns structured diagnostics.
 pub fn validate_csl_json(input: &str) -> Result<Vec<ValidationDiagnostic>, serde_json::Error> {
     let document = parse_csl_json(input)?;
     Ok(document.validate())
 }
 
+/// Parses canonical CSL JSON into a [`CslDocument`].
+///
+/// ```
+/// use sourceright::parse_csl_json;
+///
+/// let document = parse_csl_json(r#"[{"id":"smith-2024","type":"article-journal","title":"Example"}]"#).unwrap();
+/// assert_eq!(document.items.len(), 1);
+/// ```
 pub fn parse_csl_json(input: &str) -> Result<CslDocument, serde_json::Error> {
     serde_json::from_str(input)
 }
 
+/// Formats a [`CslDocument`] as pretty-printed CSL JSON.
+///
+/// ```
+/// use sourceright::{format_csl_json, parse_csl_json};
+///
+/// let document = parse_csl_json(r#"[{"id":"smith-2024","type":"article-journal","title":"Example"}]"#).unwrap();
+/// let json = format_csl_json(&document).unwrap();
+/// assert!(json.ends_with('\n'));
+/// ```
 pub fn format_csl_json(document: &CslDocument) -> Result<String, serde_json::Error> {
     let json = serde_json::to_string_pretty(document)?;
     Ok(format!("{json}\n"))
 }
 
+/// Migrates a CSL document into Sourceright's canonical form.
 pub fn migrate_csl_document(document: &CslDocument) -> CslMigrationReport {
     let mut normalized = document.clone();
     let mut changes = Vec::new();
@@ -299,23 +330,28 @@ pub fn migrate_csl_document(document: &CslDocument) -> CslMigrationReport {
     }
 }
 
+/// Migrates CSL JSON input and returns the normalized document plus changes.
 pub fn migrate_csl_json(input: &str) -> Result<CslMigrationReport, serde_json::Error> {
     let document = parse_csl_json(input)?;
     Ok(migrate_csl_document(&document))
 }
 
+/// Normalizes a CSL identifier by collapsing whitespace.
 pub fn normalize_identifier(value: &str) -> String {
     collapse_whitespace(value).to_string()
 }
 
+/// Normalizes a CSL item type to canonical lowercase spelling.
 pub fn normalize_item_type(value: &str) -> String {
     collapse_whitespace(value).to_ascii_lowercase()
 }
 
+/// Normalizes a CSL title by collapsing whitespace.
 pub fn normalize_title(value: &str) -> String {
     collapse_whitespace(value).to_string()
 }
 
+/// Normalizes a DOI by trimming common prefixes and lowercasing the result.
 pub fn normalize_doi(value: &str) -> String {
     let value = collapse_whitespace(value);
     let lower = value.to_ascii_lowercase();
@@ -337,15 +373,21 @@ fn collapse_whitespace(value: &str) -> String {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CslMigrationReport {
+    /// Normalized CSL document.
     pub document: CslDocument,
+    /// Validation diagnostics produced during migration.
     pub diagnostics: Vec<ValidationDiagnostic>,
+    /// Changes applied during migration.
     pub changes: Vec<CslMigrationChange>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CslMigrationChange {
+    /// JSON path of the migrated value.
     pub path: String,
+    /// Stable migration code.
     pub code: String,
+    /// Human-readable change description.
     pub message: String,
 }
 

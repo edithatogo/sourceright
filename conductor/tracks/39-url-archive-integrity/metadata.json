@@ -1,0 +1,20 @@
+{
+  "id": "39-url-archive-integrity",
+  "status": "in_progress",
+  "priority": "high",
+  "owned_paths": [
+    "src/policy.rs",
+    "src/report.rs",
+    "src/providers.rs",
+    "provider-fixtures/",
+    "docs/src/reporting.md",
+    "docs/src/policy-engine.md",
+    "conductor/tracks/39-url-archive-integrity/"
+  ],
+  "dependencies": [
+    "05-verification-sidecar",
+    "15-reference-reporting",
+    "20-live-provider-adapters",
+    "23-provider-backed-recency-evidence"
+  ]
+}

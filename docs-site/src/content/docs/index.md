@@ -10,4 +10,7 @@ verification, review, export, and publication.
 - Use the [CLI guide](guides/cli) for local commands.
 - Use the [MCP guide](guides/mcp) for the server contract and tool surfaces.
 - Review the [publishing guide](guides/publishing) before release or registry work.
+- Review the [limitations page](guides/limitations) for the current workflow gaps.
+- Review the [benchmark guide](guides/benchmarks) for the fixture-backed
+  technical-preview benchmark surface.
 - Read the [reference pages](reference/index) for provider, reporting, plugin, and QA policy.

@@ -1,6 +1,6 @@
 # Sourceright Conductor Tracks
 
-Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; track 15 adds reporting as a first-class audit surface; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work; track 16 covers journal workflow integrations; tracks 17-29 now cover the runtime, provider, sync, benchmark, recency-evidence, CLI, release, CI, MCP distribution, docs, and performance-hardening work that were deferred from the ZIP audit and SOTA review; tracks 30-32 extend the roadmap into a Starlight/Astro docs site, measurable QA hardening, and publication/provenance automation; tracks 33-35 finish the broader operational roadmap with live public publishing, measurable coverage evidence, and the final docs cutover.
+Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establish the academic-reference verification product; track 15 adds reporting as a first-class audit surface; tracks 13-14 reserve explicit roadmap space for legal citation verification and broader claim/source/provenance work; track 16 covers journal workflow integrations; tracks 17-29 cover the runtime, provider, sync, benchmark, recency-evidence, CLI, release, CI, MCP distribution, docs, and performance-hardening work that were deferred from the ZIP audit and SOTA review; tracks 30-32 extend the roadmap into a Starlight/Astro docs site, measurable QA hardening, and publication/provenance automation; tracks 33-35 finish the broader operational roadmap with live public publishing, measurable coverage evidence, and the final docs cutover; tracks 36-40 define the examiner-grade audit hardening phase needed to move from structured reference triage toward final-verifier confidence.
 
 | Track | Status | Purpose |
 | --- | --- | --- |
@@ -40,3 +40,8 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 33 Public release and registry submission | planned | Execute the live crates.io, GitHub Release, GHCR, official MCP registry, Smithery, and Glama publication sequence. |
 | 34 Coverage verification and reporting | planned | Make the 90 percent coverage floor measurable, reproducible, and visible in hooks, CI, and reports. |
 | 35 Public docs cutover and launch | planned | Finalise the Starlight/Astro docs migration, redirects, and archive cutover for the public site. |
+| 36 Document extraction hardening | in_progress | Real DOCX/PDF extraction, OCR diagnostics, provenance spans, and messy manuscript fixtures. |
+| 37 Live core provider verification | in_progress | Opt-in live Crossref, DataCite, OpenAlex, PubMed/NCBI, and DOI-resolution evidence with caching and sidecar-only writes. |
+| 38 Citation matching disambiguation | in_progress | Institutional authors, same-author same-year citations, `et al.` variants, numeric styles, and low-noise ambiguity handling. |
+| 39 URL archive integrity | in_progress | URL reachability, DOI landing pages, redirects, archive evidence, and broken-link reporting. |
+| 40 Low-noise writeback suggestions | in_progress | Dry-run CSL/citation-manager writeback plans with thresholds, explanations, audit logs, and explicit apply semantics. |

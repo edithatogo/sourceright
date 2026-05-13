@@ -2,6 +2,11 @@
 
 Academic verification should be built as an ordered provider roadmap. Each provider adds candidates, provenance, and confidence signals; provider data must never silently overwrite the canonical reference record.
 
+Use the registry status matrix in [Plugin Registry](plugin-registry#status-matrix)
+when describing readiness. In practice, `core_normalizer` and `core_exporter`
+are the only statuses that should be described as technical preview; the
+`planned_*` and `planned` statuses remain roadmap-only.
+
 ## Implementation Order
 
 1. Crossref: first source for DOI metadata and bibliographic matching. Use it to establish the provider contract, normalized candidate shape, confidence scoring inputs, and provenance fields.
@@ -14,6 +19,17 @@ Academic verification should be built as an ordered provider roadmap. Each provi
 ## Fixture and Mocking Expectations
 
 Provider work must be testable without live network access. Each provider should define fixture-backed responses for successful lookup, no-match, ambiguous-match, rate-limit, outage, malformed response, and conflicting metadata cases. Fixtures should preserve enough raw provider payload to verify parsing and provenance, while tests assert against normalized candidate output.
+
+Provider result diagnostics are deterministic. A fixture-backed provider result
+can be classified as `no_match`, `ambiguous`, `malformed_response`, or
+`outage`. These diagnostics describe provider evidence quality; they do not
+modify canonical CSL.
+
+The Rust core exposes those diagnostics as provider, kind, code, and message
+fields. `no_match` and `ambiguous_match` come from normalized fixture evidence;
+`malformed_response` and `outage` come from explicit provider error evidence.
+The raw provider candidate remains sidecar evidence and never overwrites
+canonical CSL.
 
 HTTP clients should be mockable behind the provider boundary. Unit tests should use local fixtures or explicit mock responses; live provider checks, if added later, should be opt-in and excluded from the default test path.
 

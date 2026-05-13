@@ -10,3 +10,5 @@ Sourceright's MCP surface is read-first and audit-friendly.
 - Status and manifest commands remain available even when transport changes.
 - Write-capable behavior must preserve schemas, provenance, and explicit apply
   semantics.
+- `server.json` and `glama.json` describe registry and directory metadata for
+  the packaged MCP surface.

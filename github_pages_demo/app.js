@@ -14,6 +14,8 @@ function renderReport(report) {
   const summary = report.summary;
   document.querySelector("#status").textContent =
     `${report.report_type} / ${report.schema_version}`;
+  document.querySelector("#report-note").textContent =
+    "Synthetic sample data only. One reference is verified, one is queued for review, and this page does not call live providers or require API keys.";
   document.querySelector("#metrics").innerHTML = [
     metric("References", summary.total_references),
     metric("Verified", summary.verified_references),

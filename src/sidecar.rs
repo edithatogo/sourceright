@@ -1,3 +1,9 @@
+//! Verification sidecar data structures and review queue derivation.
+//!
+//! `references.verification.json` stores provider evidence, provenance,
+//! conflicts, and review state for each CSL item without mutating canonical
+//! bibliographic data.
+
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
@@ -7,11 +13,14 @@ pub const SIDECAR_SCHEMA_VERSION: &str = "sourceright.verification.v1";
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct VerificationSidecar {
+    /// File format version.
     pub schema_version: String,
+    /// Per-reference verification records keyed by CSL item id.
     pub references: BTreeMap<String, ReferenceVerification>,
 }
 
 impl VerificationSidecar {
+    /// Returns an empty sidecar at the current schema version.
     pub fn empty() -> Self {
         Self {
             schema_version: SIDECAR_SCHEMA_VERSION.to_string(),
@@ -19,6 +28,7 @@ impl VerificationSidecar {
         }
     }
 
+    /// Returns review queue entries derived from the sidecar.
     pub fn review_queue_entries(&self) -> Vec<ReviewQueueEntry> {
         self.references
             .iter()
@@ -27,6 +37,7 @@ impl VerificationSidecar {
             .collect()
     }
 
+    /// Serializes review queue entries as JSON Lines.
     pub fn to_review_queue_jsonl(&self) -> serde_json::Result<String> {
         let mut jsonl = String::new();
 
@@ -38,6 +49,7 @@ impl VerificationSidecar {
         Ok(jsonl)
     }
 
+    /// Validates schema version and per-reference invariants.
     pub fn validate(&self) -> Vec<SidecarDiagnostic> {
         let mut diagnostics = Vec::new();
 
@@ -71,12 +83,14 @@ impl VerificationSidecar {
     }
 }
 
+/// Parses verification sidecar JSON into a typed structure.
 pub fn parse_verification_sidecar_json(
     input: &str,
 ) -> Result<VerificationSidecar, serde_json::Error> {
     serde_json::from_str(input)
 }
 
+/// Formats a verification sidecar as pretty-printed JSON.
 pub fn format_verification_sidecar_json(
     sidecar: &VerificationSidecar,
 ) -> Result<String, serde_json::Error> {
@@ -86,13 +100,18 @@ pub fn format_verification_sidecar_json(
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReviewQueueEntry {
+    /// CSL item id for the queue entry.
     pub id: String,
+    /// Extraction provenance, when available.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub extraction: Option<ExtractionProvenance>,
+    /// Provider evidence carried into the queue.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub provider_candidates: Vec<ProviderCandidate>,
+    /// Raw conflict payloads retained for review.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub conflicts: Vec<Value>,
+    /// Current review status.
     pub review_status: ReviewStatus,
 }
 
@@ -110,13 +129,18 @@ impl ReviewQueueEntry {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ReferenceVerification {
+    /// Extraction provenance, when available.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub extraction: Option<ExtractionProvenance>,
+    /// Provider evidence gathered for the reference.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub provider_candidates: Vec<ProviderCandidate>,
+    /// Conflict payloads retained from provider or manual review signals.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub conflicts: Vec<Value>,
+    /// Current review state.
     pub review_status: ReviewStatus,
+    /// Recorded review decisions in chronological order.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub review_decisions: Vec<ReviewDecision>,
 }
@@ -134,6 +158,7 @@ impl Default for ReferenceVerification {
 }
 
 impl ReferenceVerification {
+    /// Returns true when the record should appear in the review queue.
     pub fn requires_review_queue(&self) -> bool {
         self.review_status.requires_review_queue()
     }
@@ -251,10 +276,15 @@ impl ProviderCandidate {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ReviewStatus {
+    /// No manual review is required.
     NotRequired,
+    /// Needs manual review.
     Queued,
+    /// Is actively being reviewed.
     InProgress,
+    /// Review concluded successfully.
     Resolved,
+    /// Review concluded with unresolved issues.
     Unresolved,
 }
 
@@ -294,9 +324,13 @@ impl ReviewStatus {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct ReviewDecision {
+    /// Free-text decision label.
     pub decision: String,
+    /// Reviewer identifier.
     pub reviewer: String,
+    /// Decision timestamp.
     pub decided_at: String,
+    /// Optional reviewer notes.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub notes: Option<String>,
 }

@@ -1,3 +1,8 @@
+//! On-disk Sourceright workspace layout and derived-report helpers.
+//!
+//! A workspace keeps canonical CSL data, verification metadata, review queue
+//! output, and export artifacts together under a predictable root.
+
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -20,14 +25,20 @@ use crate::sidecar::{
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SourcerightWorkspace {
+    /// Workspace root directory.
     pub root: PathBuf,
+    /// Canonical CSL JSON path.
     pub references_csl_json: PathBuf,
+    /// Verification sidecar path.
     pub verification_sidecar_json: PathBuf,
+    /// Derived review queue path.
     pub review_queue_jsonl: PathBuf,
+    /// Export output directory.
     pub exports_dir: PathBuf,
 }
 
 impl SourcerightWorkspace {
+    /// Derives the workspace location for a document or directory.
     pub fn for_document_or_dir(path: impl AsRef<Path>) -> Self {
         let path = path.as_ref();
         let root = if path.extension().is_some() {
@@ -43,6 +54,7 @@ impl SourcerightWorkspace {
         Self::from_root(root)
     }
 
+    /// Constructs a workspace from an explicit root directory.
     pub fn from_root(root: impl Into<PathBuf>) -> Self {
         let root = root.into();
         Self {
@@ -54,6 +66,7 @@ impl SourcerightWorkspace {
         }
     }
 
+    /// Creates the standard workspace files if they do not already exist.
     pub fn init(&self) -> Result<(), WorkspaceError> {
         fs::create_dir_all(&self.exports_dir)?;
 
@@ -73,6 +86,7 @@ impl SourcerightWorkspace {
         Ok(())
     }
 
+    /// Validates a CSL JSON file and returns rendered diagnostics.
     pub fn validate_csl_file(path: impl AsRef<Path>) -> Result<Vec<String>, WorkspaceError> {
         let input = fs::read_to_string(path)?;
         let diagnostics = validate_csl_json(&input)?;
@@ -87,24 +101,29 @@ impl SourcerightWorkspace {
             .collect())
     }
 
+    /// Returns the reference report as Markdown.
     pub fn reference_report_markdown(&self) -> Result<String, WorkspaceError> {
         Ok(self.reference_report()?.to_markdown())
     }
 
+    /// Returns the reference report in JSON output shape.
     pub fn reference_report_json(&self) -> Result<ReferenceReportJsonOutput, WorkspaceError> {
         Ok(self.reference_report()?.to_json_output())
     }
 
+    /// Returns the reference report as an MCP resource payload.
     pub fn reference_report_mcp_resource(&self) -> Result<ReferenceReportResource, WorkspaceError> {
         Ok(self.reference_report()?.to_mcp_resource())
     }
 
+    /// Rebuilds the review queue JSONL file from the verification sidecar.
     pub fn refresh_review_queue(&self) -> Result<(), WorkspaceError> {
         let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
         fs::write(&self.review_queue_jsonl, sidecar.to_review_queue_jsonl()?)?;
         Ok(())
     }
 
+    /// Exports references in a single requested format or the full suite.
     pub fn export_references(
         &self,
         format: Option<ExportFormat>,
@@ -116,6 +135,7 @@ impl SourcerightWorkspace {
         })
     }
 
+    /// Writes export artifacts to the workspace export directory.
     pub fn write_exports(
         &self,
         format: Option<ExportFormat>,
@@ -131,6 +151,7 @@ impl SourcerightWorkspace {
         Ok(paths)
     }
 
+    /// Returns the export manifest without writing files.
     pub fn export_manifest(
         &self,
         format: Option<ExportFormat>,
@@ -157,18 +178,21 @@ impl SourcerightWorkspace {
         })
     }
 
+    /// Returns the cross-file reference integrity report.
     pub fn reference_report(&self) -> Result<ReferenceReport, WorkspaceError> {
         let csl: CslDocument = read_json(&self.references_csl_json)?;
         let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
         Ok(ReferenceReport::from_documents(&csl, &sidecar))
     }
 
+    /// Returns a conflict-resolution report derived from the workspace files.
     pub fn conflict_resolution_report(&self) -> Result<ConflictResolutionReport, WorkspaceError> {
         let csl: CslDocument = read_json(&self.references_csl_json)?;
         let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
         Ok(crate::conflict::resolve_conflicts(&csl, &sidecar))
     }
 
+    /// Returns a citation-reconciliation report for manuscript text.
     pub fn citation_reconciliation_report(
         &self,
         manuscript_text: &str,
@@ -177,6 +201,7 @@ impl SourcerightWorkspace {
         Ok(crate::reconcile::reconcile_citations(manuscript_text, &csl))
     }
 
+    /// Splits the review queue into bounded partitions.
     pub fn review_queue_partitions(
         &self,
         max_entries: usize,
@@ -185,6 +210,7 @@ impl SourcerightWorkspace {
         Ok(crate::review::partition_review_queue(&sidecar, max_entries))
     }
 
+    /// Applies review decisions and persists the updated sidecar and queue.
     pub fn import_review_decisions(
         &self,
         decisions: &[ReviewDecisionImport],
@@ -200,6 +226,7 @@ impl SourcerightWorkspace {
         Ok(report)
     }
 
+    /// Returns a journal screening report for the current workspace state.
     pub fn journal_screening_report(
         &self,
         submission_id: String,
@@ -234,6 +261,7 @@ fn read_json<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, Workspace
     Ok(serde_json::from_str(&input)?)
 }
 
+/// Errors raised while reading or writing workspace files.
 #[derive(Debug, Error)]
 pub enum WorkspaceError {
     #[error("I/O error: {0}")]

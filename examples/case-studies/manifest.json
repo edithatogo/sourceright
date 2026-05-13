@@ -1,0 +1,28 @@
+{
+  "schema_version": "sourceright.case_study_manifest.v1",
+  "title": "Synthetic case-study fixtures",
+  "description": "Fake-but-realistic case studies for retraction, version-of-record, and ambiguous legal citation handling.",
+  "cases": [
+    {
+      "id": "biomedical-manuscript-retraction-warning",
+      "category": "biomedical-manuscript",
+      "focus": ["retraction-check", "version-warning", "canonical-preservation"],
+      "input_file": "biomedical-manuscript-retraction-warning/input.md",
+      "expected_notes_file": "biomedical-manuscript-retraction-warning/expected-artifact-notes.md"
+    },
+    {
+      "id": "preprint-version-of-record-issue",
+      "category": "preprint",
+      "focus": ["preprint-policy", "version-of-record", "relationship-tracking"],
+      "input_file": "preprint-version-of-record-issue/input.md",
+      "expected_notes_file": "preprint-version-of-record-issue/expected-artifact-notes.md"
+    },
+    {
+      "id": "legal-filing-ambiguous-citation",
+      "category": "legal-filing",
+      "focus": ["legal-citation-separation", "ambiguity-review", "no-silent-inference"],
+      "input_file": "legal-filing-ambiguous-citation/input.md",
+      "expected_notes_file": "legal-filing-ambiguous-citation/expected-artifact-notes.md"
+    }
+  ]
+}

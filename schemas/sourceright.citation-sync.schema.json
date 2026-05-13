@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.citation-sync.schema.json",
+  "title": "Sourceright citation-manager sync report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "workspace_root",
+    "preview",
+    "applied",
+    "create_count",
+    "update_count",
+    "skip_count",
+    "conflict_count",
+    "suppressed_count",
+    "review_required_count",
+    "actions",
+    "audit_log_path"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "sourceright.citation_sync.v1" },
+    "workspace_root": { "type": "string", "minLength": 1 },
+    "preview": { "type": "boolean" },
+    "applied": { "type": "boolean" },
+    "create_count": { "type": "integer", "minimum": 0 },
+    "update_count": { "type": "integer", "minimum": 0 },
+    "skip_count": { "type": "integer", "minimum": 0 },
+    "conflict_count": { "type": "integer", "minimum": 0 },
+    "suppressed_count": { "type": "integer", "minimum": 0 },
+    "review_required_count": { "type": "integer", "minimum": 0 },
+    "actions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/action" }
+    },
+    "audit_log_path": { "type": ["string", "null"] }
+  },
+  "$defs": {
+    "suggestion": {
+      "enum": [
+        "safe_update",
+        "no_op",
+        "low_confidence",
+        "suppressed",
+        "review_required",
+        "conflict"
+      ]
+    },
+    "action": {
+      "oneOf": [
+        { "$ref": "#/$defs/create_action" },
+        { "$ref": "#/$defs/update_action" },
+        { "$ref": "#/$defs/skip_action" },
+        { "$ref": "#/$defs/conflict_action" }
+      ]
+    },
+    "create_action": {
+      "type": "object",
+      "required": ["action", "reference_id", "zotero_key", "suggestion", "explanation"],
+      "additionalProperties": false,
+      "properties": {
+        "action": { "const": "create" },
+        "reference_id": { "type": "string", "minLength": 1 },
+        "zotero_key": { "type": ["string", "null"] },
+        "suggestion": { "$ref": "#/$defs/suggestion" },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "update_action": {
+      "type": "object",
+      "required": [
+        "action",
+        "reference_id",
+        "zotero_key",
+        "changed_fields",
+        "suggestion",
+        "explanation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "action": { "const": "update" },
+        "reference_id": { "type": "string", "minLength": 1 },
+        "zotero_key": { "type": "string", "minLength": 1 },
+        "changed_fields": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "suggestion": { "$ref": "#/$defs/suggestion" },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "skip_action": {
+      "type": "object",
+      "required": ["action", "reference_id", "zotero_key", "suggestion", "explanation"],
+      "additionalProperties": false,
+      "properties": {
+        "action": { "const": "skip" },
+        "reference_id": { "type": "string", "minLength": 1 },
+        "zotero_key": { "type": "string", "minLength": 1 },
+        "suggestion": { "$ref": "#/$defs/suggestion" },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "conflict_action": {
+      "type": "object",
+      "required": [
+        "action",
+        "reference_id",
+        "zotero_key",
+        "changed_fields",
+        "message",
+        "suggestion",
+        "explanation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "action": { "const": "conflict" },
+        "reference_id": { "type": "string", "minLength": 1 },
+        "zotero_key": { "type": ["string", "null"] },
+        "changed_fields": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "message": { "type": "string", "minLength": 1 },
+        "suggestion": { "$ref": "#/$defs/suggestion" },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

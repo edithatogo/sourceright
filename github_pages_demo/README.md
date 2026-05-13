@@ -4,14 +4,29 @@ This is a static, sample-data-only demonstrator. It reads local JSON artifacts
 from `sample/` and renders the current `sourceright.reference_report.v1` and
 `sourceright.journal_screening.v1` contracts.
 
-It does not call providers, require API keys, or mutate repository state.
+It is not a live verification service. It does not call providers, require API
+keys, or mutate repository state.
 
-To preview locally, serve this directory with any static file server, for
-example:
+## Quick start
+
+1. Open [index.html](./index.html) directly in a browser, or serve this
+   directory with any static file server.
+2. Review the sample report card, open issues, and journal screening summary.
+3. Use [demo-checklist.md](./demo-checklist.md) for a quick pre-share check.
+
+Example local server:
 
 ```text
 python -m http.server 8080
 ```
+
+## What the sample report card means
+
+- `References` is the total number of references in the sample payload.
+- `Verified` shows how many references already have provider evidence.
+- `Review queue` shows how many items are still waiting on manual review.
+- `AI-risk signals` counts issues flagged as potentially higher risk.
+- `Warnings` and `Errors` show the current issue severity mix.
 
 The repository already has an mdBook Pages workflow, so this demo is kept as a
 standalone directory rather than adding another Pages deployment workflow.

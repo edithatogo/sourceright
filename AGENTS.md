@@ -35,4 +35,24 @@ cargo check --locked
 
 If new validation scripts are added, run them too.
 
+Market-readiness pack guidance:
+
+- Use `.codex-plan/` material as planning guidance only, not as source files to
+  bulk-apply over the repo.
+- Prefer small, reviewable implementation slices for benchmark maturity,
+  schemas, docs, rustdoc/API docs, public demos, plugin/provider status
+  matrices, case-study fixtures, read-only MCP examples, and launch checklists.
+- When applicable, also run:
+  - `cargo run --bin sourceright -- bench`
+  - `cargo run --bin sourceright -- report --json examples/workspace`
+  - schema/demo validation scripts
+  - the docs build command
+- Keep benchmark claims separate from product claims.
+- Accurate market wording includes “technical preview,” “pilot-ready,”
+  “fixture-backed regression benchmark,” and “deterministic benchmark
+  scaffold.”
+- Avoid claims such as “production-ready institutional platform,” “SOTA
+  benchmarked performance,” “legal filing compliance system,” or “AI detector”
+  unless the repo evidence proves them.
+
 Do not commit automatically. Summarize changed files, checks run, failures, uncertainty, and deferred work.

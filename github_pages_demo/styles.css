@@ -31,6 +31,11 @@ main {
   padding-bottom: 24px;
 }
 
+.hero-note {
+  max-width: 72ch;
+  color: var(--muted);
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: var(--accent);
@@ -89,6 +94,10 @@ article {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
   gap: 16px;
+}
+
+.explain {
+  margin-top: 16px;
 }
 
 article {

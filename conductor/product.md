@@ -1,6 +1,6 @@
 # Sourceright Product Context
 
-Sourceright is reference verification infrastructure for documents, agents, and research workflows. Its first job is to extract references from documents or text, canonicalise them as CSL JSON, verify and enrich them against reliable citation providers, then produce clean downstream reference files for tools such as EndNote, Zotero, and BibLaTeX.
+Sourceright is reference triage and verification infrastructure for documents, agents, and research workflows. Its first job is to extract references from documents or text, canonicalise them as CSL JSON, collect provider evidence, route uncertainty into review, then produce clean downstream reference files for tools such as EndNote, Zotero, and BibLaTeX.
 
 ## Product Intent
 
@@ -11,6 +11,7 @@ Sourceright is reference verification infrastructure for documents, agents, and 
 - Use agents and subagents for manual verification queues after automated checks have exhausted deterministic options.
 - Start with academic references and citations, then add legal citation support as a distinct future model and provider strategy.
 - Roadmap the broader claim/source/provenance universe without making claim verification a v1 blocker.
+- Be explicit that the current tool is a structured audit workflow until examiner-grade extraction, live-provider verification, citation disambiguation, URL/archive checks, and writeback suggestions are hardened.
 
 ## Initial Users
 
@@ -42,4 +43,5 @@ Sourceright is reference verification infrastructure for documents, agents, and 
 - Automated verification is deterministic, auditable, and safe to hand to agents for manual review.
 - Journals can consume the same local workflow as a citation-integrity screening contract without asserting that errors are AI-generated.
 - Legal citation and broader claim/source/provenance work are explicit roadmap tracks with clear boundaries.
+- Examiner-grade final-verifier confidence is tracked separately from the current structured-triage capability.
 - The legacy `humanizer-next` workflow is audited before behaviour is ported, replaced, or discarded.

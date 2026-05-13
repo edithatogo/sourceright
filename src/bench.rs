@@ -368,7 +368,7 @@ mod tests {
 
         let manifest_yaml = [
             "schema_version: sourceright.benchmark_tasks.v1",
-            "runner_status: scaffold_only",
+            "runner_status: technical_preview",
             "live_network: false",
             "workspace_crate: false",
             "tasks:",
@@ -407,7 +407,7 @@ mod tests {
 
         let manifest_yaml = [
             "schema_version: sourceright.benchmark_tasks.v1",
-            "runner_status: scaffold_only",
+            "runner_status: technical_preview",
             "live_network: false",
             "workspace_crate: false",
             "tasks:",

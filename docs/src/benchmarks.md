@@ -3,8 +3,12 @@
 The `sourceright-bench/` directory contains the checked-in benchmark manifest,
 fixtures, and baselines for deterministic local execution.
 
-Benchmark runs are fixture-backed and do not use live providers,
-citation-manager APIs, or journal-system credentials by default.
+The benchmark surface is a technical preview. It is fixture-backed,
+deterministic, and intended for local regression and stress checks rather than
+live-provider evaluation.
+
+Benchmark runs do not use live providers, citation-manager APIs, or
+journal-system credentials by default.
 
 Run the benchmark suite with:
 
@@ -14,8 +18,8 @@ cargo run --bin sourceright -- bench
 
 The runner reads `sourceright-bench/tasks.yaml`, executes the matching core
 surfaces against the checked-in fixtures, and compares the results against the
-baselines in `sourceright-bench/baselines/` when a task includes `correctness` in
-`measures`.
+baselines in `sourceright-bench/baselines/` when a task includes `correctness`
+in `measures`.
 
 Each task can include `latency` in `measures` to emit execution timing. The
 `performance` section applies enforceable latency ceilings only when `latency` is

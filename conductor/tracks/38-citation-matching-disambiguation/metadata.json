@@ -1,0 +1,18 @@
+{
+  "id": "38-citation-matching-disambiguation",
+  "status": "in_progress",
+  "priority": "high",
+  "owned_paths": [
+    "src/reconcile.rs",
+    "src/intake.rs",
+    "tests/",
+    "sourceright-bench/fixtures/",
+    "docs/src/workflow.md",
+    "conductor/tracks/38-citation-matching-disambiguation/"
+  ],
+  "dependencies": [
+    "07-standardisation-cleaning",
+    "09-in-text-citation-reconciliation",
+    "31-quality-assurance-hardening"
+  ]
+}

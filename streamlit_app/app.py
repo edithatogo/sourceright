@@ -13,6 +13,9 @@ journal = json.loads((sample_dir / "journal-screening.json").read_text(encoding=
 
 st.title("Reference integrity report")
 st.caption(f"{report['report_type']} / {report['schema_version']}")
+st.info(
+    "Synthetic sample data only. The demo does not call live providers and does not require API keys."
+)
 
 summary = report["summary"]
 cols = st.columns(6)
@@ -38,3 +41,15 @@ with right:
         }
     )
     st.write(journal["author_action_checklist"])
+
+with st.expander("What this report card means", expanded=True):
+    st.write(
+        "The sample report card summarizes reference health at a glance. The "
+        "metrics show overall coverage, while the issue list points to the "
+        "specific reference that still needs manual follow-up."
+    )
+    st.write(
+        "In this fixture, one reference is verified and one remains in the "
+        "review queue, which is why the page shows both a warning and an AI "
+        "risk signal."
+    )

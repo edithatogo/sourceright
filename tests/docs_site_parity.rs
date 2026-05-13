@@ -18,6 +18,26 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/guides/workflow.md",
         ),
         (
+            "quickstart.md",
+            "docs-site/src/content/docs/guides/quickstart.md",
+        ),
+        (
+            "author-preflight-workflow.md",
+            "docs-site/src/content/docs/guides/author-preflight-workflow.md",
+        ),
+        (
+            "editorial-triage-workflow.md",
+            "docs-site/src/content/docs/guides/editorial-triage-workflow.md",
+        ),
+        (
+            "university-repository-workflow.md",
+            "docs-site/src/content/docs/guides/university-repository-workflow.md",
+        ),
+        (
+            "legal-citation-mode-workflow.md",
+            "docs-site/src/content/docs/guides/legal-citation-mode-workflow.md",
+        ),
+        (
             "legacy-audit.md",
             "docs-site/src/content/docs/legacy-audit.md",
         ),
@@ -48,6 +68,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
         (
             "schema-contracts.md",
             "docs-site/src/content/docs/schema-contracts.md",
+        ),
+        (
+            "artifact-schema-guide.md",
+            "docs-site/src/content/docs/guides/artifact-schema-guide.md",
         ),
         (
             "reporting.md",
@@ -87,6 +111,15 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/release-status.md",
         ),
         (
+            "release-notes.md",
+            "docs-site/src/content/docs/guides/release-notes.md",
+        ),
+        ("faq.md", "docs-site/src/content/docs/guides/faq.md"),
+        (
+            "pilot-invitation.md",
+            "docs-site/src/content/docs/guides/pilot-invitation.md",
+        ),
+        (
             "coverage-reporting.md",
             "docs-site/src/content/docs/guides/coverage-reporting.md",
         ),
@@ -101,6 +134,14 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
         (
             "docs-cutover.md",
             "docs-site/src/content/docs/guides/docs-cutover.md",
+        ),
+        (
+            "live-provider-configuration.md",
+            "docs-site/src/content/docs/guides/live-provider-configuration.md",
+        ),
+        (
+            "limitations.md",
+            "docs-site/src/content/docs/guides/limitations.md",
         ),
         (
             "manual-review.md",

@@ -1,0 +1,23 @@
+{
+  "id": "40-low-noise-writeback-suggestions",
+  "status": "in_progress",
+  "priority": "high",
+  "owned_paths": [
+    "src/conflict.rs",
+    "src/review.rs",
+    "src/citation_sync.rs",
+    "src/workspace.rs",
+    "schemas/",
+    "docs/src/citation-manager-integrations.md",
+    "docs/src/verification-sidecar.md",
+    "conductor/tracks/40-low-noise-writeback-suggestions/"
+  ],
+  "dependencies": [
+    "08-conflict-resolution",
+    "10-manual-agent-review",
+    "18-mcp-write-tools-audit-dry-run",
+    "21-citation-manager-live-sync",
+    "37-live-core-provider-verification",
+    "39-url-archive-integrity"
+  ]
+}

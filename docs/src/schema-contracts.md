@@ -25,10 +25,17 @@ models change.
   that describe linkage without claim-truth scoring.
 - `sourceright.export-manifest.schema.json`: export artifact inventories. The
   exported YAML/XML files themselves continue to use `sourceright.export.v1`.
+- `sourceright.sync-manifest.schema.json`: planned citation-manager sync
+  manifests.
+- `sourceright.citation-sync.schema.json`: `sourceright.citation_sync.v1`
+  Zotero-first preview/apply reports, including suppressed and review-required
+  suggestion counts.
 - `sourceright.policy.schema.json`: journal or workflow policy inputs for later
   style, recency, and integrity checks.
 - `sourceright.policy-report.schema.json`: deterministic policy-check report
   output.
+- `sourceright.plugin-manifest.schema.json`: plugin manifest metadata,
+  contracts, capabilities, fixtures, and safety posture.
 - `sourceright.mcp-status.schema.json`: machine-readable readiness output for
   the MCP placeholder/status surface.
 
@@ -44,6 +51,7 @@ Schema versions match current Rust constants where those constants exist:
 - `sourceright.reference_report.v1`
 - `sourceright.journal_screening.v1`
 - `sourceright.export.v1`
+- `sourceright.citation_sync.v1`
 - `sourceright.policy_report.v1`
 
 The legal citation and provenance reports currently do not emit a top-level

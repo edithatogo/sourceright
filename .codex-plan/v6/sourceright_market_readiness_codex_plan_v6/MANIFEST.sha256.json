@@ -1,0 +1,126 @@
+{
+  "created_at": "2026-05-12T00:00:00+10:00",
+  "pack": "sourceright_market_readiness_codex_plan_v6",
+  "files": [
+    {
+      "path": "AGENTS.md.template",
+      "sha256": "d17fe6f2848bd0d8810e2a793774646f9c5e17cc783886202cfcdd18c4450eaf",
+      "bytes": 2452
+    },
+    {
+      "path": "BENCHMARK_MATURITY.md",
+      "sha256": "cf3e727ad5995aa4c0811abad60e09899b406c0846bc36937c3a05904f7868d2",
+      "bytes": 2579
+    },
+    {
+      "path": "CASE_STUDIES_PLAN.md",
+      "sha256": "6a55db1bebe1dfbb3c25e3cd64bcef9a246a372f5ec6fb632c220662ebf50d2c",
+      "bytes": 1263
+    },
+    {
+      "path": "DEMO_AND_LAUNCH_PLAN.md",
+      "sha256": "e0695924569b2306683361773ff464128f94f7849ebc1f07198ed4eb940de3d3",
+      "bytes": 1139
+    },
+    {
+      "path": "DOCS_AND_RUSTDOC_PLAN.md",
+      "sha256": "748b9ccf7e5c9124cace94c0526a2f56409c9439ae65f24db6577c06a3ddbb58",
+      "bytes": 1398
+    },
+    {
+      "path": "MARKET_READINESS.md",
+      "sha256": "d004fccc6448effa5057f481b020a042f215de5b8a82cb3b3f8aca159b9849cd",
+      "bytes": 2101
+    },
+    {
+      "path": "MCP_READONLY_PLAN.md",
+      "sha256": "43f1c344323a214ccaa0d5a4620554281cdbecf583fc60876f0fc1979e292ae3",
+      "bytes": 901
+    },
+    {
+      "path": "PLAN.md",
+      "sha256": "19ab6ff6a3c62f75b6525f26629bcbcf80ff2169871ff17c247e76d15c550828",
+      "bytes": 4074
+    },
+    {
+      "path": "PLUGIN_PROVIDER_STATUS_PLAN.md",
+      "sha256": "ac37c68e90ac6d879e3aab80d45d0ba03d126660a0fba6baba12f455d228ffe7",
+      "bytes": 1023
+    },
+    {
+      "path": "README.md",
+      "sha256": "7a579e4474d0d191daff7814c519de86aea6d6b5976eec378772f82fb3c4186f",
+      "bytes": 2493
+    },
+    {
+      "path": "USE_THIS_PROMPT.md",
+      "sha256": "8cf93c3787461bfc75701af63cdca2dbf8ca65562e5a57797845395f441e0f30",
+      "bytes": 3099
+    },
+    {
+      "path": "checklists/benchmark-ready.md",
+      "sha256": "4e13852bd10d2c34d1872932964d39e9354cbb9f3784ad20486d87478106524e",
+      "bytes": 763
+    },
+    {
+      "path": "checklists/market-ready.md",
+      "sha256": "36960e5a31ee38cfbae0e89825848c28abcf3555b852e27d7f8259a5f0b2d145",
+      "bytes": 636
+    },
+    {
+      "path": "codex/prompts/00-bootstrap-audit.md",
+      "sha256": "c49dd0aca18404914018ea839424ef19a802dcd891a6763f80e94f44697d9da8",
+      "bytes": 838
+    },
+    {
+      "path": "codex/prompts/01-baseline-quality-gates.md",
+      "sha256": "328c969d6040a838ae4f80194c8606a99e51940187497073bb2e758d8d6b8325",
+      "bytes": 552
+    },
+    {
+      "path": "codex/prompts/02-benchmark-maturity.md",
+      "sha256": "ae56628cb0e9348c116cb6c896931902b40d75e62d97f9c9b0f800fabe6883fd",
+      "bytes": 885
+    },
+    {
+      "path": "codex/prompts/03-docs-and-rustdoc.md",
+      "sha256": "90e0c7533f328a78be72f6aa54f7e62a7df99aa42678a1b45fa5a84eb07c1e50",
+      "bytes": 599
+    },
+    {
+      "path": "codex/prompts/04-demo-and-landing-page.md",
+      "sha256": "a06106d13bc6f041e2959154a1fca7857d6ae3655c8a3592866f15c377dae959",
+      "bytes": 553
+    },
+    {
+      "path": "codex/prompts/05-plugin-provider-status.md",
+      "sha256": "277786caa9d0f6574d0dd9a3fdf6a250d99a755286337ed188d4c1fbd3f97d03",
+      "bytes": 628
+    },
+    {
+      "path": "codex/prompts/06-case-studies.md",
+      "sha256": "9046015d1e48a67e6267428495df914f27bd92d8b505ecffd09c2431ba30a51f",
+      "bytes": 743
+    },
+    {
+      "path": "codex/prompts/07-mcp-readonly-hardening.md",
+      "sha256": "307c725567b512d9aeca8abadd439818b27e0314cf1460d683b06f7a242682da",
+      "bytes": 487
+    },
+    {
+      "path": "codex/prompts/08-launch-packaging.md",
+      "sha256": "d6209ed5e59a2342fdd09ddd552f35c043e86530e89cd1df654abb7ce4c17821",
+      "bytes": 630
+    },
+    {
+      "path": "codex/prompts/09-final-review.md",
+      "sha256": "381e6d53ba4f4e03fa785605d1053bb9c6ee80010ac825d2364729bdd48300cc",
+      "bytes": 637
+    },
+    {
+      "path": "scripts/setup_plan_windows.ps1",
+      "sha256": "83656df28763872aedf16ec2053ef95d380f2ba5979dfe1274b9672f99bdb880",
+      "bytes": 1435
+    }
+  ]
+}

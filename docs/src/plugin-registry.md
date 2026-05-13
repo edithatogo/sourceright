@@ -8,9 +8,27 @@ Registry entries point to manifests under `plugins/manifests/`. Each manifest
 declares a plugin category, capability summary, authentication expectations,
 cache and licence policy, and the Sourceright contracts it reads or writes.
 
+## Status Matrix
+
+Registry `status` values are implementation labels, not release promises.
+Use the matrix below when translating them into market-readiness wording:
+
+| Registry status | Market-readiness label | Meaning |
+| --- | --- | --- |
+| `core_normalizer` | Technical preview | Implemented core behavior with fixture-backed and trust-gated use. |
+| `core_exporter` | Technical preview | Implemented exporter behavior with the same controlled-use limits. |
+| `planned_public_api` | Roadmap, not preview | Public API target is described, but implementation is still pending. |
+| `planned_byo_key` | Roadmap, not preview | BYO-key or licensed-data target is described, but implementation is still pending. |
+| `planned_adapter` | Roadmap, not preview | Adapter target is described, but implementation is still pending. |
+| `planned` | Roadmap, not preview | Concept is catalogued, but no implementation-ready surface exists yet. |
+
+Technical preview in Sourceright means the contract, fixtures, and validation
+path are in place, but runtime execution still follows explicit trust,
+dry-run, and provenance limits.
+
 ## Categories
 
-The current registry covers the planned plugin families:
+The current registry covers the current plugin families:
 
 - `provider`: scholarly and legal metadata providers.
 - `citation-manager`: file or API sync targets such as Zotero and EndNote.

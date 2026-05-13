@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -30,6 +30,8 @@ pub struct CitationSyncReport {
     pub update_count: usize,
     pub skip_count: usize,
     pub conflict_count: usize,
+    pub suppressed_count: usize,
+    pub review_required_count: usize,
     pub actions: Vec<CitationSyncAction>,
     pub audit_log_path: Option<String>,
 }
@@ -40,21 +42,29 @@ pub enum CitationSyncAction {
     Create {
         reference_id: String,
         zotero_key: Option<String>,
+        suggestion: CitationSyncSuggestionKind,
+        explanation: String,
     },
     Update {
         reference_id: String,
         zotero_key: String,
         changed_fields: Vec<String>,
+        suggestion: CitationSyncSuggestionKind,
+        explanation: String,
     },
     Skip {
         reference_id: String,
         zotero_key: String,
+        suggestion: CitationSyncSuggestionKind,
+        explanation: String,
     },
     Conflict {
         reference_id: String,
         zotero_key: Option<String>,
         changed_fields: Vec<String>,
         message: String,
+        suggestion: CitationSyncSuggestionKind,
+        explanation: String,
     },
 }
 
@@ -73,6 +83,17 @@ pub struct RemoteCitationRecord {
     pub item_type: String,
     pub title: Option<String>,
     pub doi: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum CitationSyncSuggestionKind {
+    SafeUpdate,
+    NoOp,
+    LowConfidence,
+    Suppressed,
+    ReviewRequired,
+    Conflict,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -117,7 +138,14 @@ pub fn run_citation_sync(
         }
     }
 
-    let (create_count, update_count, skip_count, conflict_count) = count_actions(&actions);
+    let (
+        create_count,
+        update_count,
+        skip_count,
+        conflict_count,
+        suppressed_count,
+        review_required_count,
+    ) = count_actions(&actions);
     Ok(CitationSyncReport {
         schema_version: "sourceright.citation_sync.v1".to_string(),
         workspace_root: workspace.root.display().to_string(),
@@ -127,6 +155,8 @@ pub fn run_citation_sync(
         update_count,
         skip_count,
         conflict_count,
+        suppressed_count,
+        review_required_count,
         actions,
         audit_log_path,
     })
@@ -242,14 +272,36 @@ fn plan_sync_actions(
             });
 
         match remote_match {
-            None => actions.push(CitationSyncAction::Create {
-                reference_id: item.id.clone(),
-                zotero_key: None,
-            }),
+            None => {
+                let narrow_fit = best_narrow_fit(item, remote_records);
+                let (zotero_key, suggestion, explanation) = match narrow_fit {
+                    Some(fit) => (
+                        Some(fit.remote.key.clone()),
+                        fit.suggestion,
+                        narrow_fit_explanation(item, fit.remote, fit.suggestion, fit.shared_tokens),
+                    ),
+                    None => (
+                        None,
+                        CitationSyncSuggestionKind::LowConfidence,
+                        create_explanation(item),
+                    ),
+                };
+                actions.push(CitationSyncAction::Create {
+                    reference_id: item.id.clone(),
+                    zotero_key,
+                    suggestion,
+                    explanation,
+                });
+            }
             Some(remote) if record_matches(item, remote) => {
                 actions.push(CitationSyncAction::Skip {
                     reference_id: item.id.clone(),
                     zotero_key: remote.key.clone(),
+                    suggestion: CitationSyncSuggestionKind::NoOp,
+                    explanation: format!(
+                        "Remote Zotero record {} already matches the CSL DOI, title, and item type, so no writeback is needed.",
+                        remote.key
+                    ),
                 })
             }
             Some(remote) => {
@@ -259,6 +311,8 @@ fn plan_sync_actions(
                         reference_id: item.id.clone(),
                         zotero_key: remote.key.clone(),
                         changed_fields,
+                        suggestion: CitationSyncSuggestionKind::SafeUpdate,
+                        explanation: update_explanation(item, remote),
                     });
                 } else {
                     actions.push(CitationSyncAction::Conflict {
@@ -268,6 +322,8 @@ fn plan_sync_actions(
                         message:
                             "Local CSL and remote Zotero record disagree; resolve the conflict before applying."
                                 .to_string(),
+                        suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                        explanation: conflict_explanation(item, remote),
                     });
                 }
             }
@@ -297,26 +353,264 @@ fn changed_fields(item: &CslItem, remote: &RemoteCitationRecord) -> Vec<String> 
     fields
 }
 
+fn create_explanation(item: &CslItem) -> String {
+    let mut evidence = Vec::new();
+    if item
+        .doi
+        .as_deref()
+        .is_some_and(|value| !value.trim().is_empty())
+    {
+        evidence.push("DOI");
+    }
+    if item
+        .title
+        .as_deref()
+        .is_some_and(|value| !value.trim().is_empty())
+    {
+        evidence.push("title");
+    }
+
+    if evidence.is_empty() {
+        "No remote Zotero record matched this CSL item, but the local item does not carry strong identifiers, so the preview keeps the create suggestion as low confidence.".to_string()
+    } else {
+        match evidence.as_slice() {
+            [single] => format!(
+                "No remote Zotero record matched on {single}, so this preview suggests a new record only as low confidence."
+            ),
+            [first, second] => format!(
+                "No remote Zotero record matched on {first} or {second}, so this preview suggests a new record only as low confidence."
+            ),
+            _ => "No remote Zotero record matched the CSL item, so this preview suggests a new record only as low confidence.".to_string(),
+        }
+    }
+}
+
+fn update_explanation(item: &CslItem, remote: &RemoteCitationRecord) -> String {
+    let fields = changed_fields(item, remote);
+    match fields.as_slice() {
+        [] => "The remote Zotero record already matches the CSL item, so the safe-update branch should not normally be used here.".to_string(),
+        [field] => format!(
+            "DOI matched, and only the {field} differs from the CSL item; this is a safe metadata update."
+        ),
+        _ => format!(
+            "DOI matched, and the remote record differs from the CSL item in {}.",
+            fields.join(", ")
+        ),
+    }
+}
+
+fn conflict_explanation(item: &CslItem, remote: &RemoteCitationRecord) -> String {
+    let fields = changed_fields(item, remote);
+    let field_text = match fields.as_slice() {
+        [] => "metadata".to_string(),
+        [field] => field.to_string(),
+        _ => fields.join(", "),
+    };
+    format!(
+        "The remote Zotero DOI does not match the CSL DOI, and the records also differ in {field_text}; keep this in review mode until the conflict is resolved."
+    )
+}
+
+struct NarrowFit<'a> {
+    remote: &'a RemoteCitationRecord,
+    suggestion: CitationSyncSuggestionKind,
+    shared_tokens: usize,
+}
+
+fn best_narrow_fit<'a>(
+    item: &CslItem,
+    remote_records: &'a [RemoteCitationRecord],
+) -> Option<NarrowFit<'a>> {
+    let mut best: Option<NarrowFit<'a>> = None;
+
+    for remote in remote_records {
+        let Some(candidate) = narrow_fit(item, remote) else {
+            continue;
+        };
+
+        let replace = match &best {
+            None => true,
+            Some(current) => fit_priority(&candidate) > fit_priority(current),
+        };
+        if replace {
+            best = Some(candidate);
+        }
+    }
+
+    best
+}
+
+fn narrow_fit<'a>(item: &CslItem, remote: &'a RemoteCitationRecord) -> Option<NarrowFit<'a>> {
+    if let (Some(local_doi), Some(remote_doi)) = (
+        normalize(item.doi.as_deref()),
+        normalize(remote.doi.as_deref()),
+    ) && doi_prefix(&local_doi) == doi_prefix(&remote_doi)
+        && local_doi != remote_doi
+    {
+        return Some(NarrowFit {
+            remote,
+            suggestion: CitationSyncSuggestionKind::ReviewRequired,
+            shared_tokens: 0,
+        });
+    }
+
+    if let (Some(local_title), Some(remote_title)) = (
+        normalize(item.title.as_deref()),
+        normalize(remote.title.as_deref()),
+    ) {
+        let local_compact = compact_text(&local_title);
+        let remote_compact = compact_text(&remote_title);
+        let shared_tokens = shared_title_tokens(&local_title, &remote_title);
+
+        if local_compact == remote_compact || shared_tokens >= 2 {
+            return Some(NarrowFit {
+                remote,
+                suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                shared_tokens,
+            });
+        }
+
+        if shared_tokens == 1 && common_prefix_len(&local_compact, &remote_compact) >= 8 {
+            return Some(NarrowFit {
+                remote,
+                suggestion: CitationSyncSuggestionKind::Suppressed,
+                shared_tokens,
+            });
+        }
+    }
+
+    None
+}
+
+fn fit_priority(fit: &NarrowFit<'_>) -> (u8, usize, String) {
+    let suggestion_priority = match fit.suggestion {
+        CitationSyncSuggestionKind::ReviewRequired => 2,
+        CitationSyncSuggestionKind::Suppressed => 1,
+        _ => 0,
+    };
+    (
+        suggestion_priority,
+        fit.shared_tokens,
+        fit.remote.key.clone(),
+    )
+}
+
+fn narrow_fit_explanation(
+    item: &CslItem,
+    remote: &RemoteCitationRecord,
+    suggestion: CitationSyncSuggestionKind,
+    shared_tokens: usize,
+) -> String {
+    match suggestion {
+        CitationSyncSuggestionKind::Suppressed => format!(
+            "A narrow Zotero fit exists for {} on {shared_tokens} shared title token(s), but it is still too weak for an automatic create suggestion, so the preview suppresses it.",
+            remote.key
+        ),
+        CitationSyncSuggestionKind::ReviewRequired => format!(
+            "A narrow Zotero fit exists for {} and the preview keeps it review-required because the CSL item {} still disagrees on title or DOI details.",
+            remote.key, item.id
+        ),
+        _ => create_explanation(item),
+    }
+}
+
+fn shared_title_tokens(local_title: &str, remote_title: &str) -> usize {
+    let local_tokens = title_tokens(local_title);
+    let remote_tokens = title_tokens(remote_title);
+    local_tokens.intersection(&remote_tokens).count()
+}
+
+fn title_tokens(value: &str) -> BTreeSet<String> {
+    value
+        .split(|ch: char| !ch.is_ascii_alphanumeric())
+        .filter(|token| token.len() >= 4)
+        .map(|token| token.to_ascii_lowercase())
+        .collect()
+}
+
+fn compact_text(value: &str) -> String {
+    value
+        .chars()
+        .filter(|ch| ch.is_ascii_alphanumeric())
+        .collect::<String>()
+        .to_ascii_lowercase()
+}
+
+fn common_prefix_len(left: &str, right: &str) -> usize {
+    left.chars()
+        .zip(right.chars())
+        .take_while(|(left, right)| left == right)
+        .count()
+}
+
+fn doi_prefix(doi: &str) -> &str {
+    doi.split_once('/').map(|(prefix, _)| prefix).unwrap_or(doi)
+}
+
 fn normalize(value: Option<&str>) -> Option<String> {
     value
         .map(|value| value.trim().to_ascii_lowercase())
         .filter(|value| !value.is_empty())
 }
 
-fn count_actions(actions: &[CitationSyncAction]) -> (usize, usize, usize, usize) {
+fn count_actions(actions: &[CitationSyncAction]) -> (usize, usize, usize, usize, usize, usize) {
     let mut create_count = 0;
     let mut update_count = 0;
     let mut skip_count = 0;
     let mut conflict_count = 0;
+    let mut suppressed_count = 0;
+    let mut review_required_count = 0;
     for action in actions {
         match action {
-            CitationSyncAction::Create { .. } => create_count += 1,
+            CitationSyncAction::Create {
+                suggestion: CitationSyncSuggestionKind::LowConfidence,
+                ..
+            } => create_count += 1,
+            CitationSyncAction::Create {
+                suggestion: CitationSyncSuggestionKind::Suppressed,
+                ..
+            } => suppressed_count += 1,
+            CitationSyncAction::Create {
+                suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                ..
+            } => review_required_count += 1,
             CitationSyncAction::Update { .. } => update_count += 1,
             CitationSyncAction::Skip { .. } => skip_count += 1,
-            CitationSyncAction::Conflict { .. } => conflict_count += 1,
+            CitationSyncAction::Conflict {
+                suggestion: CitationSyncSuggestionKind::Conflict,
+                ..
+            } => conflict_count += 1,
+            CitationSyncAction::Conflict {
+                suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                ..
+            } => review_required_count += 1,
+            CitationSyncAction::Create {
+                suggestion: CitationSyncSuggestionKind::Conflict,
+                ..
+            }
+            | CitationSyncAction::Create {
+                suggestion:
+                    CitationSyncSuggestionKind::SafeUpdate | CitationSyncSuggestionKind::NoOp,
+                ..
+            }
+            | CitationSyncAction::Conflict {
+                suggestion:
+                    CitationSyncSuggestionKind::SafeUpdate
+                    | CitationSyncSuggestionKind::LowConfidence
+                    | CitationSyncSuggestionKind::NoOp
+                    | CitationSyncSuggestionKind::Suppressed,
+                ..
+            } => {}
         }
     }
-    (create_count, update_count, skip_count, conflict_count)
+    (
+        create_count,
+        update_count,
+        skip_count,
+        conflict_count,
+        suppressed_count,
+        review_required_count,
+    )
 }
 
 fn write_audit_log(path: &Path, actions: &[CitationSyncAction]) -> Result<(), CitationSyncError> {
@@ -330,12 +624,22 @@ fn write_audit_log(path: &Path, actions: &[CitationSyncAction]) -> Result<(), Ci
             CitationSyncAction::Create {
                 reference_id,
                 zotero_key,
+                suggestion,
+                ..
             } => CitationSyncAuditEntry {
                 timestamp_unix_seconds: timestamp,
                 reference_id: reference_id.clone(),
                 action: action_kind(action).to_string(),
                 zotero_key: zotero_key.clone(),
-                result: "created".to_string(),
+                result: match suggestion {
+                    CitationSyncSuggestionKind::LowConfidence => "created".to_string(),
+                    CitationSyncSuggestionKind::Suppressed => "suppressed".to_string(),
+                    CitationSyncSuggestionKind::ReviewRequired => "review_required".to_string(),
+                    CitationSyncSuggestionKind::Conflict => "conflict".to_string(),
+                    CitationSyncSuggestionKind::SafeUpdate | CitationSyncSuggestionKind::NoOp => {
+                        "created".to_string()
+                    }
+                },
             },
             CitationSyncAction::Update {
                 reference_id,
@@ -351,6 +655,7 @@ fn write_audit_log(path: &Path, actions: &[CitationSyncAction]) -> Result<(), Ci
             CitationSyncAction::Skip {
                 reference_id,
                 zotero_key,
+                ..
             } => CitationSyncAuditEntry {
                 timestamp_unix_seconds: timestamp,
                 reference_id: reference_id.clone(),
@@ -361,13 +666,21 @@ fn write_audit_log(path: &Path, actions: &[CitationSyncAction]) -> Result<(), Ci
             CitationSyncAction::Conflict {
                 reference_id,
                 zotero_key,
+                suggestion,
                 ..
             } => CitationSyncAuditEntry {
                 timestamp_unix_seconds: timestamp,
                 reference_id: reference_id.clone(),
                 action: action_kind(action).to_string(),
                 zotero_key: zotero_key.clone(),
-                result: "conflict".to_string(),
+                result: match suggestion {
+                    CitationSyncSuggestionKind::Conflict => "conflict".to_string(),
+                    CitationSyncSuggestionKind::ReviewRequired => "review_required".to_string(),
+                    CitationSyncSuggestionKind::LowConfidence
+                    | CitationSyncSuggestionKind::Suppressed
+                    | CitationSyncSuggestionKind::SafeUpdate
+                    | CitationSyncSuggestionKind::NoOp => "conflict".to_string(),
+                },
             },
         };
         jsonl.push_str(&serde_json::to_string(&entry)?);
@@ -395,7 +708,11 @@ fn write_remote_fixture(
     let mut records = remote_records.to_vec();
     for action in actions {
         match action {
-            CitationSyncAction::Create { reference_id, .. } => {
+            CitationSyncAction::Create {
+                reference_id,
+                suggestion: CitationSyncSuggestionKind::LowConfidence,
+                ..
+            } => {
                 if let Some(item) = csl.items.iter().find(|item| &item.id == reference_id) {
                     records.push(RemoteCitationRecord {
                         key: format!("zotero-{}", reference_id),
@@ -405,9 +722,11 @@ fn write_remote_fixture(
                     });
                 }
             }
+            CitationSyncAction::Create { .. } => {}
             CitationSyncAction::Update {
                 reference_id,
                 zotero_key,
+                suggestion: CitationSyncSuggestionKind::SafeUpdate,
                 ..
             } => {
                 if let Some(item) = csl.items.iter().find(|item| &item.id == reference_id)
@@ -419,7 +738,9 @@ fn write_remote_fixture(
                     record.doi = item.doi.clone();
                 }
             }
-            CitationSyncAction::Skip { .. } | CitationSyncAction::Conflict { .. } => {}
+            CitationSyncAction::Update { .. }
+            | CitationSyncAction::Skip { .. }
+            | CitationSyncAction::Conflict { .. } => {}
         }
     }
     fs::write(path, serde_json::to_string_pretty(&records)? + "\n")?;
@@ -437,6 +758,20 @@ mod tests {
         fs::write(
             &workspace.references_csl_json,
             r#"[{"id":"smith-2024","type":"article-journal","title":"Benchmark reference","DOI":"10.1234/benchmark"}]"#,
+        )
+        .expect("write csl");
+        tempdir
+    }
+
+    fn workspace_with_reference(title: &str, doi: &str) -> tempfile::TempDir {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            format!(
+                r#"[{{"id":"smith-2024","type":"article-journal","title":"{title}","DOI":"{doi}"}}]"#
+            ),
         )
         .expect("write csl");
         tempdir
@@ -467,6 +802,59 @@ mod tests {
         assert_eq!(report.create_count, 1);
         assert_eq!(report.conflict_count, 0);
         assert!(!report.applied);
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Create {
+                suggestion: CitationSyncSuggestionKind::LowConfidence,
+                ..
+            }
+        ));
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Create { ref explanation, .. }
+                if explanation.contains("low confidence")
+        ));
+    }
+
+    #[test]
+    fn exact_matches_are_reported_as_no_ops() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        fs::write(
+            &remote_path,
+            r#"[{"key":"zotero-1","item_type":"article-journal","title":"Benchmark reference","doi":"10.1234/benchmark"}]"#,
+        )
+        .expect("write remote");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: true,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert_eq!(report.skip_count, 1);
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Skip {
+                suggestion: CitationSyncSuggestionKind::NoOp,
+                ..
+            }
+        ));
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Skip { ref explanation, .. }
+                if explanation.contains("already matches")
+        ));
     }
 
     #[test]
@@ -528,11 +916,103 @@ mod tests {
         )
         .expect("run sync");
 
-        assert_eq!(report.conflict_count, 1);
+        assert_eq!(report.conflict_count, 0);
+        assert_eq!(report.review_required_count, 1);
         assert!(matches!(
             report.actions[0],
-            CitationSyncAction::Conflict { .. }
+            CitationSyncAction::Conflict {
+                suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                ..
+            }
         ));
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Conflict { ref explanation, .. }
+                if explanation.contains("keep this in review mode")
+        ));
+    }
+
+    #[test]
+    fn weak_narrow_fits_are_suppressed_in_preview() {
+        let tempdir = workspace_with_reference("Benchmark atlas", "10.1234/atlas");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        fs::write(
+            &remote_path,
+            r#"[{"key":"zotero-1","item_type":"article-journal","title":"Benchmark analysis","doi":"10.9999/analysis"}]"#,
+        )
+        .expect("write remote");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: true,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert_eq!(report.create_count, 0);
+        assert_eq!(report.suppressed_count, 1);
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Create {
+                suggestion: CitationSyncSuggestionKind::Suppressed,
+                ..
+            }
+        ));
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Create { ref explanation, .. }
+                if explanation.contains("suppresses it")
+        ));
+    }
+
+    #[test]
+    fn suppressed_preview_actions_stay_out_of_apply_writes() {
+        let tempdir = workspace_with_reference("Benchmark atlas", "10.1234/atlas");
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        fs::write(
+            &remote_path,
+            r#"[{"key":"zotero-1","item_type":"article-journal","title":"Benchmark analysis","doi":"10.9999/analysis"}]"#,
+        )
+        .expect("write remote");
+        let audit_log_path = tempdir.path().join("audit.jsonl");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: false,
+                apply: true,
+                audit_log_path: Some(audit_log_path.clone()),
+                remote_fixture_path: Some(remote_path.clone()),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert!(report.applied);
+        assert_eq!(report.suppressed_count, 1);
+        assert_eq!(report.create_count, 0);
+
+        let remote_after = fs::read_to_string(&remote_path).expect("remote after");
+        assert!(remote_after.contains("Benchmark analysis"));
+        assert!(!remote_after.contains("zotero-smith-2024"));
+        assert!(
+            fs::read_to_string(&audit_log_path)
+                .expect("audit")
+                .contains("suppressed")
+        );
     }
 
     #[test]
@@ -564,7 +1044,15 @@ mod tests {
         assert_eq!(report.update_count, 1);
         assert!(matches!(
             report.actions[0],
-            CitationSyncAction::Update { .. }
+            CitationSyncAction::Update {
+                suggestion: CitationSyncSuggestionKind::SafeUpdate,
+                ..
+            }
+        ));
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Update { ref explanation, .. }
+                if explanation.contains("safe metadata update")
         ));
     }
 }

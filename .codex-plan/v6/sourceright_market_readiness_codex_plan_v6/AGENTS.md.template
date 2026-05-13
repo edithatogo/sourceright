@@ -1,0 +1,53 @@
+# Sourceright Codex instructions
+
+You are working on Sourceright. Treat the current repository as the source of truth.
+
+This planning pack is guidance, not a bulk overlay. Do not blindly copy files from this pack into the repo root. Use it to plan and execute small, reviewable implementation slices.
+
+## Core architectural boundaries
+
+Preserve these boundaries:
+- `references.csl.json` is canonical clean bibliographic data.
+- `references.verification.json` stores evidence, provenance, provider candidates, confidence, conflicts, review status, and verification metadata.
+- `review-queue.jsonl` is operational review work derived from the canonical and sidecar artifacts.
+- Provider metadata must not silently overwrite canonical CSL.
+- Legal citation records remain separate from academic CSL bibliography records.
+- Claim/source/provenance graphs may record support relationships but must not assert claim truth.
+- MCP write tools must wait until read-only contracts, schemas, audit logs, dry-run semantics, and explicit apply semantics are stable.
+
+## Repo strategy
+
+The repo has already advanced beyond the original scaffold. Do not bulk-apply old overlay ZIPs. Do not split the crate into a workspace unless explicitly requested after an audit.
+
+Prefer additive changes:
+- benchmark harness maturity;
+- schemas and validation improvements;
+- documentation and worked examples;
+- rustdoc/API docs;
+- public demo and landing-page polish;
+- plugin/provider status matrices;
+- case-study fixtures;
+- read-only MCP examples;
+- launch checklist and positioning.
+
+## Quality gates
+
+After each implementation slice, run the appropriate subset of:
+- `cargo fmt --check`
+- `cargo clippy --all-targets -- -D warnings`
+- `cargo test`
+- `cargo check --locked`
+- `cargo run --bin sourceright -- bench`
+- `cargo run --bin sourceright -- report --json examples/workspace` if applicable
+- schema/demo validation scripts if present
+- docs build command if present
+
+Do not commit automatically. Summarize changed files, checks run, failures, and deferred work.
+
+## Claims discipline
+
+Use accurate language:
+- Good: “technical preview,” “pilot-ready,” “fixture-backed regression benchmark,” “deterministic benchmark scaffold.”
+- Avoid unless proven: “production-ready institutional platform,” “SOTA benchmarked performance,” “legal filing compliance system,” “AI detector.”
+
+Keep the benchmark claim separate from the product claim.

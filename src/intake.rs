@@ -52,11 +52,12 @@ pub fn extract_intake(document: &IntakeDocument) -> IntakeResult {
             extract_text_like(&document.source, &document.text, None)
         }
         IntakeSourceKind::Markdown => {
-            let reference_start = markdown_reference_start(&document.text);
+            let reference_start = reference_section_start(&document.text);
             extract_text_like(&document.source, &document.text, reference_start)
         }
         IntakeSourceKind::Docx if !document.text.trim().is_empty() => {
-            let mut result = extract_text_like(&document.source, &document.text, None);
+            let reference_start = reference_section_start(&document.text);
+            let mut result = extract_text_like(&document.source, &document.text, reference_start);
             result.diagnostics.push(IntakeDiagnostic {
                 code: "intake.docx.adapter_text_used".to_string(),
                 message: "DOCX adapter supplied extracted text; Sourceright preserved the source as DOCX provenance.".to_string(),
@@ -68,7 +69,8 @@ pub fn extract_intake(document: &IntakeDocument) -> IntakeResult {
             "DOCX extraction requires an adapter; plain text extracted from DOCX can be passed as text.",
         ),
         IntakeSourceKind::PdfText if !document.text.trim().is_empty() => {
-            let mut result = extract_text_like(&document.source, &document.text, None);
+            let reference_start = reference_section_start(&document.text);
+            let mut result = extract_text_like(&document.source, &document.text, reference_start);
             result.diagnostics.push(IntakeDiagnostic {
                 code: "intake.pdf.text_layer_used".to_string(),
                 message: "PDF text-layer adapter supplied extracted text; source spans are line-based in the extracted text.".to_string(),
@@ -87,7 +89,16 @@ pub fn extract_intake(document: &IntakeDocument) -> IntakeResult {
 }
 
 pub fn extract_references_from_text(source: &str, text: &str) -> Vec<ReferenceCandidate> {
-    reference_entries(text)
+    extract_references_from_text_with_base_line(source, text, 1)
+}
+
+fn extract_references_from_text_with_base_line(
+    source: &str,
+    text: &str,
+    base_line: usize,
+) -> Vec<ReferenceCandidate> {
+    reference_entries(text, base_line, false)
+        .entries
         .into_iter()
         .enumerate()
         .map(|(index, (line_number, text))| ReferenceCandidate {
@@ -131,33 +142,77 @@ pub fn extract_in_text_citations(source: &str, text: &str) -> Vec<InTextCitation
 }
 
 fn extract_text_like(source: &str, text: &str, reference_start: Option<usize>) -> IntakeResult {
-    let reference_text = reference_start
-        .map(|start| text.lines().skip(start).collect::<Vec<_>>().join("\n"))
-        .unwrap_or_else(|| text.to_string());
+    let (reference_text, base_line) = reference_start
+        .map(|start| {
+            (
+                text.lines().skip(start).collect::<Vec<_>>().join("\n"),
+                start + 1,
+            )
+        })
+        .unwrap_or_else(|| (text.to_string(), 1));
+    let reference_entries =
+        reference_entries(&reference_text, base_line, reference_start.is_some());
 
     IntakeResult {
-        references: extract_references_from_text(source, &reference_text),
+        references: reference_entries
+            .entries
+            .into_iter()
+            .enumerate()
+            .map(|(index, (line_number, text))| ReferenceCandidate {
+                id: format!("ref-{:04}", index + 1),
+                text,
+                source: source.to_string(),
+                span: format!("line:{line_number}"),
+            })
+            .collect(),
         citations: extract_in_text_citations(source, text),
-        diagnostics: Vec::new(),
+        diagnostics: reference_entries.diagnostics,
     }
 }
 
-fn reference_entries(text: &str) -> Vec<(usize, String)> {
+struct ReferenceEntryParse {
+    entries: Vec<(usize, String)>,
+    diagnostics: Vec<IntakeDiagnostic>,
+}
+
+fn reference_entries(text: &str, base_line: usize, emit_diagnostics: bool) -> ReferenceEntryParse {
     let mut entries = Vec::new();
+    let mut diagnostics = Vec::new();
     let mut current = String::new();
-    let mut start_line = 1;
+    let mut start_line = base_line;
+    let mut current_started_with_marker = false;
 
     for (line_index, line) in text.lines().enumerate() {
         let trimmed = line.trim();
         if trimmed.is_empty() {
-            push_entry(&mut entries, start_line, &mut current);
-            start_line = line_index + 2;
+            push_entry(
+                &mut entries,
+                &mut diagnostics,
+                start_line,
+                &mut current,
+                current_started_with_marker,
+                emit_diagnostics,
+            );
+            start_line = base_line + line_index + 1;
+            current_started_with_marker = false;
             continue;
         }
 
-        if starts_new_reference(trimmed) && !current.trim().is_empty() {
-            push_entry(&mut entries, start_line, &mut current);
-            start_line = line_index + 1;
+        if let Some(stripped) = strip_reference_marker(trimmed) {
+            if !current.trim().is_empty() {
+                push_entry(
+                    &mut entries,
+                    &mut diagnostics,
+                    start_line,
+                    &mut current,
+                    current_started_with_marker,
+                    emit_diagnostics,
+                );
+            }
+            start_line = base_line + line_index;
+            current_started_with_marker = true;
+            current.push_str(stripped);
+            continue;
         }
 
         if !current.is_empty() {
@@ -166,51 +221,92 @@ fn reference_entries(text: &str) -> Vec<(usize, String)> {
         current.push_str(trimmed);
     }
 
-    push_entry(&mut entries, start_line, &mut current);
-    entries
+    push_entry(
+        &mut entries,
+        &mut diagnostics,
+        start_line,
+        &mut current,
+        current_started_with_marker,
+        emit_diagnostics,
+    );
+    ReferenceEntryParse {
+        entries,
+        diagnostics,
+    }
 }
 
-fn push_entry(entries: &mut Vec<(usize, String)>, start_line: usize, current: &mut String) {
+fn push_entry(
+    entries: &mut Vec<(usize, String)>,
+    diagnostics: &mut Vec<IntakeDiagnostic>,
+    start_line: usize,
+    current: &mut String,
+    started_with_marker: bool,
+    emit_diagnostics: bool,
+) {
     let entry = current.trim();
     if !entry.is_empty() && looks_like_reference(entry) {
-        entries.push((start_line, strip_reference_marker(entry)));
+        entries.push((start_line, strip_reference_marker_owned(entry)));
+    } else if !entry.is_empty() && started_with_marker && emit_diagnostics {
+        diagnostics.push(IntakeDiagnostic {
+            code: "intake.references.malformed_entry".to_string(),
+            message: format!(
+                "Bibliography entry starting on line {start_line} did not match reference heuristics and was left for manual review."
+            ),
+        });
     }
     current.clear();
 }
 
-fn starts_new_reference(line: &str) -> bool {
-    let marker = line
-        .split_once(' ')
-        .map(|(marker, _)| marker)
-        .unwrap_or(line)
-        .trim_end_matches('.');
-    marker.parse::<usize>().is_ok()
-        || line.starts_with("- ")
-        || line.starts_with("* ")
-        || line.starts_with('[')
+fn strip_reference_marker_owned(entry: &str) -> String {
+    reference_marker_body(entry).map_or_else(|| entry.to_string(), |body| body.to_string())
 }
 
-fn strip_reference_marker(entry: &str) -> String {
-    let entry = entry.trim_start_matches("- ").trim_start_matches("* ");
+fn strip_reference_marker(entry: &str) -> Option<&str> {
+    reference_marker_body(entry)
+}
+
+fn reference_marker_body(entry: &str) -> Option<&str> {
+    let entry = entry.trim_start();
+    if let Some(rest) = entry.strip_prefix("- ") {
+        return Some(rest.trim_start());
+    }
+    if let Some(rest) = entry.strip_prefix("* ") {
+        return Some(rest.trim_start());
+    }
+    if let Some(rest) = entry.strip_prefix("• ") {
+        return Some(rest.trim_start());
+    }
     if let Some(stripped) = strip_bracket_marker(entry) {
-        return stripped;
+        return Some(stripped);
     }
-    if let Some((number, rest)) = entry.split_once('.')
-        && number.trim().parse::<usize>().is_ok()
-    {
-        return rest.trim().to_string();
+    if let Some(rest) = strip_numeric_marker(entry) {
+        return Some(rest);
     }
-    entry.to_string()
+    None
 }
 
-fn strip_bracket_marker(entry: &str) -> Option<String> {
+fn strip_numeric_marker(entry: &str) -> Option<&str> {
+    let digits = entry.chars().take_while(|ch| ch.is_ascii_digit()).count();
+    if digits == 0 {
+        return None;
+    }
+
+    let rest = &entry[digits..];
+    let rest = rest
+        .strip_prefix('.')
+        .or_else(|| rest.strip_prefix(')'))
+        .or_else(|| rest.strip_prefix(':'))?;
+    Some(rest.trim_start())
+}
+
+fn strip_bracket_marker(entry: &str) -> Option<&str> {
     let rest = entry.strip_prefix('[')?;
     let (marker, rest) = rest.split_once(']')?;
-    marker
-        .trim()
-        .parse::<usize>()
-        .is_ok()
-        .then(|| rest.trim_start_matches('.').trim().to_string())
+    marker.trim().parse::<usize>().is_ok().then(|| {
+        rest.trim_start_matches(|ch: char| {
+            ch == '.' || ch == ')' || ch == ':' || ch.is_whitespace()
+        })
+    })
 }
 
 fn looks_like_reference(entry: &str) -> bool {
@@ -228,12 +324,22 @@ fn looks_like_citation(candidate: &str) -> bool {
     candidate.contains(',') && candidate.chars().any(|ch| ch.is_ascii_digit())
 }
 
-fn markdown_reference_start(text: &str) -> Option<usize> {
+fn reference_section_start(text: &str) -> Option<usize> {
     text.lines().position(|line| {
-        let normalized = line.trim().trim_matches('#').trim().to_ascii_lowercase();
+        let normalized = line
+            .trim()
+            .trim_matches('#')
+            .trim()
+            .trim_end_matches(['.', ':'])
+            .to_ascii_lowercase();
         matches!(
             normalized.as_str(),
-            "references" | "reference list" | "bibliography"
+            "references"
+                | "reference list"
+                | "bibliography"
+                | "works cited"
+                | "footnotes"
+                | "endnotes"
         )
     })
 }
@@ -282,6 +388,51 @@ mod tests {
         assert_eq!(result.references.len(), 1);
         assert_eq!(result.citations.len(), 1);
         assert_eq!(result.citations[0].text, "(Smith, 2024)");
+        assert_eq!(result.references[0].span, "line:5");
+    }
+
+    #[test]
+    fn docx_reference_section_preserves_original_line_spans() {
+        let document = IntakeDocument {
+            source: "submission.docx".to_string(),
+            kind: IntakeSourceKind::Docx,
+            text: "Intro text (Smith, 2024).\n\nReferences\n\n[1] Smith J. Trial paper. Journal. doi:10.1/example\n[2] Doe J. Book title. Press.".to_string(),
+        };
+
+        let result = extract_intake(&document);
+
+        assert_eq!(result.references.len(), 2);
+        assert_eq!(result.references[0].span, "line:5");
+        assert_eq!(
+            result.references[0].text,
+            "Smith J. Trial paper. Journal. doi:10.1/example"
+        );
+        assert_eq!(result.citations[0].text, "(Smith, 2024)");
+        assert_eq!(result.diagnostics[0].code, "intake.docx.adapter_text_used");
+    }
+
+    #[test]
+    fn malformed_bibliography_entries_emit_diagnostics_without_changing_spans() {
+        let document = IntakeDocument {
+            source: "submission.pdf".to_string(),
+            kind: IntakeSourceKind::PdfText,
+            text: "Intro paragraph.\n\nReferences\n\n1. Smith J Trial paper without enough structure\n[2] Doe J. Proper article. Journal. doi:10.2/example".to_string(),
+        };
+
+        let result = extract_intake(&document);
+
+        assert_eq!(result.references.len(), 1);
+        assert_eq!(result.references[0].span, "line:6");
+        assert_eq!(
+            result.references[0].text,
+            "Doe J. Proper article. Journal. doi:10.2/example"
+        );
+        assert_eq!(
+            result.diagnostics[0].code,
+            "intake.references.malformed_entry"
+        );
+        assert!(result.diagnostics[0].message.contains("line 5"));
+        assert_eq!(result.diagnostics[1].code, "intake.pdf.text_layer_used");
     }
 
     #[test]
@@ -318,16 +469,62 @@ mod tests {
     }
 
     #[test]
-    fn pdf_text_layer_adapter_text_is_segmented() {
+    fn pdf_text_layer_adapter_text_is_segmented_with_reference_spans() {
         let document = IntakeDocument {
             source: "submission.pdf".to_string(),
             kind: IntakeSourceKind::PdfText,
-            text: "1. Doe J. Dataset paper. Journal. https://doi.org/10.2/data".to_string(),
+            text: "Background text (Doe, 2024).\n\nWorks Cited\n\n1. Doe J. Dataset paper. Journal. https://doi.org/10.2/data".to_string(),
         };
 
         let result = extract_intake(&document);
 
         assert_eq!(result.references.len(), 1);
+        assert_eq!(result.references[0].span, "line:5");
+        assert_eq!(result.citations[0].text, "(Doe, 2024)");
         assert_eq!(result.diagnostics[0].code, "intake.pdf.text_layer_used");
+    }
+
+    #[test]
+    fn endnotes_section_is_treated_as_reference_material() {
+        let document = IntakeDocument {
+            source: "submission.docx".to_string(),
+            kind: IntakeSourceKind::Docx,
+            text:
+                "Body paragraph.\n\nEndnotes\n\n1. Smith J. Trial paper. Journal. doi:10.1/example"
+                    .to_string(),
+        };
+
+        let result = extract_intake(&document);
+
+        assert_eq!(result.references.len(), 1);
+        assert_eq!(result.references[0].span, "line:5");
+        assert_eq!(
+            result.references[0].text,
+            "Smith J. Trial paper. Journal. doi:10.1/example"
+        );
+    }
+
+    #[test]
+    fn wrapped_numbered_and_bulleted_reference_lines_stay_in_one_entry() {
+        let document = IntakeDocument {
+            source: "submission.pdf".to_string(),
+            kind: IntakeSourceKind::PdfText,
+            text: "Intro paragraph.\n\nReferences:\n\n1) Smith J. Long title that wraps\n   across hanging-indent continuation lines\n   and ends with doi:10.1/example\n• Doe J. Another article\n  Journal of Tests. 2024;12(3):45-50."
+                .to_string(),
+        };
+
+        let result = extract_intake(&document);
+
+        assert_eq!(result.references.len(), 2);
+        assert_eq!(result.references[0].span, "line:5");
+        assert_eq!(
+            result.references[0].text,
+            "Smith J. Long title that wraps across hanging-indent continuation lines and ends with doi:10.1/example"
+        );
+        assert_eq!(result.references[1].span, "line:8");
+        assert_eq!(
+            result.references[1].text,
+            "Doe J. Another article Journal of Tests. 2024;12(3):45-50."
+        );
     }
 }

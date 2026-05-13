@@ -1,0 +1,17 @@
+{
+  "id": "36-document-extraction-hardening",
+  "status": "in_progress",
+  "priority": "high",
+  "owned_paths": [
+    "src/intake.rs",
+    "tests/",
+    "fixtures/",
+    "docs/src/workflow.md",
+    "docs/src/cli.md",
+    "conductor/tracks/36-document-extraction-hardening/"
+  ],
+  "dependencies": [
+    "03-reference-intake",
+    "31-quality-assurance-hardening"
+  ]
+}

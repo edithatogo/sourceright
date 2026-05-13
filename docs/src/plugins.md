@@ -24,4 +24,7 @@ Discovery is deterministic and fixture-backed; it does not execute plugin code.
 
 Runtime loading is discovery-only for now. Plugins remain gated by explicit
 trust policy, provenance checks, and the repo's existing no-silent-overwrite
-rules. Provider evidence still belongs in sidecars, not canonical CSL JSON.
+rules. The registry status matrix in [Plugin Registry](plugin-registry#status-matrix)
+is the source of truth for turning implementation statuses into public-facing
+readiness language. Provider evidence still belongs in sidecars, not canonical
+CSL JSON.

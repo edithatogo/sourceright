@@ -76,3 +76,15 @@ When provider candidates carry evidence for retraction, correction, expression
 of concern, preprint status, superseded guidance, or publication age, Sourceright
 surfaces those as conservative report issues. The evidence stays in the
 verification layer and does not overwrite canonical CSL.
+
+## Citation Reconciliation Diagnostics
+
+Citation reconciliation stays deterministic. It can now distinguish:
+
+- missing, uncited, duplicate, ambiguous, and numeric-order issues;
+- mixed author-date/numeric citation styles in the same manuscript;
+- title-derived fallback matches that should be checked manually.
+
+Title fallback is a review signal, not a proof of correctness. Author-backed
+matches take precedence over title fallback keys so the workflow does not invent
+matches where author/year evidence is available.

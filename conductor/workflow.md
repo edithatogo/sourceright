@@ -15,23 +15,9 @@ Each track lives under `conductor/tracks/NN-name/` and contains:
 
 ## Roadmap tracks
 
-0. Public repo infrastructure.
-1. Product roadmap.
-2. Legacy workflow audit.
-3. Reference intake.
-4. CSL canonical model.
-5. Verification sidecar.
-6. Academic providers.
-7. Standardisation and cleaning.
-8. Conflict resolution.
-9. In-text citation reconciliation.
-10. Manual agent review.
-11. Export suite.
-12. CLI and MCP.
-13. Legal citations.
-14. Claim/source/provenance roadmap.
-15. Reference reporting.
-16. Journal workflow integrations.
+The complete track map is maintained in `conductor/tracks.md`. Keep this file
+focused on process and validation expectations so the roadmap is not duplicated
+across multiple Conductor surfaces.
 
 ## Validation expectations
 

@@ -1,3 +1,16 @@
+//! Sourceright provides canonical data structures and helpers for reference
+//! verification workflows.
+//!
+//! The crate centers on canonical CSL JSON, verification sidecars, derived
+//! reports, and workspace-level file management.
+//!
+//! ```
+//! use sourceright::{CslDocument, ReferenceReport, VerificationSidecar};
+//!
+//! let report = ReferenceReport::from_documents(&CslDocument::empty(), &VerificationSidecar::empty());
+//! assert_eq!(report.total_references, 0);
+//! ```
+
 pub mod bench;
 pub mod citation_sync;
 pub mod cleaning;
@@ -23,7 +36,7 @@ pub use bench::{
 };
 pub use citation_sync::{
     CitationSyncAction, CitationSyncAuditEntry, CitationSyncConfig, CitationSyncError,
-    CitationSyncReport, RemoteCitationRecord, run_citation_sync,
+    CitationSyncReport, CitationSyncSuggestionKind, RemoteCitationRecord, run_citation_sync,
 };
 pub use cleaning::{CleaningReport, CleaningTransformation, DuplicateGroup, standardize_document};
 pub use conflict::{
@@ -63,9 +76,10 @@ pub use provenance::{
     build_evidence_graph,
 };
 pub use providers::{
-    AcademicProvider, AcademicProviderResult, ProviderErrorEvidence, ProviderResultStatus,
-    crossref_candidate_from_work, datacite_candidate_from_work, doi_resolution_evidence,
-    openalex_candidate_from_work, orcid_author_candidate_from_record, provider_error,
+    AcademicProvider, AcademicProviderResult, ProviderErrorEvidence, ProviderResultDiagnostic,
+    ProviderResultDiagnosticKind, ProviderResultStatus, crossref_candidate_from_work,
+    datacite_candidate_from_work, doi_resolution_evidence, openalex_candidate_from_work,
+    orcid_author_candidate_from_record, provider_error, provider_result_diagnostic,
     pubmed_candidate_from_record,
 };
 pub use reconcile::{

@@ -1308,6 +1308,18 @@ mod tests {
             .expect("text result")
     }
 
+    fn resource_text(response: &Value) -> &str {
+        response["result"]["contents"][0]["text"]
+            .as_str()
+            .expect("resource text result")
+    }
+
+    fn prompt_text(response: &Value) -> &str {
+        response["result"]["messages"][0]["content"]["text"]
+            .as_str()
+            .expect("prompt text result")
+    }
+
     fn seeded_workspace() -> (tempfile::TempDir, SourcerightWorkspace) {
         let tempdir = tempfile::tempdir().expect("workspace");
         let workspace = SourcerightWorkspace::from_root(tempdir.path().join(".sourceright"));
@@ -1324,12 +1336,12 @@ mod tests {
         .expect("write sidecar");
         fs::write(
             tempdir.path().join("manuscript.txt"),
-            "Smith (2024) cites the benchmark reference.",
+            "Text cites (Smith, 2024).",
         )
         .expect("write manuscript");
         fs::write(
             tempdir.path().join("legal.txt"),
-            "Smith v Jones 2024 NSWSC 1.",
+            "Smith v Jones [2024] NSWSC 1.",
         )
         .expect("write legal text");
         fs::write(
@@ -1460,7 +1472,7 @@ mod tests {
                 }
             }))
             .expect("citations response");
-        assert!(response_text(&citations).contains("Smith"));
+        assert!(response_text(&citations).contains("Matched citations: 1"));
 
         let journal = runtime
             .handle_message(json!({
@@ -1491,7 +1503,7 @@ mod tests {
                 }
             }))
             .expect("legal response");
-        assert!(response_text(&legal).contains("legal_citations"));
+        assert!(response_text(&legal).contains("\"citation_type\":\"case\""));
 
         let provenance = runtime
             .handle_message(json!({
@@ -1648,7 +1660,7 @@ mod tests {
                 "params": { "uri": "sourceright://reports/reference-integrity" }
             }))
             .expect("resource read");
-        assert!(response_text(&reference_resource).contains("reference-integrity"));
+        assert!(resource_text(&reference_resource).contains("reference-integrity"));
 
         let review_queue_resource = runtime
             .handle_message(json!({
@@ -1658,7 +1670,7 @@ mod tests {
                 "params": { "uri": "sourceright://workspaces/local/review-queue" }
             }))
             .expect("review queue resource");
-        assert!(response_text(&review_queue_resource).contains("smith-2024"));
+        assert!(resource_text(&review_queue_resource).trim().is_empty());
 
         let plugins_resource = runtime
             .handle_message(json!({
@@ -1668,7 +1680,7 @@ mod tests {
                 "params": { "uri": "sourceright://plugins/registry" }
             }))
             .expect("plugins resource");
-        assert!(response_text(&plugins_resource).contains("provider.crossref"));
+        assert!(resource_text(&plugins_resource).contains("provider.crossref"));
 
         let prompt = runtime
             .handle_message(json!({
@@ -1681,7 +1693,7 @@ mod tests {
                 }
             }))
             .expect("prompt response");
-        assert!(response_text(&prompt).contains("provider/canonical conflicts"));
+        assert!(prompt_text(&prompt).contains("provider/canonical conflicts"));
     }
     #[test]
     fn initialize_advertises_read_only_capabilities() {

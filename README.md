@@ -4,9 +4,20 @@
 [![Publish crate](https://github.com/edithatogo/sourceright/actions/workflows/publish-crate.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/publish-crate.yml)
 [![Coverage](https://github.com/edithatogo/sourceright/actions/workflows/coverage.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/coverage.yml)
 
-Sourceright is Rust-first reference verification infrastructure for academic writing, agent workflows, and future legal citation work.
+Sourceright is Rust-first reference triage and verification infrastructure for academic writing, agent workflows, and future legal citation work. It is currently a technical preview suitable for developer evaluation and pilot conversations.
 
-The first product goal is to take references from documents or text, produce canonical CSL JSON, standardise and clean the records, verify and enrich them through citation APIs, route uncertain records to manual agent review, then export clean reference files for tools such as EndNote, Zotero, and BibLaTeX.
+## Who This Is For
+
+- Technical editors and research-integrity teams that need auditable reference cleanup.
+- Library, repository, and publisher teams that want deterministic citation verification workflows.
+- Developers and agent workflows that need CSL-centered bibliographic pipelines with sidecar evidence.
+- Legal-tech researchers evaluating a separate legal citation path without conflating it with academic CSL.
+
+## What It Does / Does Not Do
+
+Sourceright takes references from documents or text, produces canonical CSL JSON, standardises and cleans the records, collects provider evidence, routes uncertain records to manual review, and exports clean reference files for tools such as EndNote, Zotero, and BibLaTeX.
+
+It does not claim to be a production-ready institutional product, a court filing compliance system, or a substitute for examiner-grade final verification. Robust DOCX/PDF extraction, live core-provider checks, better citation disambiguation, URL/archive integrity, and low-noise writeback suggestions remain hardening tracks.
 
 ## Workflow
 
@@ -31,12 +42,13 @@ document/text
 - CLI and MCP server interfaces over the same Rust core.
 - Legal citation analysis with a separate legal citation model and public-provider slots.
 - Claim/source/provenance graphs built over detected citation support without asserting claim truth.
+- Examiner-grade audit hardening for real DOCX/PDF extraction, live provider evidence, institutional-author matching, URL/archive checks, and explicit writeback plans.
 
 See [conductor/tracks.md](conductor/tracks.md) for the implementation track map.
 
 ## Current Status
 
-The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
+The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. It should be treated as a structured triage and audit workflow and technical preview until tracks 36-40 close the examiner-grade verification gaps. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
 
 ## CLI
 
@@ -50,9 +62,10 @@ sourceright citation-sync [--preview|--apply] [.sourceright-directory]
 sourceright mcp
 ```
 
-`bench` runs the checked-in fixture suite without live providers. `citation-sync`
-defaults to preview mode and requires explicit `--apply` before writing audit
-logs or remote fixture snapshots.
+`bench` runs the checked-in fixture suite without live providers. The benchmark
+surface is a technical preview for deterministic regression and stress checks.
+`citation-sync` defaults to preview mode and requires explicit `--apply` before
+writing audit logs or remote fixture snapshots.
 
 ## Planned Distribution
 
@@ -73,6 +86,7 @@ logs or remote fixture snapshots.
 - Track 33 covers live publication to crates.io, GitHub Releases, and registries.
 - Track 34 covers coverage measurement and reporting until the 90 percent floor is reproducible.
 - Track 35 covers the final public docs cutover and launch.
+- Tracks 36-40 cover examiner-grade audit hardening: document extraction, live core providers, citation disambiguation, URL/archive integrity, and low-noise writeback suggestions.
 - See `docs/src/release-runbook.md`, `docs/src/coverage-reporting.md`, and `docs/src/docs-cutover.md` for the operational sequence behind those tracks.
 - `v*.*.*` tags now auto-start the crate publish workflow, and the MCP registry workflow follows the release workflow completion.
 

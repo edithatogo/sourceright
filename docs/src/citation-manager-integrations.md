@@ -27,6 +27,8 @@ credential storage, and cache only caller-approved metadata. File-format
 adapters should record exactly which files they would write or import.
 
 The initial sync manifest schema is `sourceright.sync_manifest.v1`.
+The current Zotero preview/apply report schema is
+`sourceright.citation_sync.v1`.
 
 ## Zotero Preview And Apply
 
@@ -34,9 +36,19 @@ The first live sync target is Zotero. Sourceright models Zotero sync as a
 preview-first contract:
 
 - preview plans create, update, skip, and conflict actions without writes;
+- preview actions include a `suggestion` class and reviewer-facing
+  `explanation`;
+- weak near-matches can be `suppressed`, and narrow conflicts can be
+  `review_required`;
+- `suppressed_count` and `review_required_count` are first-class counters in
+  the report JSON;
 - explicit apply is required before any remote mutation;
 - applied runs append an audit log;
 - ambiguous updates are reported as conflicts rather than silently overwritten.
+
+Apply mode writes only low-confidence creates and safe updates. Suppressed
+near-matches and review-required suggestions remain visible in the report and
+audit trail, but they are not converted into remote writes.
 
 The CLI surface is:
 
