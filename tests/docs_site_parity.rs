@@ -22,6 +22,11 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/guides/quickstart.md",
         ),
         (
+            "feature-contract-matrix.md",
+            "docs-site/src/content/docs/feature-contract-matrix.md",
+        ),
+        ("design.md", "docs-site/src/content/docs/design.md"),
+        (
             "author-preflight-workflow.md",
             "docs-site/src/content/docs/guides/author-preflight-workflow.md",
         ),

@@ -33,6 +33,13 @@ canonical CSL.
 
 HTTP clients should be mockable behind the provider boundary. Unit tests should use local fixtures or explicit mock responses; live provider checks, if added later, should be opt-in and excluded from the default test path.
 
+Live adapters must expose timeout, cache, retry, and minimum-interval controls
+before they are used in pilot workflows. The default policy is conservative:
+20-second request timeout, 1000 ms minimum interval, two retries for transient
+failures, and no cache directory unless `SOURCERIGHT_PROVIDER_CACHE_DIR` is set.
+The cache is an evidence cache; cached payloads do not become canonical CSL and
+must still carry provider/provenance metadata.
+
 ## Implemented Core
 
 The Rust core currently includes the provider result model and fixture-friendly helpers for:
@@ -74,6 +81,13 @@ Required or optional credentials are read from:
 - `EUROPE_PMC_EMAIL`
 - `SOURCERIGHT_REPOSITORY_PMID`
 - `SOURCERIGHT_BYO_KEY`
+
+Runtime policy is read from:
+
+- `SOURCERIGHT_PROVIDER_TIMEOUT_SECS`
+- `SOURCERIGHT_PROVIDER_MIN_INTERVAL_MS`
+- `SOURCERIGHT_PROVIDER_MAX_RETRIES`
+- `SOURCERIGHT_PROVIDER_CACHE_DIR`
 
 The adapters write only provider evidence and do not touch canonical CSL JSON.
 Default tests stay fixture-backed and the live smoke helpers report skipped

@@ -9,3 +9,5 @@ The project is designed around a clean separation between canonical reference da
 - `review-queue.jsonl` carries unresolved records into human or agent review.
 
 The technical-preview implementation is Rust-first, exposed through a CLI and MCP server mode, with manifest-backed plugin discovery over the repository manifest set.
+
+The canonical requirements and repo contract live in [Feature Contract Matrix](feature-contract-matrix.md). The architecture and Mermaid diagrams live in [Design](design.md).

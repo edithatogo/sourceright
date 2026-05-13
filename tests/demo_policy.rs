@@ -18,6 +18,29 @@ fn command_exists(command: &str) -> bool {
         .is_ok_and(|output| output.status.success())
 }
 
+fn is_ci() -> bool {
+    matches!(
+        std::env::var("CI").ok().as_deref(),
+        Some("1") | Some("true") | Some("TRUE")
+    ) || matches!(
+        std::env::var("GITHUB_ACTIONS").ok().as_deref(),
+        Some("1") | Some("true") | Some("TRUE")
+    )
+}
+
+fn require_command_or_skip(command: &str, smoke_name: &str) -> bool {
+    if command_exists(command) {
+        return true;
+    }
+
+    if is_ci() {
+        panic!("{smoke_name} requires `{command}` in CI");
+    }
+
+    eprintln!("skipping {smoke_name} because `{command}` is not available");
+    false
+}
+
 #[test]
 fn demo_samples_are_present_and_schema_versioned() {
     for root in ["github_pages_demo/sample", "streamlit_app/sample_workspace"] {
@@ -80,8 +103,7 @@ fn demos_remain_sample_data_only_and_do_not_call_live_services() {
 
 #[test]
 fn static_demo_render_smoke_passes_when_node_is_available() {
-    if !command_exists("node") {
-        eprintln!("skipping static demo render smoke because node is not available");
+    if !require_command_or_skip("node", "static demo render smoke") {
         return;
     }
 
@@ -100,8 +122,7 @@ fn static_demo_render_smoke_passes_when_node_is_available() {
 
 #[test]
 fn streamlit_demo_model_smoke_passes_when_python_is_available() {
-    if !command_exists("python") {
-        eprintln!("skipping Streamlit demo model smoke because python is not available");
+    if !require_command_or_skip("python", "Streamlit demo model smoke") {
         return;
     }
 
@@ -116,4 +137,17 @@ fn streamlit_demo_model_smoke_passes_when_python_is_available() {
         String::from_utf8_lossy(&output.stdout),
         String::from_utf8_lossy(&output.stderr)
     );
+}
+
+#[test]
+fn optional_real_demo_smoke_scripts_are_present_and_opt_in() {
+    let browser_smoke = read("github_pages_demo/browser-smoke.mjs");
+    let streamlit_server_smoke = read("streamlit_app/server_smoke.py");
+
+    assert!(browser_smoke.contains("SOURCERIGHT_DEMO_BROWSER_SMOKE"));
+    assert!(browser_smoke.contains("playwright"));
+    assert!(browser_smoke.contains("http://127.0.0.1"));
+    assert!(streamlit_server_smoke.contains("SOURCERIGHT_DEMO_SERVER_SMOKE"));
+    assert!(streamlit_server_smoke.contains("python -m streamlit run"));
+    assert!(streamlit_server_smoke.contains("127.0.0.1"));
 }

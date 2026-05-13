@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: test -z "$(git status --porcelain --untracked-files=no)"
       - name: Generate crate attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@43d14bc2b83dec42d39ecae14e916627a18bb661 # v3
         with:
           subject-path: target/package/*.crate
       - name: Publish dry run

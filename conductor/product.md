@@ -45,3 +45,4 @@ Sourceright is reference triage and verification infrastructure for documents, a
 - Legal citation and broader claim/source/provenance work are explicit roadmap tracks with clear boundaries.
 - Examiner-grade final-verifier confidence is tracked separately from the current structured-triage capability.
 - The legacy `humanizer-next` workflow is audited before behaviour is ported, replaced, or discarded.
+- `docs/src/feature-contract-matrix.md` is the canonical feature/requirements contract, and `docs/src/design.md` explains the architecture behind it.

@@ -1,4 +1,11 @@
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{
+    collections::hash_map::DefaultHasher,
+    fs,
+    hash::{Hash, Hasher},
+    path::PathBuf,
+    thread,
+    time::{Duration, SystemTime, UNIX_EPOCH},
+};
 
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
@@ -21,6 +28,9 @@ pub struct LiveProviderConfig {
     pub byo_key: Option<String>,
     pub repository_pmid: Option<String>,
     pub timeout_secs: u64,
+    pub min_interval_ms: u64,
+    pub max_retries: u8,
+    pub cache_dir: Option<String>,
 }
 
 impl LiveProviderConfig {
@@ -33,7 +43,10 @@ impl LiveProviderConfig {
             europe_pmc_email: env_string("EUROPE_PMC_EMAIL"),
             byo_key: env_string("SOURCERIGHT_BYO_KEY"),
             repository_pmid: env_string("SOURCERIGHT_REPOSITORY_PMID"),
-            timeout_secs: 20,
+            timeout_secs: env_u64("SOURCERIGHT_PROVIDER_TIMEOUT_SECS", 20),
+            min_interval_ms: env_u64("SOURCERIGHT_PROVIDER_MIN_INTERVAL_MS", 1_000),
+            max_retries: env_u64("SOURCERIGHT_PROVIDER_MAX_RETRIES", 2).min(u8::MAX as u64) as u8,
+            cache_dir: env_string("SOURCERIGHT_PROVIDER_CACHE_DIR"),
         }
     }
 }
@@ -298,7 +311,7 @@ pub fn smoke_unpaywall(
     };
 
     let endpoint = unpaywall_endpoint(doi, email);
-    match fetch_json(&endpoint, config.timeout_secs, None) {
+    match fetch_json(&endpoint, config, None) {
         Ok(payload) => LiveProviderOutcome {
             provider: "unpaywall".to_string(),
             execution: LiveProviderExecution::Live,
@@ -332,7 +345,7 @@ pub fn smoke_open_citations(
         .map(|token| ("authorization", format!("Bearer {token}")));
     let headers = auth.as_ref().map(|(k, v)| [(*k, v.as_str())]);
 
-    match fetch_json(&endpoint, config.timeout_secs, headers) {
+    match fetch_json(&endpoint, config, headers) {
         Ok(payload) => LiveProviderOutcome {
             provider: "opencitations".to_string(),
             execution: LiveProviderExecution::Live,
@@ -374,7 +387,7 @@ pub fn smoke_arxiv(
     }
 
     let endpoint = arxiv_endpoint(&query);
-    match fetch_text(&endpoint, config.timeout_secs) {
+    match fetch_text(&endpoint, config) {
         Ok(payload) => LiveProviderOutcome {
             provider: "arxiv".to_string(),
             execution: LiveProviderExecution::Live,
@@ -401,7 +414,7 @@ pub fn smoke_europe_pmc(
         );
     }
     let endpoint = europe_pmc_endpoint(doi);
-    match fetch_json(&endpoint, config.timeout_secs, None) {
+    match fetch_json(&endpoint, config, None) {
         Ok(payload) => LiveProviderOutcome {
             provider: "europepmc".to_string(),
             execution: LiveProviderExecution::Live,
@@ -431,7 +444,7 @@ pub fn smoke_repository_records(
         );
     }
     let endpoint = ncbi_esummary_endpoint(pmid);
-    match fetch_json(&endpoint, config.timeout_secs, None) {
+    match fetch_json(&endpoint, config, None) {
         Ok(payload) => LiveProviderOutcome {
             provider: "repository-records".to_string(),
             execution: LiveProviderExecution::Live,
@@ -523,38 +536,141 @@ fn env_string(name: &str) -> Option<String> {
         .filter(|value| !value.trim().is_empty())
 }
 
-fn fetch_json(
-    endpoint: &Url,
-    timeout_secs: u64,
-    headers: Option<[(&str, &str); 1]>,
-) -> Result<Value, String> {
-    let client = reqwest::blocking::Client::builder()
-        .user_agent(concat!("sourceright/", env!("CARGO_PKG_VERSION")))
-        .timeout(std::time::Duration::from_secs(timeout_secs))
-        .build()
-        .map_err(|error| error.to_string())?;
-    let mut request = client.get(endpoint.clone());
-    if let Some(headers) = headers {
-        for (name, value) in headers {
-            request = request.header(name, value);
-        }
-    }
-    let response = request.send().map_err(|error| error.to_string())?;
-    response.json::<Value>().map_err(|error| error.to_string())
+fn env_u64(name: &str, fallback: u64) -> u64 {
+    std::env::var(name)
+        .ok()
+        .and_then(|value| value.trim().parse::<u64>().ok())
+        .unwrap_or(fallback)
 }
 
-fn fetch_text(endpoint: &Url, timeout_secs: u64) -> Result<String, String> {
+fn fetch_json(
+    endpoint: &Url,
+    config: &LiveProviderConfig,
+    headers: Option<[(&str, &str); 1]>,
+) -> Result<Value, String> {
+    if let Some(cached) = read_cached(endpoint, config, "json")? {
+        return serde_json::from_str::<Value>(&cached)
+            .map_err(|error| format!("cached JSON for {endpoint} is malformed: {error}"));
+    }
+
     let client = reqwest::blocking::Client::builder()
         .user_agent(concat!("sourceright/", env!("CARGO_PKG_VERSION")))
-        .timeout(std::time::Duration::from_secs(timeout_secs))
+        .timeout(Duration::from_secs(config.timeout_secs))
         .build()
         .map_err(|error| error.to_string())?;
-    client
-        .get(endpoint.clone())
-        .send()
-        .and_then(|response| response.error_for_status())
-        .and_then(|response| response.text())
-        .map_err(|error| error.to_string())
+
+    let mut last_error = String::new();
+    for attempt in 0..=config.max_retries {
+        apply_provider_interval(config);
+        let mut request = client.get(endpoint.clone());
+        if let Some(headers) = headers {
+            for (name, value) in headers {
+                request = request.header(name, value);
+            }
+        }
+        match request
+            .send()
+            .and_then(|response| response.error_for_status())
+            .and_then(|response| response.text())
+        {
+            Ok(body) => {
+                write_cached(endpoint, config, "json", &body)?;
+                return serde_json::from_str::<Value>(&body).map_err(|error| error.to_string());
+            }
+            Err(error) => {
+                last_error = error.to_string();
+                if attempt == config.max_retries {
+                    break;
+                }
+            }
+        }
+    }
+    Err(last_error)
+}
+
+fn fetch_text(endpoint: &Url, config: &LiveProviderConfig) -> Result<String, String> {
+    if let Some(cached) = read_cached(endpoint, config, "txt")? {
+        return Ok(cached);
+    }
+
+    let client = reqwest::blocking::Client::builder()
+        .user_agent(concat!("sourceright/", env!("CARGO_PKG_VERSION")))
+        .timeout(Duration::from_secs(config.timeout_secs))
+        .build()
+        .map_err(|error| error.to_string())?;
+
+    let mut last_error = String::new();
+    for attempt in 0..=config.max_retries {
+        apply_provider_interval(config);
+        match client
+            .get(endpoint.clone())
+            .send()
+            .and_then(|response| response.error_for_status())
+            .and_then(|response| response.text())
+        {
+            Ok(body) => {
+                write_cached(endpoint, config, "txt", &body)?;
+                return Ok(body);
+            }
+            Err(error) => {
+                last_error = error.to_string();
+                if attempt == config.max_retries {
+                    break;
+                }
+            }
+        }
+    }
+    Err(last_error)
+}
+
+fn apply_provider_interval(config: &LiveProviderConfig) {
+    if config.min_interval_ms > 0 {
+        thread::sleep(Duration::from_millis(config.min_interval_ms));
+    }
+}
+
+fn read_cached(
+    endpoint: &Url,
+    config: &LiveProviderConfig,
+    extension: &str,
+) -> Result<Option<String>, String> {
+    let Some(path) = cache_path(endpoint, config, extension) else {
+        return Ok(None);
+    };
+    if path.exists() {
+        return fs::read_to_string(&path)
+            .map(Some)
+            .map_err(|error| format!("could not read provider cache {}: {error}", path.display()));
+    }
+    Ok(None)
+}
+
+fn write_cached(
+    endpoint: &Url,
+    config: &LiveProviderConfig,
+    extension: &str,
+    body: &str,
+) -> Result<(), String> {
+    let Some(path) = cache_path(endpoint, config, extension) else {
+        return Ok(());
+    };
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).map_err(|error| {
+            format!(
+                "could not create provider cache {}: {error}",
+                parent.display()
+            )
+        })?;
+    }
+    fs::write(&path, body)
+        .map_err(|error| format!("could not write provider cache {}: {error}", path.display()))
+}
+
+fn cache_path(endpoint: &Url, config: &LiveProviderConfig, extension: &str) -> Option<PathBuf> {
+    let cache_dir = config.cache_dir.as_ref()?;
+    let mut hasher = DefaultHasher::new();
+    endpoint.as_str().hash(&mut hasher);
+    Some(PathBuf::from(cache_dir).join(format!("{:016x}.{extension}", hasher.finish())))
 }
 
 fn unpaywall_endpoint(doi: &str, email: &str) -> Url {
@@ -678,6 +794,62 @@ mod tests {
                 .iter()
                 .all(|outcome| outcome.execution == LiveProviderExecution::Skipped)
         );
+    }
+
+    #[test]
+    fn live_provider_config_defaults_to_conservative_runtime_policy() {
+        let config = LiveProviderConfig {
+            enabled: false,
+            smoke_enabled: false,
+            unpaywall_email: None,
+            open_citations_token: None,
+            europe_pmc_email: None,
+            byo_key: None,
+            repository_pmid: None,
+            timeout_secs: 20,
+            min_interval_ms: 1_000,
+            max_retries: 2,
+            cache_dir: None,
+        };
+
+        assert!(!config.enabled);
+        assert!(!config.smoke_enabled);
+        assert_eq!(config.timeout_secs, 20);
+        assert_eq!(config.min_interval_ms, 1_000);
+        assert_eq!(config.max_retries, 2);
+        assert!(config.cache_dir.is_none());
+    }
+
+    #[test]
+    fn provider_cache_returns_evidence_payload_without_network() {
+        let endpoint = Url::parse("https://example.test/provider?q=cache-hit").expect("URL");
+        let cache_root =
+            std::env::temp_dir().join(format!("sourceright-provider-cache-{}", std::process::id()));
+        let config = LiveProviderConfig {
+            enabled: true,
+            smoke_enabled: true,
+            unpaywall_email: None,
+            open_citations_token: None,
+            europe_pmc_email: None,
+            byo_key: None,
+            repository_pmid: None,
+            timeout_secs: 1,
+            min_interval_ms: 0,
+            max_retries: 0,
+            cache_dir: Some(cache_root.to_string_lossy().to_string()),
+        };
+        let cache_path = cache_path(&endpoint, &config, "json").expect("cache path");
+        fs::create_dir_all(cache_path.parent().expect("cache parent")).expect("cache dir");
+        fs::write(&cache_path, r#"{"title":"Cached provider evidence"}"#).expect("cache file");
+
+        let payload = fetch_json(&endpoint, &config, None).expect("cached payload");
+
+        assert_eq!(
+            payload.get("title").and_then(Value::as_str),
+            Some("Cached provider evidence")
+        );
+        let _ = fs::remove_file(cache_path);
+        let _ = fs::remove_dir_all(cache_root);
     }
 
     #[test]

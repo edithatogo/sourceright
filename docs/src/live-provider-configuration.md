@@ -30,6 +30,20 @@ fixture-backed path.
 The live-provider registry also covers arXiv and repository-record providers,
 but their manifests should still be treated as contract surfaces first.
 
+## Runtime controls
+
+| Setting | Environment variable | Default | Notes |
+| --- | --- | --- | --- |
+| Request timeout | `SOURCERIGHT_PROVIDER_TIMEOUT_SECS` | `20` | Per-request timeout for opt-in live smoke helpers. |
+| Minimum interval | `SOURCERIGHT_PROVIDER_MIN_INTERVAL_MS` | `1000` | Conservative provider politeness interval for adapter implementations and launch runbooks. |
+| Retry ceiling | `SOURCERIGHT_PROVIDER_MAX_RETRIES` | `2` | Maximum retry count for transient provider failures; fixture-backed tests should not retry. |
+| Cache directory | `SOURCERIGHT_PROVIDER_CACHE_DIR` | unset | Optional local response cache path. Cached responses remain provider evidence, not canonical CSL. |
+
+Adapters should treat cache hits as provenance-bearing provider evidence and
+record enough request metadata to explain when and how the response was
+obtained. Cache policy must not hide rate-limit, outage, or malformed-response
+diagnostics.
+
 ## Legal and citation-manager settings
 
 | Surface | Environment variable | Notes |
@@ -44,8 +58,9 @@ but their manifests should still be treated as contract surfaces first.
 
 1. Run the fixture-backed tests first.
 2. Set the minimum provider-specific environment variables.
-3. Enable the global live flags only for the session that needs them.
-4. Capture the provider output as evidence, not as a silent overwrite of CSL.
+3. Set runtime controls for the provider terms you are testing.
+4. Enable the global live flags only for the session that needs them.
+5. Capture the provider output as evidence, not as a silent overwrite of CSL.
 
 ## Safety boundary
 

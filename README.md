@@ -45,6 +45,9 @@ document/text
 - Examiner-grade audit hardening for real DOCX/PDF extraction, live provider evidence, institutional-author matching, URL/archive checks, and explicit writeback plans.
 
 See [conductor/tracks.md](conductor/tracks.md) for the implementation track map.
+The canonical requirements and repo contract are in
+[docs/src/feature-contract-matrix.md](docs/src/feature-contract-matrix.md), with
+the design diagrams in [docs/src/design.md](docs/src/design.md).
 
 ## Current Status
 

@@ -12,6 +12,10 @@
   "labels": [
     "dependencies"
   ],
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "assignAutomerge": false,
   "minimumReleaseAge": "3 days",
   "prConcurrentLimit": 1,
   "prHourlyLimit": 1,
@@ -31,7 +35,8 @@
         "digest"
       ],
       "groupName": "monthly dependency maintenance",
-      "groupSlug": "monthly-dependency-maintenance"
+      "groupSlug": "monthly-dependency-maintenance",
+      "automerge": true
     },
     {
       "description": "Keep major updates separate for review, but still on the monthly schedule.",
@@ -39,7 +44,19 @@
         "major"
       ],
       "groupName": "major dependency updates",
-      "groupSlug": "major-dependency-updates"
+      "groupSlug": "major-dependency-updates",
+      "automerge": false
+    },
+    {
+      "description": "Never auto-merge Rust or Node runtime major updates.",
+      "matchManagers": [
+        "cargo",
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false
     }
   ]
 }

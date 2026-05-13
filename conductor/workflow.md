@@ -19,6 +19,11 @@ The complete track map is maintained in `conductor/tracks.md`. Keep this file
 focused on process and validation expectations so the roadmap is not duplicated
 across multiple Conductor surfaces.
 
+The canonical feature requirements and repo contract are maintained in
+`docs/src/feature-contract-matrix.md`, with architecture rationale in
+`docs/src/design.md`. Track specs should cite those documents instead of
+redefining global product boundaries.
+
 ## Validation expectations
 
 - Every extracted reference fixture needs an original input and expected CSL JSON.

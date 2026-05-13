@@ -22,6 +22,25 @@ layout only.
 3. Use [demo-checklist.md](./demo-checklist.md) to confirm the sample copy and
    payloads.
 
+## Smoke checks
+
+The default automated checks exercise the sample model and app import without
+starting a server:
+
+```text
+python -m unittest streamlit_app.test_demo_model
+```
+
+The real Streamlit server smoke is opt-in because it requires Streamlit and a
+local loopback port:
+
+```text
+SOURCERIGHT_DEMO_SERVER_SMOKE=1 python streamlit_app/server_smoke.py
+```
+
+Missing Python fails in CI through the Rust `demo_policy` test. Missing
+Streamlit only fails when the server smoke is explicitly enabled.
+
 ## What the sample report card means
 
 - `References` is the total number of references in the sample payload.

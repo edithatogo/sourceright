@@ -20,6 +20,23 @@ Example local server:
 python -m http.server 8080
 ```
 
+## Smoke checks
+
+The default automated check runs without a browser:
+
+```text
+node github_pages_demo/render-smoke.mjs
+```
+
+The real browser smoke is opt-in because it requires Playwright:
+
+```text
+SOURCERIGHT_DEMO_BROWSER_SMOKE=1 node github_pages_demo/browser-smoke.mjs
+```
+
+Missing Node fails in CI through the Rust `demo_policy` test. Missing
+Playwright only fails when the browser smoke is explicitly enabled.
+
 ## What the sample report card means
 
 - `References` is the total number of references in the sample payload.

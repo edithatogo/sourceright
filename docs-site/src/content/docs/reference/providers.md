@@ -10,6 +10,10 @@ Providers are evidence sources, not truth assertions.
 - Do not let provider values silently overwrite canonical CSL.
 - Use provider diagnostics to distinguish no-match, ambiguous, malformed, and
   outage-style fixture outcomes.
+- Keep live adapter runtime policy explicit: timeout, minimum interval, retry
+  ceiling, and optional cache directory are configuration, not hidden defaults.
+- Treat cached provider payloads as evidence with provenance, not as canonical
+  CSL updates.
 - Use the registry status matrix in [Plugin registry](../plugin-registry)
   when describing readiness. In practice, `core_normalizer` and
   `core_exporter` are the only statuses that should be described as technical

@@ -94,7 +94,7 @@ jobs:
           cd dist
           if command -v shasum >/dev/null 2>&1; then shasum -a 256 "${{ matrix.artifact }}" > "${{ matrix.artifact }}.sha256"; else sha256sum "${{ matrix.artifact }}" > "${{ matrix.artifact }}.sha256"; fi
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@43d14bc2b83dec42d39ecae14e916627a18bb661 # v3
         with:
           subject-path: dist/${{ matrix.artifact }}
       - name: Upload artifact
@@ -118,7 +118,7 @@ jobs:
       - name: Package crate
         run: cargo package --locked
       - name: Generate crate attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@43d14bc2b83dec42d39ecae14e916627a18bb661 # v3
         with:
           subject-path: target/package/*.crate
       - name: Upload crate
@@ -140,9 +140,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -153,7 +153,7 @@ jobs:
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - name: Build and push image
         id: build-image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           push: true
@@ -165,7 +165,7 @@ jobs:
       - name: Push image
         run: echo "Image pushed by build-push-action"
       - name: Generate image attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@43d14bc2b83dec42d39ecae14e916627a18bb661 # v3
         with:
           subject-name: ghcr.io/edithatogo/sourceright-mcp
           subject-digest: ${{ steps.build-image.outputs.digest }}

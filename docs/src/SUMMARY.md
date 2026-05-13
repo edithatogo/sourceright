@@ -3,6 +3,8 @@
 - [Overview](index.md)
 - [Installation](installation.md)
 - [Quickstart](quickstart.md)
+- [Feature Contract Matrix](feature-contract-matrix.md)
+- [Design](design.md)
 - [Reference Workflow](workflow.md)
 - [Author Preflight Workflow](author-preflight-workflow.md)
 - [Editorial Triage Workflow](editorial-triage-workflow.md)

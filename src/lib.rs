@@ -20,6 +20,7 @@ pub mod export;
 pub mod intake;
 pub mod journal;
 pub mod legal;
+pub mod live_providers;
 pub mod plugins;
 pub mod policy;
 pub mod provenance;
@@ -64,6 +65,11 @@ pub use legal::{
     LegalCitationIssue, LegalCitationIssueType, LegalCitationRecord, LegalCitationReport,
     LegalCitationType, LegalProvider, LegalProviderCandidate, analyze_legal_citations,
     extract_legal_citations,
+};
+pub use live_providers::{
+    LIVE_PROVIDER_SMOKE_SCHEMA_VERSION, LiveProviderConfig, LiveProviderExecution,
+    LiveProviderOutcome, LiveProviderSmokeState, live_provider_config_from_env,
+    live_provider_smoke_report, live_provider_smoke_report_from_env,
 };
 pub use plugins::{PluginRegistryReport, discover_plugins, discover_plugins_from};
 pub use policy::{

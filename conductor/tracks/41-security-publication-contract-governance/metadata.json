@@ -1,0 +1,27 @@
+{
+  "id": "41-security-publication-contract-governance",
+  "status": "in_progress",
+  "priority": "high",
+  "owners": ["codex"],
+  "dependencies": [
+    "26-ci-supply-chain-hardening",
+    "27-mcp-distribution",
+    "32-publishing-governance-and-provenance",
+    "33-public-release-and-registry-submission"
+  ],
+  "owned_paths": [
+    ".github/workflows/",
+    "renovate.json",
+    "docs/src/feature-contract-matrix.md",
+    "docs/src/design.md",
+    "docs-site/src/content/docs/feature-contract-matrix.md",
+    "docs-site/src/content/docs/design.md",
+    "src/lib.rs",
+    "src/live_providers.rs",
+    "github_pages_demo/browser-smoke.mjs",
+    "streamlit_app/server_smoke.py",
+    "tests/demo_policy.rs",
+    "tests/requirements_contract_policy.rs",
+    "conductor/tracks/41-security-publication-contract-governance/"
+  ]
+}
