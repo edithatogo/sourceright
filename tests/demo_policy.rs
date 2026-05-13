@@ -1,4 +1,5 @@
 use std::fs;
+use std::process::Command;
 
 use serde_json::Value;
 
@@ -8,6 +9,13 @@ fn read(path: &str) -> String {
 
 fn read_json(path: &str) -> Value {
     serde_json::from_str(&read(path)).expect("fixture should be valid JSON")
+}
+
+fn command_exists(command: &str) -> bool {
+    Command::new(command)
+        .arg("--version")
+        .output()
+        .is_ok_and(|output| output.status.success())
 }
 
 #[test]
@@ -68,4 +76,44 @@ fn demos_remain_sample_data_only_and_do_not_call_live_services() {
     assert!(static_js.contains("sample/reference-report.json"));
     assert!(static_js.contains("sample/journal-screening.json"));
     assert!(streamlit_app.contains("sample_workspace"));
+}
+
+#[test]
+fn static_demo_render_smoke_passes_when_node_is_available() {
+    if !command_exists("node") {
+        eprintln!("skipping static demo render smoke because node is not available");
+        return;
+    }
+
+    let output = Command::new("node")
+        .arg("github_pages_demo/render-smoke.mjs")
+        .output()
+        .expect("run static demo render smoke");
+
+    assert!(
+        output.status.success(),
+        "static demo render smoke failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
+#[test]
+fn streamlit_demo_model_smoke_passes_when_python_is_available() {
+    if !command_exists("python") {
+        eprintln!("skipping Streamlit demo model smoke because python is not available");
+        return;
+    }
+
+    let output = Command::new("python")
+        .args(["-m", "unittest", "streamlit_app.test_demo_model"])
+        .output()
+        .expect("run Streamlit demo model smoke");
+
+    assert!(
+        output.status.success(),
+        "Streamlit demo model smoke failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
 }

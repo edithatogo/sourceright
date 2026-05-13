@@ -30,6 +30,8 @@ jobs:
         run: cargo build --release --locked
       - name: Package crate
         run: cargo package --locked
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
       - name: Dependency policy
         shell: bash
         run: |
