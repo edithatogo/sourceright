@@ -108,6 +108,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/guides/publishing.md",
         ),
         (
+            "security-automation.md",
+            "docs-site/src/content/docs/guides/security-automation.md",
+        ),
+        (
             "release-runbook.md",
             "docs-site/src/content/docs/guides/release-runbook.md",
         ),

@@ -11,3 +11,4 @@
 | External tests | OJS, CLI, MCP, citation-manager, and registry smoke tests are recommended as fixture-backed or opt-in live tests. |
 | Provider runtime controls | Live-provider timeout, minimum interval, retry, and cache settings default to conservative values. |
 | Demo smoke tests | GitHub Pages and Streamlit demo server smoke scripts are opt-in and fail in CI only when explicitly enabled or required. |
+| Copilot cloud agent | Repository instructions, setup workflow, and security-remediation issue template exist without adding scheduled notification-heavy automation. |

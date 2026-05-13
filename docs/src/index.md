@@ -10,4 +10,4 @@ The project is designed around a clean separation between canonical reference da
 
 The technical-preview implementation is Rust-first, exposed through a CLI and MCP server mode, with manifest-backed plugin discovery over the repository manifest set.
 
-The canonical requirements and repo contract live in [Feature Contract Matrix](feature-contract-matrix.md). The architecture and Mermaid diagrams live in [Design](design.md).
+The canonical requirements and repo contract live in [Feature Contract Matrix](feature-contract-matrix.md). The architecture and Mermaid diagrams live in [Design](design.md). GitHub security automation and Copilot cloud-agent setup are documented in [Security Automation](security-automation.md).

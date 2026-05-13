@@ -1,0 +1,49 @@
+name: Copilot security remediation
+description: Delegate a focused dependency or security hardening task to Copilot.
+title: "security: "
+labels: ["security", "dependencies"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        After creating this issue, assign it to `copilot-swe-agent[bot]` if GitHub Copilot cloud agent is enabled for the repository.
+        Keep the task focused enough for one pull request.
+  - type: textarea
+    id: finding
+    attributes:
+      label: Finding
+      description: Paste the Dependabot, CodeQL, OpenSSF Scorecard, audit, or Renovate finding.
+    validations:
+      required: true
+  - type: textarea
+    id: required_change
+    attributes:
+      label: Required change
+      description: State the exact dependency, workflow, policy, or test surface to change.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Note any package/version limits, market-readiness wording constraints, or repo boundaries.
+      value: |
+        Keep provider evidence separate from canonical CSL.
+        Do not weaken CI, security policy, or release provenance checks.
+        Do not add scheduled or notification-heavy automation.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Expected validation
+      description: List checks that should pass before review.
+      value: |
+        cargo fmt --check
+        cargo clippy --all-targets -- -D warnings
+        cargo test
+        cargo check --locked
+        npm audit --omit=dev, if docs-site/package files change
+        npm run build, if docs-site files change
+    validations:
+      required: true

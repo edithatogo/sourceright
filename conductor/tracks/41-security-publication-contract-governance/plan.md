@@ -11,11 +11,16 @@
    scripts for external-test readiness.
 8. Add policy tests for the new contract docs and docs-site parity.
 9. Run local validation, then check GitHub Actions after push.
+10. Enable GitHub Copilot cloud-agent support through repository instructions,
+    a least-privilege setup workflow, and a focused security-remediation issue
+    template that can be assigned to `copilot-swe-agent[bot]` when the GitHub
+    feature is enabled.
 
 ## Deferred
 
 - GitHub notification email preferences are account-level, not repo-local.
-- Copilot autofix requires GitHub-side entitlement and settings; this track only
-  documents the feasible repo-local posture.
+- Copilot autofix/merge requires GitHub-side entitlement, repository settings,
+  and branch-protection decisions; this track prepares the repo for that path
+  but does not bypass review gates.
 - OJS, Zotero, and live MCP client smoke tests should be opt-in external tests
   with fixtures and credentials handled outside default CI.
