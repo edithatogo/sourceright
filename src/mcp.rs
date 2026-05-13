@@ -1088,7 +1088,6 @@ fn write_plan_payload(
         "applied": false,
         "workspace": workspace.root.display().to_string(),
         "changes": changes,
-        "audit_log": workspace.root.join(MCP_AUDIT_LOG_NAME).display().to_string(),
     })
 }
 
@@ -1572,6 +1571,7 @@ mod tests {
             .expect("parse dry-run payload");
         assert_eq!(dry_run["apply_requested"], false);
         assert_eq!(dry_run["applied"], false);
+        assert!(dry_run.get("audit_log").is_none());
 
         let workspace_init_apply = runtime
             .handle_message(json!({
@@ -1616,6 +1616,7 @@ mod tests {
         let preview: Value = serde_json::from_str(response_text(&review_import_preview))
             .expect("parse preview payload");
         assert_eq!(preview["apply_requested"], false);
+        assert!(preview.get("audit_log").is_none());
 
         let review_import_apply = runtime
             .handle_message(json!({
@@ -1852,6 +1853,7 @@ mod tests {
         assert_eq!(plan["tool"], "workspace.init");
         assert_eq!(plan["apply_requested"], false);
         assert_eq!(plan["applied"], false);
+        assert!(plan.get("audit_log").is_none());
         assert!(!workspace.root.exists());
     }
 

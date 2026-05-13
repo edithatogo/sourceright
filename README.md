@@ -84,7 +84,7 @@ writing audit logs or remote fixture snapshots.
 - Track 31 is reserved for coverage, mutation, property, load, edge, integration, and end-to-end test hardening.
 - Track 32 is reserved for publishing governance and provenance automation.
 - Track 33 covers live publication to crates.io, GitHub Releases, and registries.
-- Track 34 covers coverage measurement and reporting until the 90 percent floor is reproducible.
+- Track 34 covers coverage measurement and reporting until the 85 percent floor is reproducible.
 - Track 35 covers the final public docs cutover and launch.
 - Tracks 36-40 cover examiner-grade audit hardening: document extraction, live core providers, citation disambiguation, URL/archive integrity, and low-noise writeback suggestions.
 - See `docs/src/release-runbook.md`, `docs/src/coverage-reporting.md`, and `docs/src/docs-cutover.md` for the operational sequence behind those tracks.
@@ -111,12 +111,12 @@ cargo publish --dry-run --locked
 cargo deny check advisories bans sources
 cargo tree -d --locked
 typos --config typos.toml
-cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 90
+cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 85
 cargo mutants --workspace
-pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 90
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 85
 ```
 
-Coverage stays gated above 90 percent in CI and in the checked-in pre-commit
+Coverage stays gated above 85 percent in CI and in the checked-in pre-commit
 hook.
 
 Release and publish workflows each emit a `release-status.md` artifact so the

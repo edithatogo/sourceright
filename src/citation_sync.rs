@@ -247,14 +247,14 @@ fn plan_sync_actions(
     csl: &CslDocument,
     remote_records: &[RemoteCitationRecord],
 ) -> Vec<CitationSyncAction> {
-    let mut remote_by_doi = BTreeMap::<String, &RemoteCitationRecord>::new();
-    let mut remote_by_title = BTreeMap::<String, &RemoteCitationRecord>::new();
+    let mut remote_by_doi = BTreeMap::<String, Vec<&RemoteCitationRecord>>::new();
+    let mut remote_by_title = BTreeMap::<String, Vec<&RemoteCitationRecord>>::new();
     for record in remote_records {
         if let Some(key) = normalize(record.doi.as_deref()) {
-            remote_by_doi.insert(key, record);
+            remote_by_doi.entry(key).or_default().push(record);
         }
         if let Some(key) = normalize(record.title.as_deref()) {
-            remote_by_title.insert(key, record);
+            remote_by_title.entry(key).or_default().push(record);
         }
     }
 
@@ -262,7 +262,7 @@ fn plan_sync_actions(
     for item in &csl.items {
         let local_doi = normalize(item.doi.as_deref());
         let local_title = normalize(item.title.as_deref());
-        let remote_match = local_doi
+        let remote_matches = local_doi
             .as_ref()
             .and_then(|key| remote_by_doi.get(key))
             .or_else(|| {
@@ -271,7 +271,7 @@ fn plan_sync_actions(
                     .and_then(|key| remote_by_title.get(key))
             });
 
-        match remote_match {
+        match remote_matches {
             None => {
                 let narrow_fit = best_narrow_fit(item, remote_records);
                 let (zotero_key, suggestion, explanation) = match narrow_fit {
@@ -293,38 +293,56 @@ fn plan_sync_actions(
                     explanation,
                 });
             }
-            Some(remote) if record_matches(item, remote) => {
-                actions.push(CitationSyncAction::Skip {
+            Some(matches) if matches.len() > 1 => {
+                actions.push(CitationSyncAction::Conflict {
                     reference_id: item.id.clone(),
-                    zotero_key: remote.key.clone(),
-                    suggestion: CitationSyncSuggestionKind::NoOp,
-                    explanation: format!(
-                        "Remote Zotero record {} already matches the CSL DOI, title, and item type, so no writeback is needed.",
-                        remote.key
+                    zotero_key: None,
+                    changed_fields: vec!["remote_duplicate_match".to_string()],
+                    message: format!(
+                        "Multiple remote Zotero records match reference `{}` by DOI or title.",
+                        item.id
                     ),
-                })
+                    suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                    explanation: format!(
+                        "Sourceright found {} remote Zotero records with the same DOI or title evidence. Review the remote library before applying any writeback.",
+                        matches.len()
+                    ),
+                });
             }
-            Some(remote) => {
-                let changed_fields = changed_fields(item, remote);
-                if local_doi == normalize(remote.doi.as_deref()) {
-                    actions.push(CitationSyncAction::Update {
+            Some(matches) => {
+                let remote = matches[0];
+                if record_matches(item, remote) {
+                    actions.push(CitationSyncAction::Skip {
                         reference_id: item.id.clone(),
                         zotero_key: remote.key.clone(),
-                        changed_fields,
-                        suggestion: CitationSyncSuggestionKind::SafeUpdate,
-                        explanation: update_explanation(item, remote),
-                    });
+                        suggestion: CitationSyncSuggestionKind::NoOp,
+                        explanation: format!(
+                            "Remote Zotero record {} already matches the CSL DOI, title, and item type, so no writeback is needed.",
+                            remote.key
+                        ),
+                    })
                 } else {
-                    actions.push(CitationSyncAction::Conflict {
-                        reference_id: item.id.clone(),
-                        zotero_key: Some(remote.key.clone()),
-                        changed_fields,
-                        message:
-                            "Local CSL and remote Zotero record disagree; resolve the conflict before applying."
-                                .to_string(),
-                        suggestion: CitationSyncSuggestionKind::ReviewRequired,
-                        explanation: conflict_explanation(item, remote),
-                    });
+                    let changed_fields = changed_fields(item, remote);
+                    if local_doi == normalize(remote.doi.as_deref()) {
+                        actions.push(CitationSyncAction::Update {
+                            reference_id: item.id.clone(),
+                            zotero_key: remote.key.clone(),
+                            changed_fields,
+                            suggestion: CitationSyncSuggestionKind::SafeUpdate,
+                            explanation: update_explanation(item, remote),
+                        });
+                    } else {
+                        actions.push(CitationSyncAction::Conflict {
+                            reference_id: item.id.clone(),
+                            zotero_key: Some(remote.key.clone()),
+                            changed_fields,
+                            message:
+                                "Local CSL and remote Zotero record disagree; resolve the conflict before applying."
+                                    .to_string(),
+                            suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                            explanation: conflict_explanation(item, remote),
+                        });
+                    }
                 }
             }
         }
@@ -854,6 +872,45 @@ mod tests {
             report.actions[0],
             CitationSyncAction::Skip { ref explanation, .. }
                 if explanation.contains("already matches")
+        ));
+    }
+
+    #[test]
+    fn duplicate_remote_identity_matches_are_review_required() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        fs::write(
+            &remote_path,
+            r#"[{"key":"zotero-1","item_type":"article-journal","title":"Benchmark reference","doi":"10.1234/benchmark"},{"key":"zotero-2","item_type":"article-journal","title":"Benchmark reference","doi":"10.1234/benchmark"}]"#,
+        )
+        .expect("write remote");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: true,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert_eq!(report.conflict_count, 0);
+        assert_eq!(report.review_required_count, 1);
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Conflict {
+                zotero_key: None,
+                suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                ref changed_fields,
+                ..
+            } if changed_fields == &["remote_duplicate_match"]
         ));
     }
 

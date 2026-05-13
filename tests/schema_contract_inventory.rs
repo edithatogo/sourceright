@@ -31,7 +31,7 @@ fn schema_files() -> Vec<String> {
 fn schema_contract_files_are_valid_json_and_packaged() {
     let cargo_toml = read("Cargo.toml");
     assert!(
-        cargo_toml.contains("\"schemas/**\""),
+        cargo_toml.contains("\"/schemas/**\""),
         "Cargo package include list should ship schema contracts"
     );
 

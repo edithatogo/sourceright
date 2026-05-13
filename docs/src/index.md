@@ -8,4 +8,4 @@ The project is designed around a clean separation between canonical reference da
 - `references.verification.json` records providers, confidence, provenance, conflicts, and review state.
 - `review-queue.jsonl` carries unresolved records into human or agent review.
 
-The production implementation is Rust-first, exposed through a CLI and MCP server mode, with runtime plugin discovery over the repository manifest set.
+The technical-preview implementation is Rust-first, exposed through a CLI and MCP server mode, with manifest-backed plugin discovery over the repository manifest set.

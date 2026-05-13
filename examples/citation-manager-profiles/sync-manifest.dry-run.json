@@ -12,7 +12,7 @@
       "target": ".sourceright/exports/references.ris",
       "format": "ris",
       "dry_run": true,
-      "reason": "Initial file handoff before live API sync."
+      "reason": "Sample file handoff preview; no live API sync is performed."
     }
   ],
   "privacy": {

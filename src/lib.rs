@@ -68,7 +68,8 @@ pub use legal::{
 pub use plugins::{PluginRegistryReport, discover_plugins, discover_plugins_from};
 pub use policy::{
     DoiPolicy, PolicyIssue, PolicyIssueSeverity, PolicyReport, RecencyPolicy, ReferenceOrderPolicy,
-    SourcerightPolicy, evaluate_policy,
+    SourcerightPolicy, evaluate_policy, evaluate_policy_with_verification,
+    provider_backed_recency_issues, provider_backed_url_archive_issues,
 };
 pub use provenance::{
     ClaimNode, ClaimSourceLink, ClaimSourceLinkType, EvidenceGraph, ProvenanceIssue,

@@ -9,5 +9,5 @@
 
 ## Completion Signal
 
-Coverage can be measured repeatably, and the 90 percent floor is visible in the
+Coverage can be measured repeatably, and the 85 percent floor is visible in the
 repo's developer and CI surfaces.

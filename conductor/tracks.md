@@ -38,7 +38,7 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 31 Quality assurance hardening | completed | Coverage thresholds, mutation testing, property tests, load tests, edge tests, and end-to-end verification. |
 | 32 Publishing governance and provenance | completed | Release provenance, attestation, dependency governance, and registry publication automation. |
 | 33 Public release and registry submission | planned | Execute the live crates.io, GitHub Release, GHCR, official MCP registry, Smithery, and Glama publication sequence. |
-| 34 Coverage verification and reporting | planned | Make the 90 percent coverage floor measurable, reproducible, and visible in hooks, CI, and reports. |
+| 34 Coverage verification and reporting | planned | Make the 85 percent coverage floor measurable, reproducible, and visible in hooks, CI, and reports. |
 | 35 Public docs cutover and launch | planned | Finalise the Starlight/Astro docs migration, redirects, and archive cutover for the public site. |
 | 36 Document extraction hardening | in_progress | Real DOCX/PDF extraction, OCR diagnostics, provenance spans, and messy manuscript fixtures. |
 | 37 Live core provider verification | in_progress | Opt-in live Crossref, DataCite, OpenAlex, PubMed/NCBI, and DOI-resolution evidence with caching and sidecar-only writes. |

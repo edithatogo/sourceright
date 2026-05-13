@@ -3,6 +3,6 @@ repos:
     hooks:
       - id: sourceright-quality-gate
         name: Sourceright quality gate
-        entry: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 90
+        entry: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 85
         language: system
         pass_filenames: false

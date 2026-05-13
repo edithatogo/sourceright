@@ -206,10 +206,10 @@ fn candidate_recency_findings(
     candidate: &ProviderCandidate,
     policy: &SourcerightPolicy,
 ) -> Vec<PolicyIssue> {
-    let payload = candidate.data.to_string().to_ascii_lowercase();
+    let signal_text = collect_recency_signal_text(&candidate.data);
     let mut findings = Vec::new();
 
-    if payload.contains("retract") {
+    if signal_text.contains("retract") {
         findings.push(PolicyIssue {
             severity: PolicyIssueSeverity::Error,
             reference_id: Some(reference_id.to_string()),
@@ -219,7 +219,9 @@ fn candidate_recency_findings(
         });
     }
 
-    if payload.contains("expression of concern") || payload.contains("expressions of concern") {
+    if signal_text.contains("expression of concern")
+        || signal_text.contains("expressions of concern")
+    {
         findings.push(PolicyIssue {
             severity: PolicyIssueSeverity::Warning,
             reference_id: Some(reference_id.to_string()),
@@ -230,7 +232,7 @@ fn candidate_recency_findings(
         });
     }
 
-    if payload.contains("erratum") || payload.contains("correction") {
+    if signal_text.contains("erratum") || signal_text.contains("correction") {
         findings.push(PolicyIssue {
             severity: PolicyIssueSeverity::Info,
             reference_id: Some(reference_id.to_string()),
@@ -241,7 +243,7 @@ fn candidate_recency_findings(
         });
     }
 
-    if payload.contains("preprint") {
+    if signal_text.contains("preprint") {
         findings.push(PolicyIssue {
             severity: PolicyIssueSeverity::Info,
             reference_id: Some(reference_id.to_string()),
@@ -252,7 +254,7 @@ fn candidate_recency_findings(
         });
     }
 
-    if payload.contains("supersed") {
+    if signal_text.contains("supersed") {
         findings.push(PolicyIssue {
             severity: PolicyIssueSeverity::Warning,
             reference_id: Some(reference_id.to_string()),
@@ -277,6 +279,52 @@ fn candidate_recency_findings(
     }
 
     findings
+}
+
+fn collect_recency_signal_text(value: &serde_json::Value) -> String {
+    let mut values = Vec::new();
+    collect_recency_signal_text_recursive(value, &mut values);
+    values.join(" ").to_ascii_lowercase()
+}
+
+fn collect_recency_signal_text_recursive(value: &serde_json::Value, values: &mut Vec<String>) {
+    match value {
+        serde_json::Value::Object(map) => {
+            for (key, nested) in map {
+                if is_recency_signal_key(key)
+                    && let Some(text) = nested.as_str()
+                {
+                    values.push(text.to_string());
+                }
+                collect_recency_signal_text_recursive(nested, values);
+            }
+        }
+        serde_json::Value::Array(items) => {
+            for item in items {
+                collect_recency_signal_text_recursive(item, values);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn is_recency_signal_key(key: &str) -> bool {
+    matches!(
+        key,
+        "status"
+            | "publication_status"
+            | "publicationStatus"
+            | "publication-state"
+            | "update_type"
+            | "updateType"
+            | "relation_type"
+            | "relationType"
+            | "record_type"
+            | "recordType"
+            | "type"
+            | "subtype"
+            | "category"
+    )
 }
 
 pub fn provider_backed_url_archive_issues(
@@ -600,9 +648,7 @@ fn collect_url_status_evidence_recursive(
 ) {
     match value {
         serde_json::Value::Object(map) => {
-            if object_contains_url_evidence(map)
-                && let Some(status) = classify_url_status(map)
-            {
+            if let Some(status) = classify_url_status(map) {
                 let key = (status.state.code().to_string(), status.detail.clone());
                 if seen.insert(key) {
                     evidence.push(status);
@@ -685,23 +731,6 @@ fn classify_url_status(
     }
 
     None
-}
-
-fn object_contains_url_evidence(map: &serde_json::Map<String, serde_json::Value>) -> bool {
-    map.keys().any(|key| {
-        matches!(
-            key.as_str(),
-            "final_url"
-                | "landing_page_url"
-                | "resolved_url"
-                | "url"
-                | "archive_url"
-                | "memento_url"
-                | "snapshot_url"
-                | "wayback_url"
-                | "archived_url"
-        )
-    })
 }
 
 fn string_field(map: &serde_json::Map<String, serde_json::Value>, keys: &[&str]) -> Option<String> {
@@ -1055,6 +1084,49 @@ mod tests {
     }
 
     #[test]
+    fn provider_backed_url_status_evidence_accepts_status_only_payloads() {
+        let document = CslDocument {
+            items: vec![CslItem {
+                id: "status-only".to_string(),
+                item_type: "webpage".to_string(),
+                title: Some("Status only".to_string()),
+                doi: None,
+                extra: [("URL".to_string(), json!("https://publisher.example/status"))]
+                    .into_iter()
+                    .collect(),
+            }],
+        };
+        let mut sidecar = VerificationSidecar::empty();
+        sidecar.references.insert(
+            "status-only".to_string(),
+            ReferenceVerification {
+                provider_candidates: vec![ProviderCandidate {
+                    provider: "url-checker".to_string(),
+                    confidence: 1.0,
+                    retrieved_at: "2026-05-10T00:00:00Z".to_string(),
+                    data: json!({
+                        "url_status": "broken"
+                    }),
+                }],
+                ..ReferenceVerification::default()
+            },
+        );
+
+        let report = evaluate_policy_with_verification(
+            &document,
+            &sidecar,
+            &SourcerightPolicy::journal_vancouver(),
+        );
+
+        assert!(
+            report
+                .issues
+                .iter()
+                .any(|issue| issue.code == "policy.url.broken")
+        );
+    }
+
+    #[test]
     fn provider_backed_url_archive_evidence_is_classified_without_mutating_csl() {
         let document = CslDocument {
             items: vec![CslItem {
@@ -1293,6 +1365,48 @@ mod tests {
                 .issues
                 .iter()
                 .any(|issue| issue.code == "policy.recency.provider.publication_age")
+        );
+    }
+
+    #[test]
+    fn provider_backed_recency_evidence_ignores_unscoped_title_words() {
+        let document = CslDocument {
+            items: vec![CslItem {
+                id: "history-2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Retraction policy history".to_string()),
+                doi: Some("10.1234/history".to_string()),
+                extra: Default::default(),
+            }],
+        };
+        let mut sidecar = VerificationSidecar::empty();
+        sidecar.references.insert(
+            "history-2024".to_string(),
+            ReferenceVerification {
+                provider_candidates: vec![ProviderCandidate {
+                    provider: "crossref".to_string(),
+                    confidence: 0.9,
+                    retrieved_at: "2026-05-10T00:00:00Z".to_string(),
+                    data: json!({
+                        "title": "Retraction policy history",
+                        "publication_year": 2024
+                    }),
+                }],
+                ..ReferenceVerification::default()
+            },
+        );
+
+        let report = evaluate_policy_with_verification(
+            &document,
+            &sidecar,
+            &SourcerightPolicy::journal_vancouver(),
+        );
+
+        assert!(
+            !report
+                .issues
+                .iter()
+                .any(|issue| issue.code == "policy.recency.provider.retraction")
         );
     }
 }

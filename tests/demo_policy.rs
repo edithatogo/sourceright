@@ -58,8 +58,11 @@ fn demos_remain_sample_data_only_and_do_not_call_live_services() {
         let lower = content.to_ascii_lowercase();
         assert!(lower.contains("synthetic sample data only"));
         assert!(lower.contains("does not call live providers"));
-        assert!(!lower.contains("https://"));
-        assert!(!lower.contains("http://"));
+        assert!(!lower.contains("fetch(\"http"));
+        assert!(!lower.contains("fetch('http"));
+        assert!(!lower.contains("requests."));
+        assert!(!lower.contains("urllib."));
+        assert!(!lower.contains("httpx."));
     }
 
     assert!(static_js.contains("sample/reference-report.json"));

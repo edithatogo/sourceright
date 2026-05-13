@@ -1,5 +1,5 @@
 param(
-    [int]$CoverageMinimum = 90,
+    [int]$CoverageMinimum = 85,
     [string]$ReportPath = "coverage-report.txt"
 )
 

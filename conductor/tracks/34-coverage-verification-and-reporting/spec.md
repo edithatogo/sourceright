@@ -2,7 +2,7 @@
 
 ## Goal
 
-Turn the 90 percent coverage floor into reproducible evidence that can be run
+Turn the 85 percent coverage floor into reproducible evidence that can be run
 locally and in CI, with reporting that makes the threshold visible to
 contributors and release reviewers.
 

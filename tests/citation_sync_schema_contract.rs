@@ -1,5 +1,5 @@
 use serde_json::Value;
-use sourceright::{CitationSyncReport, CitationSyncSuggestionKind};
+use sourceright::{CitationSyncAction, CitationSyncReport, CitationSyncSuggestionKind};
 
 fn citation_sync_schema() -> Value {
     serde_json::from_str(include_str!(
@@ -73,5 +73,78 @@ fn citation_sync_schema_tracks_low_noise_suggestion_classes() {
             enum_values.contains(&suggestion),
             "schema should include suggestion class {suggestion}"
         );
+    }
+}
+
+#[test]
+fn citation_sync_schema_tracks_serialized_action_shapes() {
+    let schema = citation_sync_schema();
+    let definitions = schema["$defs"]
+        .as_object()
+        .expect("schema should define action definitions");
+    let actions = [
+        (
+            "create_action",
+            CitationSyncAction::Create {
+                reference_id: "smith-2024".to_string(),
+                zotero_key: None,
+                suggestion: CitationSyncSuggestionKind::LowConfidence,
+                explanation: "Create preview".to_string(),
+            },
+        ),
+        (
+            "update_action",
+            CitationSyncAction::Update {
+                reference_id: "smith-2024".to_string(),
+                zotero_key: "Z1".to_string(),
+                changed_fields: vec!["title".to_string()],
+                suggestion: CitationSyncSuggestionKind::SafeUpdate,
+                explanation: "Safe update".to_string(),
+            },
+        ),
+        (
+            "skip_action",
+            CitationSyncAction::Skip {
+                reference_id: "smith-2024".to_string(),
+                zotero_key: "Z1".to_string(),
+                suggestion: CitationSyncSuggestionKind::NoOp,
+                explanation: "No change".to_string(),
+            },
+        ),
+        (
+            "conflict_action",
+            CitationSyncAction::Conflict {
+                reference_id: "smith-2024".to_string(),
+                zotero_key: Some("Z1".to_string()),
+                changed_fields: vec!["doi".to_string()],
+                message: "Conflict".to_string(),
+                suggestion: CitationSyncSuggestionKind::ReviewRequired,
+                explanation: "Review required".to_string(),
+            },
+        ),
+    ];
+
+    for (definition_name, action) in actions {
+        let serialized = serde_json::to_value(action).expect("action should serialize");
+        let serialized = serialized
+            .as_object()
+            .expect("serialized action should be an object");
+        let definition = definitions
+            .get(definition_name)
+            .unwrap_or_else(|| panic!("missing action definition {definition_name}"));
+        let required = definition["required"]
+            .as_array()
+            .expect("action definition should list required fields");
+
+        for key in serialized.keys() {
+            assert!(
+                required.iter().any(|value| value == key),
+                "schema should require serialized {definition_name} field {key}"
+            );
+            assert!(
+                definition["properties"].get(key).is_some(),
+                "schema should define serialized {definition_name} field {key}"
+            );
+        }
     }
 }

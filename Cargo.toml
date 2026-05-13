@@ -12,21 +12,21 @@ readme = "README.md"
 keywords = ["citations", "references", "csl", "mcp", "verification"]
 categories = ["command-line-utilities", "text-processing"]
 include = [
-    "src/**",
-    "mcp/**",
-    "plugins/**",
-    "schemas/**",
-    "examples/**",
-    "fixtures/**",
-    "provider-fixtures/**",
-    "sourceright-bench/**",
-    "docs/src/**",
-    "book.toml",
-    "README.md",
-    "LICENSE-APACHE",
-    "LICENSE-MIT",
-    "CITATION.cff",
-    "SECURITY.md",
+    "/src/**",
+    "/mcp/**",
+    "/plugins/**",
+    "/schemas/**",
+    "/examples/**",
+    "/fixtures/**",
+    "/provider-fixtures/**",
+    "/sourceright-bench/**",
+    "/docs/src/**",
+    "/book.toml",
+    "/README.md",
+    "/LICENSE-APACHE",
+    "/LICENSE-MIT",
+    "/CITATION.cff",
+    "/SECURITY.md",
 ]
 
 [package.metadata.docs.rs]

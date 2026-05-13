@@ -4,10 +4,10 @@ Initialize, then inspect the advertised surface:
 
 ```text
 Client -> Server
-{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"example","version":"0.1.0"}}}
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"example","version":"0.1.20"}}}
 
 Server -> Client
-{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-11-25","serverInfo":{"name":"sourceright","version":"0.1.0"},"capabilities":{"tools":{},"resources":{},"prompts":{}},"instructions":"Read-only local reference verification server"}}
+{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-11-25","serverInfo":{"name":"sourceright","version":"0.1.20"},"capabilities":{"tools":{},"resources":{},"prompts":{}},"instructions":"Read-only local reference verification server"}}
 
 Client -> Server
 {"jsonrpc":"2.0","id":2,"method":"tools/list"}

@@ -8,7 +8,7 @@ unit tests, integration tests, and end-to-end CLI/MCP verification.
 
 ## Scope
 
-- Enforce a line-coverage threshold above 90 percent.
+- Enforce a line-coverage threshold above 85 percent.
 - Add mutation testing on a scheduled/manual basis.
 - Use property-based tests for normalization and invariants.
 - Keep load tests and stress benchmarks separate from default PR gates.
