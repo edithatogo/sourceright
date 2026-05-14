@@ -19,6 +19,6 @@ public claims are allowed.
 | GitHub Copilot | Copilot coding agent; extension/package TBD | 64, 65 | Prepared for coding-agent workflow only; no Copilot extension package | Entitlement verification or explicit admin-blocked note; separate package evidence before extension claims. |
 | VS Code | Extension host current stable release | 66 | Explicitly deferred with contract | No VSIX or marketplace listing; future extension must reuse CLI/MCP diagnostics, respect Workspace Trust, and keep writes preview-only. |
 | Microsoft Word | Microsoft 365 Word with Office Add-ins | 67 | Explicitly deferred with contract | No Office Add-in manifest, taskpane, sideload smoke, or AppSource listing; future add-in must prove range provenance and reversible audited writes. |
-| LibreOffice Writer | Current LibreOffice stable release | 68 | Contracted | `.oxt`/UNO package or deferral, Writer range mapping, install smoke, and reversible write proof. |
+| LibreOffice Writer | Current LibreOffice stable release | 68 | Explicitly deferred with contract | No `.oxt`, UNO bridge, install smoke, or LibreOffice Extensions listing; future package must prove Writer range mapping and reversible audited writes. |
 | Public providers | Provider-specific current APIs | 48, 62 | Contracted | Fixture and opt-in live smoke per provider. |
 | Licensed providers | Provider-specific BYO-key APIs | 49, 62 | Contracted | Credential skip, redaction, fixture proof, optional live smoke. |

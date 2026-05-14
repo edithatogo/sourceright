@@ -308,15 +308,16 @@
     },
     "68-libreoffice-extension-packaging": {
       "category": "integration",
-      "evidence_level": "contracted",
+      "evidence_level": "scaffolded",
       "allowed_claims": [
-        "LibreOffice extension packaging is planned and contracted.",
+        "LibreOffice extension packaging is explicitly deferred with a documented future Writer extension contract.",
         "ODT/DOCX processing support is separate from LibreOffice Writer extension support.",
         "Any future Writer write path must be reversible, previewed, audited, and explicit on apply."
       ],
       "blockers": [
         "No .oxt package, UNO bridge, local install smoke, or LibreOffice Extensions listing exists.",
-        "Writer range mapping and reversible writeback plans must be proven before extension claims."
+        "Writer range mapping and reversible writeback plans must be proven before extension claims.",
+        "LibreOffice Extensions acceptance evidence is deferred to Track 69."
       ]
     },
     "69-marketplace-submission-evidence": {

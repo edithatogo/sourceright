@@ -1,1 +1,32 @@
-{"id":"68-libreoffice-extension-packaging","status":"pending","priority":"medium","owners":["codex"],"dependencies":["36-document-extraction-hardening","40-low-noise-writeback-suggestions","47-contract-evidence-and-overclaim-gates","63-plugin-packaging-and-supply-chain-maturity"],"owned_paths":["docs/src/host-packaging.md","conductor/plugin-compatibility-matrix.md","conductor/release-channels.md","conductor/tracks/68-libreoffice-extension-packaging/"]}
+{
+  "id": "68-libreoffice-extension-packaging",
+  "status": "completed",
+  "priority": "medium",
+  "owners": [
+    "codex"
+  ],
+  "dependencies": [
+    "36-document-extraction-hardening",
+    "40-low-noise-writeback-suggestions",
+    "47-contract-evidence-and-overclaim-gates",
+    "63-plugin-packaging-and-supply-chain-maturity"
+  ],
+  "owned_paths": [
+    "docs/src/host-packaging.md",
+    "conductor/plugin-compatibility-matrix.md",
+    "conductor/release-channels.md",
+    "conductor/tracks/68-libreoffice-extension-packaging/"
+  ],
+  "evidence": {
+    "completion_date": "2026-05-15",
+    "decision": "Explicit deferral with future LibreOffice Writer extension contract; no .oxt package, UNO bridge, install smoke, or LibreOffice Extensions listing is claimed.",
+    "contract": "Future Writer extension must reuse CLI/MCP/UNO-command-adapter outputs, map diagnostics to Writer ranges, keep edits dry-run first, and apply only with reversible plans and audit logs.",
+    "policy_test": "tests/libreoffice_extension_packaging_policy.rs",
+    "deferred": [
+      ".oxt package",
+      "UNO/Python bridge implementation",
+      "Local install/uninstall smoke",
+      "LibreOffice Extensions listing"
+    ]
+  }
+}

@@ -15,7 +15,7 @@ CSL.
 | Generic MCP clients | 56, 57, 65 | Official MCP Registry accepted for `0.1.20`; Glama and Smithery are prepared; `examples/mcp-clients/generic-mcp-client.json` documents local stdio launch. | Transcript smoke and separate accepted/prepared evidence per directory. |
 | VS Code | 66 | Explicitly deferred with a future VSIX contract; `.vscode` settings and `examples/mcp-clients/vscode-mcp.json` are not an extension package. | VSIX package, Workspace Trust implementation, diagnostics fixture, install smoke, and Marketplace/Open VSX listing evidence. |
 | Microsoft Word | 67 | Explicitly deferred with a future Office Add-in contract; DOCX extraction is separate and no Office Add-in package exists. | Office Add-in manifest, sideload/AppSource notes, document-range provenance, reversible write plans, and fixture smoke. |
-| LibreOffice Writer | 68 | No `.oxt`/UNO extension package. | `.oxt` or explicit deferral, UNO/adapter contract, local install smoke, and document-range provenance. |
+| LibreOffice Writer | 68 | Explicitly deferred with a future Writer extension contract; ODT/DOCX processing is separate. No `.oxt`/UNO extension package exists. | `.oxt` package, UNO/adapter contract, local install/uninstall smoke, Writer range provenance, reversible write plans, and listing evidence. |
 | Zotero | 58 | Adapter track is in progress. | Package/install notes plus preview/apply/audit proof in a disposable library. |
 | OJS/PKP | 60 | Generic-plugin source skeleton and fixture-backed screening are present; PKP Plugin Gallery acceptance is not claimed. | Live OJS handler/settings-form/workflow-template wiring, compatibility testing, and Gallery listing evidence. |
 
