@@ -1,1 +1,60 @@
-{"id":"69-marketplace-submission-evidence","status":"pending","priority":"medium","owners":["codex"],"dependencies":["33-public-release-and-registry-submission","43-publication-registry-completion","63-plugin-packaging-and-supply-chain-maturity","65-ai-client-mcp-packaging","66-vscode-extension-packaging","67-word-addin-packaging","68-libreoffice-extension-packaging"],"owned_paths":["docs/src/host-packaging.md","docs/src/release-status.md","docs/src/publishing.md","conductor/release-channels.md","conductor/evidence-ledger.json","conductor/tracks/69-marketplace-submission-evidence/"]}
+{
+  "id": "69-marketplace-submission-evidence",
+  "status": "completed",
+  "priority": "medium",
+  "owners": ["codex"],
+  "dependencies": [
+    "33-public-release-and-registry-submission",
+    "43-publication-registry-completion",
+    "63-plugin-packaging-and-supply-chain-maturity",
+    "65-ai-client-mcp-packaging",
+    "66-vscode-extension-packaging",
+    "67-word-addin-packaging",
+    "68-libreoffice-extension-packaging"
+  ],
+  "owned_paths": [
+    "docs/src/host-packaging.md",
+    "docs/src/release-status.md",
+    "docs/src/publishing.md",
+    "conductor/release-channels.md",
+    "conductor/evidence-ledger.json",
+    "conductor/tracks/69-marketplace-submission-evidence/"
+  ],
+  "completion": {
+    "date": "2026-05-15",
+    "evidence": [
+      "conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md",
+      "conductor/tracks/69-marketplace-submission-evidence/review.md",
+      "tests/marketplace_submission_evidence_policy.rs",
+      "docs/src/release-status.md",
+      "docs-site/src/content/docs/release-status.md"
+    ],
+    "accepted": [
+      "GitHub Release",
+      "crates.io",
+      "docs.rs",
+      "Official MCP Registry"
+    ],
+    "prepared": [
+      "GHCR MCP image",
+      "Glama",
+      "Smithery",
+      "Claude Desktop",
+      "Codex",
+      "GitHub Copilot",
+      "Generic MCP clients",
+      "Zotero",
+      "OJS/PKP"
+    ],
+    "deferred": [
+      "VS Code Marketplace/Open VSX",
+      "Microsoft AppSource",
+      "LibreOffice Extensions",
+      "Homebrew",
+      "Scoop",
+      "winget",
+      "npm launcher",
+      "PyPI launcher"
+    ]
+  }
+}

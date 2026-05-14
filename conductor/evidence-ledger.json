@@ -322,15 +322,18 @@
     },
     "69-marketplace-submission-evidence": {
       "category": "publication",
-      "evidence_level": "contracted",
+      "evidence_level": "scaffolded",
       "allowed_claims": [
-        "Marketplace submission evidence is contracted across MCP directories, AI clients, editor extensions, office add-ins, Zotero, and OJS.",
-        "Accepted, prepared, and deferred states must remain separate in release-status documentation.",
+        "Marketplace submission evidence is recorded across MCP directories, AI clients, editor extensions, office add-ins, Zotero, and OJS.",
+        "GitHub Release, crates.io, docs.rs, and Official MCP Registry are accepted for 0.1.20 with URL, date, and install metadata.",
+        "GHCR, Glama, Smithery, AI client configs, Zotero, and OJS/PKP are prepared but not accepted marketplace listings.",
         "Prepared metadata is not public marketplace acceptance."
       ],
       "blockers": [
-        "External listings require URL, version, date, install metadata, and verification evidence.",
-        "VS Code, Word, and LibreOffice marketplaces remain deferred until package tracks produce installable artifacts."
+        "External listings require URL, version or artifact id, date, install metadata, and verification evidence.",
+        "VS Code, Word, and LibreOffice marketplaces remain deferred until package tracks produce installable artifacts.",
+        "Zotero .xpi and PKP Plugin Gallery claims remain blocked until package/listing evidence exists.",
+        "Private account-side submissions must not be described as completed repo proof until public listing evidence exists."
       ]
     },
     "44-branch-triage-and-stale-work-closure": {

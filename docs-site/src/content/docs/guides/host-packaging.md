@@ -19,7 +19,7 @@ CSL.
 | VS Code | 66 | Explicitly deferred with a future VSIX contract; `.vscode` settings and `examples/mcp-clients/vscode-mcp.json` are not an extension package. | VSIX package, Workspace Trust implementation, diagnostics fixture, install smoke, and Marketplace/Open VSX listing evidence. |
 | Microsoft Word | 67 | Explicitly deferred with a future Office Add-in contract; DOCX extraction is separate and no Office Add-in package exists. | Office Add-in manifest, sideload/AppSource notes, document-range provenance, reversible write plans, and fixture smoke. |
 | LibreOffice Writer | 68 | Explicitly deferred with a future Writer extension contract; ODT/DOCX processing is separate. No `.oxt`/UNO extension package exists. | `.oxt` package, UNO/adapter contract, local install/uninstall smoke, Writer range provenance, reversible write plans, and listing evidence. |
-| Zotero | 58 | Adapter track is in progress. | Package/install notes plus preview/apply/audit proof in a disposable library. |
+| Zotero | 58 | CLI/Web API adapter is fixture-backed with preview/apply/audit semantics; no Zotero `.xpi` or Plugin Gallery listing is claimed. | Package decision, install proof, disposable-library smoke, and accepted listing evidence before plugin marketplace claims. |
 | OJS/PKP | 60 | Generic-plugin source skeleton and fixture-backed screening are present; PKP Plugin Gallery acceptance is not claimed. | Live OJS handler/settings-form/workflow-template wiring, compatibility testing, and Gallery listing evidence. |
 
 ## Cross-host rules
@@ -50,3 +50,7 @@ Passing smoke means the client can initialize the server, discover
 tools/resources/prompts, and receive a dry-run `workspace.init` plan with
 `applied: false`. It does not prove public directory acceptance or host-specific
 extension packaging.
+
+No Claude, Codex, or Copilot marketplace package exists in this repository.
+Track 69 records the cross-host marketplace evidence model in
+`conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md`.

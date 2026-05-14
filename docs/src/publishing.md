@@ -9,6 +9,8 @@ before any external registry publication.
 The full registry completion table, including accepted, prepared, deferred,
 and not-applicable registries, is documented in
 [Release Status](release-status.md).
+Track 69 adds the repo-local marketplace evidence model at
+`conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md`.
 
 ## CLI
 
@@ -123,6 +125,10 @@ In short:
   no Copilot extension package is claimed.
 - Generic MCP clients can use the documented stdio snippets, but named-client
   acceptance requires separate transcript, listing, or install evidence.
+- Zotero is prepared as a CLI/Web API adapter with fixture-backed
+  preview/apply/audit proof, not as a Zotero `.xpi` or Plugin Gallery listing.
+- OJS/PKP is prepared as a generic-plugin source skeleton with fixture-backed
+  screening, not as PKP Plugin Gallery acceptance.
 - VS Code, Microsoft Word, and LibreOffice require separate package tracks
   before release notes can claim installable editor or office-suite support.
 - Marketplace acceptance requires URL, version, date, and install metadata in

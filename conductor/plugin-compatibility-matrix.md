@@ -5,7 +5,7 @@ public claims are allowed.
 
 | Host or module | Target versions | Track | Current evidence | Required proof |
 | --- | --- | --- | --- | --- |
-| Zotero | Current supported desktop release plus one prior stable release | 58 | Contracted | Preview/apply/audit fixtures, disposable-library smoke, package/install notes. |
+| Zotero | Current supported desktop release plus one prior stable release | 58 | Fixture-backed CLI/Web API adapter; no `.xpi` or Plugin Gallery listing | Preview/apply/audit fixtures, disposable-library smoke, package/install notes, and accepted listing evidence before plugin marketplace claims. |
 | EndNote | Current desktop export/import workflow | 59 | Contracted | ENW/RIS handoff, reparse checks, reference-checking guide. |
 | Mendeley | TBD | 59 | Contracted | API/import decision and fixture proof or deferral. |
 | Paperpile | TBD | 59 | Contracted | API/import decision and fixture proof or deferral. |

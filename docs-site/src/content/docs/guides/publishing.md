@@ -12,6 +12,8 @@ provenance.
 The full registry completion table, including accepted, prepared, deferred,
 and not-applicable registries, is documented in
 [Release Status](../release-status).
+Track 69 adds the repo-local marketplace evidence model at
+`conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md`.
 
 - Crate publishing is manual and token-gated.
 - MCP distribution metadata is tracked separately from the Rust crate.
@@ -37,6 +39,10 @@ Host-specific packages are tracked separately from the Rust core.
   configuration rather than a host plugin package.
 - GitHub Copilot is prepared as a coding-agent workflow through repository
   instructions and setup steps; entitlement remains a GitHub-side setting.
+- Zotero is prepared as a CLI/Web API adapter with fixture-backed
+  preview/apply/audit proof, not as a Zotero `.xpi` or Plugin Gallery listing.
+- OJS/PKP is prepared as a generic-plugin source skeleton with fixture-backed
+  screening, not as PKP Plugin Gallery acceptance.
 - VS Code, Microsoft Word, and LibreOffice require separate package tracks
   before release notes can claim installable editor or office-suite support.
 - Marketplace acceptance requires URL, version, date, and install metadata in

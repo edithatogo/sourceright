@@ -73,4 +73,4 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 66 VS Code extension packaging | completed | Define a thin VS Code/editor package contract that reuses CLI/MCP diagnostics and stays preview-first for writes. |
 | 67 Microsoft Word add-in packaging | completed | Define Office Add-in packaging, document-range provenance, sideload/AppSource boundaries, and reversible dry-run editing semantics. |
 | 68 LibreOffice extension packaging | completed | Define LibreOffice `.oxt`/UNO packaging, Writer range mapping, and local install smoke boundaries. |
-| 69 Marketplace submission evidence | pending | Record accepted, prepared, and deferred marketplace evidence for host packages and client directories. |
+| 69 Marketplace submission evidence | completed | Record accepted, prepared, and deferred marketplace evidence for host packages and client directories. |

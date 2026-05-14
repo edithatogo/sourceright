@@ -44,6 +44,8 @@ Registries are classified into four statuses:
 | Codex MCP client config | prepared | — | `docs/src/mcp.md`, `examples/mcp-clients/codex-config.toml`, and `examples/mcp-clients/codex-mcp.json` document local CLI/MCP workflow configuration. | 2026-05-14 | Requires local Codex configuration proof for the target build before claiming verified Codex setup. No Claude, Codex, or Copilot marketplace package exists. |
 | Generic MCP client config | prepared | — | `docs/src/mcp.md`, `examples/mcp-clients/generic-mcp-client.json`, `generic-stdio.json`, and `smoke-requests.jsonl` document protocol-level stdio launch and dry-run evidence. | 2026-05-14 | Requires transcript smoke per named client before claiming client-specific compatibility. |
 | GitHub Copilot coding-agent prep | prepared | — | `.github/copilot-instructions.md`, setup workflow, security-remediation issue template, and `examples/mcp-clients/github-copilot-coding-agent.md` are present; MCP client packaging remains separate. | 2026-05-14 | Requires GitHub-side entitlement/settings verification before enabled claims; separate package evidence is required for extension claims. No Claude, Codex, or Copilot marketplace package exists. |
+| Zotero | prepared | — | `docs/src/zotero-plugin-install.md`, `plugins/manifests/citation-manager.zotero.toml`, and `fixtures/providers/zotero/` document the CLI/Web API adapter, preview/apply/audit semantics, and fixture-backed proof. | 2026-05-15 | No Zotero `.xpi` or Plugin Gallery listing is claimed. Plugin marketplace claims require a package decision, install proof, and accepted listing evidence. |
+| OJS/PKP | prepared | — | `plugins/ojs/sourceright/`, `fixtures/journal/ojs-submission.json`, and `tests/ojs_plugin_packaging_policy.rs` document the generic-plugin source skeleton and fixture-backed screening path. | 2026-05-15 | No PKP Plugin Gallery acceptance is claimed. Accepted status requires live OJS compatibility proof and Gallery listing evidence. |
 
 ### Deferred Registries
 
@@ -80,6 +82,8 @@ Registries are classified into four statuses:
 All accepted registries have been verified manually by inspecting the listed URLs.
 Prepared registries have repository metadata but no external acceptance confirmation.
 Deferred registries have documented blocking requirements and revisit triggers.
+The detailed marketplace evidence model is tracked in
+`conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md`.
 
 This page is linked from [Operations Status](operations-status.md).
 For the full publishing plan see [Publishing Plan](publishing.md).
