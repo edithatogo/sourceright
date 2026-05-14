@@ -46,11 +46,46 @@ On `v*.*.*` tags, crate publish runs automatically with manual dispatch override
 - Crates.io publication
 - GitHub Pages docs-site deployment
 
+## Pre-Release Validation (2026-05-14)
+
+Validation executed per the release runbook steps 2–5. Full results in `pre-release-validation.md`.
+
+### Step 2: `cargo package --locked`
+
+- **Strict:** BLOCKED by dirty working tree (8+ uncommitted files). This is correct gate behavior.
+- **With `--allow-dirty`:** PASSED. Package assembles successfully. 21 test file exclusion warnings are expected (binary crate, tests not in `Cargo.toml` `include`).
+
+### Step 3: `cargo publish --dry-run --locked`
+
+- **Strict:** BLOCKED by same dirty-tree gate.
+- **With `--allow-dirty`:** PASSED (warning: v0.1.20 already exists on crates.io). Package structure valid.
+
+### Step 4: GitHub Release artifacts
+
+- **Version:** v0.1.20 release exists at `https://github.com/edithatogo/sourceright/releases/tag/v0.1.20` with platform binaries + SHA-256 checksums. Accepted status confirmed in `release-status.md`.
+
+### Step 5: MCP image, server.json, and MCP registry metadata
+
+- **server.json:** VALID against MCP 2025-12-11 schema. All required fields (`name`, `description`, `version`) present. `name` matches regex pattern. `description` ≤ 100 chars. Package block has `registryType: oci`, `identifier`, `transport: { type: stdio }`. Cross-artifact: version matches Cargo.toml, name matches Dockerfile MCP label.
+- **glama.json:** VALID. `$schema` URL present, `maintainers: ["edithatogo"]`, public LICENSE confirmed.
+- **Dockerfile:** VALID. All 6 OCI labels present and consistent with Cargo.toml and server.json. Multi-stage build with pinned digests. Correct ENTRYPOINT/CMD for stdio MCP server.
+
+### Summary
+
+| Gate | Result |
+|------|--------|
+| `cargo package --locked` | ⚠️ BLOCKED (dirty tree) — passes with `--allow-dirty` |
+| `cargo publish --dry-run --locked` | ⚠️ BLOCKED (dirty tree) — passes with `--allow-dirty` |
+| `server.json` MCP schema | ✅ PASSED |
+| `glama.json` structure | ✅ PASSED |
+| `Dockerfile` OCI labels | ✅ PASSED |
+| Cross-artifact consistency | ✅ PASSED |
+
 ## Gaps
 
-1. **No first release cut** — All infrastructure is in place but no release has been executed.
-2. **No registry submission evidence** — Registry entries exist in docs/src/release-status.md as "prepared" but not "accepted" pending live submission.
-3. **Dependency chain** — This track gates on three dependencies (25, 27, 32).
+1. **No first release cut** — All infrastructure validated, release runbook steps 2–5 verified against v0.1.20 artifacts. A clean-tree release cut for a future version (>0.1.20) remains the next live execution step.
+2. **No registry submission evidence** — `release-status.md` now shows 4 accepted registries (GitHub Release, crates.io, docs.rs, Official MCP Registry). Glama and Smithery remain "prepared."
+3. **Dependency chain** — This track gates on three dependencies (25, 27, 32). Pre-release validation confirms release infrastructure is sound regardless of dependency status.
 
 ## Key Findings
 

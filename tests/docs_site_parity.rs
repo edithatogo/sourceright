@@ -43,6 +43,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/guides/legal-citation-mode-workflow.md",
         ),
         (
+            "legal-citation-audit-mcp.md",
+            "docs-site/src/content/docs/guides/legal-citation-audit-mcp.md",
+        ),
+        (
             "legacy-audit.md",
             "docs-site/src/content/docs/legacy-audit.md",
         ),

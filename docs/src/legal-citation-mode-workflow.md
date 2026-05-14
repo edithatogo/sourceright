@@ -18,6 +18,9 @@ the academic reference model.
 
 4. Keep the legal records separate from `references.csl.json`.
 
+5. Route unresolved records to attorney review or to a licensed legal research
+   system. Do not turn missing provider evidence into a legal conclusion.
+
 ## What the mode covers
 
 - Neutral citations.
@@ -25,6 +28,7 @@ the academic reference model.
 - Jurisdiction and court hints.
 - Public-provider candidates.
 - Review issues for uncertain matches.
+- Draft audit evidence that can be consumed by CLI, CI, or MCP workflows.
 
 ## What it does not do
 
@@ -32,9 +36,15 @@ the academic reference model.
 - It does not assert that a cited proposition is true.
 - It does not collapse legal records into the same clean bibliography surface
   used for journal articles and books.
+- It does not provide legal advice, predict outcomes, or decide whether a
+  filing is compliant.
+- It does not replace attorney review.
 
 ## Provider note
 
 The legal provider registry currently treats CourtListener as the first public
 provider slot. That is a contract and roadmap signal, not a claim that all live
 legal lookups are already complete.
+
+For a connector-oriented view, see
+[Legal Citation Audit MCP Pack](legal-citation-audit-mcp.md).

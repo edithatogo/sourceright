@@ -33,8 +33,9 @@ Read-only tools:
   references.
 - `journal.screen_submission` - generate a journal screening report from
   workspace references.
-- `legal.analyze_citations` - extract legal citations into the separate legal
-  model.
+- `legal.analyze_citations` - audit legal citations into the separate legal
+  model with jurisdiction/provider hints and attorney-review flags; it does not
+  provide legal advice.
 - `provenance.analyze_claim_sources` - build a claim/source provenance report
   from document text.
 - `references.policy` - evaluate deterministic style and recency policy checks.
@@ -78,8 +79,9 @@ The prompt surface is read-only and explanatory:
   claiming author intent.
 - `provider_conflict_explanation` - explain provider/canonical conflicts and
   preserve the no-silent-overwrite rule.
-- `legal_citation_review` - review separate legal citation records and
-  jurisdiction/provider issues.
+- `legal_citation_review` - review separate legal citation records,
+  jurisdiction/provider issues, and attorney-review flags without giving legal
+  advice.
 - `claim_source_provenance_review` - review claim/source linkage without
   claim-truth scoring.
 
@@ -146,6 +148,15 @@ requests only.
   user-visible approval points.
 - After any applied write, inspect the returned `audit_log` and the affected
   workspace files.
+
+## Legal Citation Connector Boundary
+
+For legal workflows, Sourceright should be described as a citation audit and
+enrichment connector. The MCP surface can extract candidate citations and
+return jurisdiction/provider evidence, confidence, conflicts, and review
+issues. It must not answer legal questions, predict outcomes, draft final legal
+work product, or claim legal compliance. Missing or stale provider evidence is
+a review issue, not a basis for a legal conclusion.
 
 The hardening goal is simple: read-only calls stay inspectable, dry-run calls
 stay non-destructive, and applied writes are explicit enough to audit later.

@@ -12,6 +12,7 @@ These pages describe the day-to-day operator surface:
 - [Editorial Triage Workflow](editorial-triage-workflow)
 - [University Repository Workflow](university-repository-workflow)
 - [Legal Citation Mode Workflow](legal-citation-mode-workflow)
+- [Legal Citation Audit MCP Pack](legal-citation-audit-mcp)
 - [CLI](cli)
 - [MCP](mcp)
 - [Artifact and Schema Guide](artifact-schema-guide)

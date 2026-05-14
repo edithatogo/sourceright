@@ -50,3 +50,13 @@
 11. Run `cargo test` on legal module.
 12. Run `$conductor-review`.
 13. Apply local fixes; defer any legal advice/compliance claims.
+
+### Slice 6: Claude For Legal Compatibility
+14. Treat Claude-for-Legal as connector/workflow design reference only, not a
+    code dependency.
+15. Add a legal citation audit MCP pack that explains Sourceright's narrow
+    connector role.
+16. Tighten MCP descriptions so `legal.analyze_citations` is framed as draft
+    citation audit evidence for attorney review.
+17. Preserve licensed-provider separation: Westlaw/Practical Law-style systems
+    remain external subscriber-provided research connectors.

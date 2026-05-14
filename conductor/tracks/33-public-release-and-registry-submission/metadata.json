@@ -20,5 +20,16 @@
     "25-release-and-registry-readiness",
     "27-mcp-distribution",
     "32-publishing-governance-and-provenance"
-  ]
+  ],
+  "evidence": {
+    "pre_release_validation": {
+      "date": "2026-05-14",
+      "document": "conductor/tracks/33-public-release-and-registry-submission/pre-release-validation.md",
+      "cargo_package_locked": "BLOCKED by dirty tree; passes with --allow-dirty",
+      "cargo_publish_dry_run_locked": "BLOCKED by dirty tree; passes with --allow-dirty (v0.1.20 already exists warning)",
+      "server_json_mcp_schema": "PASSED (2025-12-11 schema, all required fields, cross-artifact consistency)",
+      "glama_json": "PASSED (schema URL, maintainer handle, LICENSE present)",
+      "dockerfile_labels": "PASSED (6 OCI labels consistent with Cargo.toml and server.json)"
+    }
+  }
 }

@@ -55,6 +55,20 @@ The manifest accurately reflects current state. The `planned_public_api` status 
 4. **Later:** Add opt-in live smoke test gated by `COURTLISTENER_API_KEY`.
 5. **Track dependency:** Blocked on `13-legal-citations` (complete) and `46-plugin-and-provider-roadmap-delivery`.
 
+## Claude For Legal Incorporation
+
+The Claude-for-Legal materials are useful as connector and workflow design
+reference. The immediate Sourceright adaptation is a legal citation audit MCP
+pack, not a general legal assistant:
+
+- `legal.analyze_citations` is framed as read-only draft audit evidence.
+- CourtListener remains the first public United States case-law provider path.
+- Legal citations stay separate from academic CSL.
+- Provider failures and ambiguous matches become review issues.
+- Licensed research systems remain external connectors.
+- Outputs require attorney review and must not become legal advice, outcome
+  prediction, or filing-compliance claims.
+
 ## Status
 
 - **Previous status**: planned

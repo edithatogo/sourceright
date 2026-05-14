@@ -741,7 +741,7 @@ fn tools_list() -> Value {
         ),
         tool_definition(
             "legal.analyze_citations",
-            "Extract legal citations into the separate legal model.",
+            "Audit legal citations into the separate legal model with jurisdiction/provider hints and attorney-review flags; does not provide legal advice.",
             json!({
                 "type": "object",
                 "properties": {
@@ -926,7 +926,7 @@ fn prompts_list() -> Value {
         prompt_definition_entry(
             "legal_citation_review",
             "Legal citation review",
-            "Review separate legal citation records and jurisdiction/provider issues.",
+            "Review separate legal citation records, jurisdiction/provider issues, and attorney-review flags without giving legal advice.",
         ),
         prompt_definition_entry(
             "claim_source_provenance_review",
@@ -1009,7 +1009,7 @@ fn prompt_definition(
         ),
         "legal_citation_review" => prompt_body(
             "Legal citation review",
-            "Review separate legal citation records and jurisdiction/provider issues.",
+            "Review separate legal citation records, jurisdiction/provider issues, and attorney-review flags without giving legal advice.",
             arguments,
         ),
         "claim_source_provenance_review" => prompt_body(
@@ -1046,7 +1046,7 @@ fn prompt_description(name: &str) -> &'static str {
             "Explain provider/canonical conflicts and the no-silent-overwrite rule."
         }
         "legal_citation_review" => {
-            "Review separate legal citation records and jurisdiction/provider issues."
+            "Review separate legal citation records, jurisdiction/provider issues, and attorney-review flags without giving legal advice."
         }
         "claim_source_provenance_review" => {
             "Review claim/source linkage without claim-truth scoring."

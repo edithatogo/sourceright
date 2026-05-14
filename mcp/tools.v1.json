@@ -58,7 +58,8 @@
       "input": {
         "path": "legal-text.txt"
       },
-      "output_contract": "sourceright.legal_citation_report"
+      "output_contract": "sourceright.legal_citation_report",
+      "boundary": "Draft legal citation audit only; returns jurisdiction/provider hints and review issues, not legal advice or outcome prediction."
     },
     {
       "name": "provenance.analyze_claim_sources",

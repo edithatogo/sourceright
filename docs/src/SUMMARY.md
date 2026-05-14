@@ -10,6 +10,7 @@
 - [Editorial Triage Workflow](editorial-triage-workflow.md)
 - [University Repository Workflow](university-repository-workflow.md)
 - [Legal Citation Mode Workflow](legal-citation-mode-workflow.md)
+- [Legal Citation Audit MCP Pack](legal-citation-audit-mcp.md)
 - [Legacy Audit](legacy-audit.md)
 - [CLI Plan](cli.md)
 - [MCP Plan](mcp.md)

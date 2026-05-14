@@ -15,7 +15,7 @@
     },
     {
       "name": "legal_citation_review",
-      "purpose": "Review separate legal citation records and jurisdiction/provider issues."
+      "purpose": "Review separate legal citation records, jurisdiction/provider issues, and attorney-review flags without giving legal advice."
     },
     {
       "name": "claim_source_provenance_review",
