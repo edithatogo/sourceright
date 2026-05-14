@@ -35,7 +35,9 @@ archive, and writes a concrete smoke plan under `C:\tmp\sourceright-ojs-smoke`.
 Pass `-FetchPkpContainers` to clone `pkp/containers` into that work directory.
 On the local Windows validation machine, Docker 29.4.2 and Docker Compose
 v5.1.3 were detected, and `-FetchPkpContainers` successfully staged
-`pkp/containers` under `C:\tmp\sourceright-ojs-smoke\containers`.
+`pkp/containers` under `C:\tmp\sourceright-ojs-smoke\containers`. The Docker
+daemon was not running, so `docker compose up -d` could not be executed in this
+session.
 
 ## Manual OJS Test
 
@@ -79,15 +81,18 @@ candidate test plan is:
 1. Clone or vendor `pkp/containers` outside this repository, or run
    `scripts/ojs-docker-install-smoke.ps1 -FetchPkpContainers` to stage it under
    `C:\tmp\sourceright-ojs-smoke`.
-2. Start the OJS stack with the desired OJS version and a mounted plugin volume.
-3. Mount or copy `plugins/ojs/sourceright` into the container as
+2. Confirm the Docker daemon is running. The smoke script reports
+   `dockerDaemonAvailable`; pass `-RequireDockerDaemon` when you want it to fail
+   fast instead of generating a plan.
+3. Start the OJS stack with the desired OJS version and a mounted plugin volume.
+4. Mount or copy `plugins/ojs/sourceright` into the container as
    `/var/www/html/plugins/generic/sourceright`.
-4. Install Sourceright into the container or mount a release binary into a
+5. Install Sourceright into the container or mount a release binary into a
    known path.
-5. Run `php lib/pkp/tools/installPluginVersion.php
+6. Run `php lib/pkp/tools/installPluginVersion.php
    plugins/generic/sourceright/version.xml` inside the OJS container.
-6. Enable the plugin in the administrator UI.
-7. Run one editor-facing screening operation against a disposable fixture
+7. Enable the plugin in the administrator UI.
+8. Run one editor-facing screening operation against a disposable fixture
    workspace.
 
 The Docker path still needs local Docker availability and an OJS install

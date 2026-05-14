@@ -1,13 +1,29 @@
 param(
     [string]$WorkDir = "C:\tmp\sourceright-ojs-smoke",
     [string]$PluginVersion = "0.1.0",
-    [switch]$FetchPkpContainers
+    [switch]$FetchPkpContainers,
+    [switch]$RequireDockerDaemon
 )
 
 $ErrorActionPreference = "Stop"
 
 $dockerVersion = (& docker --version) -join "`n"
 $composeVersion = (& docker compose version) -join "`n"
+$dockerDaemonAvailable = $true
+$dockerInfo = ""
+try {
+    $dockerInfo = (& docker info --format '{{.ServerVersion}}' 2>&1) -join "`n"
+    if ($LASTEXITCODE -ne 0) {
+        $dockerDaemonAvailable = $false
+    }
+} catch {
+    $dockerDaemonAvailable = $false
+    $dockerInfo = $_.Exception.Message
+}
+
+if ($RequireDockerDaemon -and !$dockerDaemonAvailable) {
+    throw "Docker CLI is installed, but the Docker daemon is not available: $dockerInfo"
+}
 
 New-Item -ItemType Directory -Force -Path $WorkDir | Out-Null
 $resolvedWorkDir = (Resolve-Path -LiteralPath $WorkDir).Path
@@ -38,6 +54,8 @@ Generated from: $repoRoot
 
 - Docker: $dockerVersion
 - Docker Compose: $composeVersion
+- Docker daemon available: $dockerDaemonAvailable
+- Docker daemon detail: $dockerInfo
 - Plugin archive: $archivePath
 - SHA-256 sidecar: $checksumPath
 - Expected OJS plugin path: plugins/generic/sourceright
@@ -52,7 +70,7 @@ Use PKP's current container repository:
 Edit .env for a disposable OJS run. Prefer PKP_TOOL=ojs,
 IMAGE_SOURCE=docker-io, and a pinned OJS/PHP image tag rather than latest.
 
-Then start OJS:
+Then start OJS only after Docker daemon availability is true:
 
     docker compose up -d
 
@@ -108,6 +126,8 @@ $plan | Set-Content -LiteralPath $planPath -Encoding UTF8
 [pscustomobject]@{
     docker = $dockerVersion
     compose = $composeVersion
+    dockerDaemonAvailable = $dockerDaemonAvailable
+    dockerDaemonDetail = $dockerInfo
     pluginArchive = $archivePath
     sha256 = $checksumPath
     workDir = $resolvedWorkDir
