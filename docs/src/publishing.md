@@ -113,10 +113,16 @@ Host-specific packages are tracked separately from the Rust core. The current
 host status and claim boundaries live in [Host Packaging](host-packaging.md).
 In short:
 
-- Claude, Codex, and generic MCP clients can use the local stdio MCP contract,
-  but that is client configuration rather than a host plugin package.
+- Claude Desktop can use a local MCP server config that launches
+  `sourceright mcp`, but that is client configuration rather than a Claude
+  plugin package.
+- Codex can use repo-agent CLI workflows or local MCP server configuration
+  examples, but that is not a Codex plugin package.
 - GitHub Copilot is prepared as a coding-agent workflow through repository
-  instructions and setup steps; entitlement remains a GitHub-side setting.
+  instructions and setup steps; entitlement remains a GitHub-side setting and
+  no Copilot extension package is claimed.
+- Generic MCP clients can use the documented stdio snippets, but named-client
+  acceptance requires separate transcript, listing, or install evidence.
 - VS Code, Microsoft Word, and LibreOffice require separate package tracks
   before release notes can claim installable editor or office-suite support.
 - Marketplace acceptance requires URL, version, date, and install metadata in

@@ -1,0 +1,15 @@
+{
+  "name": "sourceright",
+  "transport": {
+    "type": "stdio",
+    "command": "sourceright",
+    "args": ["mcp"]
+  },
+  "required_smoke": [
+    "initialize",
+    "tools/list",
+    "resources/list",
+    "prompts/list"
+  ],
+  "write_boundary": "Write tools are dry-run unless apply is true."
+}

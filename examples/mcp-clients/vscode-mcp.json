@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "sourceright": {
+      "type": "stdio",
+      "command": "sourceright",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}

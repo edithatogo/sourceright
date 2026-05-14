@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": ["mcp"],
+      "env": {
+        "SOURCERIGHT_WORKSPACE": "."
+      }
+    }
+  },
+  "claim_boundary": "Codex client configuration only; not a Codex plugin package."
+}

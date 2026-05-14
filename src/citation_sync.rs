@@ -1269,4 +1269,62 @@ mod tests {
             } if zotero_key == "ABC123DEF456"
         ));
     }
+
+    #[test]
+    #[ignore = "requires explicit SOURCERIGHT_ZOTERO_LIVE_SMOKE=1 and disposable Zotero library credentials"]
+    fn zotero_disposable_library_live_smoke_skips_without_credentials() {
+        if std::env::var("SOURCERIGHT_ZOTERO_LIVE_SMOKE").as_deref() != Ok("1") {
+            eprintln!("skipping Zotero live smoke: SOURCERIGHT_ZOTERO_LIVE_SMOKE is not 1");
+            return;
+        }
+
+        let api_key = match std::env::var("SOURCERIGHT_ZOTERO_API_KEY") {
+            Ok(value) if !value.trim().is_empty() => value,
+            _ => {
+                eprintln!("skipping Zotero live smoke: SOURCERIGHT_ZOTERO_API_KEY is not set");
+                return;
+            }
+        };
+        let library_id = match std::env::var("SOURCERIGHT_ZOTERO_LIBRARY_ID") {
+            Ok(value) if !value.trim().is_empty() => value,
+            _ => {
+                eprintln!("skipping Zotero live smoke: SOURCERIGHT_ZOTERO_LIBRARY_ID is not set");
+                return;
+            }
+        };
+        let api_url = std::env::var("SOURCERIGHT_ZOTERO_API_URL")
+            .unwrap_or_else(|_| "https://api.zotero.org".to_string());
+        let library_type = std::env::var("SOURCERIGHT_ZOTERO_LIBRARY_TYPE")
+            .unwrap_or_else(|_| "users".to_string());
+
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: false,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: None,
+                zotero_api_url: Some(api_url),
+                zotero_api_key: Some(api_key),
+                zotero_library_id: Some(library_id),
+                zotero_library_type: Some(library_type),
+            },
+        )
+        .expect("live Zotero smoke should fetch the disposable library and plan without writes");
+
+        assert!(!report.applied);
+        assert!(report.audit_log_path.is_none());
+        assert_eq!(
+            report.actions.len(),
+            report.create_count
+                + report.update_count
+                + report.skip_count
+                + report.conflict_count
+                + report.suppressed_count
+                + report.review_required_count
+        );
+    }
 }

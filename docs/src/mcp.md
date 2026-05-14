@@ -100,10 +100,124 @@ For a local MCP client, the minimal stdio launcher is:
 }
 ```
 
+### Generic MCP clients
+
+Generic clients should use the same local stdio launcher and treat the checked-in
+MCP manifests as the discovery contract:
+
+```json
+{
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+Claude Desktop uses client configuration over the local stdio contract. This is
+not a Claude plugin package:
+
+```json
+{
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Codex
+
+Codex-oriented workflows should launch the same local stdio MCP server from the
+repository or installed CLI path. This is Codex MCP configuration, not a Codex
+plugin package:
+
+```toml
+[mcp_servers.sourceright]
+command = "sourceright"
+args = ["mcp"]
+```
+
+### GitHub Copilot
+
+GitHub Copilot support is prepared as a repository coding-agent workflow, not as
+an MCP client package or Copilot extension. VS Code MCP settings can expose the
+local server to Copilot agent mode when MCP servers are enabled:
+
+```json
+{
+  "servers": {
+    "sourceright": {
+      "type": "stdio",
+      "command": "sourceright",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+The repo-local Copilot preparation files remain separate from that MCP client
+configuration:
+
+```text
+.github/copilot-instructions.md
+.github/workflows/copilot-setup-steps.yml
+.github/ISSUE_TEMPLATE/copilot_security_remediation.yml
+```
+
 The server speaks stdio and starts from the current workspace root unless the
 client wrapper overrides the working directory. A client should initialize the
 server, then call `tools/list`, `resources/list`, and `prompts/list` before any
 `tools/call`.
+
+## Client Configuration Examples
+
+Concrete host configuration examples live under `examples/mcp-clients/`:
+
+- `claude-desktop.json` uses the Claude Desktop `mcpServers` local stdio shape.
+- `codex-config.toml` uses a Codex `[mcp_servers.sourceright]` stanza.
+- `vscode-mcp.json` uses the VS Code `servers` shape used by GitHub Copilot
+  agent mode when MCP servers are enabled.
+- `generic-mcp-client.json` keeps the portable `mcpServers` launcher for other
+  local MCP clients.
+- `host-manifest.json` records the Track 65 host status and claim boundary.
+- `smoke-requests.jsonl` provides a manual stdio smoke sequence.
+
+These files reference the existing `sourceright mcp` stdio server. They are not
+host plugin packages, hosted HTTP endpoints, or marketplace acceptance evidence.
+
+Before adding a host config, verify the binary and manifests:
+
+```bash
+sourceright --version
+sourceright mcp status
+sourceright mcp tools --json
+sourceright mcp resources --json
+sourceright mcp prompts --json
+```
+
+For a manual stdio smoke, start `sourceright mcp`, then send the JSON-RPC lines
+from `examples/mcp-clients/smoke-requests.jsonl`. The dry-run write call should
+return `apply_requested: false`, `applied: false`, and no `audit_log`.
+
+## Acceptance Evidence
+
+Track 65 accepts evidence only at the level it actually proves:
+
+| Evidence | Proves | Does not prove |
+| --- | --- | --- |
+| `sourceright mcp status --json` | The installed binary exposes MCP status metadata. | Client-specific discovery or marketplace acceptance. |
+| `sourceright mcp tools --json`, `resources --json`, and `prompts --json` | The advertised contract is inspectable before a client call. | That a host has enabled or approved Sourceright. |
+| `initialize`, `tools/list`, `resources/list`, and `prompts/list` transcript smoke | Protocol-level local stdio compatibility. | Hosted HTTP support or remote execution. |
+| Dry-run `workspace.init` call with `apply` omitted or `false` | Write-capable tools return a plan without mutating files. | That applied writes are safe without user review. |
+| Official MCP Registry listing for `0.1.20` | Registry metadata and OCI package binding for that version. | Glama, Smithery, Claude, Codex, Copilot, or generic-client acceptance. |
+| `.github/copilot-instructions.md` and setup workflow | Repository preparation for Copilot coding-agent work. | Copilot entitlement, extension packaging, or MCP client support. |
 
 ## Client Packaging Status
 
@@ -112,9 +226,10 @@ server, then call `tools/list`, `resources/list`, and `prompts/list` before any
 | Official MCP Registry | Accepted for `0.1.20` through `server.json` and the OCI image target. | Registry acceptance does not prove every downstream client configuration. |
 | Glama | Prepared through `glama.json`; no accepted listing is recorded. | Do not claim Glama availability until the listing is verified. |
 | Smithery | Prepared through the MCPB/local stdio package path. | Do not claim Smithery availability until a concrete bundle/listing is verified. |
-| Claude Desktop | Uses the generic local stdio pattern unless a client-specific guide is added. | This is client configuration, not a Claude plugin package. |
-| Codex | Uses CLI/MCP workflow guidance unless a Codex-specific package is added. | This is repo-agent or MCP configuration, not a Codex plugin package. |
-| GitHub Copilot | Repository coding-agent prep exists separately from MCP. | This is not a Copilot extension or marketplace package. |
+| Claude Desktop | Prepared through local stdio configuration examples in `examples/mcp-clients/claude-desktop.json`. | This is client configuration, not a Claude plugin package. |
+| Codex | Prepared through local stdio configuration examples in `examples/mcp-clients/codex-config.toml` and `codex-mcp.json`. | This is repo-agent or MCP configuration, not a Codex plugin package. |
+| GitHub Copilot / VS Code | Repository coding-agent prep and local VS Code MCP configuration example in `examples/mcp-clients/vscode-mcp.json`. | This is not a Copilot extension, Copilot marketplace package, or proof of Copilot entitlement. |
+| Generic MCP clients | Portable local stdio configuration example in `examples/mcp-clients/generic-mcp-client.json`. | Client syntax can vary; this is a launcher example, not a universal install package. |
 
 ## Transcript Snippets
 

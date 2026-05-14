@@ -9,7 +9,9 @@ export claim.
 
 - Dry-run preview compares Zotero records with Sourceright CSL/sidecar state.
 - Apply requires explicit user action and writes an audit log.
-- A disposable-library smoke test proves write semantics.
+- A disposable-library smoke gate is ignored by default, skips cleanly without
+  credentials, and only performs live Zotero discovery/planning when explicitly
+  enabled with disposable-library environment variables.
 - If a Zotero `.xpi` is built, it has packaging, install notes, versioning,
   permissions, and public distribution notes.
 - Distribution notes cover Zotero Forums/plugin listing state without claiming

@@ -1,0 +1,50 @@
+{
+  "schema_version": "sourceright.mcp_client_hosts.v1",
+  "track": "65-ai-client-mcp-packaging",
+  "server": {
+    "name": "sourceright",
+    "transport": "stdio",
+    "command": "sourceright",
+    "args": [
+      "mcp"
+    ]
+  },
+  "claim_boundary": "MCP-compatible local stdio configuration examples; not host plugin or marketplace acceptance evidence.",
+  "hosts": [
+    {
+      "host": "Claude Desktop",
+      "status": "local-configuration-example",
+      "config_file": "claude-desktop.json",
+      "claim_boundary": "Client configuration only; no Claude plugin package is claimed."
+    },
+    {
+      "host": "Codex",
+      "status": "local-configuration-example",
+      "config_file": "codex-config.toml",
+      "claim_boundary": "Codex MCP configuration only; no Codex plugin package is claimed."
+    },
+    {
+      "host": "GitHub Copilot / VS Code",
+      "status": "local-configuration-example",
+      "config_file": "vscode-mcp.json",
+      "claim_boundary": "VS Code MCP settings for agent use; no Copilot extension or VS Code Marketplace listing is claimed."
+    },
+    {
+      "host": "Generic MCP client",
+      "status": "local-configuration-example",
+      "config_file": "generic-mcp-client.json",
+      "claim_boundary": "Generic stdio launcher example; clients may require host-specific syntax."
+    }
+  ],
+  "smoke": {
+    "requests": "smoke-requests.jsonl",
+    "expected": [
+      "initialize returns serverInfo.name=sourceright",
+      "tools/list returns the read-only and dry-run tool surface",
+      "resources/list returns sourceright:// resource URIs",
+      "prompts/list returns review prompts",
+      "workspace.init is dry-run unless apply is true",
+      "workspace.init without apply returns applied=false"
+    ]
+  }
+}

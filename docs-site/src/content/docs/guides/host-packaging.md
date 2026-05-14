@@ -12,10 +12,10 @@ CSL.
 
 | Host | Track | Current state | Required proof before public plugin claim |
 | --- | --- | --- | --- |
-| Claude Desktop | 65 | MCP-compatible local stdio server; no Claude-specific package. | Client install snippet, MCP discovery smoke, dry-run write proof, and wording that says client configuration rather than Claude plugin. |
-| Codex | 65 | CLI/MCP usable from repo workflows; no Codex-specific package. | Client guide or config example plus policy tests that keep Codex claims to CLI/MCP integration. |
-| GitHub Copilot | 64, 65 | Repository coding-agent prep exists through instructions and setup workflow; no Copilot extension package. | Entitlement/settings evidence for coding-agent use, or a separate accepted Copilot extension package. |
-| Generic MCP clients | 56, 57, 65 | Official MCP Registry accepted for `0.1.20`; Glama and Smithery are prepared. | Transcript smoke and separate accepted/prepared evidence per directory. |
+| Claude Desktop | 65 | MCP-compatible local stdio server with `examples/mcp-clients/claude-desktop.json`; no Claude-specific package. | MCP discovery smoke, dry-run write proof, and wording that says client configuration rather than Claude plugin. |
+| Codex | 65 | CLI/MCP usable from repo workflows with `examples/mcp-clients/codex-config.toml`; no Codex-specific package. | Client smoke plus policy tests that keep Codex claims to CLI/MCP integration. |
+| GitHub Copilot | 64, 65 | Repository coding-agent prep exists through instructions and setup workflow; `examples/mcp-clients/vscode-mcp.json` covers VS Code MCP settings; no Copilot extension package. | Entitlement/settings evidence for coding-agent use, or a separate accepted Copilot extension package. |
+| Generic MCP clients | 56, 57, 65 | Official MCP Registry accepted for `0.1.20`; Glama and Smithery are prepared; `examples/mcp-clients/generic-mcp-client.json` documents local stdio launch. | Transcript smoke and separate accepted/prepared evidence per directory. |
 | VS Code | 66 | Development settings exist; no VSIX product package. | VSIX or explicit deferral, Marketplace/Open VSX notes, install smoke, and diagnostics contract. |
 | Microsoft Word | 67 | DOCX extraction is separate; no Office Add-in package. | Office Add-in manifest, sideload/AppSource notes, document-range provenance, reversible write plans, and fixture smoke. |
 | LibreOffice Writer | 68 | No `.oxt`/UNO extension package. | `.oxt` or explicit deferral, UNO/adapter contract, local install smoke, and document-range provenance. |
@@ -35,3 +35,18 @@ CSL.
 
 Prepared metadata, local configuration, and development settings are useful
 inputs, but they are not marketplace acceptance.
+
+## Track 65 client artifacts
+
+Track 65 keeps host examples in `examples/mcp-clients/` and uses
+`examples/mcp-clients/host-manifest.json` as the local inventory of client
+status. Every example launches the same server command:
+
+```text
+sourceright mcp
+```
+
+Passing smoke means the client can initialize the server, discover
+tools/resources/prompts, and receive a dry-run `workspace.init` plan with
+`applied: false`. It does not prove public directory acceptance or host-specific
+extension packaging.

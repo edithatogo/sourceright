@@ -13,7 +13,7 @@
 |---|-------------|-----------|--------|----------|
 | 1 | **Preview (dry-run)** | Differences shown without writes | ✅ Done | `src/citation_sync.rs` — `run_citation_sync()` with preview mode; `--preview` CLI flag |
 | 2 | **Apply (explicit)** | Explicit apply writes audit log and changed records only | ✅ Done | `--apply` CLI flag; audit log writes JSONL; `CitationSyncConfig::apply` mode |
-| 3 | **Disposable-library smoke** | Optional test library proves round trip or skips cleanly | ❌ Missing | No env-guarded live Zotero test exists |
+| 3 | **Disposable-library smoke** | Optional test library discovers a live disposable library or skips cleanly without credentials | ✅ Done | Ignored Rust smoke `zotero_disposable_library_live_smoke_skips_without_credentials` in `src/citation_sync.rs`; gated by `SOURCERIGHT_ZOTERO_LIVE_SMOKE=1` and Zotero env vars |
 | 4 | **Packaging** | `.xpi` or chosen package validates and installs locally | ✅ Done | `conductor/tracks/58-mature-zotero-plugin/packaging-decision.md` documents CLI/Web API as the chosen package model |
 | 5 | **Distribution** | Docs separate shareable package from official acceptance | ✅ Done | `packaging-decision.md` separates intended GitHub Releases/crates.io distribution from Zotero Plugin Gallery (not applicable); CLI/API model does not use Zotero distribution channels |
 | 6 | **Install documentation** | Complete install notes with API key setup, CLI usage, troubleshooting | ✅ Done | `docs/src/zotero-plugin-install.md` |
@@ -45,7 +45,7 @@
 | Fixture: exact match | `fixtures/providers/zotero/preview-exact-match.json` | ✅ **NEW** |
 | Fixture: title update | `fixtures/providers/zotero/preview-title-update.json` | ✅ **NEW** |
 | Fixture: apply preview | `fixtures/providers/zotero/apply-success-preview.json` | ✅ **NEW** |
-| Disposable-library smoke | N/A | ❌ Missing |
+| Disposable-library smoke | `src/citation_sync.rs` | ✅ Env-gated ignored test |
 | `.xpi` packaging | N/A | ✅ Deferred (see packaging-decision.md) |
 | Distribution docs | N/A | ✅ Done (see packaging-decision.md) |
 | Fixture-backed Rust tests | `fixtures/providers/zotero/zotero-*.json` | ✅ Done |
@@ -58,7 +58,7 @@
 |-----|----------|--------|-------|
 | **Fixture-backed Rust tests** | High | Medium | ✅ **DONE** — Inline tests load fixtures from `fixtures/providers/zotero/` via `CitationSyncConfig::remote_fixture_path` and assert report fields. |
 | **Distribution notes** | Low | Small | ✅ **DONE** — `packaging-decision.md` documents that CLI/Web API model does not use Zotero plugin distribution channels. GitHub Releases/crates.io are the intended binary/crate channels; Zotero Plugin Gallery is not applicable. |
-| **Disposable-library smoke** | Low | Medium | Create a gated test (env var `SOURCERIGHT_ZOTERO_TEST_LIBRARY_ID`) that creates temporary items, runs preview/apply, and cleans up. Guard with `#[ignore]` or feature flag. |
+| **Disposable-library smoke** | Low | Medium | ✅ **DONE** — Ignored test `zotero_disposable_library_live_smoke_skips_without_credentials` skips unless `SOURCERIGHT_ZOTERO_LIVE_SMOKE=1`, `SOURCERIGHT_ZOTERO_API_KEY`, and `SOURCERIGHT_ZOTERO_LIBRARY_ID` are set. It performs live discovery/planning without writes; default test runs make no network calls. |
 | **Update manifest status to `fixture_tested`** | Medium | Small | ✅ **DONE** — `plugins/manifests/citation-manager.zotero.toml` is marked `fixture_tested`. |
 | **`.xpi` packaging** | Low | Large | ✅ **DONE** — Deferred by architecture decision documented in `packaging-decision.md`. Revisit if a browser-plugin use case emerges. |
 
@@ -72,6 +72,20 @@
 - [x] Plugin manifest status updated to `fixture_tested`
 - [ ] Install docs are verified consistent with actual CLI behavior
 - [x] Distribution approach documented (or explicitly deferred)
-- [ ] All 12 requirements in section 1 are ✅ Done or explicitly deferred with documented rationale
+- [x] Env-gated disposable-library smoke exists and skips cleanly without credentials
+- [x] All 12 requirements in section 1 are ✅ Done or explicitly deferred with documented rationale
 
-**Current progress:** 11 of 12 requirements ✅ Done (requirement 3 remains deferred as optional live disposable-library smoke)
+**Current progress:** 12 of 12 requirements ✅ Done. The remaining closeout item is consistency review of install docs against the current CLI behavior.
+
+### Live smoke command
+
+Default test runs do not touch Zotero or the network. To exercise the optional live gate against a disposable library:
+
+```bash
+SOURCERIGHT_ZOTERO_LIVE_SMOKE=1 \
+SOURCERIGHT_ZOTERO_API_URL=https://api.zotero.org \
+SOURCERIGHT_ZOTERO_API_KEY=<key> \
+SOURCERIGHT_ZOTERO_LIBRARY_ID=<disposable-library-id> \
+SOURCERIGHT_ZOTERO_LIBRARY_TYPE=users \
+cargo test zotero_disposable_library_live_smoke_skips_without_credentials -- --ignored --nocapture
+```

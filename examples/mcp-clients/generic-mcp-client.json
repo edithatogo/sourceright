@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": [
+        "mcp"
+      ],
+      "transport": "stdio"
+    }
+  }
+}

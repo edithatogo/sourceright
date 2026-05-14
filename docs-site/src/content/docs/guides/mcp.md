@@ -24,6 +24,64 @@ Sourceright's MCP surface is read-first and audit-friendly.
 | Codex | Uses CLI/MCP workflow guidance unless a Codex-specific package is added. | This is repo-agent or MCP configuration, not a Codex plugin package. |
 | GitHub Copilot | Repository coding-agent prep exists separately from MCP. | This is not a Copilot extension or marketplace package. |
 
+## Local stdio snippets
+
+### Generic MCP clients
+
+```json
+{
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+Claude Desktop uses client configuration over local stdio. This is not a Claude
+plugin package.
+
+```json
+{
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Codex
+
+Codex workflows use the same local stdio server from the repository or installed
+CLI path. This is not a Codex plugin package.
+
+```json
+{
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### GitHub Copilot
+
+GitHub Copilot support is repository coding-agent preparation, not an MCP client
+package or Copilot extension.
+
+```text
+.github/copilot-instructions.md
+.github/workflows/copilot-setup-steps.yml
+.github/ISSUE_TEMPLATE/copilot_security_remediation.yml
+```
+
 ## Legal Citation Connector Boundary
 
 For legal workflows, Sourceright should be described as a citation audit and
