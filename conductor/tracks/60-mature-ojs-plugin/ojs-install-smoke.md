@@ -37,7 +37,9 @@ On the local Windows validation machine, Docker 29.4.2 and Docker Compose
 v5.1.3 were detected, and `-FetchPkpContainers` successfully staged
 `pkp/containers` under `C:\tmp\sourceright-ojs-smoke\containers`. The Docker
 daemon was not running, so `docker compose up -d` could not be executed in this
-session.
+session. The default Docker context pointed at
+`npipe:////./pipe/docker_engine`, WSL was not installed, and Podman was not
+available.
 
 ## Manual OJS Test
 

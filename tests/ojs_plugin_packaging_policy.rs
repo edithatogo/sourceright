@@ -34,6 +34,9 @@ fn ojs_plugin_has_install_test_package_builder_and_smoke_path() {
     assert!(docker_smoke.contains("docker --version"));
     assert!(docker_smoke.contains("docker compose version"));
     assert!(docker_smoke.contains("docker info"));
+    assert!(docker_smoke.contains("docker context ls"));
+    assert!(docker_smoke.contains("wsl --status"));
+    assert!(docker_smoke.contains("Get-Command podman"));
     assert!(docker_smoke.contains("RequireDockerDaemon"));
     assert!(docker_smoke.contains("https://github.com/pkp/containers.git"));
     assert!(docker_smoke.contains("installPluginVersion.php"));
@@ -42,6 +45,8 @@ fn ojs_plugin_has_install_test_package_builder_and_smoke_path() {
     assert!(smoke.contains("pkp/containers"));
     assert!(smoke.contains("pkp/docker-ojs"));
     assert!(smoke.contains("dockerDaemonAvailable"));
+    assert!(smoke.contains("WSL was not installed"));
+    assert!(smoke.contains("Podman was not"));
     assert!(smoke.contains("not PKP Plugin Gallery acceptance"));
     assert!(smoke.contains("no verified live OJS smoke transcript"));
 

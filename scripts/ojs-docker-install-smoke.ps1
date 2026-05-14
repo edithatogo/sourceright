@@ -7,12 +7,18 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Normalize-CommandOutput {
+    param([string]$Text)
+    return $Text.Replace([string][char]0, "").Trim()
+}
+
 $dockerVersion = (& docker --version) -join "`n"
 $composeVersion = (& docker compose version) -join "`n"
+$dockerContext = (& docker context ls) -join "`n"
 $dockerDaemonAvailable = $true
 $dockerInfo = ""
 try {
-    $dockerInfo = (& docker info --format '{{.ServerVersion}}' 2>&1) -join "`n"
+    $dockerInfo = Normalize-CommandOutput ((& docker info --format '{{.ServerVersion}}' 2>&1) -join "`n")
     if ($LASTEXITCODE -ne 0) {
         $dockerDaemonAvailable = $false
     }
@@ -24,6 +30,22 @@ try {
 if ($RequireDockerDaemon -and !$dockerDaemonAvailable) {
     throw "Docker CLI is installed, but the Docker daemon is not available: $dockerInfo"
 }
+
+$wslAvailable = $true
+$wslStatus = ""
+try {
+    $wslStatus = Normalize-CommandOutput ((& wsl --status 2>&1) -join "`n")
+    if ($LASTEXITCODE -ne 0) {
+        $wslAvailable = $false
+    }
+} catch {
+    $wslAvailable = $false
+    $wslStatus = $_.Exception.Message
+}
+$wslStatus = -join ($wslStatus.ToCharArray() | Where-Object { [int]$_ -ne 0 })
+
+$podmanCommand = Get-Command podman -ErrorAction SilentlyContinue
+$podmanAvailable = $null -ne $podmanCommand
 
 New-Item -ItemType Directory -Force -Path $WorkDir | Out-Null
 $resolvedWorkDir = (Resolve-Path -LiteralPath $WorkDir).Path
@@ -54,8 +76,13 @@ Generated from: $repoRoot
 
 - Docker: $dockerVersion
 - Docker Compose: $composeVersion
+- Docker context:
+  $dockerContext
 - Docker daemon available: $dockerDaemonAvailable
 - Docker daemon detail: $dockerInfo
+- WSL available: $wslAvailable
+- WSL detail: $wslStatus
+- Podman available: $podmanAvailable
 - Plugin archive: $archivePath
 - SHA-256 sidecar: $checksumPath
 - Expected OJS plugin path: plugins/generic/sourceright
@@ -126,8 +153,12 @@ $plan | Set-Content -LiteralPath $planPath -Encoding UTF8
 [pscustomobject]@{
     docker = $dockerVersion
     compose = $composeVersion
+    dockerContext = $dockerContext
     dockerDaemonAvailable = $dockerDaemonAvailable
     dockerDaemonDetail = $dockerInfo
+    wslAvailable = $wslAvailable
+    wslDetail = $wslStatus
+    podmanAvailable = $podmanAvailable
     pluginArchive = $archivePath
     sha256 = $checksumPath
     workDir = $resolvedWorkDir
