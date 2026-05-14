@@ -111,9 +111,17 @@ cargo clippy --all-targets -- -D warnings
 cargo run --bin sourceright -- bench
 cargo package --locked
 cargo publish --dry-run --locked
+cargo machete
+cargo semver-checks check-release --release-type minor  # advisory until the public Rust API is stabilized
 cargo deny check advisories bans sources
 cargo tree -d --locked
+taplo lint Cargo.toml book.toml deny.toml lychee.toml rust-toolchain.toml taplo.toml typos.toml fuzz/Cargo.toml plugins/**/*.toml .cargo/config.toml
 typos --config typos.toml
+vale --minAlertLevel=error README.md docs/src docs/import-manifest.md .github/copilot-instructions.md
+npx --yes markdownlint-cli2@0.18.1 README.md "docs/**/*.md" ".github/**/*.md"
+lychee --config lychee.toml --offline README.md docs/src/**/*.md docs/import-manifest.md
+actionlint
+zizmor --min-severity medium .github/workflows
 cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 85
 cargo mutants --workspace
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 85

@@ -15,6 +15,7 @@ These pages describe the day-to-day operator surface:
 - [Legal Citation Audit MCP Pack](legal-citation-audit-mcp)
 - [CLI](cli)
 - [MCP](mcp)
+- [Host Packaging](host-packaging)
 - [Artifact and Schema Guide](artifact-schema-guide)
 - [Live Provider Configuration](live-provider-configuration)
 - [Publishing](publishing)

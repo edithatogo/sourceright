@@ -2,7 +2,7 @@
 id = "extraction.docx-pdf"
 name = "DOCX/PDF extraction adapter"
 category = "extraction"
-status = "planned_adapter"
+status = "fixture_tested"
 plugin_api = "sourceright.plugin.v1"
 license_profile = "mixed"
 summary = "Document text and reference extraction adapter for DOCX, PDF text layers, and later OCR."

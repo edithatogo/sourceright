@@ -13,6 +13,17 @@ Sourceright's MCP surface is read-first and audit-friendly.
 - `server.json` and `glama.json` describe registry and directory metadata for
   the packaged MCP surface.
 
+## Client packaging status
+
+| Client or directory | Current status | Claim boundary |
+| --- | --- | --- |
+| Official MCP Registry | Accepted for `0.1.20` through `server.json` and the OCI image target. | Registry acceptance does not prove every downstream client configuration. |
+| Glama | Prepared through `glama.json`; no accepted listing is recorded. | Do not claim Glama availability until the listing is verified. |
+| Smithery | Prepared through the MCPB/local stdio package path. | Do not claim Smithery availability until a concrete bundle/listing is verified. |
+| Claude Desktop | Uses the generic local stdio pattern unless a client-specific guide is added. | This is client configuration, not a Claude plugin package. |
+| Codex | Uses CLI/MCP workflow guidance unless a Codex-specific package is added. | This is repo-agent or MCP configuration, not a Codex plugin package. |
+| GitHub Copilot | Repository coding-agent prep exists separately from MCP. | This is not a Copilot extension or marketplace package. |
+
 ## Legal Citation Connector Boundary
 
 For legal workflows, Sourceright should be described as a citation audit and

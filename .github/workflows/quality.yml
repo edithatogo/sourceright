@@ -1,0 +1,98 @@
+name: Quality
+
+on:
+  pull_request:
+    paths:
+      - ".github/**"
+      - ".markdownlint-cli2.jsonc"
+      - ".vale.ini"
+      - ".vale/**"
+      - "docs/**"
+      - "conductor/**"
+      - "README.md"
+      - "lychee.toml"
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/**"
+      - ".markdownlint-cli2.jsonc"
+      - ".vale.ini"
+      - ".vale/**"
+      - "docs/**"
+      - "conductor/**"
+      - "README.md"
+      - "lychee.toml"
+  schedule:
+    - cron: "11 5 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prose:
+    name: Prose and Markdown
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+      - name: Setup Go
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v6
+        with:
+          go-version: "1.25.x"
+      - name: Install Vale
+        run: go install github.com/errata-ai/vale/v3/cmd/vale@v3.12.0
+      - name: Vale prose lint
+        run: vale --minAlertLevel=error README.md docs/src docs/import-manifest.md conductor .github/copilot-instructions.md
+      - name: Markdown structure lint
+        run: npx --yes markdownlint-cli2@0.18.1 README.md "docs/**/*.md" "conductor/**/*.md" ".github/**/*.md"
+
+  links:
+    name: Offline link check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+      - name: Install lychee
+        run: cargo install lychee --locked
+      - name: Check local links and anchors
+        run: lychee --config lychee.toml --offline README.md docs/src/**/*.md docs/import-manifest.md conductor/**/*.md
+
+  workflows:
+    name: Workflow lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+      - name: Setup Go
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v6
+        with:
+          go-version: "1.25.x"
+      - name: Setup Python
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
+        with:
+          python-version: "3.14"
+      - name: Install actionlint
+        run: go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+      - name: Lint workflows
+        run: actionlint
+      - name: Install zizmor
+        run: python -m pip install zizmor==1.14.2
+      - name: Security-lint workflows
+        run: zizmor --min-severity medium .github/workflows

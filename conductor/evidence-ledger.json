@@ -255,6 +255,72 @@
         "Live GitHub API or settings modification is required to confirm enforcement state."
       ]
     },
+    "65-ai-client-mcp-packaging": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "AI client packaging is contracted for Claude, Codex, GitHub Copilot, and generic MCP clients.",
+        "Current Claude and Codex support is client configuration over local stdio MCP or CLI workflows, not a host-specific plugin package.",
+        "GitHub Copilot support is prepared as a coding-agent workflow and remains separate from any Copilot extension claim."
+      ],
+      "blockers": [
+        "Client-specific snippets and transcript smoke are still required before client-ready packaging claims.",
+        "Copilot entitlement and settings require GitHub-side verification.",
+        "No Claude, Codex, or Copilot marketplace package exists."
+      ]
+    },
+    "66-vscode-extension-packaging": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "VS Code extension packaging is planned and contracted.",
+        "Current .vscode settings are development tooling only.",
+        "A future extension must reuse CLI/MCP diagnostics rather than reimplementing Sourceright logic."
+      ],
+      "blockers": [
+        "No VSIX package, extension manifest, Marketplace listing, or Open VSX listing exists.",
+        "Diagnostics mapping, workspace-trust docs, and install smoke remain to be implemented."
+      ]
+    },
+    "67-word-addin-packaging": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Microsoft Word add-in packaging is planned and contracted.",
+        "DOCX extraction support is separate from Word add-in support.",
+        "Any future in-document write path must be reversible, previewed, audited, and explicit on apply."
+      ],
+      "blockers": [
+        "No Office Add-in manifest, taskpane package, sideload smoke, or AppSource listing exists.",
+        "Document-range provenance and reversible writeback plans must be proven before editing claims."
+      ]
+    },
+    "68-libreoffice-extension-packaging": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "LibreOffice extension packaging is planned and contracted.",
+        "ODT/DOCX processing support is separate from LibreOffice Writer extension support.",
+        "Any future Writer write path must be reversible, previewed, audited, and explicit on apply."
+      ],
+      "blockers": [
+        "No .oxt package, UNO bridge, local install smoke, or LibreOffice Extensions listing exists.",
+        "Writer range mapping and reversible writeback plans must be proven before extension claims."
+      ]
+    },
+    "69-marketplace-submission-evidence": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Marketplace submission evidence is contracted across MCP directories, AI clients, editor extensions, office add-ins, Zotero, and OJS.",
+        "Accepted, prepared, and deferred states must remain separate in release-status documentation.",
+        "Prepared metadata is not public marketplace acceptance."
+      ],
+      "blockers": [
+        "External listings require URL, version, date, install metadata, and verification evidence.",
+        "VS Code, Word, and LibreOffice marketplaces remain deferred until package tracks produce installable artifacts."
+      ]
+    },
     "44-branch-triage-and-stale-work-closure": {
       "category": "governance",
       "evidence_level": "fixture-backed",
@@ -320,6 +386,40 @@
       "blockers": [
         "Browser/server smoke tests are opt-in, not default CI.",
         "Streamlit Community Cloud deployment requires manual account setup."
+      ]
+    },
+    "53-courtlistener-legal-provider": {
+      "category": "legal",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "CourtListener legal citation provider has src/legal.rs model with LegalProvider::CourtListener enum variant.",
+        "courtlistener_fixture_candidate() is publicly exported from lib.rs.",
+        "US court neutral citations (SCOTUS, USCA) are mapped to CourtListener with confidence 0.75 by provider_candidates_for_court().",
+        "Fixture files exist: fixtures/providers/courtlistener/success.json (1 result, high confidence) and no-match.json (0 results, zero confidence).",
+        "Four unit tests exercise CourtListener provider assignment and fixture parsing.",
+        "cargo fmt --check passes on src/legal.rs and src/lib.rs.",
+        "Plugin manifest plugins/manifests/legal.courtlistener.toml exists with planned_public_api status."
+      ],
+      "blockers": [
+        "cargo check --lib fails on Windows due to MSVC linker issue with spaces in repo path (OneDrive - Flinders); no code-level compilation errors detected.",
+        "No live smoke test gated by COURTLISTENER_API_KEY.",
+        "No provider-fixtures/courtlistener/ directory for live-provider adapter (only fixture adapter exists)."
+      ]
+    },
+    "33-public-release-and-registry-submission": {
+      "category": "publication",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Release workflow exists with dry-run validation gates.",
+        "Cargo package and publish-dry-run have been verified against the workspace.",
+        "server.json and glama.json metadata are validated.",
+        "Dockerfile builds correctly.",
+        "Pre-release validation checklist documents the complete gate sequence."
+      ],
+      "blockers": [
+        "First release tag requires clean working tree and human review.",
+        "No release has been executed against a real tag.",
+        "Registry submission evidence requires live execution."
       ]
     }
   }

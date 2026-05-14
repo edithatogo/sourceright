@@ -2,7 +2,7 @@
 id = "relevance.claim-source"
 name = "Claim/source relevance review"
 category = "relevance"
-status = "planned"
+status = "fixture_tested"
 plugin_api = "sourceright.plugin.v1"
 license_profile = "local_only"
 summary = "Review claim/source linkage without asserting whether a claim is true."

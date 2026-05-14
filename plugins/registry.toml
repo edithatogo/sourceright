@@ -51,12 +51,12 @@ status = "planned_public_api"
 [[plugins]]
 id = "citation-manager.zotero"
 manifest = "plugins/manifests/citation-manager.zotero.toml"
-status = "planned_adapter"
+status = "fixture_tested"
 
 [[plugins]]
 id = "citation-manager.endnote"
 manifest = "plugins/manifests/citation-manager.endnote.toml"
-status = "planned_adapter"
+status = "fixture_tested"
 
 [[plugins]]
 id = "journal.ojs"

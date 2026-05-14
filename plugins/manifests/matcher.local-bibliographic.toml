@@ -2,7 +2,7 @@
 id = "matcher.local-bibliographic"
 name = "Local bibliographic matcher"
 category = "matcher"
-status = "planned"
+status = "fixture_tested"
 plugin_api = "sourceright.plugin.v1"
 license_profile = "local_only"
 summary = "Deterministic local matching and ranking over extracted references and provider candidates."

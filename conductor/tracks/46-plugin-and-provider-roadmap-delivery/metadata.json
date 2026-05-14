@@ -1,6 +1,6 @@
 {
   "id": "46-plugin-and-provider-roadmap-delivery",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owners": ["codex"],
   "dependencies": [
@@ -20,5 +20,7 @@
     "docs-site/src/content/docs/plugin-registry.md",
     "docs-site/src/content/docs/reference/providers.md",
     "conductor/tracks/46-plugin-and-provider-roadmap-delivery/"
-  ]
+  ],
+  "evidence_ledger": true,
+  "completion_notes": "Updated status-dashboard.md with manifest-level statuses, color-coded indicators, owner track links. All 20 plugins have documented ownership. 4 plugins promoted from 'planned' to 'fixture_tested' per manifest. Review.md updated with completion assessment."
 }

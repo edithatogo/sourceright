@@ -48,6 +48,11 @@ flowchart TB
     T62[62 Expanded normalisers]
     T63[63 Plugin supply-chain]
     T64[64 GitHub governance]
+    T65[65 AI client MCP packaging]
+    T66[66 VS Code extension packaging]
+    T67[67 Word add-in packaging]
+    T68[68 LibreOffice extension packaging]
+    T69[69 Marketplace submission evidence]
     T36[36 DOCX/PDF extraction]
     T37[37 Live core providers]
     T38[38 Citation disambiguation]
@@ -83,6 +88,21 @@ flowchart TB
     T46 --> T62
     T46 --> T63
     T42 --> T64
+    T56 --> T65
+    T57 --> T65
+    T64 --> T65
+    T63 --> T66
+    T65 --> T66
+    T36 --> T67
+    T40 --> T67
+    T63 --> T67
+    T36 --> T68
+    T40 --> T68
+    T63 --> T68
+    T65 --> T69
+    T66 --> T69
+    T67 --> T69
+    T68 --> T69
 ```
 
 ## Parallel Subagent Model
@@ -174,6 +194,26 @@ flowchart LR
 
 Every plugin manifest needs a track owner, status, fixtures, docs, and test
 gate. Planned plugins stay visibly planned until implementation evidence exists.
+
+## Host Packaging Architecture
+
+```mermaid
+flowchart LR
+    Core[Rust core] --> CLI[CLI JSON contracts]
+    Core --> MCP[Local stdio MCP]
+    CLI --> Editor[VS Code or IDE adapter]
+    MCP --> AI[Claude, Codex, and MCP clients]
+    CLI --> Word[Microsoft Word add-in]
+    CLI --> LibreOffice[LibreOffice Writer extension]
+    Editor --> Evidence[Marketplace evidence]
+    AI --> Evidence
+    Word --> Evidence
+    LibreOffice --> Evidence
+```
+
+Host packages are thin adapters. They may call CLI JSON or MCP resources, but
+they must not reimplement verification logic, silently write canonical CSL, or
+claim marketplace availability before accepted listing evidence exists.
 
 ## Anti-Overclaim Gate
 

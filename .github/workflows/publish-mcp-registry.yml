@@ -1,6 +1,9 @@
 name: Publish MCP registry metadata
 
 on:
+  # zizmor: ignore[dangerous-triggers] Release-owned registry publication is
+  # intentionally chained from the tag-only Release workflow and still uses
+  # the protected mcp-registry environment.
   workflow_run:
     workflows: ["Release"]
     types: [completed]
@@ -27,15 +30,20 @@ jobs:
       - name: Resolve source ref
         id: source-ref
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          CURRENT_SHA: ${{ github.sha }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_run" ]; then
-            echo "ref=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            echo "ref=$WORKFLOW_RUN_HEAD_SHA" >> "$GITHUB_OUTPUT"
           else
-            echo "ref=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+            echo "ref=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
           fi
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
+          persist-credentials: false
           ref: ${{ steps.source-ref.outputs.ref }}
       - name: Validate server metadata
         run: |

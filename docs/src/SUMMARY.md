@@ -14,6 +14,7 @@
 - [Legacy Audit](legacy-audit.md)
 - [CLI Plan](cli.md)
 - [MCP Plan](mcp.md)
+- [Host Packaging](host-packaging.md)
 - [MCP Server Plan](mcp-server-plan.md)
 - [Provider Strategy](providers.md)
 - [Runtime Plugin Loading](plugins.md)

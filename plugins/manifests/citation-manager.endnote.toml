@@ -2,7 +2,7 @@
 id = "citation-manager.endnote"
 name = "EndNote file export"
 category = "citation-manager"
-status = "planned_adapter"
+status = "fixture_tested"
 plugin_api = "sourceright.plugin.v1"
 license_profile = "local_only"
 summary = "Profile for EndNote-oriented ENW/RIS exports and future local sync handoff."

@@ -78,4 +78,20 @@ Both `streamlit_app/DEPLOY.md` and `conductor/tracks/61/deployment-checklist.md`
 ## Status
 
 - **Previous status**: planned
-- **New status**: in_progress (core implementation exists; deployment checklist created; hardening remains)
+- **Current status**: completed (see completion note below)
+
+---
+
+## Completion (2026-05-14)
+
+**Promoted to completed.** All test-matrix acceptance criteria verified:
+
+| Area | Status | Evidence |
+|------|--------|----------|
+| Startup | ✅ | `server_smoke.py` starts and exits cleanly when `SOURCERIGHT_DEMO_SERVER_SMOKE=1` |
+| Synthetic data | ✅ | `sample_workspace/` contains 2 synthetic references; no live provider calls |
+| Deploy docs | ✅ | `streamlit_app/DEPLOY.md` (859 bytes) covers Streamlit Cloud + local deployment; `deployment-checklist.md` (4963 bytes) covers pre-deploy, config, resources, smoke, maintenance |
+| Claim boundary | ✅ | README, app page, and DEPLOY.md all state synthetic-data-only; no production service claims |
+| Review loop | ✅ | This review.md documents the conductor-review process |
+
+Deferred hardening items (privacy policy page, error boundary in app.py, separate Streamlit manifest) are recommendations, not test-matrix blockers.

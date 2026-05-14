@@ -13,6 +13,8 @@ steady stream of account notifications.
 | Dependency review | Active on pull requests | Blocks or reports risky dependency changes before merge. |
 | CodeQL | Active | Uploads SARIF for Rust security analysis. Current code-scanning API output returned no open CodeQL alerts. |
 | OpenSSF Scorecard | Active | Reports supply-chain posture through SARIF without changing code. API check on 2026-05-14 returned one open Scorecard alert (`VulnerabilitiesID`) and 29 fixed Scorecard alerts. |
+| Quality workflow | Active | Adds Vale claim/prose linting, markdownlint structure checks, offline Lychee link checking, actionlint workflow validation, and zizmor workflow security linting. |
+| Rust tool hardening | Active | Pins the Rust toolchain, forbids unsafe code in crate roots, checks unused dependencies with cargo-machete, validates TOML with Taplo, and runs cargo-semver-checks as advisory release evidence. |
 | Copilot cloud agent | Prepared | Repository instructions, setup steps, and a security-remediation issue template are present. Requires GitHub Copilot entitlement at org/repo level to activate `copilot-swe-agent[bot]` assignment. |
 
 ## Alert Inventory
@@ -56,6 +58,23 @@ not modify repository settings or alert state.
 - **Status**: GitHub-side setting to verify in the repository Security tab. No
   repo-local configuration is required for public repositories.
 
+### Rust developer tooling
+
+The repository includes `rust-toolchain.toml` so local and CI Rust commands use
+the same minimal toolchain and install `clippy` and `rustfmt` consistently. The
+`.vscode/settings.json` file points rust-analyzer at
+`cargo clippy --all-targets -- -D warnings`, matching the CI lint posture for
+developers who use VS Code-compatible editors.
+
+Crate roots use `#![forbid(unsafe_code)]`. This is intentionally stricter than
+Clippy because Sourceright's citation-audit core should not need unsafe Rust.
+`cargo-semver-checks` is advisory for now: the current technical-preview Rust
+API has known public-shape drift from the published `0.1.20` crate, so turning
+it into a hard release gate should wait for a public API stabilization pass.
+Missing-docs enforcement is also deferred because the public API is broad, and
+turning `missing_docs` into a hard gate should happen only after a dedicated
+rustdoc documentation pass.
+
 ## Installed GitHub Apps And Marketplace Integrations
 
 The current environment token can read repository alerts, workflows, branch
@@ -72,6 +91,8 @@ inspection plus the GitHub workflow and alert APIs:
 | Dependabot (GitHub-native) | Confirmed | Dependabot alert API is readable and returned 12 fixed, zero open alerts on 2026-05-14. PR creation is configured through Renovate rather than Dependabot update PRs. |
 | CodeQL (GitHub-native) | Confirmed | `.github/workflows/security.yml` runs CodeQL analysis. |
 | OpenSSF Scorecard action | Confirmed | `.github/workflows/security.yml` runs Scorecard with SARIF upload; code-scanning API returned one open Scorecard alert on 2026-05-14. |
+| Prose and workflow quality gates | Repo-local | `.github/workflows/quality.yml`, `.vale.ini`, `.markdownlint-cli2.jsonc`, and `lychee.toml` define the first dedicated docs/workflow quality layer. |
+| Rust quality tools | Repo-local | `rust-toolchain.toml`, `.vscode/settings.json`, `taplo.toml`, `cargo-machete`, and `cargo-semver-checks` align local developer checks with CI and release validation. |
 
 **Note**: A full inventory requires GitHub UI navigation to **Settings > GitHub
 Apps** or **Settings > Integrations > Installed GitHub Apps** with an
@@ -108,6 +129,8 @@ default branch (`main`):
 | --- | --- | --- |
 | `CI` | Yes | Runs `cargo fmt --check`, `cargo clippy`, `cargo test`, `cargo check --locked`. |
 | `Security` | Yes | Runs CodeQL, Scorecard, Dependabot review, and cargo/npm audit steps. |
+| `Quality` | Yes | Blocks docs and workflow regressions through Vale, markdownlint, offline Lychee, actionlint, and zizmor. |
+| `TOML lint` | Yes | Blocks invalid Cargo, plugin, workflow-adjacent, and configuration TOML files through Taplo. |
 | `Pages` | Yes | Docs-site build and deployment check. |
 | `release-dry-run` | Recommended | Validates release packaging without publishing. |
 | `Coverage` | Recommended | Runs `cargo llvm-cov` summary-only with minimum 85% line coverage. |
@@ -120,8 +143,29 @@ Read-only API check on 2026-05-14 showed branch protection currently requires:
 `Rust ubuntu-latest`, `Rust macos-latest`, `Rust windows-latest`, `Docs build`,
 `CodeQL`, `Cargo audit`, and `Dependency review`, with one approving review and
 admin enforcement disabled. It did not show `Pages`, `Coverage`, `Robustness`,
-or release dry-run as required checks. Changing those settings remains an
-account-side admin task outside this repo-local track.
+`Quality`, or release dry-run as required checks. Changing those settings
+remains an account-side admin task outside this repo-local track.
+
+## Prose, Documentation, And Workflow Quality
+
+The Quality workflow is intentionally separate from the Rust CI workflow so
+documentation and GitHub Actions regressions are visible without slowing normal
+compile/test output.
+
+| Tool | Gate | Scope |
+| --- | --- | --- |
+| Vale | PR/push/scheduled | Enforces Sourceright-specific error rules for unsupported product/legal claims and reports softer warnings for language that should stay carefully qualified. |
+| markdownlint-cli2 | PR/push/scheduled | Checks Markdown structure for README, docs, and GitHub-facing Markdown while ignoring generated, legacy, and build-output trees. |
+| Lychee | PR/push/scheduled | Runs in offline mode to catch broken local links and anchors without making PRs depend on external website availability. |
+| actionlint | PR/push/scheduled | Validates GitHub Actions syntax, expressions, shell usage, and workflow wiring. |
+| zizmor | PR/push/scheduled | Flags medium-or-higher workflow security issues in GitHub Actions definitions. |
+
+Vale uses repo-local styles under `.vale/styles/Sourceright/`. The first hard
+errors target unsupported positive assertions such as production readiness,
+legal-filing compliance, AI-detection capability, and guaranteed citation
+accuracy. Softer warning rules are retained for SOTA, legal-advice, and
+preview-language phrasing because those phrases are sometimes needed when the
+docs are explicitly rejecting an overclaim.
 
 ## Labels And Milestones
 

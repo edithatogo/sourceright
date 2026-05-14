@@ -1,0 +1,17 @@
+{
+  "rust-analyzer.cargo.features": "all",
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.check.extraArgs": [
+    "--all-targets",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "rust-analyzer.cargo.extraEnv": {
+    "CARGO_TERM_COLOR": "always"
+  },
+  "editor.formatOnSave": true,
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  }
+}

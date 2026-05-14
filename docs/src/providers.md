@@ -157,6 +157,7 @@ for the following shared reasons:
 in Sourceright.
 
 **Rationale**:
+
 - Google Scholar has no public API.
 - Scraping Google Scholar violates its Terms of Service and is legally and
   ethically prohibited.

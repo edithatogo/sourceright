@@ -1,7 +1,9 @@
 use std::fs;
 
 fn read(path: &str) -> String {
-    fs::read_to_string(path).expect("fixture should be present")
+    fs::read_to_string(path)
+        .expect("fixture should be present")
+        .replace("\r\n", "\n")
 }
 
 fn squash_whitespace(text: &str) -> String {

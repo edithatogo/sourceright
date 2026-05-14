@@ -33,7 +33,6 @@ Registries are classified into four statuses:
 | docs.rs | accepted | 0.1.20 | <https://docs.rs/crate/sourceright/0.1.20> | 2026-05-11 | Auto-built from crates.io publish. `package.metadata.docs.rs` configures `all-features = true`. |
 | Official MCP Registry | accepted | 0.1.20 | <https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.edithatogo/sourceright> | 2026-05-13 | Listed as active and latest. Server metadata from `server.json`. OCI image target: `ghcr.io/edithatogo/sourceright-mcp:0.1.20`. |
 
-
 ### Prepared Registries
 
 | Registry | Status | Version | URL / Evidence | Date | Blocking Requirement |
@@ -41,6 +40,8 @@ Registries are classified into four statuses:
 | GHCR MCP image | prepared | 0.1.20 | Referenced by MCP Registry listing; direct GHCR package page requires package read permissions. | 2026-05-13 | GHCR package visibility must be confirmed after registry submission. Documented as MCP Registry indirection — the OCI image is published but the GHCR package listing is indirectly evidenced. |
 | Glama | prepared | — | `glama.json` present at repository root with valid schema and maintainer handle `edithatogo`. | 2026-05-13 | No accepted external listing recorded. Glama requirements: valid `glama.json`, public `LICENSE`, MCP metadata discoverable from repo files and release artifacts. Manual verification or Glama API check required for accepted status. |
 | Smithery | prepared | 0.1.20 | `smithery/mcpb/manifest.template.json` and `scripts/build-smithery-mcpb.ps1` define the MCPB/local stdio package path. | 2026-05-14 | No accepted Smithery listing recorded. Publish only after a concrete `.mcpb` bundle is built from a release binary and the Smithery listing is verified. |
+| Claude/Codex client guides | prepared | — | Generic local stdio MCP snippet exists in `docs/src/mcp.md`; host-specific package artifacts do not exist. | 2026-05-14 | Add client-specific configuration guidance and transcript smoke before claiming client-ready packaging. |
+| GitHub Copilot coding-agent prep | prepared | — | `.github/copilot-instructions.md`, setup workflow, and security-remediation issue template are present. | 2026-05-14 | Requires GitHub-side entitlement/settings verification before enabled claims; separate package evidence is required for extension claims. |
 
 ### Deferred Registries
 
@@ -51,6 +52,9 @@ Registries are classified into four statuses:
 | winget | deferred | — | No winget manifest maintained. | winget manifest submission requires GitHub Release binary URLs, checksums, and Microsoft Partner Center account for manifest PRs. | Binary release cadence stable and GitHub Actions automation for manifest generation ready. |
 | npm launcher | deferred | — | No npm package maintained. | An npm launcher package is a convenience layer only — it should invoke the Rust binary rather than reimplement verification. Requires stable binary paths. | MCP clients that benefit from `npx` installation demand proven. Create thin npm wrapper that downloads and invokes the Rust binary. |
 | PyPI launcher | deferred | — | No PyPI package maintained. | Similar reasoning to npm: a PyPI launcher would download and invoke the Rust binary. No native Python code is planned. | User demand from Python-based MCP clients or data-science workflows. |
+| VS Code Marketplace / Open VSX | deferred | — | No VSIX extension package maintained. | Requires Track 66 package, diagnostics mapping, workspace-trust docs, and install smoke. | Stable CLI/MCP diagnostics and clear editor demand. |
+| Microsoft AppSource / Word add-in | deferred | — | No Office Add-in manifest or taskpane package maintained. | Requires Track 67 manifest, sideload smoke, document-range provenance, and reversible write plans. | Stable low-noise writeback and document-range provenance. |
+| LibreOffice Extensions | deferred | — | No `.oxt`/UNO package maintained. | Requires Track 68 package, Writer range mapping, local install/uninstall smoke, and reversible write plans. | Stable office-document adapter contract and user demand. |
 
 ### Not Applicable
 

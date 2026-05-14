@@ -11,6 +11,8 @@
 //! assert_eq!(report.total_references, 0);
 //! ```
 
+#![forbid(unsafe_code)]
+
 pub mod bench;
 pub mod citation_sync;
 pub mod cleaning;

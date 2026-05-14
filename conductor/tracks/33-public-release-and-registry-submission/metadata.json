@@ -24,12 +24,15 @@
   "evidence": {
     "pre_release_validation": {
       "date": "2026-05-14",
+      "rerun": true,
       "document": "conductor/tracks/33-public-release-and-registry-submission/pre-release-validation.md",
-      "cargo_package_locked": "BLOCKED by dirty tree; passes with --allow-dirty",
+      "cargo_package_locked": "BLOCKED by dirty tree (2 modified + 5 untracked); passes with --allow-dirty",
+      "cargo_package_list_allow_dirty_locked": "PASSED (full manifest verified)",
       "cargo_publish_dry_run_locked": "BLOCKED by dirty tree; passes with --allow-dirty (v0.1.20 already exists warning)",
-      "server_json_mcp_schema": "PASSED (2025-12-11 schema, all required fields, cross-artifact consistency)",
-      "glama_json": "PASSED (schema URL, maintainer handle, LICENSE present)",
-      "dockerfile_labels": "PASSED (6 OCI labels consistent with Cargo.toml and server.json)"
+      "server_json_mcp_schema": "PASSED (MCP 2025-12-11 schema fetched and verified; name pattern, description length, version semver, repository, package, transport, cross-artifact all valid)",
+      "glama_json": "PASSED (schema URL, maintainer handle, dual LICENSE, server.json discoverable, public repo)",
+      "dockerfile_labels": "PASSED (6 OCI+MCP labels consistent with Cargo.toml and server.json; multi-stage with pinned digests; ENTRYPOINT+CMD for stdio; --locked build)",
+      "cross_artifact_consistency": "PASSED (Cargo.toml ↔ server.json ↔ Dockerfile)"
     }
   }
 }

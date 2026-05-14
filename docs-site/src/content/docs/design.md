@@ -137,3 +137,23 @@ flowchart LR
 Publication evidence must separate accepted listings from prepared or submitted
 metadata. Future package-manager channels should be added only when they have a
 maintainable manifest and validation path.
+
+## Host packaging architecture
+
+```mermaid
+flowchart LR
+    Core[Rust core] --> CLI[CLI JSON contracts]
+    Core --> MCP[Local stdio MCP]
+    CLI --> Editor[VS Code or IDE adapter]
+    MCP --> AI[Claude, Codex, and MCP clients]
+    CLI --> Word[Microsoft Word add-in]
+    CLI --> LibreOffice[LibreOffice Writer extension]
+    Editor --> Evidence[Marketplace evidence]
+    AI --> Evidence
+    Word --> Evidence
+    LibreOffice --> Evidence
+```
+
+Host packages are thin adapters. They may call CLI JSON or MCP resources, but
+they must not reimplement verification logic, silently write canonical CSL, or
+claim marketplace availability before accepted listing evidence exists.

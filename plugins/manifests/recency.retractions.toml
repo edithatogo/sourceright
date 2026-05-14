@@ -2,7 +2,7 @@
 id = "recency.retractions"
 name = "Retraction and recency checks"
 category = "recency"
-status = "planned"
+status = "fixture_tested"
 plugin_api = "sourceright.plugin.v1"
 license_profile = "mixed"
 summary = "Policy-aware checks for retractions, corrections, stale guidance, and publication age."

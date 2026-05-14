@@ -107,6 +107,21 @@ completion. The manual dispatch entries remain for controlled retries.
 Documentation and contributor checks also run typo validation through
 `typos.toml`, so new public text should be reviewed with the same bar as code.
 
+## Host Packages
+
+Host-specific packages are tracked separately from the Rust core. The current
+host status and claim boundaries live in [Host Packaging](host-packaging.md).
+In short:
+
+- Claude, Codex, and generic MCP clients can use the local stdio MCP contract,
+  but that is client configuration rather than a host plugin package.
+- GitHub Copilot is prepared as a coding-agent workflow through repository
+  instructions and setup steps; entitlement remains a GitHub-side setting.
+- VS Code, Microsoft Word, and LibreOffice require separate package tracks
+  before release notes can claim installable editor or office-suite support.
+- Marketplace acceptance requires URL, version, date, and install metadata in
+  the release-status evidence table.
+
 ## Release Gates
 
 Release candidates should pass:

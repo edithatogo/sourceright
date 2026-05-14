@@ -1,0 +1,13 @@
+extends: existence
+message: "Avoid product overclaims unless the evidence ledger and release gates prove them."
+level: warning
+ignorecase: true
+tokens:
+  - SOTA
+  - state-of-the-art
+  - production-ready institutional product
+  - production-ready institutional platform
+  - examiner-grade final verifier
+  - AI detector
+  - guaranteed
+  - guarantees

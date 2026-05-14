@@ -47,6 +47,11 @@ market-readiness hardening, and what is intentionally excluded for now.
 | Additional journal platforms | Could | Planned | Adapters should call the Rust core or CLI/MCP, not reimplement verification logic. | future platform fixtures |
 | More citation managers | Could | Planned | EndNote and other managers should follow preview/apply/audit semantics. | sync contract docs |
 | HTTP MCP hosting | Could | Deferred | Local stdio remains the current server contract until a separate transport track exists. | MCP docs |
+| AI client MCP packaging | Should | Contracted | Claude, Codex, GitHub Copilot, and generic MCP clients must be documented as client configuration or deferred package tracks, not implied plugins. | host packaging docs and MCP transcript smoke |
+| VS Code extension | Could | Contracted | A future VSIX must reuse CLI/MCP diagnostics and must not reimplement citation logic. Current `.vscode` files are development tooling only. | host packaging docs |
+| Microsoft Word add-in | Could | Contracted | A future Office Add-in must prove range provenance and reversible dry-run editing before any in-document write claim. | host packaging docs |
+| LibreOffice extension | Could | Contracted | A future `.oxt`/UNO package must prove Writer range mapping and reversible dry-run editing before extension claims. | host packaging docs |
+| Marketplace submission evidence | Should | Contracted | Host marketplaces and directories require accepted/prepared/deferred evidence before release wording can claim installability. | release-status and host packaging docs |
 | Automatic final verification | Won't for now | Excluded | The product must not claim examiner-grade final verification until tracks 36-40 prove it. | product guidelines |
 | AI authorship detection | Won't for now | Excluded | Citation errors are not treated as proof of AI authorship. | report wording tests |
 | Silent provider overwrite | Won't for now | Excluded | Provider data never mutates canonical CSL without review or explicit apply. | sidecar boundary tests |
@@ -64,3 +69,6 @@ External tests should be added as opt-in smoke suites:
 - Zotero or Better BibTeX preview/apply smoke using a disposable library.
 - Registry smoke for crates.io, docs.rs, GHCR, official MCP Registry, Glama,
   and any future package-manager channels.
+- Host-package smoke for future Claude/Codex client guides, VS Code VSIX,
+  Office Add-in sideload, and LibreOffice `.oxt` packages when those tracks
+  move beyond contracted status.

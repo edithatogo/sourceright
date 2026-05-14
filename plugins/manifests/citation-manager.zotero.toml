@@ -2,7 +2,7 @@
 id = "citation-manager.zotero"
 name = "Zotero sync"
 category = "citation-manager"
-status = "planned_adapter"
+status = "fixture_tested"
 plugin_api = "sourceright.plugin.v1"
 license_profile = "open"
 summary = "Dry-run first profile for exporting or syncing verified references to Zotero."

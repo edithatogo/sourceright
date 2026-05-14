@@ -32,6 +32,10 @@ These can run in parallel when their owned paths do not overlap:
 - Track 59: other citation-manager integrations.
 - Track 60: mature OJS plugin.
 - Track 61: Streamlit app publication and hardening.
+- Track 65: AI client MCP packaging.
+- Track 66: VS Code extension packaging.
+- Track 67: Microsoft Word add-in packaging.
+- Track 68: LibreOffice extension packaging.
 
 ## Publication And Proof
 
@@ -40,6 +44,7 @@ These can run in parallel when their owned paths do not overlap:
 - Track 56 binds MCP release artifacts.
 - Track 57 closes Smithery.
 - Track 54 proves demos.
+- Track 69 records marketplace submission evidence for host packages.
 
 ## Parallelization Rule
 

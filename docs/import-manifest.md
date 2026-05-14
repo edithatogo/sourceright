@@ -25,4 +25,3 @@ Destination: `legacy/humanizer-next/`
 - The import deliberately keeps reference and citation material broad so pruning can happen after Conductor planning.
 - OneDrive hydration caused timeouts while copying `experiments/citation_ref_manager/integration_test.js`, but a later copy pass completed and the file is present in the imported tree.
 - Dependency and build folders were not copied: `.git`, `node_modules`, `dist`, package locks, and local cache directories remain out of scope.
-

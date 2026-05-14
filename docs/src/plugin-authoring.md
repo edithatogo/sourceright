@@ -48,6 +48,7 @@ meets **at least one** of these criteria:
    break across Sourceright releases.
 
 Before extracting, the plugin must have:
+
 - A full evidence-ledger entry (see below).
 - Provenance documentation for installable artifacts (see below).
 - A deprecation plan for the monorepo manifest placeholder.
@@ -134,6 +135,7 @@ The `[cache]` section declares caching policy:
 | `retention` | string | `caller_controlled`, `session`, `persistent`, `no_cache`. |
 
 **Rules:**
+
 - Every plugin with `network = true` must document why network access is
   needed and what endpoints it contacts.
 - Plugins with `default_enabled = true` require explicit security review
@@ -164,6 +166,7 @@ Plugins with a `planned_*` or `planned` status must be described in public
 communication as *roadmap items*, not as available functionality.
 
 **Rules:**
+
 - Status labels are implementation descriptors, not release promises.
 - Do not describe a `planned_*` plugin as "available," "shipped," or
   "integrated" until its status moves to `core_normalizer` or

@@ -1,0 +1,6 @@
+[formatting]
+align_comments = true
+align_entries = false
+array_auto_collapse = false
+compact_arrays = false
+reorder_keys = false

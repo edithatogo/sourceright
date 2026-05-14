@@ -1,0 +1,18 @@
+accept = [200, 206, 429]
+exclude = [
+  "mailto:",
+  "file:",
+  "http://localhost",
+  "https://localhost",
+  "http://127.0.0.1",
+  "https://127.0.0.1"
+]
+exclude_path = [
+  "legacy",
+  "target",
+  "docs-site/dist",
+  "docs-site/.astro",
+  "node_modules"
+]
+max_retries = 2
+timeout = 20

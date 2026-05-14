@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
       - name: Install Rust
         uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
         with:
@@ -53,6 +55,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
       - name: Install Rust
         uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
       - name: Setup Node
@@ -76,6 +80,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
       - name: Install Rust
         uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
       - name: Install cargo-deny
@@ -95,6 +101,23 @@ jobs:
             printf '%s\n' "$unexpected_duplicates"
             exit 1
           fi
+      - name: Install cargo-machete
+        run: cargo install cargo-machete --locked
+      - name: Check unused dependencies
+        run: cargo machete
+
+  toml:
+    name: TOML lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+      - name: Install Taplo
+        run: cargo install taplo-cli --locked
+      - name: Lint TOML
+        run: taplo lint Cargo.toml book.toml deny.toml lychee.toml rust-toolchain.toml taplo.toml typos.toml fuzz/Cargo.toml plugins/**/*.toml .cargo/config.toml
 
   typos:
     name: Typos
@@ -102,6 +125,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
       - name: Install typos
         run: cargo install typos-cli --locked
       - name: Check typos

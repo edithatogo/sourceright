@@ -1,0 +1,8 @@
+extends: existence
+message: "Prefer preview-safe language: technical preview, pilot-ready, fixture-backed, deterministic benchmark scaffold."
+level: suggestion
+ignorecase: true
+tokens:
+  - production ready
+  - fully automated
+  - complete compliance

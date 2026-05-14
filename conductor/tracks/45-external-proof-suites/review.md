@@ -37,17 +37,20 @@
 
 No `evidence-ledger.json` file exists in the repository. Track 45 does not have a pre-existing ledger entry.
 
-## Proof Documentation (NEW)
+## Proof Documentation (ALL SIX FAMILIES NOW DOCUMENTED)
 
-Two proof documents have been added to the track directory:
+Six proof documents now exist in the track directory:
 
 | Document | Purpose | Proof Family |
 |----------|---------|-------------|
 | `cli-smoke-proof.md` | Documents expected output and exit codes for all 7 required CLI commands. Includes example transcripts, JSON output samples, and a runnable shell script. | Installed CLI Smoke |
 | `mcp-transcript-proof.md` | Documents MCP stdio endpoint discovery surfaces: tools, resources, prompts. Provides full JSON response examples and transcript template. | MCP Stdio Transcript Smoke |
+| `ojs-proof.md` | Documents OJS journal screening pipeline using synthetic submission fixture. Covers fixture validation, workspace init, pipeline execution, and MCP surface verification. | OJS Proof |
+| `citation-manager-proof.md` | Documents citation-sync preview/apply using Zotero fixtures. Covers exact match, title update, apply success, audit log, and MCP surface verification. | Citation-Manager Proof |
+| `provider-proof.md` | Documents provider adapter discovery, manifest validation, fixture smoke tests, and CLI surface verification. | Live Provider Proof |
+| `registry-proof.md` | Documents registry binding verification: server.json, glama.json, Dockerfile labels, release/publish workflows, and CI tests. | Registry Proof |
 
-Both documents cross-reference the existing `tests/cli_end_to_end.rs` CI coverage
-for all proven surfaces.
+All six documents cross-reference existing CI tests where applicable.
 
 ## Gaps by Proof Family
 
@@ -55,10 +58,11 @@ for all proven surfaces.
 |-------------|----------|-----|
 | **Installed CLI smoke** | `cli_end_to_end.rs` exists. `cli-smoke-proof.md` documents all 7 commands. | **Gap closed** — all 7 commands documented with expected output and exit codes. |
 | **MCP stdio transcript smoke** | `mcp-transcript-proof.md` documents discovery surfaces. `mcp_distribution_checks.rs` validates server.json. | **Gap partially closed** — discovery surfaces are documented and CI-tested. Server startup remains opt-in only. |
-| **OJS proof** | No dedicated OJS fixture or adapter test | Family is entirely missing |
-| **Citation-manager proof** (Zotero/EndNote) | Zotero fixtures exist at `fixtures/providers/zotero/`. | Fixture-backed tests exist at fixture path level but no automated integration test exercises them. |
-| **Live provider proof** | Provider manifests exist in `plugins/manifests/` | No opt-in live provider smoke with cache/rate-limit controls |
-| **Registry proof** | MCP Registry is "accepted" in release-status.md. crates.io is accepted. | No automated listing/install checks for accepted registries |
+| **OJS proof** | `ojs-proof.md` documents OJS screening pipeline with synthetic fixture. | **Gap partially closed** — pipeline is documented but not automated in CI. |
+| **Citation-manager proof** | `citation-manager-proof.md` documents three Zotero fixture scenarios. | **Gap partially closed** — documented but not automated in CI. |
+| **Live provider proof** | `provider-proof.md` documents registry discovery, manifest validation, fixture smoke. | **Gap partially closed** — static fixture validation works; live provider API calls remain planned. |
+| **Registry proof** | `registry-proof.md` documents server.json, glama.json, Dockerfile, workflows. | **Gap closed** — all registry bindings are CI-validated via `mcp_distribution_checks.rs`. |
+
 
 ## Completion Signal Assessment
 
@@ -68,10 +72,33 @@ The spec requires 6 proof families. Current status:
 |--------|--------|----------|
 | Installed CLI Smoke | ✅ Proven (documented + CI) | `cli-smoke-proof.md`, `tests/cli_end_to_end.rs` |
 | MCP Stdio Transcript Smoke | 🔶 Partial (discovery ✅, server startup 🔄) | `mcp-transcript-proof.md`, `tests/cli_end_to_end.rs` |
-| OJS Proof | ❌ Missing | Nothing |
-| Citation-Manager Proof | 🔶 Partial (fixtures exist, no automated test) | `fixtures/providers/zotero/` |
-| Live Provider Proof | ❌ Missing | Nothing |
-| Registry Proof | ❌ Missing | Nothing |
+| OJS Proof | 🔶 Partial (documented, not CI-automated) | `ojs-proof.md`, `fixtures/journal/ojs-submission.json` |
+| Citation-Manager Proof | 🔶 Partial (documented, not CI-automated) | `citation-manager-proof.md`, `fixtures/providers/zotero/` |
+| Live Provider Proof | 🔶 Partial (static discovery ✅, live API 🔄) | `provider-proof.md`, `plugins/registry.toml` |
+| Registry Proof | ✅ Proven (CI-validated) | `registry-proof.md`, `mcp_distribution_checks.rs` |
 
-**Readiness:** Early stage. Two of six proof families now have documentation;
-four remain entirely missing or require automated integration tests.
+## ⛔ Track Completion Assessment (2026-06-24)
+
+**Verdict: Do NOT promote to completed.**
+
+The track requires 6 proof families with documented evidence matching the
+test-matrix acceptance criteria. While all 6 proof documents exist and 5 of 6
+acceptance criteria are met, one critical gap remains:
+
+| Proof Family | Acceptance | Verdict |
+|-------------|-----------|---------|
+| Installed CLI | Binary install/run smoke produces expected JSON or help output. | ✅ Met (`cli-smoke-proof.md`) |
+| MCP stdio | Transcript fixture proves initialize/list/read paths. | ✅ Met (`mcp-transcript-proof.md`) |
+| OJS | Fixture adapter produces editor and author screening outputs; live smoke is opt-in. | ✅ Met (`ojs-proof.md`) |
+| Zotero/EndNote | Preview/apply/audit semantics are fixture-backed; live library smoke is opt-in. | ✅ Met (`citation-manager-proof.md`) |
+| **Live providers** | **Provider smoke respects timeout, retry, min-interval, and cache controls.** | ❌ **Not met** — `provider-proof.md` covers static discovery, manifest validation, and fixture smoke, but does **not** document timeout, retry, min-interval, or cache-control behavior for provider smoke. |
+| Registries | Accepted listings have install/listing checks; prepared surfaces do not overclaim. | ✅ Met (`registry-proof.md`) |
+
+**Required action to close:** Update `provider-proof.md` to document how provider
+smoke verifies timeout, retry, min-interval, and cache-control semantics — or
+update the test-matrix acceptance if these controls are deferred to a downstream
+implementation track.
+
+**Readiness:** Five of six proof families are documented and acceptance-matched.
+One gap remains. Next step: add timeout/retry/min-interval/cache-control
+documentation to the Live Provider proof, then reassess for completion.

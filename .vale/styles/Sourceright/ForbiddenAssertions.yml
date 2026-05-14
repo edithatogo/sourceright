@@ -1,0 +1,12 @@
+extends: existence
+message: "This claim is too strong for the current technical-preview evidence base."
+level: error
+ignorecase: true
+tokens:
+  - Sourceright is production-ready
+  - Sourceright is a production-ready
+  - Sourceright is a legal filing compliance system
+  - Sourceright is a court filing compliance system
+  - Sourceright is an AI detector
+  - guaranteed citation accuracy
+  - guarantees citation accuracy

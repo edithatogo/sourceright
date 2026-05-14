@@ -26,3 +26,17 @@ and not-applicable registries, is documented in
   first-line release checklist.
 - `docs/src/` remains the archival Markdown source for parity review.
 - Duplicate-dependency checks use `cargo tree -d --locked`.
+
+## Host packages
+
+Host-specific packages are tracked separately from the Rust core.
+[Host Packaging](host-packaging) records the current boundaries:
+
+- Claude, Codex, and generic MCP clients can use the local stdio MCP contract,
+  but that is client configuration rather than a host plugin package.
+- GitHub Copilot is prepared as a coding-agent workflow through repository
+  instructions and setup steps; entitlement remains a GitHub-side setting.
+- VS Code, Microsoft Word, and LibreOffice require separate package tracks
+  before release notes can claim installable editor or office-suite support.
+- Marketplace acceptance requires URL, version, date, and install metadata in
+  the release-status evidence table.

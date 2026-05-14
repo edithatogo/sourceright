@@ -1,0 +1,10 @@
+extends: existence
+message: "Keep legal outputs framed as citation audit or research support, not legal advice."
+level: warning
+ignorecase: true
+tokens:
+  - legal advice
+  - predicts? outcomes?
+  - court filing compliance system
+  - legal filing compliance system
+  - final legal work product
