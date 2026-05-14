@@ -24,6 +24,19 @@ plugins/generic/sourceright
 
 This is an install-test artifact, not PKP Plugin Gallery acceptance.
 
+The repo also includes an opt-in Docker smoke harness:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ojs-docker-install-smoke.ps1
+```
+
+The harness validates local Docker/Compose availability, builds the plugin
+archive, and writes a concrete smoke plan under `C:\tmp\sourceright-ojs-smoke`.
+Pass `-FetchPkpContainers` to clone `pkp/containers` into that work directory.
+On the local Windows validation machine, Docker 29.4.2 and Docker Compose
+v5.1.3 were detected, and `-FetchPkpContainers` successfully staged
+`pkp/containers` under `C:\tmp\sourceright-ojs-smoke\containers`.
+
 ## Manual OJS Test
 
 1. Install or start an OJS 3.x test instance.
@@ -63,7 +76,9 @@ This is an install-test artifact, not PKP Plugin Gallery acceptance.
 PKP's current container path is the lowest-friction disposable test route. The
 candidate test plan is:
 
-1. Clone or vendor `pkp/containers` outside this repository.
+1. Clone or vendor `pkp/containers` outside this repository, or run
+   `scripts/ojs-docker-install-smoke.ps1 -FetchPkpContainers` to stage it under
+   `C:\tmp\sourceright-ojs-smoke`.
 2. Start the OJS stack with the desired OJS version and a mounted plugin volume.
 3. Mount or copy `plugins/ojs/sourceright` into the container as
    `/var/www/html/plugins/generic/sourceright`.

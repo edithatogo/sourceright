@@ -7,7 +7,11 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $sourceDir = Join-Path $repoRoot "plugins/ojs/sourceright"
-$outDir = Join-Path $repoRoot $OutputDir
+if ([System.IO.Path]::IsPathRooted($OutputDir)) {
+    $outDir = $OutputDir
+} else {
+    $outDir = Join-Path $repoRoot $OutputDir
+}
 $stageRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("sourceright-ojs-stage-" + [guid]::NewGuid().ToString("N"))
 $stagePlugin = Join-Path $stageRoot "sourceright"
 $archiveName = "sourceright-ojs-generic-plugin-$Version.tar.gz"

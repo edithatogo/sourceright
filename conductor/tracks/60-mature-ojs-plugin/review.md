@@ -133,7 +133,7 @@ deliberately narrower than PKP Plugin Gallery acceptance.
 | Editor/author separation | Editor output receives summary/full report; author output receives checklist |
 | Fixture proof | `fixtures/journal/ojs-submission.json` covered by CLI end-to-end test |
 | Policy proof | `tests/ojs_plugin_packaging_policy.rs` enforces package files and guardrails |
-| Smoke path | `ojs-install-smoke.md` documents manual and Docker OJS test routes |
+| Smoke path | `ojs-install-smoke.md` documents manual and Docker OJS test routes; local preflight detected Docker 29.4.2 and Compose v5.1.3 and staged `pkp/containers` under `C:\tmp\sourceright-ojs-smoke\containers` |
 | Gallery acceptance | Not claimed; readiness remains prepared/deferred until external review |
 
 ### Remaining Work (Post-Completion)

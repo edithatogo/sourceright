@@ -22,6 +22,7 @@ fn ojs_plugin_source_skeleton_contains_required_package_files() {
 #[test]
 fn ojs_plugin_has_install_test_package_builder_and_smoke_path() {
     let script = read("scripts/build-ojs-plugin-package.ps1");
+    let docker_smoke = read("scripts/ojs-docker-install-smoke.ps1");
     let smoke = read("conductor/tracks/60-mature-ojs-plugin/ojs-install-smoke.md");
     let readme = read("plugins/ojs/sourceright/README.md");
 
@@ -30,6 +31,11 @@ fn ojs_plugin_has_install_test_package_builder_and_smoke_path() {
     assert!(script.contains("Get-FileHash -Algorithm SHA256"));
     assert!(script.contains("tar -czf"));
 
+    assert!(docker_smoke.contains("docker --version"));
+    assert!(docker_smoke.contains("docker compose version"));
+    assert!(docker_smoke.contains("https://github.com/pkp/containers.git"));
+    assert!(docker_smoke.contains("installPluginVersion.php"));
+
     assert!(smoke.contains("installPluginVersion.php"));
     assert!(smoke.contains("pkp/containers"));
     assert!(smoke.contains("pkp/docker-ojs"));
@@ -37,6 +43,7 @@ fn ojs_plugin_has_install_test_package_builder_and_smoke_path() {
     assert!(smoke.contains("no verified live OJS smoke transcript"));
 
     assert!(readme.contains("scripts/build-ojs-plugin-package.ps1"));
+    assert!(readme.contains("scripts/ojs-docker-install-smoke.ps1"));
     assert!(readme.contains("installPluginVersion.php"));
 }
 

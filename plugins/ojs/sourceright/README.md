@@ -59,3 +59,5 @@ before PKP Plugin Gallery review.
 
 The repo-local install smoke path is documented in
 `conductor/tracks/60-mature-ojs-plugin/ojs-install-smoke.md`.
+For Docker-based preflight planning, run
+`scripts/ojs-docker-install-smoke.ps1`.
