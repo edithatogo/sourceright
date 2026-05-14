@@ -11,7 +11,7 @@ its channel-specific evidence exists.
 | OJS plugin | OJS/PKP plugin package | GitHub Release, PKP/OJS Plugin Gallery readiness | 60 | Package install, permission docs, fixture and optional test-instance smoke. |
 | AI client configs | MCP client snippets and optional packaged configs | Claude Desktop local config, Codex CLI/MCP workflow guidance, GitHub Copilot coding-agent prep, generic MCP clients | 65 | Transcript smoke, client config examples, dry-run write proof, Copilot entitlement notes, no host-plugin overclaim. |
 | VS Code extension | VSIX package | VS Code Marketplace, Open VSX, GitHub Release | 66, 69 | Explicitly deferred until package build, install smoke, Workspace Trust docs, diagnostics fixture, and accepted listing evidence exist. |
-| Microsoft Word add-in | Office Add-in manifest and taskpane package | AppSource or sideload-only release | 67, 69 | Manifest validation, sideload smoke, range provenance, reversible write plan. |
+| Microsoft Word add-in | Office Add-in manifest and taskpane package | AppSource or sideload-only release | 67, 69 | Explicitly deferred until manifest validation, sideload smoke, range provenance, reversible write plan, and accepted listing evidence exist. |
 | LibreOffice extension | `.oxt` package | LibreOffice Extensions site or GitHub Release | 68, 69 | Package build, install/uninstall smoke, Writer fixture, reversible write plan. |
 | Streamlit demo | Streamlit app | Streamlit Community Cloud or local-only docs | 61 | Server smoke, synthetic data, privacy limits. |
 | Static demo | GitHub Pages assets | GitHub Pages | 54 | Render/browser smoke and synthetic-data limits. |

@@ -1,1 +1,32 @@
-{"id":"67-word-addin-packaging","status":"pending","priority":"medium","owners":["codex"],"dependencies":["36-document-extraction-hardening","40-low-noise-writeback-suggestions","47-contract-evidence-and-overclaim-gates","63-plugin-packaging-and-supply-chain-maturity"],"owned_paths":["docs/src/host-packaging.md","conductor/plugin-compatibility-matrix.md","conductor/release-channels.md","conductor/tracks/67-word-addin-packaging/"]}
+{
+  "id": "67-word-addin-packaging",
+  "status": "completed",
+  "priority": "medium",
+  "owners": [
+    "codex"
+  ],
+  "dependencies": [
+    "36-document-extraction-hardening",
+    "40-low-noise-writeback-suggestions",
+    "47-contract-evidence-and-overclaim-gates",
+    "63-plugin-packaging-and-supply-chain-maturity"
+  ],
+  "owned_paths": [
+    "docs/src/host-packaging.md",
+    "conductor/plugin-compatibility-matrix.md",
+    "conductor/release-channels.md",
+    "conductor/tracks/67-word-addin-packaging/"
+  ],
+  "evidence": {
+    "completion_date": "2026-05-15",
+    "decision": "Explicit deferral with future Office Add-in contract; no manifest, taskpane, sideload package, or AppSource listing is claimed.",
+    "contract": "Future Word add-in must reuse CLI/MCP/service-wrapper outputs, map diagnostics to Word ranges, keep edits dry-run first, and apply only with reversible plans and audit logs.",
+    "policy_test": "tests/word_addin_packaging_policy.rs",
+    "deferred": [
+      "Office Add-in manifest",
+      "Taskpane package",
+      "Sideload smoke",
+      "Microsoft AppSource listing"
+    ]
+  }
+}

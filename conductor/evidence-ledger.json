@@ -294,15 +294,16 @@
     },
     "67-word-addin-packaging": {
       "category": "integration",
-      "evidence_level": "contracted",
+      "evidence_level": "scaffolded",
       "allowed_claims": [
-        "Microsoft Word add-in packaging is planned and contracted.",
+        "Microsoft Word add-in packaging is explicitly deferred with a documented future Office Add-in contract.",
         "DOCX extraction support is separate from Word add-in support.",
         "Any future in-document write path must be reversible, previewed, audited, and explicit on apply."
       ],
       "blockers": [
         "No Office Add-in manifest, taskpane package, sideload smoke, or AppSource listing exists.",
-        "Document-range provenance and reversible writeback plans must be proven before editing claims."
+        "Document-range provenance and reversible writeback plans must be proven before editing claims.",
+        "Microsoft AppSource acceptance evidence is deferred to Track 69."
       ]
     },
     "68-libreoffice-extension-packaging": {
