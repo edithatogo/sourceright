@@ -1,6 +1,6 @@
 {
   "id": "33-public-release-and-registry-submission",
-  "status": "planned",
+  "status": "in_progress",
   "priority": "high",
   "owned_paths": [
     ".github/workflows/release.yml",
@@ -12,6 +12,7 @@
     "glama.json",
     "README.md",
     "docs/src/publishing.md",
+    "docs/src/release-runbook.md",
     "SECURITY.md",
     "conductor/tracks/33-public-release-and-registry-submission/"
   ],

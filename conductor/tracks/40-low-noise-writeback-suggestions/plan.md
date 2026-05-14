@@ -30,3 +30,9 @@ apply explicitly, with every suggested change traceable to sidecar evidence.
 - 2026-05-13: Contract-hardening pass added citation-sync schema tests and a
   full schema inventory test so public schema files must remain valid JSON,
   packaged, and documented in both docs surfaces.
+- 2026-05-14: Completion review. Verified all 7 test-matrix scenarios have
+  corresponding unit tests in `src/citation_sync.rs`, `src/conflict.rs`,
+  `src/review.rs`, and the schema inventory. Coverage includes missing-DOI,
+  conflicting-evidence, archive-suggestion, weak-match suppression,
+  citation-manager preview, schema contract, explicit apply/audit paths.
+  Track status updated to completed.

@@ -128,7 +128,9 @@ fn extract_neutral_citations(
         let number = window[2].trim_matches(['[', ']', ',', '.', ';', ':']);
         if year.len() == 4
             && year.chars().all(|ch| ch.is_ascii_digit())
-            && court.chars().all(|ch| ch.is_ascii_uppercase())
+            && court
+                .chars()
+                .all(|ch| ch.is_ascii_uppercase() || ch.is_ascii_digit())
             && number.chars().all(|ch| ch.is_ascii_digit())
         {
             let citation_text = format!("[{year}] {court} {number}");
@@ -198,7 +200,9 @@ fn jurisdiction_for_court(court: &str) -> Option<String> {
     match court {
         "HCA" | "FCA" | "FCAFC" | "NSWCA" | "VSCA" | "QCA" | "SASC" | "WASCA" | "TASSC"
         | "NTSC" | "ACTSC" => Some("AU".to_string()),
-        "US" | "SCOTUS" => Some("US".to_string()),
+        "US" | "SCOTUS" | "USCA" | "USCADC" | "USCA1" | "USCA2" | "USCA3" | "USCA4" | "USCA5"
+        | "USCA6" | "USCA7" | "USCA8" | "USCA9" | "USCA10" | "USCA11" | "USCAFED" | "USD"
+        | "USBC" | "USCOURT" | "USDCT" => Some("US".to_string()),
         _ => None,
     }
 }
@@ -209,13 +213,22 @@ fn provider_candidates_for_court(
     number: &str,
 ) -> Vec<LegalProviderCandidate> {
     let mut providers = Vec::new();
-    if jurisdiction_for_court(court).as_deref() == Some("AU") {
-        providers.push(LegalProviderCandidate {
+    match jurisdiction_for_court(court).as_deref() {
+        Some("AU") => providers.push(LegalProviderCandidate {
             provider: LegalProvider::Austlii,
             confidence: 0.75,
             identifier: format!("{year} {court} {number}"),
             url: None,
-        });
+        }),
+        Some("US") => providers.push(LegalProviderCandidate {
+            provider: LegalProvider::CourtListener,
+            confidence: 0.75,
+            identifier: format!("{year} {court} {number}"),
+            url: Some(format!(
+                "https://www.courtlistener.com/?q={year}+{court}+{number}"
+            )),
+        }),
+        _ => {}
     }
     providers
 }
@@ -289,5 +302,40 @@ mod tests {
                 .any(|issue| issue.issue_type == LegalCitationIssueType::MissingJurisdiction)
         );
         assert!(report.to_markdown().contains("missing_provider_candidate"));
+    }
+
+    #[test]
+    fn us_supreme_court_case_uses_courtlistener_provider() {
+        let report = analyze_legal_citations(
+            "The holding in Dobbs v. Jackson Women's Health Organization [2022] SCOTUS 19.",
+        );
+
+        assert_eq!(report.records.len(), 1);
+        assert_eq!(report.records[0].citation_type, LegalCitationType::Case);
+        assert_eq!(report.records[0].jurisdiction.as_deref(), Some("US"));
+        assert_eq!(
+            report.records[0].providers[0].provider,
+            LegalProvider::CourtListener
+        );
+        assert_eq!(report.records[0].providers[0].confidence, 0.75);
+        assert!(
+            report.records[0].providers[0]
+                .url
+                .as_deref()
+                .unwrap_or("")
+                .contains("courtlistener.com")
+        );
+    }
+
+    #[test]
+    fn us_circuit_court_case_receives_courtlistener_provider() {
+        let report = analyze_legal_citations("See Smith v. United States [2023] USCA9 123.");
+
+        assert_eq!(report.records.len(), 1);
+        assert_eq!(report.records[0].jurisdiction.as_deref(), Some("US"));
+        assert_eq!(
+            report.records[0].providers[0].provider,
+            LegalProvider::CourtListener
+        );
     }
 }

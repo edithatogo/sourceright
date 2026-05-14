@@ -1,0 +1,57 @@
+{
+  "data": {
+    "id": "abc12",
+    "type": "nodes",
+    "attributes": {
+      "title": "Reproducible analysis of RNA-seq data from melanoma patients",
+      "doi": "10.17605/OSF.IO/ABC12",
+      "date_created": "2024-03-10T09:15:00.000Z",
+      "date_modified": "2024-05-22T16:30:00.000Z",
+      "description": "This project contains all code, data, and analysis scripts for the melanoma RNA-seq study published in Bioinformatics Advances. Includes raw FASTQ metadata, processed count matrices, R Markdown notebooks, and Docker environment definitions.",
+      "category": "project",
+      "public": true,
+      "tags": [
+        "RNA-seq",
+        "melanoma",
+        "reproducibility",
+        "bioinformatics"
+      ],
+      "license": {
+        "id": "CC-By-Attribution-4.0",
+        "name": "CC-By-Attribution-4.0"
+      },
+      "preprint_doi": "10.1101/2024.03.15.987654",
+      "wiki_home": null,
+      "registration": false,
+      "current_user_permissions": [],
+      "date_registered": null,
+      "withdrawn": false,
+      "pending_registration": false,
+      "pending_withdrawal": false,
+      "pending_embargo": false,
+      "embargo_end_date": null
+    },
+    "relationships": {
+      "contributors": {
+        "links": {
+          "related": {
+            "href": "https://api.osf.io/v2/nodes/abc12/contributors/",
+            "meta": {}
+          }
+        }
+      },
+      "registrations": {
+        "links": {
+          "related": {
+            "href": "https://api.osf.io/v2/nodes/abc12/registrations/",
+            "meta": {}
+          }
+        }
+      }
+    },
+    "links": {
+      "self": "https://api.osf.io/v2/nodes/abc12/",
+      "html": "https://osf.io/abc12/"
+    }
+  }
+}

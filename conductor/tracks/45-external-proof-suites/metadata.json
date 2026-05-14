@@ -1,0 +1,30 @@
+{
+  "id": "45-external-proof-suites",
+  "status": "in_progress",
+  "priority": "high",
+  "owners": ["codex"],
+  "dependencies": [
+    "16-journal-workflow-integrations",
+    "17-mcp-server-runtime",
+    "20-live-provider-adapters",
+    "21-citation-manager-live-sync",
+    "27-mcp-distribution",
+    "36-document-extraction-hardening",
+    "37-live-core-provider-verification",
+    "38-citation-matching-disambiguation",
+    "39-url-archive-integrity",
+    "40-low-noise-writeback-suggestions"
+  ],
+  "owned_paths": [
+    ".github/workflows/",
+    "github_pages_demo/",
+    "streamlit_app/",
+    "sourceright-bench/",
+    "tests/",
+    "docs/src/benchmarks.md",
+    "docs/src/journal-integrations.md",
+    "docs/src/mcp.md",
+    "docs/src/citation-manager-integrations.md",
+    "conductor/tracks/45-external-proof-suites/"
+  ]
+}

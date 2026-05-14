@@ -1,0 +1,17 @@
+{
+  "id": "42-github-automation-and-alert-operations",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["codex"],
+  "dependencies": [
+    "26-ci-supply-chain-hardening",
+    "41-security-publication-contract-governance"
+  ],
+  "owned_paths": [
+    ".github/",
+    "renovate.json",
+    "docs/src/security-automation.md",
+    "docs-site/src/content/docs/guides/security-automation.md",
+    "conductor/tracks/42-github-automation-and-alert-operations/"
+  ]
+}

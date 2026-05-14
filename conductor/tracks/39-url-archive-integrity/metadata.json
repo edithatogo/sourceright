@@ -1,6 +1,6 @@
 {
   "id": "39-url-archive-integrity",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owned_paths": [
     "src/policy.rs",

@@ -1,0 +1,21 @@
+{
+  "id": "60-mature-ojs-plugin",
+  "status": "in_progress",
+  "priority": "high",
+  "owners": [
+    "codex"
+  ],
+  "dependencies": [
+    "16-journal-workflow-integrations",
+    "45-external-proof-suites",
+    "63-plugin-packaging-and-supply-chain-maturity"
+  ],
+  "owned_paths": [
+    "plugins/manifests/journal.ojs.toml",
+    "src/",
+    "tests/",
+    "docs/src/journal-integrations.md",
+    "fixtures/journal/",
+    "conductor/tracks/60-mature-ojs-plugin/"
+  ]
+}

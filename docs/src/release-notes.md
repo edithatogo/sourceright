@@ -20,10 +20,10 @@ production-readiness or externally comparable benchmark claims.
 ## Release wording
 
 Use language such as "technical preview", "pilot-ready workflow", "structured
-reference triage", and "fixture-backed regression benchmark". Avoid language
-such as "production-ready institutional platform", "examiner-grade final
-verifier", or "state-of-the-art benchmarked performance" unless the repository
-evidence supports those claims.
+reference triage", and "fixture-backed regression benchmark". Do not claim
+language such as "production-ready institutional platform", "examiner-grade
+final verifier", or "state-of-the-art benchmarked performance" unless the
+repository evidence supports those claims.
 
 ## Operator checklist
 

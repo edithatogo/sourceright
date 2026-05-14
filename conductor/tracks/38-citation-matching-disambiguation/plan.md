@@ -28,3 +28,8 @@ with stable low-noise diagnostics across checked-in fixtures.
   title-derived fallback matches, while author-backed matches take precedence.
 - 2026-05-13: Consolidation pass updated reporting/workflow docs to describe
   mixed-style and title-fallback diagnostics as manual-review signals.
+- 2026-05-14: Completion review. Verified all 6 test-matrix scenarios have
+  corresponding unit tests in `src/reconcile.rs` covering institutional authors,
+  same-author same-year suffixes, et al. variants, Vancouver numeric citations,
+  mixed-style manuscripts, title-fallback matches, and author-precedence behavior.
+  Track status updated to completed.

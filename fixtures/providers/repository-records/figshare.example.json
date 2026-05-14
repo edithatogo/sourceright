@@ -1,0 +1,92 @@
+{
+  "id": 12345678,
+  "doi": "10.6084/m9.figshare.12345678",
+  "title": "Structural and functional characterization of novel antimicrobial peptides from soil metagenomes",
+  "authors": [
+    {
+      "id": 9876543,
+      "name": "Patel, Anika"
+    },
+    {
+      "id": 9876544,
+      "name": "Johansson, Erik"
+    },
+    {
+      "id": 9876545,
+      "name": "Kim, Soo-Jin"
+    }
+  ],
+  "published_date": "2024-04-22T00:00:00Z",
+  "defined_type": "dataset",
+  "defined_type_name": "Dataset",
+  "description": "This dataset includes raw sequencing reads, annotated peptide sequences, structural models, and antimicrobial activity assays for 12 novel peptides identified through functional metagenomic screening of soil samples.",
+  "url": "https://figshare.com/articles/dataset/Structural_and_functional_characterization_of_novel_antimicrobial_peptides/12345678",
+  "url_public_html": "https://figshare.com/articles/dataset/Structural_and_functional_characterization_of_novel_antimicrobial_peptides/12345678",
+  "url_public_api": "https://api.figshare.com/v2/articles/12345678",
+  "url_private_html": null,
+  "url_private_api": null,
+  "thumb": "https://figshare.com/thumbnails/12345678/thumb.png",
+  "version": 3,
+  "status": "public",
+  "size": 314572800,
+  "files": [
+    {
+      "id": 11223344,
+      "name": "peptide_sequences.fasta",
+      "size": 1048576,
+      "is_link_only": false,
+      "download_url": "https://figshare.com/ndownloader/files/11223344",
+      "mime_type": "application/x-fasta"
+    },
+    {
+      "id": 11223345,
+      "name": "activity_assay_results.csv",
+      "size": 524288,
+      "is_link_only": false,
+      "download_url": "https://figshare.com/ndownloader/files/11223345",
+      "mime_type": "text/csv"
+    }
+  ],
+  "categories": [
+    {
+      "id": 12345,
+      "title": "Antimicrobials",
+      "parent_id": 12000
+    },
+    {
+      "id": 12346,
+      "title": "Metagenomics",
+      "parent_id": 12001
+    }
+  ],
+  "tags": [
+    "antimicrobial peptides",
+    "metagenomics",
+    "soil microbiome",
+    "structural biology"
+  ],
+  "references": [
+    {
+      "text": "Patel et al. (2024) Novel antimicrobial peptides from soil metagenomes, Nature Microbiology",
+      "link": "https://doi.org/10.1000/nature-micro-2024-001"
+    }
+  ],
+  "license": {
+    "value": 4,
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "timeline": {
+    "first_online": "2024-04-22T10:00:00Z",
+    "publisher_publication": null,
+    "revision": "2024-05-01T08:30:00Z"
+  },
+  "has_linked_file": false,
+  "is_embargoed": false,
+  "is_confidential": false,
+  "embargo_date": null,
+  "embargo_title": null,
+  "embargo_type": null,
+  "embargo_options": [],
+  "custom_fields": {}
+}

@@ -1,0 +1,310 @@
+{
+  "schema": "sourceright.conductor.evidence-ledger.v1",
+  "policy": {
+    "evidence_levels": [
+      "contracted",
+      "scaffolded",
+      "fixture-backed",
+      "opt-in-live-proven",
+      "publicly-accepted"
+    ],
+    "claim_rule": "Public claims must not exceed the evidence_level for the owning track.",
+    "default_live_tests": "disabled"
+  },
+  "tracks": {
+    "42-github-automation-and-alert-operations": {
+      "category": "foundation",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Alert inventory is documented from local inspection plus read-only GitHub API checks on 2026-05-14: Dependabot returned 12 fixed and zero open alerts; code scanning returned one open Scorecard alert and 29 fixed Scorecard alerts.",
+        "GitHub automation inventory is documented with explicit evidence sources for Renovate, Copilot, Dependabot, CodeQL, Scorecard, branch protection, environments, and GitHub CLI extensions.",
+        "Renovate is configured for quiet monthly grouped updates with majors manual and no automerge assignees.",
+        "Notification posture avoids scheduled issue creation, broad bot assignment, and default watcher notifications.",
+        "Copilot cloud-agent path is prepared with instructions, setup workflow, and security-remediation issue template.",
+        "Both docs surfaces (docs/src and docs-site) maintain parity for security-automation content."
+      ],
+      "blockers": [
+        "GitHub App installation enumeration was unavailable: user installations returned HTTP 403 for the token type and repository installation returned HTTP 401.",
+        "Copilot entitlement activation, installed Marketplace app confirmation, branch-protection changes, environment reviewer/secret verification, labels, and milestones remain GitHub-side settings requiring admin UI access.",
+        "No account-side GitHub settings or alerts were modified."
+      ]
+    },
+    "43-publication-registry-completion": {
+      "category": "publication",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Registry completion table documents accepted, prepared, deferred, and n/a registries.",
+        "Accepted registries have version, URL, date, and install metadata recorded.",
+        "Prepared registries have repository metadata with documented blocking requirements.",
+        "Deferred registries have blocking requirements and revisit triggers documented.",
+        "Package-manager feasibility decisions are documented with rationale.",
+        "GHCR evidence is captured as MCP Registry indirection.",
+        "server.json and glama.json metadata are reflected in the registry table.",
+        "docs/src/release-status.md and docs-site mirror are in parity."
+      ],
+      "blockers": [
+        "Public registry listing evidence for Glama requires manual or API verification.",
+        "Smithery publication is prepared through track 57 MCPB/local packaging, but no accepted external listing is verified.",
+        "Homebrew/Scoop/winget manifests require stable binary release layout.",
+        "npm/PyPI launchers require proven MCP client demand.",
+        "Automatic verification of registry listings remains excluded from this track."
+      ]
+    },
+    "45-external-proof-suites": {
+      "category": "proof",
+      "evidence_level": "contracted",
+      "allowed_claims": ["External proof suites are planned and opt-in."],
+      "blockers": ["Fixture and live-smoke evidence required per host."]
+    },
+    "55-benchmark-robustness-contract": {
+      "category": "benchmark",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Benchmark suite runs deterministically against checked-in fixtures.",
+        "Robustness workflow runs on push/PR to main with labelled artifact output.",
+        "Stress benchmarks produce labelled metrics artifacts for trend review.",
+        "Benchmark claims are explicitly bounded: fixture-backed regression only, no SOTA or external comparability."
+      ],
+      "blockers": [
+        "Live-provider throughput or end-to-end latency benchmarks require a separate, opt-in suite with published methodology.",
+        "External benchmark suite comparability requires dedicated evidence and a new evidence-ledger entry.",
+        "Build-environment dependency (MSVC linker) may prevent local benchmark execution on Windows toolchains."
+      ]
+    },
+    "57-smithery-distribution-readiness": {
+      "category": "publication",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Smithery distribution has a prepared MCPB/local package path for the stdio MCP server.",
+        "The MCPB manifest template and package builder are checked in and covered by policy tests.",
+        "Smithery can be described as prepared, not accepted or publicly listed."
+      ],
+      "blockers": [
+        "No Smithery account-side publish was performed.",
+        "No accepted Smithery listing has been verified.",
+        "Bundle install smoke requires a concrete release binary supplied to scripts/build-smithery-mcpb.ps1.",
+        "Streamable HTTP URL publishing remains unavailable until a separate HTTP MCP transport exists."
+      ]
+    },
+    "58-mature-zotero-plugin": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": ["Mature Zotero integration is planned."],
+      "blockers": ["Installable package or adapter proof, preview/apply/audit tests, and distribution notes."]
+    },
+    "60-mature-ojs-plugin": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": ["Mature OJS integration is planned."],
+      "blockers": ["Installable OJS package, fixtures, optional test-instance smoke, and gallery readiness."]
+    },
+    "63-plugin-packaging-and-supply-chain-maturity": {
+      "category": "foundation",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "No-submodule default and split criteria are formalized in plugin-authoring.md.",
+        "Evidence-ledger requirements per status level are documented (fixtures, docs, install path, version, compatibility).",
+        "Provenance requirements for installable plugins are documented (signing, pinning, SBOM, deprecation).",
+        "Sandbox policy for network/auth/cache permissions is documented and aligned with existing manifest structure.",
+        "Status taxonomy and overclaim guards are documented in plugin-authoring.md.",
+        "Plugin-registry.md cross-references the authoring guide for packaging and supply-chain policy."
+      ],
+      "blockers": [
+        "Live CI enforcement of provenance gates (signed artifacts, SBOM generation) requires separate automation tracks.",
+        "Plugin extraction to external repositories is not yet exercised — split criteria remain untested in practice.",
+        "Deprecated plugin lifecycle has no real-world examples yet."
+      ]
+    },
+    "36-document-extraction-hardening": {
+      "category": "extraction",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "DOCX and PDF adapter-text extraction preserves provenance spans.",
+        "Malformed-reference diagnostics queue entries for manual review.",
+        "Scanned PDF emits OCR-required diagnostics without fake references."
+      ],
+      "blockers": [
+        "True OCR/extractor integration requires adapter loading (track 19).",
+        "Column-aware table extraction is not covered by adapter-text fixtures."
+      ]
+    },
+    "37-live-core-provider-verification": {
+      "category": "verification",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Core academic provider responses are normalized into sidecar-only candidates.",
+        "Provider outcomes are classified as match, no_match, ambiguous, or error.",
+        "DOI resolution records reachability evidence without bibliographic overwrite."
+      ],
+      "blockers": [
+        "Live network tests are opt-in and skip by default.",
+        "Provider cache is tested; real rate-limit/retry requires live endpoints."
+      ]
+    },
+    "38-citation-matching-disambiguation": {
+      "category": "matching",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Institutional authors and same-author same-year suffixes are handled.",
+        "et al. variants and multi-author sequences resolve deterministically.",
+        "Mixed-style manuscripts and title-fallback matches produce review issues."
+      ],
+      "blockers": [
+        "Non-Latin script author names and rare institutional formats may need additional fixtures.",
+        "Unknown formats produce upstream diagnostics, not false matches."
+      ]
+    },
+    "39-url-archive-integrity": {
+      "category": "verification",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "URL/archive evidence is classified without network calls.",
+        "DOI landing pages, redirects, broken, offline, and unchecked states are distinguished.",
+        "Canonical CSL is never silently mutated by URL/archive checks."
+      ],
+      "blockers": [
+        "Live reachability checking requires opt-in provider configuration.",
+        "Archive.org/Memento integration is deferred to future work."
+      ]
+    },
+    "40-low-noise-writeback-suggestions": {
+      "category": "writeback",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Writeback suggestions are dry-run by default with explicit apply gates.",
+        "Confidence thresholds suppress weak suggestions and route conflicts to review.",
+        "Audit logs record all applied writeback actions."
+      ],
+      "blockers": [
+        "Zotero API writes require live credentials and are opt-in only.",
+        "Schema contract tests validate JSON validity not exhaustive field coverage."
+      ]
+    },
+    "41-security-publication-contract-governance": {
+      "category": "governance",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Dependency automation is configured with grouped, scheduled, safe updates.",
+        "Feature contract matrix and design document exist in both docs surfaces.",
+        "Live-provider runtime controls default to conservative values.",
+        "Copilot cloud-agent support is prepared but requires GitHub entitlement."
+      ],
+      "blockers": [
+        "GitHub notification preferences are account-level, not repo-local.",
+        "Copilot autofix/merge requires GitHub-side settings and entitlement."
+      ]
+    },
+    "47-contract-evidence-and-overclaim-gates": {
+      "category": "foundation",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Overclaim gates exist in conductor/requirements.md, conductor/design.md, and docs/src/limitations.md.",
+        "Forbidden claims (production-ready, SOTA, AI-detector, legal-compliance, etc.) are guarded by policy tests.",
+        "Evidence ledger enforces claim boundaries per track.",
+        "Public docs mirrors maintain parity with Conductor contract."
+      ],
+      "blockers": [
+        "Automatic final verification remains excluded until tracks 36-40 and external proof suites pass.",
+        "AI detector claims are permanently excluded by policy.",
+        "Live provider and registry-accepted claims require opt-in evidence per owning track."
+      ]
+    },
+    "62-expanded-normaliser-provider-catalogue": {
+      "category": "documentation",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Catalogue table in docs/src/providers.md lists 25 provider candidates with access model, status, track, evidence level, fixtures, and overclaim guard.",
+        "Economics decision log documents deferral rationale for RePEc, SSRN, NBER, EconLit, IDEAS.",
+        "Google Scholar is documented as permanently prohibited per ADR 0005 — no manifest, no fixtures, no CI path.",
+        "Plugin-registry.md cross-references the expanded catalogue."
+      ],
+      "blockers": [
+        "Plugin manifests for planned providers are owned by tracks 48, 49, 50, 58.",
+        "Deferred providers (institutional repositories, clinical trial registries) require new tracks for implementation.",
+        "No live adapters were added or tested — catalogue is documentation-only."
+      ]
+    },
+    "64-github-side-governance-additions": {
+      "category": "foundation",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "GitHub-side governance additions are planned and fixture-backed.",
+        "Copilot cloud-agent instructions, security-remediation template, and PR governance checklist are present in the repository.",
+        "Branch protection, coverage reporting decision, and release environment protection are documented in security-automation.md.",
+        "Renovate configuration is low-noise with monthly grouped PRs; Dependabot PR creation is disabled.",
+        "Code scanning surfaces (CodeQL, Scorecard, Dependabot alerts, cargo/npm audits) are tracked."
+      ],
+      "blockers": [
+        "Live repository settings observation or documented admin tasks are required for branch protection, environments, labels, milestones, and Copilot entitlement activation.",
+        "Live GitHub API or settings modification is required to confirm enforcement state."
+      ]
+    },
+    "44-branch-triage-and-stale-work-closure": {
+      "category": "governance",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "All non-main branches are classified as superseded by merged PRs or agent checkpoint artifacts.",
+        "No unmerged WIP branches require preservation.",
+        "Stale agent checkpoint branches are documented with instructions for cleanup."
+      ],
+      "blockers": [
+        "Live branch deletion requires explicit confirmation and review gate.",
+        "Remote branches on GitHub require git push --delete with verified ownership."
+      ]
+    },
+    "48-public-api-provider-adapters": {
+      "category": "integration",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Unpaywall, OpenCitations, arXiv, and Europe PMC have fixture-backed adapter implementations.",
+        "All four providers parse responses into sidecar-only candidates.",
+        "Provider enum variants, slugs, plugin manifests, and fixture files exist.",
+        "Live smoke endpoints are configured and skip without credentials."
+      ],
+      "blockers": [
+        "No live network tests were run — all evidence is from fixture-backed tests.",
+        "OpenCitations test was added to close the verification gap."
+      ]
+    },
+    "49-licensed-byo-key-provider-adapters": {
+      "category": "integration",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Licensed BYO-key provider adapter handles Dimensions, Scopus, and Web of Science manifest structure.",
+        "Fixture result parsing and smoke function exist.",
+        "Provider enum variant, slug, manifest files, and fixture file exist."
+      ],
+      "blockers": [
+        "No live credentials are configured — adapter runs as fixture-only by default.",
+        "Actual Dimensions/Scopus/Web of Science API responses may differ from the generic fixture."
+      ]
+    },
+    "50-repository-record-provider-adapters": {
+      "category": "integration",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Repository record provider adapter handles Zenodo, OSF, Figshare, and Dataverse through a common interface.",
+        "Fixture result parsing, smoke function, and test exist.",
+        "Provider enum variant, slug, manifest file, and fixture file exist."
+      ],
+      "blockers": [
+        "Repository-specific response shapes are not separately fixture-tested.",
+        "Live repository queries require opt-in credentials."
+      ]
+    },
+    "54-demo-public-surface-proof": {
+      "category": "proof",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "GitHub Pages demo has static render smoke with sample data.",
+        "Streamlit demo has unit tests, server smoke, and deployment documentation.",
+        "Both demos use synthetic data only with clear claim boundaries.",
+        "Demo policy test enforces separation from production claims."
+      ],
+      "blockers": [
+        "Browser/server smoke tests are opt-in, not default CI.",
+        "Streamlit Community Cloud deployment requires manual account setup."
+      ]
+    }
+  }
+}

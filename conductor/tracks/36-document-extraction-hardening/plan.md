@@ -31,3 +31,6 @@ and review diagnostics without silent extraction failures.
 - 2026-05-13: Consolidation pass updated operator docs to describe adapter-text
   DOCX/PDF span handling, malformed-reference diagnostics, and the remaining OCR
   boundary.
+- 2026-05-14: Completion review. Added missing `docx_table_references_preserve_row_cell_origin_provenance`
+  test covering the DOCX-table-references scenario from the test matrix. All 6 test-matrix
+  scenarios now have corresponding unit tests. Track status updated to completed.

@@ -1,0 +1,13 @@
+{
+  "id": "44-branch-triage-and-stale-work-closure",
+  "status": "completed",
+  "priority": "medium",
+  "owners": ["codex"],
+  "dependencies": [
+    "41-security-publication-contract-governance"
+  ],
+  "owned_paths": [
+    "conductor/tracks.md",
+    "conductor/tracks/44-branch-triage-and-stale-work-closure/"
+  ]
+}

@@ -888,6 +888,17 @@ mod tests {
         assert_eq!(result.provider, AcademicProvider::Arxiv);
         assert_eq!(result.candidates[0].provider, "arxiv");
     }
+    #[test]
+    fn open_citations_fixture_response_records_sidecar_evidence() {
+        let payload: Value = serde_json::from_str(include_str!(
+            "../fixtures/providers/opencitations.example.json"
+        ))
+        .expect("opencitations fixture");
+        let result = open_citations_fixture_result("unix-seconds:1", &canonical_item(), &payload);
+
+        assert_eq!(result.provider, AcademicProvider::OpenCitations);
+        assert_eq!(result.candidates[0].provider, "opencitations");
+    }
 
     #[test]
     fn repository_records_fixture_response_records_sidecar_evidence() {

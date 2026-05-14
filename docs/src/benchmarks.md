@@ -10,6 +10,29 @@ live-provider evaluation.
 Benchmark runs do not use live providers, citation-manager APIs, or
 journal-system credentials by default.
 
+## Claim Boundary
+
+**Fixture-backed regression benchmarks only. Not comparable to external
+benchmark suites.**
+
+All benchmark results in this repository are produced against self-authored,
+checked-in fixtures. They measure internal correctness and latency regressions
+for the core CLI surfaces (CSL validation, sidecar validation, reference
+reporting, citation reconciliation, review queue, export, legal citation,
+provenance, and journal screening).
+
+These benchmarks do **not**:
+
+- Assert state-of-the-art (SOTA) performance relative to external tools.
+- Claim comparability with academic benchmark suites (e.g., those used in
+  NLP/IR or citation-matching publications).
+- Measure live-provider response quality, throughput under real network
+  conditions, or end-to-end pipeline latency against arbitrary datasets.
+
+Any future SOTA or external comparability claim must be backed by a separate,
+published evaluation with independently verifiable methodology and a dedicated
+evidence entry in the conductor evidence ledger.
+
 Run the benchmark suite with:
 
 ```text

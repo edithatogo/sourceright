@@ -3,9 +3,11 @@ title: Design
 description: Contract-first architecture and Mermaid diagrams for Sourceright.
 ---
 
-This design document explains the architecture behind the feature contract. It
-is intentionally contract-first: public claims, tests, and Conductor tracks
-should stay consistent with these boundaries.
+This design document explains the architecture behind the feature contract. The
+Conductor-owned planning authority is `conductor/design.md`; this page mirrors
+the same architecture for users and contributors. It is intentionally
+contract-first: public claims, tests, and Conductor tracks should stay
+consistent with these boundaries.
 
 ## Scope
 

@@ -4,6 +4,22 @@ This page is the blunt version of the product boundary. Sourceright is useful
 today as a technical preview, but it is still constrained by fixture-backed
 execution, explicit trust gates, and a narrow set of implemented commands.
 
+## Forbidden claims
+
+The following claims must never appear in README, docs, release notes, or
+marketing copy unless the Conductor evidence ledger and a dedicated track prove
+they are supported:
+
+| Claim | Reason |
+| --- | --- |
+| Production-ready institutional platform | Only fixture-backed or scaffolded tracks exist; none meet institutional requirements. |
+| Examiner-grade final verifier | Automatic final verification is explicitly "Won't for now" (track 47). |
+| SOTA benchmarked performance | Benchmarks are fixture-backed regression checks only (track 55). |
+| AI detector / AI authorship detection | Explicitly excluded — citation errors are never treated as AI authorship evidence. |
+| Legal filing compliance system | Legal citation mode is "Could" and explicitly excludes filing compliance. |
+| Live provider verified | Live providers are opt-in and fixture-only in default runs (track 37). |
+| Registry accepted | Registry entries require public listing evidence (track 43/56). |
+
 ## Current limits
 
 - Live provider use is opt-in and should not be assumed in CI or normal local

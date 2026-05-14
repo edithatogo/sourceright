@@ -30,3 +30,7 @@ network-free.
   preserving sidecar-only candidate handling.
 - 2026-05-13: Consolidation pass updated provider docs to describe the
   diagnostic fields and their sidecar-only evidence boundary.
+- 2026-05-14: Completion review. Verified all 6 test-matrix scenarios have
+  corresponding unit tests. The DOI resolver reachability scenario is covered
+  by `doi_resolution_records_reachability_without_bibliographic_overwrite` in
+  `src/providers.rs`. Track status updated to completed.

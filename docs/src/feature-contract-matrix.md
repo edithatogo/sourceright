@@ -1,7 +1,9 @@
 # Feature Contract Matrix
 
-This matrix is the canonical requirements document and repo contract for
-Sourceright. It defines what the technical preview must preserve, what is
+This matrix is the public requirements document and repo contract for
+Sourceright. The Conductor-owned planning authority is
+`conductor/requirements.md`; this page mirrors the same contract for users and
+contributors. It defines what the technical preview must preserve, what is
 market-readiness hardening, and what is intentionally excluded for now.
 
 ## Contract Rules

@@ -439,4 +439,40 @@ mod tests {
         assert!(yaml.starts_with("schema_version: sourceright.export.v1"));
         assert_eq!(yaml.matches("  - id: ").count(), 2);
     }
+
+    #[test]
+    fn ris_export_matches_endnote_handoff_fixture() {
+        let document = fixture();
+        let ris = export_document(&document, ExportFormat::Ris).content;
+        let expected = include_str!("../fixtures/export/endnote-export.ris");
+        let normalize = |content: &str| {
+            content
+                .replace("\r\n", "\n")
+                .lines()
+                .map(str::trim_end)
+                .collect::<Vec<_>>()
+                .join("\n")
+        };
+        let ris_normalized = normalize(&ris);
+        let expected_normalized = normalize(expected);
+        assert_eq!(
+            ris_normalized.trim(),
+            expected_normalized.trim(),
+            "RIS export did not match endnote-export.ris fixture"
+        );
+    }
+
+    #[test]
+    fn enw_export_matches_endnote_handoff_fixture() {
+        let document = fixture();
+        let enw = export_document(&document, ExportFormat::Enw).content;
+        let expected = include_str!("../fixtures/export/endnote-export.enw");
+        let enw_normalized = enw.replace("\r\n", "\n");
+        let expected_normalized = expected.replace("\r\n", "\n");
+        assert_eq!(
+            enw_normalized.trim(),
+            expected_normalized.trim(),
+            "ENW export did not match endnote-export.enw fixture"
+        );
+    }
 }

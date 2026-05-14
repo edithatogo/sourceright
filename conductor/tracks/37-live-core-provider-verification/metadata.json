@@ -1,6 +1,6 @@
 {
   "id": "37-live-core-provider-verification",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owned_paths": [
     "src/providers.rs",

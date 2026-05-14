@@ -1,0 +1,1 @@
+{"id":"53-courtlistener-legal-provider","status":"in_progress","priority":"medium","owners":["codex"],"dependencies":["13-legal-citations","46-plugin-and-provider-roadmap-delivery"],"owned_paths":["plugins/manifests/legal.courtlistener.toml","src/legal.rs","tests/","docs/src/legal-roadmap.md","conductor/tracks/53-courtlistener-legal-provider/"]}

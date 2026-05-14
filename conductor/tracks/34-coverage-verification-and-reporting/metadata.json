@@ -1,6 +1,6 @@
 {
   "id": "34-coverage-verification-and-reporting",
-  "status": "planned",
+  "status": "in_progress",
   "priority": "high",
   "owned_paths": [
     ".github/workflows/coverage.yml",

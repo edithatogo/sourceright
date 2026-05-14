@@ -25,3 +25,7 @@ unchecked URLs with low-noise sidecar evidence and no silent CSL mutation.
   deterministic policy issues without live network calls.
 - 2026-05-13: Consolidation pass updated policy docs to list the URL/archive
   issue classes and reinforce that default checks do not fetch URLs.
+- 2026-05-14: Completion review. Verified all 6 test-matrix scenarios have
+  corresponding unit tests in `src/policy.rs` covering reachable, redirected,
+  broken, DOI landing-page, archived, and timeout/offline URL cases without
+  network calls. Track status updated to completed.

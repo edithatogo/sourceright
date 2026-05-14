@@ -1,0 +1,1 @@
+{"id":"64-github-side-governance-additions","status":"completed","priority":"high","owners":["codex"],"dependencies":["26-ci-supply-chain-hardening","42-github-automation-and-alert-operations"],"owned_paths":[".github/","CODEOWNERS","renovate.json","docs/src/security-automation.md","conductor/tracks/64-github-side-governance-additions/"]}

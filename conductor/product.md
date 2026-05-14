@@ -45,4 +45,7 @@ Sourceright is reference triage and verification infrastructure for documents, a
 - Legal citation and broader claim/source/provenance work are explicit roadmap tracks with clear boundaries.
 - Examiner-grade final-verifier confidence is tracked separately from the current structured-triage capability.
 - The legacy `humanizer-next` workflow is audited before behaviour is ported, replaced, or discarded.
-- `docs/src/feature-contract-matrix.md` is the canonical feature/requirements contract, and `docs/src/design.md` explains the architecture behind it.
+- `conductor/requirements.md` is the Conductor-owned requirements contract.
+- `conductor/design.md` is the Conductor-owned architecture and execution design.
+- `docs/src/feature-contract-matrix.md` and `docs/src/design.md` are the public documentation mirrors of those contracts.
+- `conductor/tracks.md` and individual track files are execution artifacts; they must not broaden public claims beyond the contract evidence level.

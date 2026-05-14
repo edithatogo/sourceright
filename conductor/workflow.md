@@ -19,10 +19,41 @@ The complete track map is maintained in `conductor/tracks.md`. Keep this file
 focused on process and validation expectations so the roadmap is not duplicated
 across multiple Conductor surfaces.
 
-The canonical feature requirements and repo contract are maintained in
-`docs/src/feature-contract-matrix.md`, with architecture rationale in
-`docs/src/design.md`. Track specs should cite those documents instead of
-redefining global product boundaries.
+The canonical Conductor requirements and design contracts are maintained in
+`conductor/requirements.md` and `conductor/design.md`. The public documentation
+mirrors are `docs/src/feature-contract-matrix.md` and `docs/src/design.md`.
+Track specs should cite those documents instead of redefining global product
+boundaries.
+
+The release-maturity control layer is:
+
+- `conductor/evidence-ledger.json`: evidence level and allowed claims.
+- `conductor/implementation-order.md`: sequencing and parallelization.
+- `conductor/plugin-compatibility-matrix.md`: host/version compatibility.
+- `conductor/release-channels.md`: artifact and registry channels.
+- `conductor/secrets-and-live-tests.md`: credential, redaction, and live-test
+  policy.
+- `conductor/deprecation-policy.md`: withdrawal and supersession rules.
+- `conductor/track-template.md`: required track structure.
+- `conductor/adrs/`: architecture decision records.
+
+## Automatic review and progression
+
+Remaining planned tracks use this loop:
+
+1. Run a discovery pass, preferably with parallel subagents for independent
+   path families.
+2. Update the track spec, plan, and test matrix before implementation.
+3. Implement one small slice with a declared owned-path set.
+4. Run targeted checks and record evidence.
+5. Run `$conductor-review` for the track.
+6. Apply review fixes automatically when they are local, non-destructive, and
+   inside the track scope.
+7. Progress to the next independent slice only after review findings are fixed
+   or explicitly deferred in the track.
+
+Subagents must not edit overlapping path sets in parallel. They must return the
+files inspected, evidence found, and remaining uncertainty.
 
 ## Validation expectations
 

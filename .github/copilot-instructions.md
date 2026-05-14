@@ -42,3 +42,27 @@ npm run build
 When touching GitHub Actions, keep permissions least-privilege, keep actions
 pinned by full commit SHA, and avoid scheduled or notification-heavy workflows
 unless the issue explicitly requests them.
+
+## Conductor Track Workflow
+
+Each implementation slice should reference a Conductor track by its ID
+(e.g., `64-github-side-governance-additions`). Before editing files under a
+track's owned paths, run `$conductor-review` (if available) or manually verify:
+
+- The track spec and test matrix are up to date.
+- Changes stay within declared owned paths.
+- Evidence level in `conductor/evidence-ledger.json` accurately reflects what was done.
+
+## Forbidden Claims
+
+Sourceright code, docs, and PR metadata must never assert:
+
+- "Production-ready institutional platform"
+- "SOTA benchmarked performance"
+- "Legal filing compliance system"
+- "AI detector"
+- "Fully verified" (without live-provider opt-in evidence)
+- "Registry/platform supported" (without published registry packages)
+
+Use accurate wording: "technical preview," "pilot-ready," "fixture-backed
+regression benchmark," "deterministic benchmark scaffold."

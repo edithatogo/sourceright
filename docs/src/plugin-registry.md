@@ -46,6 +46,10 @@ Paid or closed providers, including Scopus, Web of Science, and Dimensions, are
 marked as BYO-key or licensed-data plugins. Their manifests describe expected
 contracts without requiring credentials or live network access in normal tests.
 
+Full plugin authoring guidance — including packaging policy, evidence-ledger
+requirements, provenance, sandbox rules, status taxonomy, and overclaim guards —
+is maintained in [Plugin Authoring](plugin-authoring.md).
+
 ## Runtime Status
 
 Runtime plugin discovery is implemented. Execution remains gated by explicit
@@ -58,3 +62,34 @@ plugins at runtime, it still needs:
 - deterministic dry-run modes;
 - audit logs for every provider or exporter action;
 - stable read-only MCP contracts for plugin discovery and reports.
+
+## Expanded Provider Catalogue
+
+A comprehensive catalogue of all normaliser provider candidates (including
+access model, status, owning track, evidence level, fixture coverage, default-CI
+behaviour, and overclaim guard) is maintained in [Provider Strategy](providers#expanded-provider-catalogue).
+That catalogue covers:
+
+- **Core/public**: Crossref, DataCite, OpenAlex, PubMed/NCBI, ORCID,
+  Unpaywall, OpenCitations, arXiv, Europe PMC.
+- **Licensed BYO-key**: Dimensions, Scopus, Web of Science.
+- **Economics (deferred)**: RePEc, SSRN, NBER, EconLit, IDEAS — with
+  documented decision rationale.
+- **Grey literature/repositories**: Zenodo, OSF, Figshare, Dataverse,
+  institutional repositories (deferred).
+- **Search**: Google Scholar — documented as assessment-only / prohibited
+  per ADR 0005.
+- **Biomedical**: bioRxiv/medRxiv, clinical trial registries (deferred).
+
+Each row in the catalogue includes an overclaim guard that prevents
+unsupported market-readiness claims. Providers with `deferred` status
+have no manifest, no fixtures, and no CI path.
+
+## Packaging Policy
+
+Plugins should not be split into git submodules by default. Keep plugin
+manifests and immature adapters in this repository while the plugin API is
+changing. Split a plugin into a separate repository or package only when it has
+an independent release lifecycle, separate maintainers, host-specific packaging
+requirements, or a stable compatibility contract. Track 63 owns the supply-chain
+criteria for that decision.

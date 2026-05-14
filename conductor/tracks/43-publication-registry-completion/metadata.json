@@ -1,0 +1,21 @@
+{
+  "id": "43-publication-registry-completion",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["codex"],
+  "dependencies": [
+    "25-release-and-registry-readiness",
+    "27-mcp-distribution",
+    "32-publishing-governance-and-provenance",
+    "33-public-release-and-registry-submission"
+  ],
+  "owned_paths": [
+    "server.json",
+    "glama.json",
+    "docs/src/release-status.md",
+    "docs/src/publishing.md",
+    "docs-site/src/content/docs/release-status.md",
+    "docs-site/src/content/docs/guides/publishing.md",
+    "conductor/tracks/43-publication-registry-completion/"
+  ]
+}

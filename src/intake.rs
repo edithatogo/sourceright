@@ -215,6 +215,22 @@ fn reference_entries(text: &str, base_line: usize, emit_diagnostics: bool) -> Re
             continue;
         }
 
+        if !current.trim().is_empty()
+            && !current_started_with_marker
+            && looks_like_reference(current.trim())
+            && looks_like_reference(trimmed)
+        {
+            push_entry(
+                &mut entries,
+                &mut diagnostics,
+                start_line,
+                &mut current,
+                current_started_with_marker,
+                emit_diagnostics,
+            );
+            start_line = base_line + line_index;
+        }
+
         if !current.is_empty() {
             current.push(' ');
         }
@@ -502,6 +518,43 @@ mod tests {
             result.references[0].text,
             "Smith J. Trial paper. Journal. doi:10.1/example"
         );
+    }
+
+    #[test]
+    fn docx_table_references_preserve_row_cell_origin_provenance() {
+        // Simulates table-like reference material (text-formatted rows) where
+        // each row carries a citation-like structure. The extraction should
+        // preserve row-level spans and original text without losing provenance.
+        let document = IntakeDocument {
+            source: "manuscript.docx".to_string(),
+            kind: IntakeSourceKind::Docx,
+            text: "Smith J. Trial paper. Journal. doi:10.1/example
+Doe J. Book title. Press. https://doi.org/10.2/book
+Lee K. Report. Agency. doi:10.3/report"
+                .to_string(),
+        };
+
+        let result = extract_intake(&document);
+
+        // All three rows should be extracted as references
+        assert_eq!(result.references.len(), 3);
+        assert_eq!(result.references[0].span, "line:1");
+        assert_eq!(
+            result.references[0].text,
+            "Smith J. Trial paper. Journal. doi:10.1/example"
+        );
+        assert_eq!(result.references[1].span, "line:2");
+        assert_eq!(
+            result.references[1].text,
+            "Doe J. Book title. Press. https://doi.org/10.2/book"
+        );
+        assert_eq!(result.references[2].span, "line:3");
+        assert_eq!(
+            result.references[2].text,
+            "Lee K. Report. Agency. doi:10.3/report"
+        );
+        // DOCX provenance diagnostic should be present
+        assert_eq!(result.diagnostics[0].code, "intake.docx.adapter_text_used");
     }
 
     #[test]

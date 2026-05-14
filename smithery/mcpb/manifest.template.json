@@ -1,0 +1,44 @@
+{
+  "manifest_version": "0.3",
+  "name": "sourceright",
+  "display_name": "Sourceright",
+  "version": "0.1.20",
+  "description": "Local stdio MCP server for Sourceright reference verification, CSL evidence, review queues, and audited write plans.",
+  "long_description": "Sourceright runs as a local stdio MCP server. Provider evidence stays in references.verification.json and never silently overwrites canonical references.csl.json. Write-capable tools default to dry-run plans and require explicit apply semantics.",
+  "author": {
+    "name": "edithatogo",
+    "url": "https://github.com/edithatogo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edithatogo/sourceright.git"
+  },
+  "homepage": "https://edithatogo.github.io/sourceright/",
+  "documentation": "https://edithatogo.github.io/sourceright/guides/mcp/",
+  "support": "https://github.com/edithatogo/sourceright/issues",
+  "license": "MIT OR Apache-2.0",
+  "keywords": [
+    "mcp",
+    "citations",
+    "references",
+    "csl",
+    "verification"
+  ],
+  "server": {
+    "type": "binary",
+    "entry_point": "bin/sourceright",
+    "mcp_config": {
+      "command": "${__dirname}/bin/sourceright",
+      "args": [
+        "mcp"
+      ]
+    }
+  },
+  "tools_generated": true,
+  "prompts_generated": true,
+  "compatibility": {
+    "platforms": [
+      "linux"
+    ]
+  }
+}

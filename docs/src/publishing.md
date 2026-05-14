@@ -6,6 +6,10 @@ The current release path is staged rather than auto-published from a dirty
 tree. Local changes must be committed, pushed, and green in GitHub Actions
 before any external registry publication.
 
+The full registry completion table, including accepted, prepared, deferred,
+and not-applicable registries, is documented in
+[Release Status](release-status.md).
+
 ## CLI
 
 The CLI should publish through:
@@ -44,12 +48,25 @@ name.
 
 ### Smithery
 
-Smithery URL publishing requires Streamable HTTP, so Sourceright should use an
-MCPB/local distribution path there until an HTTP transport exists.
+Smithery supports two publication modes relevant to Sourceright:
 
-When Smithery URL publishing is ready, set up a project configuration and expose
-`sourceright mcp` under the required command surface. Until then, keep Smithery
-readiness documented as a future distribution mode.
+- URL publishing for hosted MCP servers that expose Streamable HTTP.
+- MCPB bundle publishing for local stdio servers.
+
+Sourceright has chosen the MCPB/local path for Smithery because the current MCP
+runtime is `sourceright mcp` over stdio. The prepared bundle contract is:
+
+- `smithery/mcpb/manifest.template.json` — MCPB manifest v0.3 template for the
+  local stdio server.
+- `scripts/build-smithery-mcpb.ps1` — stages a `.mcpb` bundle from a supplied
+  release binary and writes platform-specific manifest fields.
+- `tests/smithery_distribution_policy.rs` — keeps the manifest and docs aligned
+  with the prepared-not-accepted status.
+
+Track 57 owns the Smithery publication path. It must choose and validate either
+Streamable HTTP publishing or MCPB/local packaging before release notes or docs
+claim Smithery availability. Prepared metadata is not accepted-listing evidence.
+The current state is MCPB-prepared, not Smithery-accepted.
 
 ### Glama
 

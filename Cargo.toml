@@ -21,6 +21,8 @@ include = [
     "/provider-fixtures/**",
     "/sourceright-bench/**",
     "/docs/src/**",
+    "/smithery/**",
+    "/scripts/build-smithery-mcpb.ps1",
     "/book.toml",
     "/README.md",
     "/LICENSE-APACHE",

@@ -1,0 +1,315 @@
+{
+  "$schema": "../../schemas/ojs-submission-fixture.json",
+  "fixture_name": "ojs-submission-synthetic-001",
+  "description": "Synthetic OJS submission fixture exercising JournalScreeningRequest -> JournalScreeningReport pipeline with mixed reference integrity states.",
+  "created": "2025-05-14T00:00:00Z",
+  "submission": {
+    "submission_id": "OJS-SUB-2025-0042",
+    "platform": "ojs",
+    "manuscript_label": "manuscript-v3-final.docx"
+  },
+  "manuscript": {
+    "title": "A Multi-Centre Randomised Controlled Trial of Citation Integrity Screening in Scholarly Publishing",
+    "authors": [
+      {
+        "given": "Alice",
+        "family": "Martinez",
+        "affiliation": "University of Scholarly Communications"
+      },
+      {
+        "given": "Bob",
+        "family": "Chen",
+        "affiliation": "Institute for Research Integrity"
+      },
+      {
+        "given": "Carol",
+        "family": "Davies",
+        "affiliation": "PKP Collaboratory"
+      }
+    ],
+    "abstract": "Background: Citation integrity is a growing concern in scholarly publishing. Methods: We conducted a multi-centre randomised controlled trial across 12 journals.",
+    "keywords": [
+      "citation integrity",
+      "reference screening",
+      "AI-assisted writing",
+      "scholarly publishing",
+      "OJS plugin"
+    ],
+    "submission_date": "2025-05-10",
+    "section": "Research Article",
+    "language": "en"
+  },
+  "csl_references": [
+    {
+      "id": "martinez-2025-trial",
+      "type": "article-journal",
+      "title": "A multi-centre randomised controlled trial of citation integrity screening",
+      "DOI": "10.1234/example-2025-001",
+      "author": [
+        {
+          "family": "Martinez",
+          "given": "Alice"
+        },
+        {
+          "family": "Chen",
+          "given": "Bob"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2025
+          ]
+        ]
+      },
+      "container-title": "Journal of Scholarly Publishing",
+      "volume": "42",
+      "issue": "3",
+      "page": "215-238"
+    },
+    {
+      "id": "phelps-2023-hallucination",
+      "type": "article-journal",
+      "title": "A plausible but unverifiable reference pattern in LLM-generated bibliographies",
+      "DOI": "10.5678/example-2023-089",
+      "author": [
+        {
+          "family": "Phelps",
+          "given": "D."
+        },
+        {
+          "family": "Taylor",
+          "given": "E."
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2023
+          ]
+        ]
+      },
+      "container-title": "Scientometrics",
+      "volume": "128",
+      "page": "1041-1059"
+    },
+    {
+      "id": "zhang-2024-retracted",
+      "type": "article-journal",
+      "title": "Overstated findings in AI-assisted citation analysis",
+      "DOI": "10.9012/retracted-2024-001",
+      "author": [
+        {
+          "family": "Zhang",
+          "given": "L."
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2024
+          ]
+        ]
+      },
+      "container-title": "Journal of Informetrics",
+      "volume": "18",
+      "issue": "1",
+      "page": "1-15"
+    },
+    {
+      "id": "thompson-2022-foundations",
+      "type": "book",
+      "title": "Foundations of Reference Integrity Analysis",
+      "DOI": "10.1111/books-2022-001",
+      "author": [
+        {
+          "family": "Thompson",
+          "given": "R."
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2022
+          ]
+        ]
+      },
+      "publisher": "Academic Press",
+      "publisher-place": "Cambridge, UK"
+    },
+    {
+      "id": "kumar-2025-no-doi",
+      "type": "article-journal",
+      "title": "A reference with missing identifier metadata requiring verification",
+      "author": [
+        {
+          "family": "Kumar",
+          "given": "S."
+        },
+        {
+          "family": "Patel",
+          "given": "N."
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2025
+          ]
+        ]
+      },
+      "container-title": "Journal of Emerging Research",
+      "volume": "15",
+      "page": "88-102"
+    }
+  ],
+  "verification_sidecar": {
+    "schema": "sourceright.sidecar.v1",
+    "references": {
+      "martinez-2025-trial": {
+        "provider_candidates": [
+          {
+            "provider": "crossref",
+            "confidence": 0.97,
+            "retrieved_at": "2025-05-11T14:30:00Z",
+            "data": {
+              "DOI": "10.1234/example-2025-001",
+              "title": "A multi-centre randomised controlled trial of citation integrity screening"
+            }
+          }
+        ],
+        "conflicts": [],
+        "review_status": "not_required"
+      },
+      "phelps-2023-hallucination": {
+        "provider_candidates": [
+          {
+            "provider": "crossref",
+            "confidence": 0.94,
+            "retrieved_at": "2025-05-11T14:30:05Z",
+            "data": {
+              "DOI": "10.5678/example-2023-089",
+              "title": "A plausible but unverifiable reference pattern in LLM-generated bibliographies"
+            }
+          },
+          {
+            "provider": "openalex",
+            "confidence": 0.91,
+            "retrieved_at": "2025-05-11T14:30:10Z",
+            "data": {
+              "DOI": "10.5678/example-2023-089",
+              "title": "A different title variant"
+            }
+          }
+        ],
+        "conflicts": [
+          {
+            "field": "title",
+            "message": "OpenAlex reports different title than Crossref"
+          }
+        ],
+        "review_status": "not_required"
+      },
+      "zhang-2024-retracted": {
+        "provider_candidates": [
+          {
+            "provider": "crossref",
+            "confidence": 0.93,
+            "retrieved_at": "2025-05-11T14:30:15Z",
+            "data": {
+              "DOI": "10.9012/retracted-2024-001",
+              "status": "retracted",
+              "retraction_notice": "10.9012/retraction-2025-001",
+              "publication_year": 2018
+            }
+          }
+        ],
+        "conflicts": [],
+        "review_status": "not_required"
+      },
+      "thompson-2022-foundations": {
+        "provider_candidates": [],
+        "conflicts": [],
+        "review_status": "queued"
+      },
+      "kumar-2025-no-doi": {
+        "provider_candidates": [],
+        "conflicts": [],
+        "review_status": "not_required"
+      }
+    }
+  },
+  "expected_screening_request": {
+    "submission_id": "OJS-SUB-2025-0042",
+    "platform": "ojs",
+    "manuscript_label": "manuscript-v3-final.docx"
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "OJS-SUB-2025-0042",
+    "platform": "ojs",
+    "status": "screened_with_warnings",
+    "editorial_summary": "Submission OJS-SUB-2025-0042 (manuscript-v3-final.docx) screened with status ScreenedWithWarnings: 5 references, 5 issues, 4 AI-risk citation-error signals.",
+    "author_action_checklist": [
+      "Review missing identifiers, unverified references, and provider conflicts.",
+      "Resolve references currently queued for manual review."
+    ],
+    "reference_report": {
+      "schema_version": "sourceright.reference_report.v1",
+      "report_type": "reference_integrity",
+      "summary": {
+        "total_references": 5,
+        "verified_references": 2,
+        "review_queue_count": 1,
+        "unresolved_count": 0,
+        "conflict_count": 1,
+        "ai_risk_issue_count": 4,
+        "error_count": 0,
+        "warning_count": 4,
+        "info_count": 1
+      },
+      "issues": [
+        {
+          "severity": "warning",
+          "category": "identifier",
+          "reference_id": "kumar-2025-no-doi",
+          "code": "report.missing_doi",
+          "message": "Reference has no DOI in canonical CSL JSON",
+          "ai_risk_signal": true
+        },
+        {
+          "severity": "warning",
+          "category": "verification_coverage",
+          "reference_id": "kumar-2025-no-doi",
+          "code": "report.unverified_reference",
+          "message": "Reference has no provider candidate or manual review state",
+          "ai_risk_signal": true
+        },
+        {
+          "severity": "warning",
+          "category": "provider_conflict",
+          "reference_id": "phelps-2023-hallucination",
+          "code": "report.provider_conflict",
+          "message": "Reference has unresolved provider conflict metadata",
+          "ai_risk_signal": true
+        },
+        {
+          "severity": "warning",
+          "category": "recency_evidence",
+          "reference_id": "zhang-2024-retracted",
+          "code": "policy.recency.provider.retraction",
+          "message": "Reference is flagged as retracted by Crossref",
+          "ai_risk_signal": true
+        },
+        {
+          "severity": "info",
+          "category": "manual_review",
+          "reference_id": "thompson-2022-foundations",
+          "code": "report.manual_review_needed",
+          "message": "Reference review status is Queued",
+          "ai_risk_signal": false
+        }
+      ]
+    }
+  }
+}

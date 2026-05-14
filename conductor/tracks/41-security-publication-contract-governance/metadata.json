@@ -1,6 +1,6 @@
 {
   "id": "41-security-publication-contract-governance",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owners": ["codex"],
   "dependencies": [

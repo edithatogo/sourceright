@@ -1,0 +1,25 @@
+{
+  "description": "Non-Latin script author names in CJK (Chinese). Tests that the reconcile module matches author names written in CJK characters in both reference entries and in-text citations.",
+  "csl_item": {
+    "id": "zhang-wei-2024",
+    "type": "article-journal",
+    "title": "CJK study title",
+    "extra": {
+      "author": [
+        {
+          "family": "张伟"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2024
+          ]
+        ]
+      }
+    }
+  },
+  "citation_text": "(张伟, 2024)",
+  "expected_match": true,
+  "expected_confidence": 0.7
+}

@@ -1,0 +1,26 @@
+{
+  "description": "Non-Latin script author names in Arabic script. Tests that the reconcile module correctly matches author family names written with Arabic characters from the citation text to the reference-list entry.",
+  "csl_item": {
+    "id": "ahmed-hassan-2024",
+    "type": "article-journal",
+    "title": "Arabic study title",
+    "extra": {
+      "author": [
+        {
+          "family": "أحمد",
+          "given": "حسن"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2024
+          ]
+        ]
+      }
+    }
+  },
+  "citation_text": "(أحمد, 2024)",
+  "expected_match": true,
+  "expected_confidence": 0.7
+}

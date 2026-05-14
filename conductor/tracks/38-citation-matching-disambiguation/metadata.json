@@ -1,6 +1,6 @@
 {
   "id": "38-citation-matching-disambiguation",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owned_paths": [
     "src/reconcile.rs",

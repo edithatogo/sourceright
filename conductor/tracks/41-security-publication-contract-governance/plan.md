@@ -24,3 +24,13 @@
   but does not bypass review gates.
 - OJS, Zotero, and live MCP client smoke tests should be opt-in external tests
   with fixtures and credentials handled outside default CI.
+
+## Progress Notes
+
+- 2026-05-12: Initial planning and scope recorded.
+- 2026-05-13: Implementation completed with dependency alerts closed, Renovate
+  configured, GitHub Actions pinned, feature contract matrix added, design
+  document added, Copilot cloud-agent setup, and policy tests added.
+- 2026-05-14: Completion review. All 10 acceptance criteria areas in the test
+  matrix have been addressed. The existing `tests/requirements_contract_policy.rs`
+  validates track documentation completeness. Track status updated to completed.

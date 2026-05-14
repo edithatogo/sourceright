@@ -25,3 +25,12 @@ dry-run, and provenance limits.
 
 - Registry entries are validated before use.
 - Capabilities remain explicit and provenance-aware.
+
+## Packaging Policy
+
+Plugins should not be split into git submodules by default. Keep plugin
+manifests and immature adapters in this repository while the plugin API is
+changing. Split a plugin into a separate repository or package only when it has
+an independent release lifecycle, separate maintainers, host-specific packaging
+requirements, or a stable compatibility contract. Track 63 owns the supply-chain
+criteria for that decision.

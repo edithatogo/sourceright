@@ -1,0 +1,90 @@
+{
+  "id": 1234567,
+  "doi": "10.5281/zenodo.1234567",
+  "doi_url": "https://doi.org/10.5281/zenodo.1234567",
+  "title": "Supporting data for: Machine learning approaches to climate model downscaling",
+  "metadata": {
+    "title": "Supporting data for: Machine learning approaches to climate model downscaling",
+    "doi": "10.5281/zenodo.1234567",
+    "description": "This dataset contains the training data, model weights, and evaluation metrics used in the study on machine learning approaches for statistical downscaling of global climate models.",
+    "creators": [
+      {
+        "name": "Chen, Wei",
+        "affiliation": "University of Cambridge",
+        "orcid": "0000-0002-1234-5678"
+      },
+      {
+        "name": "Rodriguez, Maria",
+        "affiliation": "ETH Zurich",
+        "orcid": "0000-0003-8765-4321"
+      },
+      {
+        "name": "Smith, James",
+        "affiliation": "University of Melbourne",
+        "orcid": "0000-0001-2345-6789"
+      }
+    ],
+    "publication_date": "2024-06-15",
+    "resource_type": {
+      "type": "dataset",
+      "title": "Dataset"
+    },
+    "access_right": "open",
+    "license": {
+      "id": "cc-by-4.0",
+      "title": "Creative Commons Attribution 4.0 International"
+    },
+    "prereserve_doi": {
+      "doi": "10.5281/zenodo.1234567",
+      "recid": 1234567
+    },
+    "relations": [
+      {
+        "type": "isSupplementTo",
+        "doi": "10.1000/climate-2024-001",
+        "title": "Machine learning approaches to climate model downscaling"
+      }
+    ],
+    "keywords": [
+      "climate downscaling",
+      "machine learning",
+      "neural networks",
+      "climate modeling"
+    ],
+    "notes": "",
+    "version": "v1.0.0"
+  },
+  "created": "2024-06-15T10:30:00+00:00",
+  "modified": "2024-06-16T14:22:00+00:00",
+  "links": {
+    "self": "https://zenodo.org/api/records/1234567",
+    "doi": "https://doi.org/10.5281/zenodo.1234567",
+    "html": "https://zenodo.org/records/1234567"
+  },
+  "files": [
+    {
+      "id": "file-abc123",
+      "key": "training_data.csv",
+      "size": 104857600,
+      "checksum": "md5:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+      "links": {
+        "self": "https://zenodo.org/api/records/1234567/files/training_data.csv"
+      }
+    },
+    {
+      "id": "file-def456",
+      "key": "model_weights.h5",
+      "size": 52428800,
+      "checksum": "md5:b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7",
+      "links": {
+        "self": "https://zenodo.org/api/records/1234567/files/model_weights.h5"
+      }
+    }
+  ],
+  "stats": {
+    "downloads": 1520,
+    "views": 3200,
+    "unique_downloads": 890,
+    "unique_views": 2100
+  }
+}

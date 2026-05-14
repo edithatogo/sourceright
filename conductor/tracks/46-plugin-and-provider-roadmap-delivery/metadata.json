@@ -1,0 +1,24 @@
+{
+  "id": "46-plugin-and-provider-roadmap-delivery",
+  "status": "in_progress",
+  "priority": "high",
+  "owners": ["codex"],
+  "dependencies": [
+    "19-runtime-plugin-loading",
+    "20-live-provider-adapters",
+    "21-citation-manager-live-sync",
+    "23-provider-backed-recency-evidence",
+    "37-live-core-provider-verification"
+  ],
+  "owned_paths": [
+    "plugins/",
+    "schemas/",
+    "src/",
+    "docs/src/plugin-registry.md",
+    "docs/src/providers.md",
+    "docs/src/citation-manager-integrations.md",
+    "docs-site/src/content/docs/plugin-registry.md",
+    "docs-site/src/content/docs/reference/providers.md",
+    "conductor/tracks/46-plugin-and-provider-roadmap-delivery/"
+  ]
+}

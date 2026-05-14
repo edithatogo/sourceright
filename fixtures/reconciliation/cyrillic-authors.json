@@ -1,0 +1,26 @@
+{
+  "description": "Non-Latin script author names in Cyrillic script. Tests that the reconcile module correctly matches Russian author family names written in Cyrillic characters, verifying that to_ascii_lowercase() preserves Cyrillic letters and that whitespace-normalized forms compare equal.",
+  "csl_item": {
+    "id": "ivanov-2024",
+    "type": "article-journal",
+    "title": "Cyrillic study title",
+    "extra": {
+      "author": [
+        {
+          "family": "Иванов",
+          "given": "Иван Петрович"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2024
+          ]
+        ]
+      }
+    }
+  },
+  "citation_text": "(Иванов, 2024)",
+  "expected_match": true,
+  "expected_confidence": 0.7
+}
