@@ -9,12 +9,24 @@ preview or explicit configuration boundaries.
 
 ## Install
 
-1. Copy this directory to an OJS installation as
+1. Build the install-test archive from the repository root:
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-ojs-plugin-package.ps1
+   ```
+
+2. Copy this directory, or extract the generated archive, to an OJS installation as
    `plugins/generic/sourceright`.
-2. Ensure the Sourceright CLI is installed on the OJS server.
-3. Configure the plugin setting `sourcerightCliPath` if the executable is not
+3. From the OJS root, register the plugin version:
+
+   ```bash
+   php lib/pkp/tools/installPluginVersion.php plugins/generic/sourceright/version.xml
+   ```
+
+4. Ensure the Sourceright CLI is installed on the OJS server.
+5. Configure the plugin setting `sourcerightCliPath` if the executable is not
    available as `sourceright` on the web server path.
-4. Enable the generic plugin in the OJS administration plugin list.
+6. Enable the generic plugin in the OJS administration plugin list.
 
 ## Runtime Boundary
 
@@ -44,3 +56,6 @@ This package is a source skeleton for Track 60. It is intended to be installable
 as an OJS generic plugin source tree, but it is not PKP Plugin Gallery accepted.
 It still needs live OJS handler, settings-form, and workflow-template wiring
 before PKP Plugin Gallery review.
+
+The repo-local install smoke path is documented in
+`conductor/tracks/60-mature-ojs-plugin/ojs-install-smoke.md`.

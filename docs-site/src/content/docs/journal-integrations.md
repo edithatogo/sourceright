@@ -26,3 +26,16 @@ The skeleton:
 This is fixture-backed and suitable for controlled pilot wiring. It is not PKP
 Plugin Gallery accepted, and it still needs live OJS handler/settings-form and
 workflow-template wiring before external Gallery review.
+
+For local install testing, build the generic-plugin archive:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-ojs-plugin-package.ps1
+```
+
+Then extract it to `plugins/generic/sourceright` in a disposable OJS instance
+and register the plugin with:
+
+```bash
+php lib/pkp/tools/installPluginVersion.php plugins/generic/sourceright/version.xml
+```

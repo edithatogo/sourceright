@@ -128,10 +128,12 @@ deliberately narrower than PKP Plugin Gallery acceptance.
 | Evidence | Status |
 |----------|--------|
 | OJS source skeleton | Completed in `plugins/ojs/sourceright/` |
+| Install-test archive | `scripts/build-ojs-plugin-package.ps1` builds `dist/ojs/sourceright-ojs-generic-plugin-0.1.0.tar.gz` with SHA-256 sidecar |
 | CLI runner safety | Escaped command arguments, configurable CLI path, timeout, preview-only export |
 | Editor/author separation | Editor output receives summary/full report; author output receives checklist |
 | Fixture proof | `fixtures/journal/ojs-submission.json` covered by CLI end-to-end test |
 | Policy proof | `tests/ojs_plugin_packaging_policy.rs` enforces package files and guardrails |
+| Smoke path | `ojs-install-smoke.md` documents manual and Docker OJS test routes |
 | Gallery acceptance | Not claimed; readiness remains prepared/deferred until external review |
 
 ### Remaining Work (Post-Completion)
@@ -140,7 +142,7 @@ deliberately narrower than PKP Plugin Gallery acceptance.
 |------|-------|----------|
 | Live OJS handler/settings/workflow-template wiring | Future OJS implementation | Medium |
 | REST/HTTP endpoint for OJS | Track 60 | Medium |
-| OJS test-instance smoke script | Track 45 | Low |
+| OJS test-instance smoke transcript | Track 45 / manual Docker OJS test | Low |
 | PKP Gallery submission and acceptance | Track 69 / external marketplace evidence | Low |
 | Localisation / i18n | Track 60 | Low |
 

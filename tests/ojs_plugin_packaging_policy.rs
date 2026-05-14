@@ -20,6 +20,27 @@ fn ojs_plugin_source_skeleton_contains_required_package_files() {
 }
 
 #[test]
+fn ojs_plugin_has_install_test_package_builder_and_smoke_path() {
+    let script = read("scripts/build-ojs-plugin-package.ps1");
+    let smoke = read("conductor/tracks/60-mature-ojs-plugin/ojs-install-smoke.md");
+    let readme = read("plugins/ojs/sourceright/README.md");
+
+    assert!(script.contains("sourceright-ojs-generic-plugin-$Version.tar.gz"));
+    assert!(script.contains("plugins/generic/sourceright"));
+    assert!(script.contains("Get-FileHash -Algorithm SHA256"));
+    assert!(script.contains("tar -czf"));
+
+    assert!(smoke.contains("installPluginVersion.php"));
+    assert!(smoke.contains("pkp/containers"));
+    assert!(smoke.contains("pkp/docker-ojs"));
+    assert!(smoke.contains("not PKP Plugin Gallery acceptance"));
+    assert!(smoke.contains("no verified live OJS smoke transcript"));
+
+    assert!(readme.contains("scripts/build-ojs-plugin-package.ps1"));
+    assert!(readme.contains("installPluginVersion.php"));
+}
+
+#[test]
 fn ojs_plugin_skeleton_keeps_cli_and_write_boundaries_explicit() {
     let runner = read("plugins/ojs/sourceright/classes/SourcerightCliRunner.php");
     let plugin = read("plugins/ojs/sourceright/SourcerightPlugin.php");

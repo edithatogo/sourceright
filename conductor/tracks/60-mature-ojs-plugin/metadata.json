@@ -23,6 +23,7 @@
     "completion_date": "2026-05-15",
     "claim_boundary": "Installable OJS generic plugin source skeleton plus fixture-backed screening; PKP Plugin Gallery acceptance is not claimed.",
     "package_skeleton": "plugins/ojs/sourceright contains index.php, SourcerightPlugin.php, SourcerightCliRunner.php, version.xml, README, and en_US locale.",
+    "install_archive": "scripts/build-ojs-plugin-package.ps1 builds dist/ojs/sourceright-ojs-generic-plugin-0.1.0.tar.gz for manual OJS install testing.",
     "screening_fixture": "fixtures/journal/ojs-submission.json is exercised by cli_end_to_end OJS fixture test.",
     "policy_tests": [
       "tests/ojs_plugin_packaging_policy.rs",
