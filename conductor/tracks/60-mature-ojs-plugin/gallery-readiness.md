@@ -91,8 +91,8 @@ Sourceright OJS integration is a **CLI / MCP service**, not a traditional OJS PH
 | Editor summaries | editorial_summary field | Implemented |
 | Author checklists | author_action_checklist field | Implemented |
 | Reference report | ReferenceReportJsonOutput | Stable JSON schema |
-| CSL validation | csl.rs | Production-quality |
-| Sidecar model | Sidecar with candidates/conflicts | Production-quality |
+| CSL validation | csl.rs | Fixture-backed technical preview |
+| Sidecar model | Sidecar with candidates/conflicts | Fixture-backed technical preview |
 | OJS fixture | fixtures/journal/ojs-submission.json | **NEW - 2026-05-14** |
 | Gallery readiness | This document | **NEW - 2026-05-14** |
 
@@ -136,7 +136,7 @@ Sourceright OJS integration is a **CLI / MCP service**, not a traditional OJS PH
 PKP Gallery fetches plugin.xml from a stable release URL:
 
 `
-https://raw.githubusercontent.com/with-two-eyes/sourceright/v0.1.0/plugins/generic/sourceright/plugin.xml
+https://raw.githubusercontent.com/edithatogo/sourceright/v0.1.0/plugins/generic/sourceright/plugin.xml
 `
 
 ---
@@ -236,7 +236,7 @@ plugins/generic/sourceright/
         <date>2026-05-14</date>
     </version>
     <author><name>Sourceright Project</name></author>
-    <homepage>https://github.com/with-two-eyes/sourceright</homepage>
+    <homepage>https://github.com/edithatogo/sourceright</homepage>
     <license>Apache-2.0 OR MIT</license>
 </plugin>
 `

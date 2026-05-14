@@ -137,6 +137,40 @@ sourceright policy [--policy <policy.json>] <references.csl.json>
 ```
 
 **Exit code:** `0`
+### 7. Provider Runtime Controls — Timeout, Retry, Min-Interval, Cache
+
+**Purpose:** Verify that provider runtime controls (timeout, retry, min-interval, cache)
+are configurable and respected. These are defined in `LiveProviderConfig` in
+`src/live_providers.rs` and controlled via environment variables.
+
+**Configuration reference:**
+| Variable | Default | Controls |
+|---|---|---|
+| `SOURCERIGHT_PROVIDER_TIMEOUT_SECS` | `20` | HTTP request timeout |
+| `SOURCERIGHT_PROVIDER_MAX_RETRIES` | `2` | Max retry attempts on failure |
+| `SOURCERIGHT_PROVIDER_MIN_INTERVAL_MS` | `1000` | Minimum delay between provider requests |
+| `SOURCERIGHT_PROVIDER_CACHE_DIR` | (none) | Optional filesystem cache directory |
+| `SOURCERIGHT_LIVE_PROVIDERS` | (false) | Master enable for live provider calls |
+| `SOURCERIGHT_LIVE_PROVIDER_SMOKE` | (false) | Enable smoke tests for provider adapters |
+
+**Verification approach:**
+1. Set `SOURCERIGHT_PROVIDER_TIMEOUT_SECS=1` and observe timeout behavior
+2. Set `SOURCERIGHT_PROVIDER_MAX_RETRIES=0` and confirm no retry on failure
+3. Set `SOURCERIGHT_PROVIDER_CACHE_DIR=/tmp/provider-cache` and confirm cache hits
+4. Verify default config: `cargo test live_provider_config_defaults_to_conservative_runtime_policy`
+
+**Key assertions:**
+- Default timeout is 20 seconds (conservative)
+- Default max retries is 2
+- Default min interval is 1000ms
+- Cache is optional (None by default)
+- Live providers are disabled by default (opt-in only)
+
+**Exit code:** `0` when config tests pass
+
+---
+
+
 
 
 ## Transcript Template

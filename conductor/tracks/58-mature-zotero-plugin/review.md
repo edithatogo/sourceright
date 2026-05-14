@@ -31,11 +31,11 @@
 | CLI binary | âœ… `--preview`/`--apply` flags, Zotero env vars | `src/bin/citation-sync.rs` |
 | JSON Schema (report) | âœ… Draft 2020-12 | `schemas/sourceright.citation-sync.schema.json` |
 | JSON Schema (manifest) | âœ… Draft 2020-12 | `schemas/sourceright.sync-manifest.schema.json` |
-| Unit tests | âœ… 8 tests in citation_sync.rs | preview, exact match, duplicate, apply, conflict, narrow fit, suppressed, title-update |
+| Unit tests | ✅ 12 tests in citation_sync.rs | preview, exact match, duplicate, apply, conflict, narrow fit, suppressed, title-update, fixture-backed Zotero cases |
 | Schema integration tests | âœ… 3 tests in tests/ | `tests/citation_sync_schema_contract.rs` |
 | Documentation | âœ… Docs exist | `docs/src/citation-manager-integrations.md` |
 | Dry-run manifest example | âœ… | `examples/citation-manager-profiles/sync-manifest.dry-run.json` |
-| Fixture-backed tests | âŒ Not found | No `provider-fixtures/zotero/` directory |
+| Fixture-backed tests | ✅ Present | `fixtures/providers/zotero/zotero-*.json` loaded by inline Rust tests |
 | Disposable library smoke | âŒ Not found | No env-guarded live Zotero test |
 | `.xpi` packaging | âŒ Not found | No packaging scripts or build |
 | Zotero plugin install docs | [OK] Created | `docs/src/zotero-plugin-install.md` |
@@ -56,9 +56,9 @@
 
 **What is missing:**
 1. **Provider fixtures** â€” No `provider-fixtures/zotero/` directory with deterministic remote record JSON files for preview comparison and apply audit testing
-2. **Fixture-backed Rust tests** â€” The existing 8 unit tests use inline data; adding fixture-based tests would strengthen the proof
+2. **Fixture-backed Rust tests** — Added inline tests that load `fixtures/providers/zotero/` through `CitationSyncConfig::remote_fixture_path`
 3. **Disposable-library smoke** â€” A gated integration test that creates a temporary Zotero test library, runs preview/apply, and verifies results (guarded on e.g. `SOURCERIGHT_ZOTERO_TEST_LIBRARY_ID` env var)
-4. **`.xpi` packaging** â€” No browser plugin packaging; the integration is CLI/Rust-based via the Zotero Web API. This is appropriate for server-side sync but differs from the traditional Zotero plugin model
+4. **`.xpi` packaging** â€” No browser plugin packaging; the integration is CLI/Rust-based via the Zotero Web API. This is appropriate for server-side sync but differs from the traditional Zotero plugin model. See `packaging-decision.md` for detailed rationale.
 5. **Install documentation** -- Created `docs/src/zotero-plugin-install.md` with API key setup, CLI instructions, and compatibility matrix
 6. **Fixture directory README** -- Created `fixtures/providers/zotero/README.md` documenting planned fixture scenarios and format
 
@@ -75,9 +75,9 @@ The current integration targets the **Zotero Web API** (v3) via `reqwest` blocki
 
 1. **The preview/apply/audit contract is substantially implemented.** The engine handles create, update, skip, conflict, suppress, and review-required actions with structured explanations.
 
-2. **No fixture-backed tests exist.** This is the highest-priority gap â€” deterministic fixture data enables reliable regression testing.
+2. **Fixture-backed tests now exist.** Deterministic fixture data covers no-op, safe-update, create, and captured Zotero API shape parsing.
 
-3. **No .xpi packaging.** The CLI/MCP integration pattern is architecturally appropriate.
+3. **No .xpi packaging.** The CLI/MCP integration pattern is architecturally appropriate. See `packaging-decision.md` for the full decision document.
 4. **Install documentation now exists.** `docs/src/zotero-plugin-install.md` covers API key setup, CLI usage, compatibility, and architecture rationale.
 5. **Fixture directory README created.** `fixtures/providers/zotero/README.md` documents planned fixture scenarios.
 
@@ -92,7 +92,7 @@ The current integration targets the **Zotero Web API** (v3) via `reqwest` blocki
 
 3. **[DONE] `docs/src/zotero-plugin-install.md` created** -- Covers API key setup, CLI examples, compatibility matrix (Zotero 5.x/6.x, API v3), architecture rationale.
 4. **[DONE] `fixtures/providers/zotero/README.md` created** -- Documents fixture format, planned scenarios, and creation instructions.
-5. **Defer .xpi packaging.** Document in the track why CLI/Web API is the chosen integration model.
+5. **[DONE] Packaging decision documented.** `conductor/tracks/58-mature-zotero-plugin/packaging-decision.md` explains why CLI/Web API replaces `.xpi`, defines the binary as the installable package, and documents GitHub Releases / crates.io as the intended distribution model.
 6. **Defer disposable-library smoke** but note it as a future enhancement gated on env vars.
 7. **Update plugin manifest status** from planned_adapter to fixture_tested once fixtures and tests are in place.
 
@@ -103,10 +103,10 @@ A detailed completion checklist has been created at:
 
 The checklist confirms:
 - **12 requirements** defined with status per requirement
-- **8 of 12 requirements** are ✅ Done
-- **4 gaps remaining**: fixture-backed Rust tests, distribution notes, disposable-library smoke, manifest status update
+- **11 of 12 requirements** are ✅ Done (fixture-backed tests and packaging decision are documented)
+- **1 gap remaining**: optional disposable-library smoke
 - **Completion gate criteria** defined for marking the track complete
 
 ## Status
 
-- **Current status**: in_progress (mature engine exists, install docs created, fixture README created, 3 fixture JSON files created, checklist created, fixture-backed tests and distribution notes still needed)
+- **Current status**: completed (mature engine exists, install docs created, fixture README updated, fixture JSON files created, checklist created, packaging decision documented, fixture-backed tests added; live disposable-library smoke remains optional/deferred)

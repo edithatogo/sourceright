@@ -8,7 +8,8 @@ CI pipeline, or MCP server runtime.
 > **Architecture note:** The CLI/Web API approach was chosen over a `.xpi` browser plugin
 > because Sourceright is a server-side/CLI tool. The Web API integration works in CI/CD
 > pipelines, MCP server runtimes, and shared group libraries without requiring a browser
-> extension. See [Architecture Decision: API Mode](#architecture-decision-api-mode).
+> extension. See the [Architecture Decision section](#architecture-decision-cliweb-api-mode) below
+> and the full [Packaging Decision document](../../conductor/tracks/58-mature-zotero-plugin/packaging-decision.md).
 
 ---
 
@@ -154,16 +155,36 @@ cat ./sync-audit.jsonl | jq '.action, .reference_id, .explanation'
 
 ---
 
-## Architecture Decision: API Mode
+## Architecture Decision: CLI/Web API Mode
+
+### Detailed rationale
+
+For full reasoning, see:
+[`conductor/tracks/58-mature-zotero-plugin/packaging-decision.md`](../../conductor/tracks/58-mature-zotero-plugin/packaging-decision.md)
+
+### Comparison table
 
 | Criterion | CLI/Web API (chosen) | .xpi Plugin (deferred) |
 |-----------|---------------------|------------------------|
-| CI/CD use | Yes | No (needs browser) |
-| MCP integration | Yes | No |
-| Group libraries | Yes | No (user-scoped) |
-| Audit log on disk | Yes (JSONL) | No |
-| Installation | No signing needed | Needs packaging |
-| Zotero UI | No | Yes (in-browser) |
+| CI/CD use | Yes (no browser needed) | No (requires Firefox/Chrome runtime) |
+| MCP integration | Yes (stdio/HTTP transport) | No (browser-scoped API) |
+| Group libraries | Yes (via `/groups/{id}` endpoint) | No (user profile scope) |
+| Audit log on disk | Yes (JSONL, configurable path) | No (browser storage) |
+| Installation | Binary + API key; no signing needed | `.xpi` packaging, signing, per-user install |
+| Zotero UI required | No (CLI works headless) | Yes (in-browser extension) |
+| Distribution channel | GitHub Releases, crates.io | Zotero Plugin Gallery |
+| Write permissions | API key scoping | Extension permissions manifest |
+
+### What this means for users
+
+1. **No browser plugin to install.** You get the `sourceright` binary via GitHub
+   Releases or `cargo install`, configure a few environment variables, and run
+   `sourceright citation-sync --preview` to verify.
+2. **Works everywhere.** The same binary works on your desktop, in CI/CD pipelines,
+   in MCP server runtimes, and on remote/headless servers (using the public API).
+3. **Same preview/apply contract.** The `--preview`/`--apply` flags and JSONL audit
+   logs behave identically regardless of whether you target the local Zotero API
+   (`127.0.0.1:23119`) or the public API (`api.zotero.org`).
 
 ---
 

@@ -87,7 +87,49 @@ The `JournalPlatform::Ojs` variant is already defined and used in tests.
 
 5. **Defer PKP Gallery submission** until packaging is built and tested.
 
+## Progress Evidence (2026-05-14)
+
+### Acceptance Criteria Assessment
+
+| Scenario | Acceptance | Status | Evidence |
+|----------|-----------|--------|----------|
+| **Package** | OJS plugin package builds and has install instructions | 🔵 Partial | `installation-guide.md` documents the CLI/MCP service path. A PHP plugin wrapper/package is still required before claiming an installable OJS/PKP plugin. |
+| **Screening** | Fixture submission produces editor and author outputs | ✅ Completed | `fixtures/journal/ojs-submission.json` exercises 5 reference states. `src/journal.rs` produces `editorial_summary` and `author_action_checklist`. Test matrix update (`test-matrix-update.md`) maps 24 test scenarios across intake, individual reference states, summary integrity, and editorial/author outputs. |
+| **Permissions** | Plugin permissions and data boundaries are documented | ✅ Completed | `installation-guide.md` section 4 documents OJS role-based access (6 roles), data boundaries (5 data types with read/write/persistence), privacy and processing rules. |
+| **Live smoke** | Optional OJS test instance smoke passes or skips cleanly | 🔵 Deferred | Documented as a limitation in `installation-guide.md` section 6.2 with workaround (manual testing on target instance). |
+| **Gallery** | PKP/OJS gallery readiness tracked separately | ✅ Completed | `gallery-readiness.md` documents 12 gaps with effort estimates, Path A/B recommendations, and submission process. |
+
+### Architecture Decision
+
+The integration currently follows the **CLI/MCP service model** (not a traditional OJS PHP plugin). This is documented in `installation-guide.md` section 1 and aligns with the gallery-readiness recommendation (Path B for service, Path A deferred for Gallery submission).
+
+### Files Created/Updated
+
+| File | Action | Purpose |
+|------|--------|---------|
+| `conductor/tracks/60-mature-ojs-plugin/installation-guide.md` | **NEW** | Architecture decision, installation steps, integration methods (CLI/MCP/batch), permission boundaries, configuration reference, current status, troubleshooting, uninstallation |
+| `conductor/tracks/60-mature-ojs-plugin/metadata.json` | Updated | Status remains `in_progress` until PHP packaging or an equivalent installable OJS package exists |
+
+### Existing Assets (Verified)
+
+- `plugins/manifests/journal.ojs.toml` — `planned_adapter` status
+- `src/journal.rs` — `JournalPlatform::Ojs`, `screen_journal_submission()`, `editorial_summary`, `author_action_checklist`
+- `fixtures/journal/ojs-submission.json` — 5 references with mixed integrity states
+- `conductor/tracks/60-mature-ojs-plugin/gallery-readiness.md` — PKP Gallery gaps and Path A/B
+- `conductor/tracks/60-mature-ojs-plugin/test-matrix-update.md` — 24 test scenarios mapped to acceptance criteria
+- `docs/src/journal-integrations.md` — Platform-neutral integration contract
+
+### Remaining Work (Post-Completion)
+
+| Item | Owner | Priority |
+|------|-------|----------|
+| PHP plugin wrapper (Path A for Gallery) | Track 60 | Medium |
+| REST/HTTP endpoint for OJS | Track 60 | Medium |
+| OJS test-instance smoke script | Track 45 | Low |
+| PKP Gallery submission | Track 63 | Low |
+| Localisation / i18n | Track 60 | Low |
+
 ## Status
 
 - **Previous status**: planned
-- **New status**: in_progress (screening engine is mature; OJS packaging, fixtures, and install docs needed)
+- **New status**: in_progress (screening engine is mature and the CLI/MCP service path is documented; OJS/PKP package proof remains open)

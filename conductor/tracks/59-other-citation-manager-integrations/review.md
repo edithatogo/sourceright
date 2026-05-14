@@ -1,4 +1,4 @@
-# Track 59 — Other Citation Manager Integrations: Review
+﻿# Track 59 — Other Citation Manager Integrations: Review
 
 ## Current State
 
@@ -80,4 +80,24 @@
 ## Status
 
 - **Previous status**: planned
-- **Current status**: planned (decision table created ✅, EndNote ENW/RIS export exists ✅, all other managers deferred — fixtures needed before advancing)
+- **Current status**: completed (all 4 acceptance criteria verified ✅)
+
+## Completion Evidence
+
+| # | Acceptance Criterion | Evidence | Verdict |
+|---|---------------------|----------|---------|
+| 1 | **EndNote handoff** - ENW/RIS output generated, reparsed, documented | `src/export.rs` -> `export_ris()`/`export_enw()`; golden fixtures at `fixtures/export/endnote-export.{ris,enw}`; fixture-backed tests `ris_export_matches_endnote_handoff_fixture` and `enw_export_matches_endnote_handoff_fixture`; documented in `docs/src/exports.md` and `docs/src/citation-manager-integrations.md` | ✅ PASS |
+| 2 | **Manager decision** - Each target manager has support/defer rationale | `decision-table.md` covers 8 target managers (Zotero, EndNote, Mendeley, Paperpile, JabRef, RefWorks, Citavi, Papers/ReadCube) + 3 systematic-review tools (RevMan, Rayyan, Covidence); each row has explicit Decision + Rationale | ✅ PASS |
+| 3 | **Import/export proof** - Supported managers have fixture-backed proof | EndNote: 2 golden-file fixtures + 2 `include_str!` tests; Zotero: 3 fixtures at `fixtures/providers/zotero/` (Track 51/58); decision table labels only Zotero/EndNote as "Implementing" (not "supported") | ✅ PASS |
+| 4 | **Claim boundary** - Docs do not imply live sync where only file handoff exists | `docs/src/citation-manager-integrations.md` separates Zotero preview/apply/audit from file exports; `conductor/requirements.md` guard: "Do not claim Zotero live sync from EndNote/RIS export proof"; `decision-table.md` Claim Boundary Enforcement section | ✅ PASS |
+
+### Files verified during completion gate
+
+| File | Role |
+|------|------|
+| `decision-table.md` | Manager decisions, evidence summary, claim boundary enforcement |
+| `docs/src/citation-manager-integrations.md` | Citation-manager integration boundaries, Zotero fixture doc |
+| `src/export.rs` | ENW/RIS exporters with fixtures |
+| `fixtures/export/endnote-export.enw` | ENW golden fixture |
+| `fixtures/export/endnote-export.ris` | RIS golden fixture |
+| `metadata.json` | Track status -> **completed** |

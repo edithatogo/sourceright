@@ -173,7 +173,11 @@ fn load_remote_records(
 ) -> Result<Vec<RemoteCitationRecord>, CitationSyncError> {
     if let Some(path) = &config.remote_fixture_path {
         let input = fs::read_to_string(path)?;
-        return Ok(serde_json::from_str(&input)?);
+        let value: serde_json::Value = serde_json::from_str(&input)?;
+        if let Ok(records) = serde_json::from_value::<Vec<RemoteCitationRecord>>(value.clone()) {
+            return Ok(records);
+        }
+        return Ok(parse_remote_records(&value));
     }
 
     if config.preview {
@@ -220,27 +224,45 @@ fn parse_remote_records(value: &serde_json::Value) -> Vec<RemoteCitationRecord> 
         .into_iter()
         .flatten()
         .enumerate()
-        .map(|(index, item)| RemoteCitationRecord {
-            key: item
-                .get("key")
-                .and_then(|value| value.as_str())
-                .map(|value| value.to_string())
-                .unwrap_or_else(|| format!("remote-{index:04}")),
-            item_type: item
-                .get("itemType")
-                .and_then(|value| value.as_str())
-                .unwrap_or("document")
-                .to_string(),
-            title: item
-                .get("title")
-                .and_then(|value| value.as_str())
-                .map(|value| value.to_string()),
-            doi: item
-                .get("DOI")
-                .and_then(|value| value.as_str())
-                .map(|value| value.to_string()),
+        .map(|(index, item)| {
+            let data = item.get("data").unwrap_or(item);
+            RemoteCitationRecord {
+                key: first_string(item, data, &["key"])
+                    .map(str::to_string)
+                    .unwrap_or_else(|| format!("remote-{index:04}")),
+                item_type: first_string(item, data, &["itemType", "item_type"])
+                    .map(zotero_item_type_to_csl)
+                    .unwrap_or("document")
+                    .to_string(),
+                title: first_string(item, data, &["title"]).map(str::to_string),
+                doi: first_string(item, data, &["DOI", "doi"]).map(str::to_string),
+            }
         })
         .collect()
+}
+
+fn zotero_item_type_to_csl(item_type: &str) -> &str {
+    match item_type {
+        "journalArticle" => "article-journal",
+        "bookSection" => "chapter",
+        "conferencePaper" => "paper-conference",
+        "thesis" => "thesis",
+        "book" => "book",
+        "document" => "document",
+        other => other,
+    }
+}
+
+fn first_string<'a>(
+    item: &'a serde_json::Value,
+    data: &'a serde_json::Value,
+    keys: &[&str],
+) -> Option<&'a str> {
+    keys.iter().find_map(|key| {
+        item.get(key)
+            .or_else(|| data.get(key))
+            .and_then(|value| value.as_str())
+    })
 }
 
 fn plan_sync_actions(
@@ -1110,6 +1132,141 @@ mod tests {
             report.actions[0],
             CitationSyncAction::Update { ref explanation, .. }
                 if explanation.contains("safe metadata update")
+        ));
+    }
+
+    #[test]
+    fn fixture_backed_exact_match_is_no_op() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        let fixture = include_str!("../fixtures/providers/zotero/zotero-exact-match.json");
+        fs::write(&remote_path, fixture).expect("write fixture");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: true,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert_eq!(report.skip_count, 1);
+        assert_eq!(report.create_count, 0);
+        assert_eq!(report.update_count, 0);
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Skip {
+                suggestion: CitationSyncSuggestionKind::NoOp,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn fixture_backed_title_update_is_safe_update() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        let fixture = include_str!("../fixtures/providers/zotero/zotero-title-update.json");
+        fs::write(&remote_path, fixture).expect("write fixture");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: true,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert_eq!(report.update_count, 1);
+        assert_eq!(report.skip_count, 0);
+        assert_eq!(report.create_count, 0);
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Update {
+                suggestion: CitationSyncSuggestionKind::SafeUpdate,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn fixture_backed_empty_remote_proposes_create() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        let fixture = include_str!("../fixtures/providers/zotero/zotero-empty.json");
+        fs::write(&remote_path, fixture).expect("write fixture");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: true,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert_eq!(report.create_count, 1);
+        assert_eq!(report.skip_count, 0);
+        assert_eq!(report.update_count, 0);
+    }
+
+    #[test]
+    fn zotero_api_shaped_fixture_is_parsed_for_preview() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        fs::write(
+            &remote_path,
+            r#"[{"key":"ABC123DEF456","version":42,"data":{"key":"ABC123DEF456","itemType":"journalArticle","title":"Benchmark reference","DOI":"10.1234/benchmark"}}]"#,
+        )
+        .expect("write remote");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: true,
+                apply: false,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        assert_eq!(report.skip_count, 1);
+        assert!(matches!(
+            report.actions[0],
+            CitationSyncAction::Skip {
+                ref zotero_key,
+                suggestion: CitationSyncSuggestionKind::NoOp,
+                ..
+            } if zotero_key == "ABC123DEF456"
         ));
     }
 }

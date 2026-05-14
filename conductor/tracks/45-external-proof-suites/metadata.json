@@ -1,6 +1,6 @@
 {
   "id": "45-external-proof-suites",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owners": ["codex"],
   "dependencies": [

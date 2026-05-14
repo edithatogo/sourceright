@@ -1,11 +1,7 @@
 ﻿# Zotero Fixtures
 
-This directory will hold JSON fixture files representing Zotero Web API (v3) responses
-for deterministic testing of the `citation-sync` preview/apply/audit engine.
-
-> **Note:** No fixture files are checked in yet. Zotero fixture creation requires
-> capturing live API responses from a running Zotero instance. See
-> [How to create fixtures](#how-to-create-fixtures) below.
+This directory holds deterministic Zotero fixture files for the `citation-sync`
+preview/apply/audit engine.
 
 ## Purpose
 
@@ -21,32 +17,35 @@ calls to the Zotero API. This enables:
 
 ## Fixture Format
 
-Each fixture file is a JSON array of Zotero item objects as returned by the
-[Zotero Web API /items endpoint](https://www.zotero.org/support/dev/web_api/v3/basics).
-Each item has the following structure:
+Preferred regression fixtures use Sourceright's compact remote-record shape:
 
 ```json
-{
-  "key": "ABC123DEF",
-  "version": 1234,
-  "data": {
+[
+  {
     "key": "ABC123DEF",
-    "itemType": "journalArticle",
+    "item_type": "article-journal",
     "title": "Example Publication Title",
-    "creators": [
-      { "firstName": "Jane", "lastName": "Doe" }
-    ],
-    "DOI": "10.1234/example.2025.001",
-    "date": "2025-01-15",
-    "extra": "",
-    "tags": [],
-    "collections": [],
-    "relations": {},
-    "notes": [],
-    "dateAdded": "2025-01-15T10:00:00Z",
-    "dateModified": "2025-01-15T10:00:00Z"
+    "doi": "10.1234/example.2025.001"
   }
-}
+]
+```
+
+The loader also accepts captured Zotero Web API item responses where metadata is
+nested under `data`:
+
+```json
+[
+  {
+    "key": "ABC123DEF",
+    "version": 1234,
+    "data": {
+      "key": "ABC123DEF",
+      "itemType": "journalArticle",
+      "title": "Example Publication Title",
+      "DOI": "10.1234/example.2025.001"
+    }
+  }
+]
 ```
 
 ## Planned Fixture Scenarios
@@ -55,9 +54,9 @@ Each item has the following structure:
 
 | Fixture file | Scenario | Expected actions |
 |---|---|---|
-| `preview.single-exact-match.json` | Same DOI + title | 1 Skip (NoOp) |
-| `preview.title-update-needed.json` | Same DOI, different title | 1 Update (SafeUpdate) |
-| `preview.create-needed.json` | DOI not in Zotero | 1 Create |
+| `zotero-exact-match.json` | Same DOI + title | 1 Skip (NoOp) |
+| `zotero-title-update.json` | Same DOI, different title | 1 Update (SafeUpdate) |
+| `zotero-empty.json` | DOI not in Zotero | 1 Create |
 | `preview.narrow-fit.json` | Shared tokens, no DOI | 1 LowConfidence or Suppressed |
 | `preview.doi-conflict.json` | Same DOI, different titles | 1 Conflict |
 | `preview.mixed-scenario.json` | Multiple items, all action types | Multiple actions |
@@ -66,9 +65,7 @@ Each item has the following structure:
 
 | Fixture file | Scenario | Expected behavior |
 |---|---|---|
-| `apply.create-item.json` | CSL item absent from Zotero | Create written to audit log |
-| `apply.update-item.json` | CSL item with updated title | Update written to audit log |
-| `apply.skip-noop.json` | CSL item identical to Zotero | Skip recorded |
+| `apply-success-preview.json` | CSL item absent from Zotero | Create written to audit log in apply-mode tests |
 
 ### Edge case scenarios
 
@@ -83,16 +80,17 @@ Each item has the following structure:
 
 1. Start Zotero desktop (local API at `http://127.0.0.1:23119`).
 2. Set your API key and library environment variables.
-3. Run: `sourceright citation-sync --preview --remote-fixture ./captured-items.json`
-4. Trim the captured fixture to the desired scenario.
-5. Place the fixture file in this directory.
+3. Capture a small `/items` response from the Zotero API, or write the compact
+   `RemoteCitationRecord` JSON shape directly.
+4. Trim the fixture to the desired scenario and remove unrelated personal data.
+5. Place the fixture file in this directory and add a fixture-backed test.
 
 ## Usage in Tests
 
 Rust integration tests can load fixtures as follows:
 
 ```rust
-let fixture_path = Path::new("fixtures/providers/zotero/preview.single-exact-match.json");
+let fixture_path = Path::new("fixtures/providers/zotero/zotero-exact-match.json");
 let config = CitationSyncConfig {
     remote_fixture_path: Some(fixture_path.to_path_buf()),
     ..Default::default()

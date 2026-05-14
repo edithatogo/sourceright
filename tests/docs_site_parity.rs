@@ -100,6 +100,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/guides/zotero-plugin-install.md",
         ),
         (
+            "host-packaging.md",
+            "docs-site/src/content/docs/guides/host-packaging.md",
+        ),
+        (
             "journal-integrations.md",
             "docs-site/src/content/docs/journal-integrations.md",
         ),
@@ -143,6 +147,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
         (
             "coverage-status.md",
             "docs-site/src/content/docs/guides/coverage-status.md",
+        ),
+        (
+            "devsecops-automation-upgrade.md",
+            "docs-site/src/content/docs/guides/devsecops-automation-upgrade.md",
         ),
         (
             "operations-status.md",

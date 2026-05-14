@@ -49,21 +49,21 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 42 GitHub automation and alert operations | completed | Verify GitHub-side Copilot, Dependabot/code-scanning alert state, installed apps, and low-noise automation settings. |
 | 43 Publication registry completion | completed | Close the accepted/prepared/deferred registry gaps for Glama, Smithery, GHCR evidence, and future package managers. |
 | 44 Branch triage and stale-work closure | completed | Triage unmerged branches against current `main`, merging, superseding, or archiving with evidence. |
-| 45 External proof suites | in_progress | Add opt-in proof suites for installed CLI, MCP stdio, OJS, citation managers, live providers, and registries. |
-| 46 Plugin and provider roadmap delivery | in_progress | Convert every planned plugin/provider manifest into an owned implementation, fixture, or explicit deferral track. |
+| 45 External proof suites | completed | Add opt-in proof suites for installed CLI, MCP stdio, OJS, citation managers, live providers, and registries. |
+| 46 Plugin and provider roadmap delivery | completed | Convert every planned plugin/provider manifest into an owned implementation, fixture, or explicit deferral track. |
 | 47 Contract evidence and overclaim gates | completed | Enforce the requirements/design contracts so docs, releases, and tracks cannot overclaim completion. |
 | 48 Public API provider adapters | completed | Implement or explicitly defer Unpaywall, OpenCitations, arXiv, Europe PMC, and related public-provider adapters with fixtures. |
 | 49 Licensed BYO-key provider adapters | completed | Implement Dimensions, Scopus, and Web of Science contracts with auth, cache, privacy, and opt-in live gates. |
 | 50 Repository record provider adapters | completed | Split repository-record evidence into Zenodo, OSF, Figshare, Dataverse, and institutional-repository lanes. |
-| 51 Citation-manager adapter proof | in_progress | Separate Zotero preview/apply/audit sync from EndNote ENW/RIS handoff proof. |
+| 51 Citation-manager adapter proof | completed | Separate Zotero preview/apply/audit sync from EndNote ENW/RIS handoff proof. |
 | 52 Non-provider pipeline plugins | completed | Implement local bibliographic matching, recency/retraction policy checks, claim-source relevance, and DOCX/PDF extraction plugin contracts. |
-| 53 CourtListener legal provider | in_progress | Implement CourtListener as a legal-citation provider without touching academic CSL boundaries. |
+| 53 CourtListener legal provider | completed | Implement CourtListener as a legal-citation provider without touching academic CSL boundaries. |
 | 54 Demo public surface proof | completed | Prove GitHub Pages and Streamlit demos separately with static render, browser, and server smoke gates. |
 | 55 Benchmark robustness contract | completed | Keep benchmark, stress, robustness, and metrics artifacts first-class evidence gates. |
 | 56 MCP registry release binding | completed | Validate `server.json`, OCI labels, release artifacts, and official MCP Registry publication binding. |
 | 57 Smithery distribution readiness | completed | Prepare and validate the Smithery MCPB/local package path while keeping public listing claims gated. |
-| 58 Mature Zotero plugin | in_progress | Deliver a ready Zotero plugin or adapter package with `.xpi`, preview/apply/audit semantics, tests, and public distribution notes. |
-| 59 Other citation-manager integrations | in_progress | Harden EndNote reference-checking handoff plus Mendeley, Paperpile, JabRef, RefWorks, and CSL-compatible import/export decisions. |
+| 58 Mature Zotero plugin | completed | Deliver a ready Zotero plugin or adapter package with `.xpi`, preview/apply/audit semantics, tests, and public distribution notes. |
+| 59 Other citation-manager integrations | completed | Harden EndNote reference-checking handoff plus Mendeley, Paperpile, JabRef, RefWorks, and CSL-compatible import/export decisions. |
 | 60 Mature OJS plugin | in_progress | Deliver an installable OJS/PKP plugin path with platform-neutral screening, permissions, packaging, and Plugin Gallery readiness. |
 | 61 Streamlit app publication and hardening | completed | Make the Streamlit demo deployable, synthetic-data-only, smoke-tested, and clearly separated from the static Pages demo. |
 | 62 Expanded normaliser/provider catalogue | completed | Assess and track additional scholarly, economics, grey literature, repository, and search-provider normalisers. |
