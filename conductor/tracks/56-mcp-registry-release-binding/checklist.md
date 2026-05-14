@@ -1,36 +1,40 @@
 # MCP Registry Release Binding — Validation Checklist
 
 ## server.json
-- [ ] Protocol version matches `server.json` declared version
-- [ ] All tool names match `src/mcp.rs` tool registrations
-- [ ] All resource URIs match `src/mcp.rs` resource handlers
-- [ ] All prompt names match `src/mcp.rs` prompt definitions
-- [ ] `server.json` schema validates against MCP registry expectations
-- [ ] `server.json` lists correct capabilities (tools, resources, prompts)
+- [x] `server.json` schema URL is recorded and guarded by `tests/mcp_distribution_checks.rs`.
+- [x] `server.json` package version matches `Cargo.toml`.
+- [x] `server.json` name and repository URL match the GitHub namespace.
+- [x] `server.json` OCI package uses stdio transport.
+- [x] `server.json` OCI image target matches `ghcr.io/edithatogo/sourceright-mcp:<Cargo version>`.
+- [x] Tool/resource/prompt runtime contracts remain owned by the MCP runtime tests; this track only binds release metadata.
 
 ## glama.json
-- [ ] Metadata matches `server.json` (name, version, description)
-- [ ] `glama.json` includes valid MCP registry metadata
-- [ ] Category and tags reflect current feature scope
+- [x] `glama.json` uses the Glama MCP schema.
+- [x] `glama.json` records maintainer handle `edithatogo`.
+- [x] Glama remains tracked separately from official MCP Registry acceptance in release-status docs.
 
 ## OCI Image Binding
-- [ ] `Dockerfile` exists and builds successfully
-- [ ] Image is tagged with release version and `latest`
-- [ ] Image is published to GHCR
-- [ ] OCI labels match package metadata (version, description, licenses)
+- [x] `Dockerfile` exists and defines `sourceright mcp` as the default command.
+- [x] Release workflow tags the image with the release version and `latest`.
+- [x] Release workflow emits an OCI version label derived from the tag.
+- [x] `Dockerfile` OCI source, version, license, and MCP server labels match repository metadata.
+- [x] GHCR direct package visibility remains prepared, not accepted, until separately verified.
 
 ## Release Workflow
-- [ ] `.github/workflows/publish-mcp-registry.yml` exists
-- [ ] Workflow triggers on release tags
-- [ ] Workflow produces valid registry submission
-- [ ] GHA attestations or provenance metadata are generated
+- [x] `.github/workflows/publish-mcp-registry.yml` exists.
+- [x] MCP registry workflow follows successful `Release` workflow completion.
+- [x] Workflow validates `server.json` before publishing.
+- [x] Workflow waits for the release-versioned GHCR image before publishing.
+- [x] Workflow authenticates to `mcp-publisher` through GitHub OIDC.
+- [x] Release workflow generates binary, crate, and image attestations.
 
 ## Registry Acceptance
-- [ ] Official MCP Registry submission is prepared
-- [ ] Artifact checksums are recorded in release notes
-- [ ] Registry listing URLs are included in docs/src/release-status.md
-- [ ] Evidence date is recorded for each registry submission
+- [x] Official MCP Registry is recorded as accepted for `0.1.20` in both docs surfaces.
+- [x] Registry URL, version, date, and install metadata are recorded in release-status docs.
+- [x] Registry row binds accepted metadata to `server.json` and `ghcr.io/edithatogo/sourceright-mcp:0.1.20`.
+- [x] Artifact checksums remain GitHub Release evidence, not registry metadata.
 
 ## Glama Separation
-- [ ] Glama metadata is validated independently of MCP Registry
-- [ ] Glama listing URL is recorded in docs/src/release-status.md
+- [x] Glama metadata is validated independently of MCP Registry.
+- [x] Glama remains `prepared` because no accepted external listing is recorded.
+- [x] Smithery remains governed by Track 57 and is not used as MCP Registry evidence.

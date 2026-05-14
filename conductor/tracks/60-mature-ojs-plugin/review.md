@@ -35,10 +35,11 @@
 | Journal screening engine | ✅ Mature | `src/journal.rs` (187 lines) — `JournalScreeningReport`, `JournalPlatform::Ojs`, `screen_journal_submission()` |
 | Editor-facing output | ✅ | `JournalScreeningReport` has `editorial_summary` field |
 | Author-facing output | ✅ | `JournalScreeningReport` has `author_action_checklist` field |
-| Fixtures | ❌ Not found | No OJS-specific fixture data |
+| OJS submission fixture | ✅ **NEW - 2026-05-14** | `fixtures/journal/ojs-submission.json` — mixed integrity states, 5 references |
+| Gallery readiness doc | ✅ **NEW - 2026-05-14** | `conductor/tracks/60-mature-ojs-plugin/gallery-readiness.md` — gaps + requirements for PKP Gallery |
+| Test matrix update | ✅ **NEW - 2026-05-14** | `conductor/tracks/60-mature-ojs-plugin/test-matrix-update.md` — maps fixture scenarios to acceptance criteria |
 | Plugin packaging | ❌ Not found | No OJS plugin directory, build script, or XML |
 | Install docs | ❌ Not found | No OJS installation instructions |
-| Gallery checklist | ❌ Not found | No PKP/OJS gallery submission materials |
 | Test-instance smoke | ❌ Not found | No OJS test instance smoke script |
 
 ### Journal Screening Engine Review (`src/journal.rs`)
@@ -59,9 +60,13 @@ The `JournalPlatform::Ojs` variant is already defined and used in tests.
 
 2. **No OJS plugin packaging exists.** There is no PHP plugin directory, no `version.xml`, no `index.php` — the integration is CLI/MCP-based, not a traditional OJS PHP plugin.
 
-3. **No fixtures specific to OJS.** While `screen_journal_submission()` tests exist, they use minimal inline data rather than realistic OJS submission fixtures.
+3. **OJS submission fixture created.** `fixtures/journal/ojs-submission.json` covers 5 references with mixed integrity states: verified, provider conflict, retracted, queued, and missing DOI. The fixture exercises all relevant branches of the screening pipeline.
 
-4. **Plugin manifest accurately reflects status** at `planned_adapter`.
+4. **Gallery readiness doc created.** `conductor/tracks/60-mature-ojs-plugin/gallery-readiness.md` documents all PKP Plugin Gallery requirements, current gaps, integration architecture (Path A: PHP wrapper + CLI), and a submission process checklist. 12 gaps identified with effort estimates.
+
+5. **Test matrix update created.** `conductor/tracks/60-mature-ojs-plugin/test-matrix-update.md` maps OJS fixture scenarios to specific test acceptance criteria for future automation.
+
+6. **Plugin manifest accurately reflects status** at `planned_adapter`.
 
 ## Recommendations
 

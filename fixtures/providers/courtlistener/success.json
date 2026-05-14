@@ -1,0 +1,25 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 123456,
+      "absolute_url": "/opinion/123456/dobbs-v-jackson-womens-health-organization/",
+      "case_name": "Dobbs v. Jackson Women's Health Organization",
+      "case_name_short": "Dobbs v. Jackson Women's Health",
+      "court": "scotus",
+      "court_citation_string": "Supreme Court of the United States",
+      "date_filed": "2022-06-24",
+      "docket_number": "19-1392",
+      "citation": [
+        {"type": "official", "cite": "597 U.S. 215"},
+        {"type": "neutral", "cite": "2022 SCOTUS 19"}
+      ],
+      "syllabus": "Mississippi's Gestational Age Act...",
+      "source": "C",
+      "status": "Published",
+      "judges": "Roberts, C. J."
+    }
+  ]
+}

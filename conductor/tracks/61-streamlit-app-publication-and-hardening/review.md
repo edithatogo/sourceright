@@ -37,29 +37,40 @@ The Streamlit demo app at `streamlit_app/` is already well-implemented:
 | Sample data is synthetic | ✅ | `sample_workspace/` with 2 references |
 | No live provider calls | ✅ | All data from local JSON files |
 | Unit tests without Streamlit | ✅ | `test_demo_model.py` uses fake module |
-| Deployment docs | ❌ | No Streamlit Community Cloud docs |
+| Deployment docs | ✅ | `DEPLOY.md` and `deployment-checklist.md` exist |
 | Privacy notes | ❌ | README has claim boundary but no privacy policy |
 | CI requirement | ✅ | Unit tests run in CI via `demo_policy` |
 
 ---
 
+## New Documentation (Track 61)
+
+### Deployment Checklist (`deployment-checklist.md`)
+
+Created in the track directory, covering:
+- **Pre-Deployment Checks**: local verification, repository structure audit, CI gate
+- **Deployment Steps**: GitHub push, Streamlit Cloud connect, build monitoring
+- **Configuration**: environment variables (none required), secrets (none required)
+- **Resource Limits**: free tier limits documented (1 GB RAM, 10 GB storage, 15-min idle timeout)
+- **Post-Deployment Smoke Test**: basic smoke, functional smoke, CI gate re-check
+- **Maintenance Checklist**: update cycle, troubleshooting, auto-deploy verification
+- **Claim Boundary Reminder**: synthetic data disclaimer, no live APIs, no user data
+
+### Existing `DEPLOY.md`
+Already provides concise deployment steps for Streamlit Cloud and local hosting.
+
+---
+
 ## Recommendations
 
-### 1. Add Streamlit Community Cloud Deployment Docs
-Create `streamlit_app/deploy-docs.md` with:
-- `secrets.toml` template (empty — no secrets needed for synthetic demo)
-- Resource limits (free tier: 1 GB RAM, 10 GB storage)
-- Environment variables (none required)
-- Privacy note: "This demo uses only synthetic sample data. No user data is collected, stored, or transmitted."
+### 1. Deployment Documentation (DONE)
+Both `streamlit_app/DEPLOY.md` and `conductor/tracks/61/deployment-checklist.md` exist.
 
-### 2. Add `streamlit_app/DEPLOY.md`
-Short deployment steps for Cloud or local hosting.
-
-### 3. Consider Hardening
+### 2. Consider Hardening
 - Add `streamlit_app/security.md` noting the demo does not handle authentication or sensitive data
 - Add error boundary in `app.py` for missing/corrupt sample data
 
-### 4. Plugin Manifest
+### 3. Plugin Manifest
 `plugins/manifests/demo.github-pages.toml` only covers the static demo. Consider whether a separate Streamlit manifest is needed, or update the existing one to cover both surfaces.
 
 ---
@@ -67,4 +78,4 @@ Short deployment steps for Cloud or local hosting.
 ## Status
 
 - **Previous status**: planned
-- **New status**: in_progress (core implementation exists; deployment docs and hardening remain)
+- **New status**: in_progress (core implementation exists; deployment checklist created; hardening remains)

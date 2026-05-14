@@ -1,0 +1,61 @@
+{
+  "schema_version": "sourceright.citation_sync.v1",
+  "preview": true,
+  "applied": true,
+  "generate_time": "2025-05-14T12:00:00Z",
+  "total_items": 3,
+  "create_count": 1,
+  "update_count": 1,
+  "skip_count": 1,
+  "suppressed_count": 0,
+  "review_required_count": 0,
+  "conflict_count": 0,
+  "actions": [
+    {
+      "reference_id": "martinez-2025-trial",
+      "kind": "NoOp",
+      "action": "Skip",
+      "explanation": "DOI 10.1234/example-2025-001 and title match exactly. No write needed.",
+      "suggestion": {
+        "kind": "NoOp",
+        "zotero_key": "XYZ789ABCDEF",
+        "confidence": 0.99
+      }
+    },
+    {
+      "reference_id": "phelps-2023-hallucination",
+      "kind": "SafeUpdate",
+      "action": "Update",
+      "explanation": "DOI 10.5678/example-2023-089 matches Zotero item ABC456DEF789. Title differs: canonical has 'A plausible but unverifiable reference pattern in LLM-generated bibliographies'; Zotero has 'Plausible but unverified reference patterns in AI bibliographies'. Updating Zotero title to canonical.",
+      "suggestion": {
+        "kind": "SafeUpdate",
+        "zotero_key": "ABC456DEF789",
+        "field": "title",
+        "old_value": "Plausible but unverified reference patterns in AI bibliographies",
+        "new_value": "A plausible but unverifiable reference pattern in LLM-generated bibliographies",
+        "confidence": 0.94
+      }
+    },
+    {
+      "reference_id": "kumar-2025-no-doi",
+      "kind": "SafeUpdate",
+      "action": "Create",
+      "explanation": "Reference has no DOI and no matching Zotero item found by title. Creating new Zotero item.",
+      "suggestion": {
+        "kind": "LowConfidence",
+        "zotero_key": null,
+        "confidence": 0.65
+      }
+    }
+  ],
+  "audit_log_path": "./sync-audit.jsonl",
+  "config": {
+    "zotero_api_url": "http://127.0.0.1:23119/api",
+    "zotero_library_id": "123456",
+    "zotero_library_type": "user",
+    "preview": false,
+    "apply": true,
+    "audit_log_path": "./sync-audit.jsonl"
+  },
+  "errors": []
+}

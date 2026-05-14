@@ -64,7 +64,7 @@ pub use journal::{
 pub use legal::{
     LegalCitationIssue, LegalCitationIssueType, LegalCitationRecord, LegalCitationReport,
     LegalCitationType, LegalProvider, LegalProviderCandidate, analyze_legal_citations,
-    extract_legal_citations,
+    courtlistener_fixture_candidate, extract_legal_citations,
 };
 pub use live_providers::{
     LIVE_PROVIDER_SMOKE_SCHEMA_VERSION, LiveProviderConfig, LiveProviderExecution,

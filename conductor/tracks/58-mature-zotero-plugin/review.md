@@ -95,6 +95,18 @@ The current integration targets the **Zotero Web API** (v3) via `reqwest` blocki
 5. **Defer .xpi packaging.** Document in the track why CLI/Web API is the chosen integration model.
 6. **Defer disposable-library smoke** but note it as a future enhancement gated on env vars.
 7. **Update plugin manifest status** from planned_adapter to fixture_tested once fixtures and tests are in place.
+
+## Checklist
+
+A detailed completion checklist has been created at:
+`conductor/tracks/58-mature-zotero-plugin/checklist.md`
+
+The checklist confirms:
+- **12 requirements** defined with status per requirement
+- **8 of 12 requirements** are ✅ Done
+- **4 gaps remaining**: fixture-backed Rust tests, distribution notes, disposable-library smoke, manifest status update
+- **Completion gate criteria** defined for marking the track complete
+
 ## Status
 
-- **Current status**: in_progress (mature engine exists, install docs created, fixture README created, fixtures+integration tests needed, .xpi deferred)
+- **Current status**: in_progress (mature engine exists, install docs created, fixture README created, 3 fixture JSON files created, checklist created, fixture-backed tests and distribution notes still needed)

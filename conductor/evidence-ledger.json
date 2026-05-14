@@ -50,6 +50,22 @@
         "Automatic verification of registry listings remains excluded from this track."
       ]
     },
+    "56-mcp-registry-release-binding": {
+      "category": "publication",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "server.json is locally validated against Cargo.toml version, repository metadata, stdio transport, and the versioned GHCR OCI target.",
+        "Dockerfile and release workflow OCI labels are locally validated against the release version binding.",
+        "The MCP registry publishing workflow is locally validated to follow a successful release workflow, wait for the versioned GHCR image, authenticate through GitHub OIDC, and invoke mcp-publisher.",
+        "Release-status docs record Official MCP Registry acceptance for 0.1.20 and keep direct GHCR package visibility as prepared until separately verified.",
+        "Glama and Smithery distribution states remain separate from Official MCP Registry acceptance."
+      ],
+      "blockers": [
+        "No external publication was executed during this track implementation.",
+        "Direct GHCR package page visibility still requires separate live verification.",
+        "Future version bumps must update server.json, Dockerfile, and release-status docs together or the local regression checks will fail."
+      ]
+    },
     "45-external-proof-suites": {
       "category": "proof",
       "evidence_level": "contracted",

@@ -93,8 +93,8 @@ Sourceright OJS integration is a **CLI / MCP service**, not a traditional OJS PH
 | Reference report | ReferenceReportJsonOutput | Stable JSON schema |
 | CSL validation | csl.rs | Production-quality |
 | Sidecar model | Sidecar with candidates/conflicts | Production-quality |
-| OJS fixture | fixtures/journal/ojs-submission.json | **NEW - 2025-05-14** |
-| Gallery readiness | This document | **NEW - 2025-05-14** |
+| OJS fixture | fixtures/journal/ojs-submission.json | **NEW - 2026-05-14** |
+| Gallery readiness | This document | **NEW - 2026-05-14** |
 
 ### 6.2 Gaps Blocking Gallery Submission
 
@@ -180,7 +180,7 @@ PHP plugin handles OJS integration. Matches PKP Gallery expectations.
 
 | Date | Change |
 |---|---|
-| 2025-05-14 | Initial document - gaps and requirements for PKP Plugin Gallery submission |
+| 2026-05-14 | Initial document - gaps and requirements for PKP Plugin Gallery submission |
 
 ---
 
@@ -211,7 +211,7 @@ plugins/generic/sourceright/
     <type>plugins.generic</type>
     <package>sourceright</package>
     <release>0.1.0</release>
-    <date>2025-05-14</date>
+    <date>2026-05-14</date>
     <lazy-load>1</lazy-load>
     <sitewide>1</sitewide>
 </version>
@@ -233,7 +233,7 @@ plugins/generic/sourceright/
         <type>plugins.generic</type>
         <package>sourceright</package>
         <release>0.1.0</release>
-        <date>2025-05-14</date>
+        <date>2026-05-14</date>
     </version>
     <author><name>Sourceright Project</name></author>
     <homepage>https://github.com/with-two-eyes/sourceright</homepage>

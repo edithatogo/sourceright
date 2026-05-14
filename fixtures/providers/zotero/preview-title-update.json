@@ -1,0 +1,34 @@
+[
+  {
+    "key": "ABC456DEF789",
+    "version": 1234,
+    "data": {
+      "key": "ABC456DEF789",
+      "itemType": "journalArticle",
+      "title": "A Multi-Centre Randomised Trial of Citation Screening in Scholarly Publishing",
+      "creators": [
+        { "firstName": "Alice", "lastName": "Martinez" },
+        { "firstName": "Bob", "lastName": "Chen" }
+      ],
+      "DOI": "10.1234/example-2025-001",
+      "date": "2025-03-15",
+      "publicationTitle": "Journal of Scholarly Publishing",
+      "volume": "42",
+      "issue": "3",
+      "pages": "215–238",
+      "publisher": "Scholarly Press",
+      "extra": "",
+      "tags": [],
+      "collections": [],
+      "relations": {},
+      "notes": [],
+      "dateAdded": "2025-03-20T09:15:00Z",
+      "dateModified": "2025-04-01T11:30:00Z"
+    },
+    "meta": {
+      "creatorSummary": "Martinez, Chen",
+      "parsedDate": "2025-03-15",
+      "numChildren": 0
+    }
+  }
+]

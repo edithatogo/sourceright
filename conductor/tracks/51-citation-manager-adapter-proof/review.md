@@ -23,6 +23,9 @@
 | Sync manifest dry-run example | `examples/citation-manager-profiles/sync-manifest.dry-run.json` | ✅ RIS export dry run |
 | Documentation | `docs/src/citation-manager-integrations.md` | ✅ Preview/apply contract |
 | Provider fixtures | `provider-fixtures/` (7 subdirs) | ❌ **No Zotero/EndNote dirs** |
+| Zotero fixture: exact match | `fixtures/providers/zotero/preview-exact-match.json` | ✅ **NEW - 2025-05-14** |
+| Zotero fixture: title update | `fixtures/providers/zotero/preview-title-update.json` | ✅ **NEW - 2025-05-14** |
+| Zotero fixture: apply preview | `fixtures/providers/zotero/apply-success-preview.json` | ✅ **NEW - 2025-05-14** |
 
 ### Plugin Manifests
 

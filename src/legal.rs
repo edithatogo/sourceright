@@ -265,6 +265,65 @@ fn validate_legal_citation(record: &LegalCitationRecord) -> Vec<LegalCitationIss
     }
     issues
 }
+/// Parse a CourtListener API response payload and return a fixture-backed provider candidate.
+///
+/// This is a fixture-only adapter. It validates the response shape matches expected
+/// CourtListener API v4 patterns and extracts candidate evidence. Live API calls are
+/// not implemented; all evidence comes from prerecorded fixture files.
+pub fn courtlistener_fixture_candidate(
+    payload: &serde_json::Value,
+    citation_text: &str,
+) -> LegalProviderCandidate {
+    let results = payload
+        .get("results")
+        .and_then(|r| r.as_array())
+        .map(|arr| arr.len())
+        .unwrap_or(0);
+
+    if results == 0 {
+        return LegalProviderCandidate {
+            provider: LegalProvider::CourtListener,
+            confidence: 0.0,
+            identifier: citation_text.to_string(),
+            url: None,
+        };
+    }
+
+    let first = &payload["results"][0];
+    let case_name = first
+        .get("case_name")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    let docket = first
+        .get("docket_number")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+
+    let search_url = format!(
+        "https://www.courtlistener.com/?q={}",
+        urlencode(citation_text)
+    );
+
+    let confidence = if results == 1 { 0.85 } else { 0.5 };
+
+    LegalProviderCandidate {
+        provider: LegalProvider::CourtListener,
+        confidence,
+        identifier: format!("{} ({})", case_name, docket),
+        url: Some(search_url),
+    }
+}
+
+fn urlencode(input: &str) -> String {
+    input
+        .chars()
+        .map(|ch| match ch {
+            'A'..='Z' | 'a'..='z' | '0'..='9' | '-' | '_' | '.' | '~' => ch.to_string(),
+            ' ' => "+".to_string(),
+            _ => format!("%{:02X}", ch as u32),
+        })
+        .collect()
+}
 
 #[cfg(test)]
 mod tests {
@@ -337,5 +396,37 @@ mod tests {
             report.records[0].providers[0].provider,
             LegalProvider::CourtListener
         );
+    }
+
+    #[test]
+    fn courtlistener_success_fixture_returns_high_confidence_candidate() {
+        let payload: serde_json::Value = serde_json::from_str(include_str!(
+            "../fixtures/providers/courtlistener/success.json"
+        ))
+        .expect("courtlistener success fixture");
+        let candidate = courtlistener_fixture_candidate(&payload, "2022 SCOTUS 19");
+
+        assert_eq!(candidate.provider, LegalProvider::CourtListener);
+        assert_eq!(candidate.confidence, 0.85);
+        assert!(candidate.identifier.contains("Dobbs"));
+        assert!(
+            candidate
+                .url
+                .unwrap_or_default()
+                .contains("courtlistener.com")
+        );
+    }
+
+    #[test]
+    fn courtlistener_no_match_fixture_returns_zero_confidence() {
+        let payload: serde_json::Value = serde_json::from_str(include_str!(
+            "../fixtures/providers/courtlistener/no-match.json"
+        ))
+        .expect("courtlistener no-match fixture");
+        let candidate = courtlistener_fixture_candidate(&payload, "2099 NONEXIST 1");
+
+        assert_eq!(candidate.provider, LegalProvider::CourtListener);
+        assert_eq!(candidate.confidence, 0.0);
+        assert!(candidate.url.is_none());
     }
 }

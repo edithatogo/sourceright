@@ -52,8 +52,16 @@ fn server_json_version_matches_cargo_package_version() {
     let server: Value = serde_json::from_str(&read_repo_file("server.json"))
         .expect("server.json must be valid JSON");
 
+    assert_eq!(
+        server["$schema"],
+        json!("https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json")
+    );
     assert_eq!(server["name"], json!("io.github.edithatogo/sourceright"));
     assert_eq!(server["version"], json!(cargo_version.as_str()));
+    assert_eq!(
+        server["repository"]["url"],
+        json!("https://github.com/edithatogo/sourceright")
+    );
 }
 
 #[test]
@@ -91,6 +99,7 @@ fn server_json_has_expected_oci_distribution_target() {
 
 #[test]
 fn dockerfile_has_mcp_registry_ownership_labels() {
+    let cargo_version = parse_package_version_from_cargo_toml();
     let dockerfile = read_repo_file("Dockerfile");
 
     assert!(
@@ -101,6 +110,12 @@ fn dockerfile_has_mcp_registry_ownership_labels() {
         dockerfile.contains(
             "org.opencontainers.image.source=\"https://github.com/edithatogo/sourceright\""
         )
+    );
+    assert!(
+        dockerfile.contains(&format!(
+            "org.opencontainers.image.version=\"{cargo_version}\""
+        )),
+        "Dockerfile OCI version label must match Cargo.toml"
     );
 }
 
@@ -118,6 +133,67 @@ fn release_workflow_declares_oci_version_label() {
         ),
         "release workflow should label OCI image with version",
     );
+}
+
+#[test]
+fn publish_workflow_binds_registry_submission_to_release_image() {
+    let publish_workflow = read_repo_file(".github/workflows/publish-mcp-registry.yml");
+
+    assert!(
+        publish_workflow.contains("workflow_run"),
+        "MCP registry publication should follow the release workflow"
+    );
+    assert!(
+        publish_workflow.contains("workflow_run.conclusion == 'success'"),
+        "MCP registry publication must be gated on successful release workflow completion"
+    );
+    assert!(
+        publish_workflow.contains("data[\"name\"] == \"io.github.edithatogo/sourceright\""),
+        "publish workflow should validate the server name before submission"
+    );
+    assert!(
+        publish_workflow
+            .contains("ghcr.io/edithatogo/sourceright-mcp:${{ steps.version.outputs.version }}"),
+        "publish workflow should wait for the release-versioned GHCR image"
+    );
+    assert!(
+        publish_workflow.contains("./mcp-publisher login github-oidc"),
+        "publish workflow should use GitHub OIDC namespace verification"
+    );
+    assert!(
+        publish_workflow.contains("./mcp-publisher publish"),
+        "publish workflow should submit server.json through mcp-publisher"
+    );
+}
+
+#[test]
+fn release_status_records_mcp_registry_acceptance_and_ghcr_boundary() {
+    let cargo_version = parse_package_version_from_cargo_toml();
+    let release_status = read_repo_file("docs/src/release-status.md");
+    let docs_site_release_status = read_repo_file("docs-site/src/content/docs/release-status.md");
+
+    for content in [&release_status, &docs_site_release_status] {
+        assert!(
+            content.contains(&format!(
+                "| Official MCP Registry | accepted | {cargo_version} |"
+            )),
+            "release status must record the official MCP Registry as accepted for the Cargo version"
+        );
+        assert!(
+            content.contains(&format!(
+                "ghcr.io/edithatogo/sourceright-mcp:{cargo_version}"
+            )),
+            "release status must bind the MCP Registry entry to the versioned GHCR image"
+        );
+        assert!(
+            content.contains(&format!("| GHCR MCP image | prepared | {cargo_version} |")),
+            "release status must keep direct GHCR visibility as prepared until verified"
+        );
+        assert!(
+            content.contains("GHCR package visibility must be confirmed"),
+            "release status must preserve the GHCR direct-visibility boundary"
+        );
+    }
 }
 
 #[test]

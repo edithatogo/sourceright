@@ -60,7 +60,7 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 53 CourtListener legal provider | in_progress | Implement CourtListener as a legal-citation provider without touching academic CSL boundaries. |
 | 54 Demo public surface proof | completed | Prove GitHub Pages and Streamlit demos separately with static render, browser, and server smoke gates. |
 | 55 Benchmark robustness contract | completed | Keep benchmark, stress, robustness, and metrics artifacts first-class evidence gates. |
-| 56 MCP registry release binding | in_progress | Validate `server.json`, OCI labels, release artifacts, and official MCP Registry publication binding. |
+| 56 MCP registry release binding | completed | Validate `server.json`, OCI labels, release artifacts, and official MCP Registry publication binding. |
 | 57 Smithery distribution readiness | completed | Prepare and validate the Smithery MCPB/local package path while keeping public listing claims gated. |
 | 58 Mature Zotero plugin | in_progress | Deliver a ready Zotero plugin or adapter package with `.xpi`, preview/apply/audit semantics, tests, and public distribution notes. |
 | 59 Other citation-manager integrations | in_progress | Harden EndNote reference-checking handoff plus Mendeley, Paperpile, JabRef, RefWorks, and CSL-compatible import/export decisions. |

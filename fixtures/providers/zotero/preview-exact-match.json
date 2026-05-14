@@ -1,0 +1,37 @@
+[
+  {
+    "key": "XYZ789ABCDEF",
+    "version": 5678,
+    "data": {
+      "key": "XYZ789ABCDEF",
+      "itemType": "journalArticle",
+      "title": "A multi-centre randomised controlled trial of citation integrity screening in scholarly publishing",
+      "creators": [
+        { "firstName": "Alice", "lastName": "Martinez" },
+        { "firstName": "Bob", "lastName": "Chen" },
+        { "firstName": "Carol", "lastName": "Davies" }
+      ],
+      "DOI": "10.1234/example-2025-001",
+      "date": "2025-05-01",
+      "publicationTitle": "Journal of Scholarly Publishing",
+      "volume": "42",
+      "issue": "3",
+      "pages": "215–238",
+      "publisher": "Scholarly Press",
+      "ISSN": "1234-5678",
+      "url": "https://doi.org/10.1234/example-2025-001",
+      "extra": "",
+      "tags": [],
+      "collections": [],
+      "relations": {},
+      "notes": [],
+      "dateAdded": "2025-05-10T08:30:00Z",
+      "dateModified": "2025-05-12T14:22:00Z"
+    },
+    "meta": {
+      "creatorSummary": "Martinez, Chen, Davies",
+      "parsedDate": "2025-05-01",
+      "numChildren": 0
+    }
+  }
+]

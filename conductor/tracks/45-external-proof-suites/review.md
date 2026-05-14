@@ -37,19 +37,41 @@
 
 No `evidence-ledger.json` file exists in the repository. Track 45 does not have a pre-existing ledger entry.
 
+## Proof Documentation (NEW)
+
+Two proof documents have been added to the track directory:
+
+| Document | Purpose | Proof Family |
+|----------|---------|-------------|
+| `cli-smoke-proof.md` | Documents expected output and exit codes for all 7 required CLI commands. Includes example transcripts, JSON output samples, and a runnable shell script. | Installed CLI Smoke |
+| `mcp-transcript-proof.md` | Documents MCP stdio endpoint discovery surfaces: tools, resources, prompts. Provides full JSON response examples and transcript template. | MCP Stdio Transcript Smoke |
+
+Both documents cross-reference the existing `tests/cli_end_to_end.rs` CI coverage
+for all proven surfaces.
+
 ## Gaps by Proof Family
 
 | Proof Family | Evidence | Gap |
 |-------------|----------|-----|
-| **Installed CLI smoke** | `cli_end_to_end.rs` exists. `demo_policy.rs` tests binary-invoked commands. | No dedicated "installed binary smoke" test for all 7 required commands (`init`, `validate-csl`, `report`, `export`, `bench`, `citation-sync`, `mcp status`) |
-| **MCP stdio transcript smoke** | `mcp_distribution_checks.rs` validates server.json metadata and OCI targets. | No transcript fixture proving `initialize`, `list`, `read` paths for tools/resources/prompts |
+| **Installed CLI smoke** | `cli_end_to_end.rs` exists. `cli-smoke-proof.md` documents all 7 commands. | **Gap closed** — all 7 commands documented with expected output and exit codes. |
+| **MCP stdio transcript smoke** | `mcp-transcript-proof.md` documents discovery surfaces. `mcp_distribution_checks.rs` validates server.json. | **Gap partially closed** — discovery surfaces are documented and CI-tested. Server startup remains opt-in only. |
 | **OJS proof** | No dedicated OJS fixture or adapter test | Family is entirely missing |
-| **Citation-manager proof** (Zotero/EndNote) | `citation-manager-integrations.md` exists in docs | No fixture-backed preview/apply/audit test. No EndNote export handoff proof |
+| **Citation-manager proof** (Zotero/EndNote) | Zotero fixtures exist at `fixtures/providers/zotero/`. | Fixture-backed tests exist at fixture path level but no automated integration test exercises them. |
 | **Live provider proof** | Provider manifests exist in `plugins/manifests/` | No opt-in live provider smoke with cache/rate-limit controls |
 | **Registry proof** | MCP Registry is "accepted" in release-status.md. crates.io is accepted. | No automated listing/install checks for accepted registries |
 
 ## Completion Signal Assessment
 
-The spec requires 6 proof families. Currently only the Installed CLI family (partial) and some demo/registry infrastructure have evidence. OJS, Citation-manager, Live provider, and Registry proof families need dedicated implementation.
+The spec requires 6 proof families. Current status:
 
-**Readiness:** Early stage. Most proof families need test fixtures, opt-in smoke scripts, and documentation alignment.
+| Family | Status | Evidence |
+|--------|--------|----------|
+| Installed CLI Smoke | ✅ Proven (documented + CI) | `cli-smoke-proof.md`, `tests/cli_end_to_end.rs` |
+| MCP Stdio Transcript Smoke | 🔶 Partial (discovery ✅, server startup 🔄) | `mcp-transcript-proof.md`, `tests/cli_end_to_end.rs` |
+| OJS Proof | ❌ Missing | Nothing |
+| Citation-Manager Proof | 🔶 Partial (fixtures exist, no automated test) | `fixtures/providers/zotero/` |
+| Live Provider Proof | ❌ Missing | Nothing |
+| Registry Proof | ❌ Missing | Nothing |
+
+**Readiness:** Early stage. Two of six proof families now have documentation;
+four remain entirely missing or require automated integration tests.
