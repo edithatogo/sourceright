@@ -1,1 +1,32 @@
-{"id":"66-vscode-extension-packaging","status":"pending","priority":"medium","owners":["codex"],"dependencies":["24-cli-entrypoint-integration","47-contract-evidence-and-overclaim-gates","63-plugin-packaging-and-supply-chain-maturity","65-ai-client-mcp-packaging"],"owned_paths":["docs/src/host-packaging.md","conductor/plugin-compatibility-matrix.md","conductor/release-channels.md","conductor/tracks/66-vscode-extension-packaging/"]}
+{
+  "id": "66-vscode-extension-packaging",
+  "status": "completed",
+  "priority": "medium",
+  "owners": [
+    "codex"
+  ],
+  "dependencies": [
+    "24-cli-entrypoint-integration",
+    "47-contract-evidence-and-overclaim-gates",
+    "63-plugin-packaging-and-supply-chain-maturity",
+    "65-ai-client-mcp-packaging"
+  ],
+  "owned_paths": [
+    "docs/src/host-packaging.md",
+    "conductor/plugin-compatibility-matrix.md",
+    "conductor/release-channels.md",
+    "conductor/tracks/66-vscode-extension-packaging/"
+  ],
+  "evidence": {
+    "completion_date": "2026-05-15",
+    "decision": "Explicit deferral with future VSIX contract; no VSIX, VS Code Marketplace listing, or Open VSX listing is claimed.",
+    "contract": "Future extension must reuse CLI/MCP/LSP-wrapper diagnostics, respect Workspace Trust, keep live providers opt-in, and keep writes preview-only until explicit apply/audit semantics exist.",
+    "policy_test": "tests/vscode_extension_packaging_policy.rs",
+    "deferred": [
+      "VSIX package",
+      "VS Code Marketplace listing",
+      "Open VSX listing",
+      "Local install/uninstall smoke"
+    ]
+  }
+}

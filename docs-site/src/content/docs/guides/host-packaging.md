@@ -16,7 +16,7 @@ CSL.
 | Codex | 65 | CLI/MCP usable from repo workflows with `examples/mcp-clients/codex-config.toml`; no Codex-specific package. | Client smoke plus policy tests that keep Codex claims to CLI/MCP integration. |
 | GitHub Copilot | 64, 65 | Repository coding-agent prep exists through instructions and setup workflow; `examples/mcp-clients/vscode-mcp.json` covers VS Code MCP settings; no Copilot extension package. | Entitlement/settings evidence for coding-agent use, or a separate accepted Copilot extension package. |
 | Generic MCP clients | 56, 57, 65 | Official MCP Registry accepted for `0.1.20`; Glama and Smithery are prepared; `examples/mcp-clients/generic-mcp-client.json` documents local stdio launch. | Transcript smoke and separate accepted/prepared evidence per directory. |
-| VS Code | 66 | Development settings exist; no VSIX product package. | VSIX or explicit deferral, Marketplace/Open VSX notes, install smoke, and diagnostics contract. |
+| VS Code | 66 | Explicitly deferred with a future VSIX contract; `.vscode` settings and `examples/mcp-clients/vscode-mcp.json` are not an extension package. | VSIX package, Workspace Trust implementation, diagnostics fixture, install smoke, and Marketplace/Open VSX listing evidence. |
 | Microsoft Word | 67 | DOCX extraction is separate; no Office Add-in package. | Office Add-in manifest, sideload/AppSource notes, document-range provenance, reversible write plans, and fixture smoke. |
 | LibreOffice Writer | 68 | No `.oxt`/UNO extension package. | `.oxt` or explicit deferral, UNO/adapter contract, local install smoke, and document-range provenance. |
 | Zotero | 58 | Adapter track is in progress. | Package/install notes plus preview/apply/audit proof in a disposable library. |

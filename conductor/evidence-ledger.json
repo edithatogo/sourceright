@@ -279,15 +279,17 @@
     },
     "66-vscode-extension-packaging": {
       "category": "integration",
-      "evidence_level": "contracted",
+      "evidence_level": "scaffolded",
       "allowed_claims": [
-        "VS Code extension packaging is planned and contracted.",
+        "VS Code extension packaging is explicitly deferred with a documented future VSIX contract.",
         "Current .vscode settings are development tooling only.",
+        "examples/mcp-clients/vscode-mcp.json is MCP client configuration, not a VS Code extension.",
         "A future extension must reuse CLI/MCP diagnostics rather than reimplementing Sourceright logic."
       ],
       "blockers": [
         "No VSIX package, extension manifest, Marketplace listing, or Open VSX listing exists.",
-        "Diagnostics mapping, workspace-trust docs, and install smoke remain to be implemented."
+        "Workspace Trust implementation, package build, and install smoke remain future work.",
+        "Marketplace/Open VSX acceptance evidence is deferred to Track 69."
       ]
     },
     "67-word-addin-packaging": {

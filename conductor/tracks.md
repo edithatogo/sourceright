@@ -70,7 +70,7 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 63 Plugin packaging and supply-chain maturity | completed | Define no-submodule policy, signing, provenance, versioning, compatibility, deprecation, and sandbox/network gates for plugins. |
 | 64 GitHub-side governance additions | completed | Configure or document required GitHub-side settings for branch protection, Copilot, Renovate, code scanning, coverage, labels, and releases. |
 | 65 AI client MCP packaging | completed | Document and prove Claude, Codex, GitHub Copilot, and generic MCP-client packaging boundaries without overclaiming host plugins. |
-| 66 VS Code extension packaging | pending | Define a thin VS Code/editor package contract that reuses CLI/MCP diagnostics and stays preview-first for writes. |
+| 66 VS Code extension packaging | completed | Define a thin VS Code/editor package contract that reuses CLI/MCP diagnostics and stays preview-first for writes. |
 | 67 Microsoft Word add-in packaging | pending | Define Office Add-in packaging, document-range provenance, sideload/AppSource boundaries, and reversible dry-run editing semantics. |
 | 68 LibreOffice extension packaging | pending | Define LibreOffice `.oxt`/UNO packaging, Writer range mapping, and local install smoke boundaries. |
 | 69 Marketplace submission evidence | pending | Record accepted, prepared, and deferred marketplace evidence for host packages and client directories. |
