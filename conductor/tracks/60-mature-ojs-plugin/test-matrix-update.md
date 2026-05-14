@@ -18,7 +18,7 @@ screening pipeline defined in `src/journal.rs` -> `screen_journal_submission()`.
 |---|---|---|---|
 | `martinez-2025-trial` | 10.1234/example-2025-001 | ✅ Verified (high confidence) | none |
 | `phelps-2023-hallucination` | 10.5678/example-2023-089 | ⚠️ Provider conflict (title mismatch) | warning |
-| `zhang-2024-retracted` | 10.9012/retracted-2024-001 | ⛔ Retracted per Crossref | warning |
+| `zhang-2024-retracted` | 10.9012/retracted-2024-001 | ⛔ Retracted per Crossref | error |
 | `thompson-2022-foundations` | 10.1111/books-2022-001 | 🔍 Queued for manual review | info |
 | `kumar-2025-no-doi` | (missing) | ❓ Unverified, no identifier | warning |
 
@@ -56,7 +56,7 @@ screening pipeline defined in `src/journal.rs` -> `screen_journal_submission()`.
 
 | # | Acceptance Criterion | Verification Method | Coverage |
 |---|---------------------|---------------------|----------|
-| D1 | Retraction status from Crossref is surfaced as warning | Assert issue with `code == "policy.recency.provider.retraction"` | Retraction signal |
+| D1 | Retraction status from Crossref is surfaced as error | Assert issue with `code == "policy.recency.provider.retraction"` | Retraction signal |
 | D2 | Retraction notice DOI is referenced in issue | Assert message references `"10.9012/retraction-2025-001"` | Evidence linking |
 | D3 | Publication year mismatch (2018 vs. 2024) does not produce separate issue | Assert exactly 1 issue for this reference | Noise reduction |
 
@@ -83,18 +83,18 @@ screening pipeline defined in `src/journal.rs` -> `screen_journal_submission()`.
 | # | Acceptance Criterion | Verification Method | Coverage |
 |---|---------------------|---------------------|----------|
 | G1 | `total_references` matches fixture reference count (5) | Assert `summary.total_references == 5` | Counting |
-| G2 | `verified_references` counts only references with no issues | Assert `summary.verified_references == 1` (only martinez) | Counting |
+| G2 | `verified_references` counts references without report warnings or errors | Assert `summary.verified_references == 3` | Counting |
 | G3 | `review_queue_count` matches queued references (1) | Assert `summary.review_queue_count == 1` | Counting |
 | G4 | `conflict_count` matches conflict references (1) | Assert `summary.conflict_count == 1` | Counting |
-| G5 | `warning_count` matches warning issues (4) | Assert `summary.warning_count == 4` | Counting |
+| G5 | `warning_count` matches warning issues (3) | Assert `summary.warning_count == 3` | Counting |
 | G6 | `info_count` matches info issues (1) | Assert `summary.info_count == 1` | Counting |
-| G7 | `error_count` is 0 | Assert `summary.error_count == 0` | Boundary |
+| G7 | `error_count` matches retraction issues (1) | Assert `summary.error_count == 1` | Boundary |
 
 ### Scenario H: Editorial & Author Outputs
 
 | # | Acceptance Criterion | Verification Method | Coverage |
 |---|---------------------|---------------------|----------|
-| H1 | `editorial_summary` contains status `screened_with_warnings` | Assert `status == ScreenedWithWarnings` | Status enum |
+| H1 | `editorial_summary` contains status `screened_with_errors` | Assert `status == ScreenedWithErrors` | Status enum |
 | H2 | `editorial_summary` includes total reference count | Assert string contains `"5 references"` | Content |
 | H3 | `editorial_summary` includes warning count | Assert string contains `"5 issues"` | Content |
 | H4 | `editorial_summary` includes AI-risk signal count | Assert string contains `"4 AI-risk"` | Content |

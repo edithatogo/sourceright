@@ -11,7 +11,7 @@ public claims are allowed.
 | Paperpile | TBD | 59 | Contracted | API/import decision and fixture proof or deferral. |
 | JabRef | Current BibLaTeX/RIS workflow | 59 | Contracted | BibLaTeX/RIS round trip and limitations. |
 | RefWorks | TBD | 59 | Contracted | Export/import proof or deferral. |
-| OJS/PKP | Supported OJS LTS/current release | 60 | Contracted | Installable plugin package, fixture submission, optional test-instance smoke. |
+| OJS/PKP | Supported OJS LTS/current release | 60 | Fixture-backed source skeleton | Generic-plugin source skeleton, fixture submission, and policy tests exist; live OJS smoke and PKP Plugin Gallery acceptance remain separate evidence gates. |
 | Streamlit | Current Python and Streamlit supported by `streamlit_app/requirements.txt` | 61 | Contracted | Server smoke, synthetic-data check, deployment docs. |
 | MCP clients | Local stdio clients first | 56, 57, 65 | Official MCP Registry accepted for `0.1.20`; generic stdio snippets documented; Smithery prepared | Transcript smoke, registry listing, Smithery path validation, and named-client install evidence before named-client claims. |
 | Claude Desktop | Current MCP-capable local client | 65 | Prepared as local stdio client configuration; no Claude package | Client config snippet, transcript smoke, dry-run write proof, and no Claude-plugin claim. |

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<version>
+    <application>ojs</application>
+    <type>plugins.generic</type>
+    <package>sourceright</package>
+    <release>0.1.0</release>
+    <date>2026-05-15</date>
+    <lazy-load>1</lazy-load>
+    <sitewide>1</sitewide>
+</version>

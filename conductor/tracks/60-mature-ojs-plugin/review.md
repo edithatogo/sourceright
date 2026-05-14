@@ -38,8 +38,8 @@
 | OJS submission fixture | ✅ **NEW - 2026-05-14** | `fixtures/journal/ojs-submission.json` — mixed integrity states, 5 references |
 | Gallery readiness doc | ✅ **NEW - 2026-05-14** | `conductor/tracks/60-mature-ojs-plugin/gallery-readiness.md` — gaps + requirements for PKP Gallery |
 | Test matrix update | ✅ **NEW - 2026-05-14** | `conductor/tracks/60-mature-ojs-plugin/test-matrix-update.md` — maps fixture scenarios to acceptance criteria |
-| Plugin packaging | ❌ Not found | No OJS plugin directory, build script, or XML |
-| Install docs | ❌ Not found | No OJS installation instructions |
+| Plugin packaging | ✅ Source skeleton | `plugins/ojs/sourceright/` contains an OJS generic plugin source skeleton with `index.php`, main class, CLI runner, `version.xml`, README, and locale file. |
+| Install docs | ✅ Source skeleton install docs | `plugins/ojs/sourceright/README.md` and `installation-guide.md` document source-tree install and CLI/MCP service boundaries. |
 | Test-instance smoke | ❌ Not found | No OJS test instance smoke script |
 
 ### Journal Screening Engine Review (`src/journal.rs`)
@@ -58,7 +58,7 @@ The `JournalPlatform::Ojs` variant is already defined and used in tests.
 
 1. **Journal screening engine is mature and OJS-ready.** The `journal.rs` module produces editor-facing summaries and author-facing checklists that match OJS workflow requirements.
 
-2. **No OJS plugin packaging exists.** There is no PHP plugin directory, no `version.xml`, no `index.php` — the integration is CLI/MCP-based, not a traditional OJS PHP plugin.
+2. **OJS source packaging now exists, but Gallery acceptance is not claimed.** The thin PHP generic-plugin skeleton shells out to the Sourceright CLI/MCP core and keeps writes previewed or explicit. Live OJS handler/settings/template wiring and PKP Plugin Gallery review remain open.
 
 3. **OJS submission fixture created.** `fixtures/journal/ojs-submission.json` covers 5 references with mixed integrity states: verified, provider conflict, retracted, queued, and missing DOI. The fixture exercises all relevant branches of the screening pipeline.
 
@@ -119,17 +119,32 @@ The integration currently follows the **CLI/MCP service model** (not a tradition
 - `conductor/tracks/60-mature-ojs-plugin/test-matrix-update.md` — 24 test scenarios mapped to acceptance criteria
 - `docs/src/journal-integrations.md` — Platform-neutral integration contract
 
+### Completion Update (2026-05-15)
+
+Track 60 is complete at the repo-local evidence level: installable OJS generic
+plugin source skeleton plus fixture-backed screening. The completion claim is
+deliberately narrower than PKP Plugin Gallery acceptance.
+
+| Evidence | Status |
+|----------|--------|
+| OJS source skeleton | Completed in `plugins/ojs/sourceright/` |
+| CLI runner safety | Escaped command arguments, configurable CLI path, timeout, preview-only export |
+| Editor/author separation | Editor output receives summary/full report; author output receives checklist |
+| Fixture proof | `fixtures/journal/ojs-submission.json` covered by CLI end-to-end test |
+| Policy proof | `tests/ojs_plugin_packaging_policy.rs` enforces package files and guardrails |
+| Gallery acceptance | Not claimed; readiness remains prepared/deferred until external review |
+
 ### Remaining Work (Post-Completion)
 
 | Item | Owner | Priority |
 |------|-------|----------|
-| PHP plugin wrapper (Path A for Gallery) | Track 60 | Medium |
+| Live OJS handler/settings/workflow-template wiring | Future OJS implementation | Medium |
 | REST/HTTP endpoint for OJS | Track 60 | Medium |
 | OJS test-instance smoke script | Track 45 | Low |
-| PKP Gallery submission | Track 63 | Low |
+| PKP Gallery submission and acceptance | Track 69 / external marketplace evidence | Low |
 | Localisation / i18n | Track 60 | Low |
 
 ## Status
 
 - **Previous status**: planned
-- **New status**: in_progress (screening engine is mature and the CLI/MCP service path is documented; OJS/PKP package proof remains open)
+- **New status**: completed (source skeleton and fixture-backed screening are complete; OJS live wiring and PKP Gallery acceptance are not claimed)

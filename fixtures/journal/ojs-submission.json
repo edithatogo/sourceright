@@ -248,9 +248,10 @@
     "schema_version": "sourceright.journal_screening.v1",
     "submission_id": "OJS-SUB-2025-0042",
     "platform": "ojs",
-    "status": "screened_with_warnings",
-    "editorial_summary": "Submission OJS-SUB-2025-0042 (manuscript-v3-final.docx) screened with status ScreenedWithWarnings: 5 references, 5 issues, 4 AI-risk citation-error signals.",
+    "status": "screened_with_errors",
+    "editorial_summary": "Submission OJS-SUB-2025-0042 (manuscript-v3-final.docx) screened with status ScreenedWithErrors: 5 references, 5 issues, 4 AI-risk citation-error signals.",
     "author_action_checklist": [
+      "Correct reference records that fail CSL integrity checks.",
       "Review missing identifiers, unverified references, and provider conflicts.",
       "Resolve references currently queued for manual review."
     ],
@@ -259,13 +260,13 @@
       "report_type": "reference_integrity",
       "summary": {
         "total_references": 5,
-        "verified_references": 2,
+        "verified_references": 3,
         "review_queue_count": 1,
         "unresolved_count": 0,
         "conflict_count": 1,
         "ai_risk_issue_count": 4,
-        "error_count": 0,
-        "warning_count": 4,
+        "error_count": 1,
+        "warning_count": 3,
         "info_count": 1
       },
       "issues": [
@@ -294,11 +295,11 @@
           "ai_risk_signal": true
         },
         {
-          "severity": "warning",
+          "severity": "error",
           "category": "recency_evidence",
           "reference_id": "zhang-2024-retracted",
           "code": "policy.recency.provider.retraction",
-          "message": "Reference is flagged as retracted by Crossref",
+          "message": "Provider evidence suggests the record is retracted and should be reviewed.",
           "ai_risk_signal": true
         },
         {

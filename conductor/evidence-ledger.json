@@ -110,9 +110,17 @@
     },
     "60-mature-ojs-plugin": {
       "category": "integration",
-      "evidence_level": "contracted",
-      "allowed_claims": ["Mature OJS integration is planned."],
-      "blockers": ["Installable OJS package, fixtures, optional test-instance smoke, and gallery readiness."]
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "OJS integration has an installable generic-plugin source skeleton that shells out to the Sourceright CLI/MCP core.",
+        "OJS screening is fixture-backed with editor-facing and author-facing outputs.",
+        "Plugin Gallery readiness is tracked separately from public acceptance."
+      ],
+      "blockers": [
+        "PKP Plugin Gallery acceptance is not claimed.",
+        "Live OJS handler/settings-form/workflow-template wiring and compatibility testing remain external or future work.",
+        "Optional OJS test-instance smoke remains opt-in and not part of default CI."
+      ]
     },
     "63-plugin-packaging-and-supply-chain-maturity": {
       "category": "foundation",

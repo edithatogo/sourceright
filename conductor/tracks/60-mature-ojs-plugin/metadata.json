@@ -1,6 +1,6 @@
 {
   "id": "60-mature-ojs-plugin",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "high",
   "owners": [
     "codex"
@@ -12,10 +12,27 @@
   ],
   "owned_paths": [
     "plugins/manifests/journal.ojs.toml",
+    "plugins/ojs/sourceright/",
     "src/",
     "tests/",
     "docs/src/journal-integrations.md",
     "fixtures/journal/",
     "conductor/tracks/60-mature-ojs-plugin/"
-  ]
+  ],
+  "evidence": {
+    "completion_date": "2026-05-15",
+    "claim_boundary": "Installable OJS generic plugin source skeleton plus fixture-backed screening; PKP Plugin Gallery acceptance is not claimed.",
+    "package_skeleton": "plugins/ojs/sourceright contains index.php, SourcerightPlugin.php, SourcerightCliRunner.php, version.xml, README, and en_US locale.",
+    "screening_fixture": "fixtures/journal/ojs-submission.json is exercised by cli_end_to_end OJS fixture test.",
+    "policy_tests": [
+      "tests/ojs_plugin_packaging_policy.rs",
+      "tests/cli_end_to_end.rs::ojs_fixture_screens_to_editor_and_author_outputs_end_to_end"
+    ],
+    "deferred": [
+      "Live OJS handler/settings-form/workflow-template wiring",
+      "OJS compatibility matrix execution",
+      "PKP Plugin Gallery PR and acceptance",
+      "External OJS test-instance smoke"
+    ]
+  }
 }

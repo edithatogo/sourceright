@@ -34,6 +34,24 @@ Recency and integrity evidence from providers should remain conservative: a
 retraction or expression of concern should surface as a review signal, not as an
 assertion about claim truth or AI authorship.
 
+### OJS Plugin Source Skeleton
+
+The repository includes a thin OJS generic-plugin source skeleton at
+`plugins/ojs/sourceright/`. It is a wrapper around the Sourceright CLI/MCP core,
+not a reimplementation of reference verification in PHP.
+
+The skeleton:
+
+- calls `sourceright journal-screen --platform ojs`;
+- keeps export integration on `sourceright export --preview`;
+- escapes command arguments before invoking the CLI;
+- separates editor-facing report output from author-facing checklist output;
+- keeps future write-capable flows behind explicit configuration.
+
+This is fixture-backed and suitable for controlled pilot wiring. It is not PKP
+Plugin Gallery accepted, and it still needs live OJS handler/settings-form and
+workflow-template wiring before external Gallery review.
+
 ## Enterprise Adapters
 
 ScholarOne, Editorial Manager, eJournalPress, Manuscript Manager, and similar editorial systems should initially be handled through adapter contracts or generic batch/webhook workflows. Live integrations should wait for platform API access, vendor documentation, or publisher test environments.

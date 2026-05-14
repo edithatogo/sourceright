@@ -64,7 +64,7 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 57 Smithery distribution readiness | completed | Prepare and validate the Smithery MCPB/local package path while keeping public listing claims gated. |
 | 58 Mature Zotero plugin | completed | Deliver a ready Zotero plugin or adapter package with `.xpi`, preview/apply/audit semantics, tests, and public distribution notes. |
 | 59 Other citation-manager integrations | completed | Harden EndNote reference-checking handoff plus Mendeley, Paperpile, JabRef, RefWorks, and CSL-compatible import/export decisions. |
-| 60 Mature OJS plugin | in_progress | Deliver an installable OJS/PKP plugin path with platform-neutral screening, permissions, packaging, and Plugin Gallery readiness. |
+| 60 Mature OJS plugin | completed | Deliver an installable OJS/PKP plugin path with platform-neutral screening, permissions, packaging, and Plugin Gallery readiness. |
 | 61 Streamlit app publication and hardening | completed | Make the Streamlit demo deployable, synthetic-data-only, smoke-tested, and clearly separated from the static Pages demo. |
 | 62 Expanded normaliser/provider catalogue | completed | Assess and track additional scholarly, economics, grey literature, repository, and search-provider normalisers. |
 | 63 Plugin packaging and supply-chain maturity | completed | Define no-submodule policy, signing, provenance, versioning, compatibility, deprecation, and sandbox/network gates for plugins. |

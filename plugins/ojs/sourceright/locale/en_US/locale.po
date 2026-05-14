@@ -1,0 +1,26 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Sourceright OJS Plugin 0.1.0\n"
+"POT-Creation-Date: 2026-05-15 00:00+1000\n"
+"PO-Revision-Date: 2026-05-15 00:00+1000\n"
+"Last-Translator: Sourceright Project\n"
+"Language-Team: Sourceright Project\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "plugins.generic.sourceright.displayName"
+msgstr "Sourceright Reference Screening"
+
+msgid "plugins.generic.sourceright.description"
+msgstr "Calls the Sourceright CLI/MCP core for OJS reference integrity screening while keeping write-capable operations previewed or explicit."
+
+msgid "plugins.generic.sourceright.settings.cliPath"
+msgstr "Sourceright CLI path"
+
+msgid "plugins.generic.sourceright.settings.timeout"
+msgstr "Command timeout in seconds"
+
+msgid "plugins.generic.sourceright.settings.allowExplicitWrites"
+msgstr "Allow explicit write-capable Sourceright commands"

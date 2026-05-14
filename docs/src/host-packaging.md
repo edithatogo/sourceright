@@ -17,7 +17,7 @@ CSL.
 | Microsoft Word | 67 | DOCX extraction is separate; no Office Add-in package. | Office Add-in manifest, sideload/AppSource notes, document-range provenance, reversible write plans, and fixture smoke. |
 | LibreOffice Writer | 68 | No `.oxt`/UNO extension package. | `.oxt` or explicit deferral, UNO/adapter contract, local install smoke, and document-range provenance. |
 | Zotero | 58 | Adapter track is in progress. | Package/install notes plus preview/apply/audit proof in a disposable library. |
-| OJS/PKP | 60 | Plugin track is in progress. | Installable plugin package, permissions, fixture submission, and optional test-instance smoke. |
+| OJS/PKP | 60 | Generic-plugin source skeleton and fixture-backed screening are present; PKP Plugin Gallery acceptance is not claimed. | Live OJS handler/settings-form/workflow-template wiring, compatibility testing, and Gallery listing evidence. |
 
 ## Cross-Host Rules
 

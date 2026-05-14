@@ -2,6 +2,7 @@ use std::fs;
 use std::path::Path;
 use std::process::{Command, Output};
 
+use serde_json::Value;
 use tempfile::TempDir;
 
 fn binary() -> Command {
@@ -230,4 +231,75 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
             .expect("stderr utf-8")
             .contains("unknown command")
     );
+}
+
+#[test]
+fn ojs_fixture_screens_to_editor_and_author_outputs_end_to_end() {
+    let tempdir = TempDir::new().expect("create tempdir");
+    let root = tempdir.path();
+
+    let fixture_text = read_fixture("fixtures/journal/ojs-submission.json");
+    let fixture: Value = serde_json::from_str(&fixture_text).expect("valid OJS fixture");
+    let submission = &fixture["submission"];
+
+    let init = run_in_dir(&["init"], root);
+    assert!(init.status.success());
+
+    let workspace = root.join(".sourceright");
+    let references = serde_json::to_string(&fixture["csl_references"]).expect("serialize csl");
+    let mut sidecar = fixture["verification_sidecar"].clone();
+    sidecar["schema_version"] = Value::String("sourceright.verification.v1".to_string());
+    if let Some(object) = sidecar.as_object_mut() {
+        object.remove("schema");
+    }
+
+    write(workspace.join("references.csl.json"), &references);
+    write(
+        workspace.join("references.verification.json"),
+        &serde_json::to_string(&sidecar).expect("serialize sidecar"),
+    );
+
+    let journal = run_in_dir(
+        &[
+            "journal-screen",
+            "--platform",
+            submission["platform"].as_str().expect("platform"),
+            "--submission-id",
+            submission["submission_id"].as_str().expect("submission id"),
+            "--manuscript",
+            submission["manuscript_label"]
+                .as_str()
+                .expect("manuscript label"),
+            ".sourceright",
+        ],
+        root,
+    );
+
+    assert!(journal.status.success());
+    let output = output_text(&journal);
+    let report: Value = serde_json::from_str(&output).expect("journal output json");
+
+    assert_eq!(report["schema_version"], "sourceright.journal_screening.v1");
+    assert_eq!(report["submission_id"], "OJS-SUB-2025-0042");
+    assert_eq!(report["platform"], "ojs");
+    assert_eq!(report["status"], "screened_with_errors");
+    assert!(
+        report["editorial_summary"]
+            .as_str()
+            .expect("editorial summary")
+            .contains("5 references")
+    );
+    assert!(
+        report["author_action_checklist"]
+            .as_array()
+            .expect("author checklist")
+            .len()
+            >= 2
+    );
+    assert!(!output.contains("AI-generated"));
+    assert!(!output.contains("AI authorship"));
+}
+
+fn read_fixture(path: &str) -> String {
+    fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join(path)).expect("read fixture")
 }
