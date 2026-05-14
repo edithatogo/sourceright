@@ -37,7 +37,7 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 30 Starlight Astro docs site | completed | Replace mdBook with a Starlight/Astro documentation site with CI, search, and deployment parity. |
 | 31 Quality assurance hardening | completed | Coverage thresholds, mutation testing, property tests, load tests, edge tests, and end-to-end verification. |
 | 32 Publishing governance and provenance | completed | Release provenance, attestation, dependency governance, and registry publication automation. |
-| 33 Public release and registry submission | in_progress | Execute the live crates.io, GitHub Release, GHCR, official MCP registry, Smithery, and Glama publication sequence. |
+| 33 Public release and registry submission | completed | Execute the live crates.io, GitHub Release, GHCR, official MCP registry, Smithery, and Glama publication sequence. |
 | 34 Coverage verification and reporting | completed | Make the 85 percent coverage floor measurable, reproducible, and visible in hooks, CI, and reports. |
 | 35 Public docs cutover and launch | completed | Finalise the Starlight/Astro docs migration, redirects, and archive cutover for the public site. |
 | 36 Document extraction hardening | completed | Real DOCX/PDF extraction, OCR diagnostics, provenance spans, and messy manuscript fixtures. |

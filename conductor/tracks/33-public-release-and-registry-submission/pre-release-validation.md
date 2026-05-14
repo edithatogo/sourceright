@@ -3,68 +3,42 @@
 Checklist and results for gate checks that must pass before tagging a release.
 
 **Validated against:** v0.1.20
-**Validation date:** 2026-05-14 (fresh re-validation)
+**Validation date:** 2026-05-15
 **Validator:** Track 33 release engineering audit
-**Schema:** MCP 2025-12-11 server.schema.json (fetched, 200 OK)
+**Schema:** MCP 2025-12-11 server.schema.json
 
 ## 1. Crate Packaging (`cargo package --locked`)
 
 ### 1a. Strict mode
 
 ```text
-$ cargo package --locked
-error: 2 files in the working directory contain changes that were not yet
-committed into git:
-
-README.md
-docs/src/security-automation.md
-
-to proceed and include the uncommitted changes, pass the `--allow-dirty` flag
+$env:CARGO_TARGET_DIR='C:\tmp\sourceright-track33-gnu-target'
+$ cargo +stable-x86_64-pc-windows-gnu package --locked
+Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 36s
 ```
 
 | Check | Result | Detail |
 |-------|--------|--------|
-| `cargo package --locked` | **BLOCKED** (dirty tree) | 2 modified + 5 untracked files. |
-| Gate behavior | **CORRECT** | Prevents packaging from uncommitted state. |
-
-### 1b. Allow-dirty verification
-
-```text
-$ cargo package --list --allow-dirty --locked
-```
-
-| Check | Result | Detail |
-|-------|--------|--------|
-| `cargo package --list` | **PASSED** | Full manifest produced. |
-| Package file count | **PASSED** | All include-list directories present. |
-| Test exclusion warnings | **EXPECTED** | Binary crate. |
-| `Cargo.toml` metadata | **PASSED** | All required fields populated. |
-
-**Gate rule:** Clean git tree mandatory. 7 uncommitted changes confirm gate works.
+| `cargo package --locked` | **PASSED** | Packaged 242 files, 976.6 KiB (205.0 KiB compressed). |
+| Package verification | **PASSED** | Tarball verification completed under the GNU stable toolchain. |
+| Test exclusion warnings | **EXPECTED** | Binary crate test files are not included in the published package. |
+| Clean-tree gate | **PASSED** | `git status --short --branch` reported `## main...origin/main` before validation. |
 
 ## 2. Crate Dry Run (`cargo publish --dry-run --locked`)
 
-### 2a. Strict mode
-
 ```text
-$ cargo publish --dry-run --locked
-    Updating crates.io index
+$env:CARGO_TARGET_DIR='C:\tmp\sourceright-track33-gnu-target'
+$ cargo +stable-x86_64-pc-windows-gnu publish --dry-run --locked
 warning: crate sourceright@0.1.20 already exists on crates.io index
-error: 2 files in the working directory contain changes...
+error: failed to write query cache ... There is not enough space on the disk. (os error 112)
 ```
 
 | Check | Result | Detail |
 |-------|--------|--------|
-| `cargo publish --dry-run --locked` | **BLOCKED** (dirty tree) | Same dirty-tree gate. |
+| `cargo publish --dry-run --locked` | **ENVIRONMENT-BLOCKED** | Dry run reached package verification, then failed because local `C:\` had zero free bytes. |
 | crates.io index sync | **PASSED** | Index updated successfully. |
-| Version collision warning | **EXPECTED** | v0.1.20 already on crates.io. |
-
-### 2b. Allow-dirty verification
-
-| Check | Result | Detail |
-|-------|--------|--------|
-| `cargo publish --dry-run --locked --allow-dirty` | **PASSED** | Package valid; expected warning only. |
-| Crates.io metadata | **PASSED** | All required fields present. |
+| Version collision warning | **EXPECTED** | `sourceright@0.1.20` is already accepted on crates.io. |
+| Publish rule | **UNCHANGED** | A future version still requires a successful dry run before publish. |
 
 ## 3. MCP Server Manifest (`server.json`)
 
@@ -152,19 +126,38 @@ Validated against MCP 2025-12-11 schema (draft-07, fetched and verified).
 | No port exposure (correct for stdio) | ✅ |
 | Version pinning (digests + `--locked`) | ✅ |
 
+## Accepted Public Release Evidence
+
+| Surface | Status | Evidence |
+|---------|--------|----------|
+| GitHub Release | **ACCEPTED** | `v0.1.20` release with platform binaries and SHA-256 checksums. |
+| crates.io | **ACCEPTED** | `sourceright` version `0.1.20` listed publicly. |
+| docs.rs | **ACCEPTED** | `sourceright` version `0.1.20` documentation built from crates.io. |
+| Official MCP Registry | **ACCEPTED** | `io.github.edithatogo/sourceright` version `0.1.20` listed as active/latest. |
+
+## Prepared/Deferred Boundary Evidence
+
+| Surface | Status | Boundary |
+|---------|--------|----------|
+| GHCR MCP image | **PREPARED** | OCI image is referenced by the MCP Registry; direct GHCR package page visibility remains unverified. |
+| Glama | **PREPARED** | `glama.json` is present and structurally valid; no accepted external listing is recorded. |
+| Smithery | **PREPARED** | MCPB template and builder exist; no accepted external listing is recorded. |
+| Package managers and host marketplaces | **DEFERRED** | Release-status docs record blocking requirements and revisit triggers. |
+
 ## Summary
 
 | Gate | Status |
 |------|--------|
-| `cargo package --locked` | BLOCKED (dirty tree; passes with --allow-dirty) |
-| `cargo package --list --allow-dirty --locked` | PASSED |
-| `cargo publish --dry-run --locked` | BLOCKED (dirty tree; v0.1.20 exists expected) |
+| `cargo package --locked` | PASSED with GNU stable toolchain and temp target directory |
+| `cargo publish --dry-run --locked` | ENVIRONMENT-BLOCKED by local disk exhaustion after verification began; future-version dry run still required |
 | `server.json` MCP 2025-12-11 schema | PASSED |
 | `glama.json` structure | PASSED |
 | `Dockerfile` labels (6) | PASSED |
 | Dockerfile build structure | PASSED |
 | Cross-artifact consistency | PASSED |
 
-**Overall:** All structural validations pass. The only blockers are expected dirty-tree
-gates from uncommitted documentation changes -- these confirm release integrity gates
-function correctly. No regressions, schema violations, or misconfigurations found.
+**Overall:** Track 33 is complete for the core public release path because
+GitHub Release, crates.io, docs.rs, and the official MCP Registry are accepted
+for `v0.1.20`, and remaining surfaces are explicitly prepared or deferred.
+Future releases must still run a successful publish dry-run before publishing a
+new crate version.

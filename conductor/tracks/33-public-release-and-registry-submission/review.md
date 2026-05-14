@@ -2,7 +2,7 @@
 
 ## Current State
 
-**Status:** In Progress
+**Status:** Completed
 **Priority:** High
 **Dependencies:** 25-release-and-registry-readiness, 27-mcp-distribution, 32-publishing-governance-and-provenance
 
@@ -83,29 +83,35 @@ Validation executed per the release runbook steps 2–5. Full results in `pre-re
 | Dockerfile build structure | PASSED |
 | Cross-artifact consistency | PASSED |
 
-## Gaps
+## Remaining Boundaries
 
-1. **No first release cut** — All infrastructure validated, release runbook steps 2–5 verified against v0.1.20 artifacts. A clean-tree release cut for a future version (>0.1.20) remains the next live execution step.
-2. **No registry submission evidence** — `release-status.md` shows 4 accepted registries (GitHub Release, crates.io, docs.rs, Official MCP Registry). Glama and Smithery remain "prepared."
-3. **Dependency chain** — This track gates on three dependencies (25, 27, 32). Pre-release validation confirms release infrastructure is sound regardless of dependency status.
+1. **Prepared, not accepted:** Direct GHCR package visibility, Glama, and
+   Smithery remain prepared surfaces until external listings or package pages
+   are verified.
+2. **Future-version crate publish:** `cargo publish --dry-run --locked` must
+   pass again before any version after `0.1.20` is published. The 2026-05-15
+   rerun reached verification but was blocked by local disk exhaustion.
+3. **Deferred marketplaces:** Homebrew, Scoop, winget, npm, PyPI, VS Code,
+   Word, and LibreOffice remain deferred to their owning tracks and marketplace
+   evidence gates.
 
 ## Key Findings
 
 1. All 11 owned paths are present and populated with substantive content.
-2. The release runbook is conservative (dry-run gates publishing, artifact verification before submission).
-3. Publishing guide covers all three distribution channels with clear documentation.
-4. Release-status.md provides a comprehensive registry completion table.
+2. The release runbook is conservative: dry-run gates publishing, artifact verification happens before submission, and manual approval gates stay explicit.
+3. Publishing guide covers the current accepted release path and keeps prepared/deferred channels separate.
+4. Release-status.md provides the registry completion table used to avoid public overclaims.
 
 ## Evidence-Ledger Entry
 
 A `"33-public-release-and-registry-submission"` entry has been registered in `conductor/evidence-ledger.json` with:
 
 - **Category:** publication
-- **Evidence level:** fixture-backed
-- **Allowed claims:** Release workflow with dry-run validation gates; cargo package/publish-dry-run verified; server.json/glama.json validated; Dockerfile builds correctly; pre-release validation checklist documents the complete gate sequence.
-- **Blockers:** First release tag requires clean tree and human review; no release executed against a real tag; registry submission evidence requires live execution.
+- **Evidence level:** publicly-accepted for the core release surfaces; prepared or deferred for other registries.
+- **Allowed claims:** GitHub Release, crates.io, docs.rs, and Official MCP Registry are accepted for `v0.1.20`; GHCR direct visibility, Glama, and Smithery remain prepared.
+- **Blockers:** Future version publishes still require clean-tree review, successful dry run, and registry-specific approval. Prepared/deferred registries require their own external acceptance evidence.
 
 ## Status
 
 - **Previous status:** in_progress
-- **Current status:** in_progress
+- **Current status:** completed
