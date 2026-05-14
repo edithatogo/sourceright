@@ -19,6 +19,7 @@ These pages describe the day-to-day operator surface:
 - [Artifact and Schema Guide](artifact-schema-guide)
 - [Live Provider Configuration](live-provider-configuration)
 - [Publishing](publishing)
+- [DevSecOps Automation Upgrade](devsecops-automation-upgrade)
 - [Limitations](limitations)
 - [Benchmarks](benchmarks) - fixture-backed technical preview
 - [Release Notes](release-notes)

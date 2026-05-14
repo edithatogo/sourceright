@@ -1,0 +1,28 @@
+name: Release Drafter
+
+on:
+  push:
+    branches: ["main"]
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: release-drafter-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update-release-draft:
+    name: Update release draft
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update draft release
+        uses: release-drafter/release-drafter@da8b9b696abad2ad997580e49f4c1c2e03cc2bd2 # v7
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

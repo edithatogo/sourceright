@@ -12,7 +12,7 @@
 
 | Artifact | Path | Evidence |
 |----------|------|----------|
-| Coverage workflow | `.github/workflows/coverage.yml` | CI workflow exists, scheduled + manual trigger, `ubuntu-latest` runner, `--fail-under-lines 85` gate |
+| Coverage workflow | `.github/workflows/coverage.yml` | CI workflow exists, scheduled + manual trigger, `ubuntu-latest` runner, `--fail-under-branches 85` gate |
 | Pre-commit hook | `.githooks/pre-commit` | Contains `CoverageMinimum 85` assertion |
 | Pre-commit config | `.pre-commit-config.yaml` | Contains `CoverageMinimum 85` assertion |
 | Verify script | `scripts/verify.ps1` | Contains `CoverageMinimum = 85` and `cargo llvm-cov` invocation |
@@ -24,14 +24,14 @@
 | Benchmark docs coverage ref | `docs/src/benchmarks.md` | Mentions Coverage workflow runs `cargo llvm-cov` on schedule |
 | Hook setup guide | `conductor/tracks/34-coverage-verification-and-reporting/hook-setup-guide.md` | **NEW** — Documents hook installation on all platforms, verification, 85% floor table, and troubleshooting |
 | Coverage gaps assessment | `conductor/tracks/34-coverage-verification-and-reporting/coverage-gaps-assessment.md` | **NEW** — Analyzes what the workflow measures, Windows limitation, badge status, and script verification |
-| Test: coverage_policy | `tests/coverage_policy.rs` | Asserts `--fail-under-lines 85` in CI, hook, pre-commit config, verify script, CONTRIBUTING, and README |
+| Test: coverage_policy | `tests/coverage_policy.rs` | Asserts `--fail-under-branches 85` in CI, hook, pre-commit config, verify script, CONTRIBUTING, and README |
 | Test: coverage_status_policy | `tests/coverage_status_policy.rs` | Asserts `ubuntu-latest` runner, `coverage-status.md` artifact, and docs-site parity |
 
 ### Coverage Workflow Details
 
 - **Trigger:** `workflow_dispatch` + `schedule` (Tuesday 04:37 UTC)
 - **Runner:** `ubuntu-latest`
-- **Steps:** Checkout → Install Rust → Install `cargo-llvm-cov` → Run `cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 85` → Generate coverage status via `scripts/coverage-status.ps1` → Upload `coverage-report.txt` and `coverage-status.md` artifacts
+- **Steps:** Checkout → Install Rust → Install `cargo-llvm-cov` → Run `cargo llvm-cov --locked --all-targets --summary-only --branch --fail-under-branches 85` → Generate coverage status via `scripts/coverage-status.ps1` → Upload `coverage-report.txt` and `coverage-status.md` artifacts
 - **Concurrency:** Grouped by ref, cancel-in-progress
 
 ## Gaps
@@ -63,7 +63,7 @@ The spec says: "Coverage can be measured repeatably, and the 85 percent floor is
 
 | Area | Status | Evidence |
 |------|--------|----------|
-| Coverage gate | ✅ | `coverage.yml` with `--fail-under-lines 85` |
+| Coverage gate | ✅ | `coverage.yml` with `--fail-under-branches 85` |
 | Hook parity | ✅ | `.githooks/pre-commit` + `.pre-commit-config.yaml` both assert 85%; `hook-setup-guide.md` documents all platforms |
 | CI parity | ✅ | `coverage-gaps-assessment.md` confirms workflow/hook/script alignment |
 | Documentation | ✅ | README, CONTRIBUTING, coverage-reporting.md, coverage-status.md all reference 85% floor |

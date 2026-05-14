@@ -27,15 +27,74 @@
   "semanticCommits": "enabled",
   "packageRules": [
     {
-      "description": "Group routine non-major updates into one quiet monthly PR.",
+      "description": "Group routine Rust crate updates separately from Node and Actions updates.",
+      "matchManagers": [
+        "cargo"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch",
         "pin",
         "digest"
       ],
-      "groupName": "monthly dependency maintenance",
-      "groupSlug": "monthly-dependency-maintenance",
+      "groupName": "rust crate maintenance",
+      "groupSlug": "rust-crate-maintenance",
+      "labels": [
+        "dependencies",
+        "rust"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Group MCP and release automation actions so registry plumbing is reviewable as one lane.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchPackageNames": [
+        "/^actions\\//",
+        "/^github\\//",
+        "/^docker\\//",
+        "/^softprops\\//",
+        "/^release-drafter\\//",
+        "/^Swatinem\\//"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "groupName": "github actions and mcp release automation",
+      "groupSlug": "github-actions-mcp-release-automation",
+      "labels": [
+        "dependencies",
+        "ci",
+        "registry"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Group docs-site Node modules separately from Rust core updates.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "docs-site/package.json",
+        "docs-site/package-lock.json"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "groupName": "docs-site node modules",
+      "groupSlug": "docs-site-node-modules",
+      "labels": [
+        "dependencies",
+        "node",
+        "docs"
+      ],
       "automerge": true
     },
     {
@@ -45,6 +104,10 @@
       ],
       "groupName": "major dependency updates",
       "groupSlug": "major-dependency-updates",
+      "labels": [
+        "dependencies",
+        "major"
+      ],
       "automerge": false
     },
     {

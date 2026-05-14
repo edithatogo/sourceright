@@ -1,5 +1,6 @@
 param(
     [int]$CoverageMinimum = 85,
+    [string]$CoverageMetric = "branch",
     [string]$Outcome = "passed",
     [string]$OutputPath = "coverage-status.md"
 )
@@ -14,6 +15,7 @@ $lines = @(
     "# Coverage status",
     "",
     "- Outcome: $Outcome",
+    "- Coverage metric: $CoverageMetric",
     "- Coverage floor: $CoverageMinimum",
     "- Workflow run: $runUrl",
     "- Supported runner: ubuntu-latest",

@@ -10,5 +10,5 @@ cargo clippy --all-targets -- -D warnings
 cargo test --locked
 
 if (-not $SkipCoverage) {
-    cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines $CoverageMinimum
+    cargo llvm-cov --locked --all-targets --summary-only --branch --fail-under-branches $CoverageMinimum
 }

@@ -1,0 +1,79 @@
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+tag-prefix: "v"
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
+change-title-escapes: '\<*_&`#@'
+no-changes-template: "- No pull-request changes were detected."
+sort-by: "merged_at"
+sort-direction: "descending"
+latest: true
+
+categories:
+  - title: "Security"
+    labels:
+      - "security"
+      - "dependencies"
+      - "devsecops"
+  - title: "Features"
+    labels:
+      - "feature"
+      - "enhancement"
+  - title: "Fixes"
+    labels:
+      - "bug"
+      - "fix"
+  - title: "Documentation"
+    labels:
+      - "documentation"
+      - "docs"
+  - title: "CI/CD And Release"
+    labels:
+      - "ci"
+      - "release"
+      - "registry"
+  - title: "Plugins And Providers"
+    labels:
+      - "plugin"
+      - "provider"
+      - "mcp"
+  - title: "Maintenance"
+    labels:
+      - "maintenance"
+      - "chore"
+
+exclude-labels:
+  - "skip-changelog"
+
+version-resolver:
+  major:
+    labels:
+      - "major"
+      - "breaking-change"
+  minor:
+    labels:
+      - "minor"
+      - "feature"
+      - "enhancement"
+  patch:
+    labels:
+      - "patch"
+      - "bug"
+      - "fix"
+      - "security"
+      - "dependencies"
+  default: patch
+
+template: |
+  ## Release Gate
+
+  - CI, security, coverage, and release dry-run checks must be green before publication.
+  - Registry claims must match `docs/src/release-status.md`.
+  - Sourceright remains a technical preview unless the evidence ledger says otherwise.
+
+  ## Changes
+
+  $CHANGES
+
+  ## Contributors
+
+  $CONTRIBUTORS

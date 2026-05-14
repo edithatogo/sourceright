@@ -11,11 +11,12 @@ steady stream of account notifications.
 
 | Surface | Status | Contract |
 | --- | --- | --- |
-| Renovate | Active | Groups routine minor, patch, pin, and digest updates into a monthly PR that is eligible for PR automerge after required checks pass. Major updates stay manual. Dependabot PR creation disabled to prevent duplicate bot noise. |
+| Renovate | Active | Groups routine minor, patch, pin, and digest updates by ecosystem: Rust crates, GitHub Actions/MCP release automation, and docs-site Node modules. Major updates stay manual. Dependabot PR creation disabled to prevent duplicate bot noise. |
 | Dependabot alerts | Active in GitHub | Alerts identify vulnerable dependencies. Dependency updates are handled by Renovate to avoid duplicate bot PRs. API check on 2026-05-14 returned 12 fixed alerts and no open alerts. |
 | Dependency review | Active on pull requests | Blocks or reports risky dependency changes before merge. |
 | CodeQL | Active | Uploads SARIF for Rust security analysis. Current code-scanning API output returned no open CodeQL alerts. |
 | OpenSSF Scorecard | Active | Reports supply-chain posture through SARIF without changing code. API check on 2026-05-14 returned one open Scorecard alert (`VulnerabilitiesID`) and 29 fixed Scorecard alerts. |
+| Release Drafter | Active | Maintains a draft changelog from merged PR labels and refreshes release notes on `main` pushes and `v*.*.*` tag pushes. |
 | Copilot cloud agent | Prepared | Repository instructions, setup steps, and a security-remediation issue template are present. Requires GitHub Copilot entitlement at org/repo level to activate `copilot-swe-agent[bot]` assignment. |
 
 ## Alert Inventory
@@ -109,11 +110,11 @@ default branch (`main`):
 
 | Check | Required | Notes |
 | --- | --- | --- |
-| `CI` | Yes | Runs `cargo fmt --check`, `cargo clippy`, `cargo test`, `cargo check --locked`. |
+| `CI` | Yes | Runs `cargo fmt --check`, `cargo clippy`, `cargo test`, `cargo check --locked`, docs build, and docs-site TypeScript `tsc --noEmit`. |
 | `Security` | Yes | Runs CodeQL, Scorecard, Dependabot review, and cargo/npm audit steps. |
 | `Pages` | Yes | Docs-site build and deployment check. |
 | `release-dry-run` | Recommended | Validates release packaging without publishing. |
-| `Coverage` | Recommended | Runs `cargo llvm-cov` summary-only with minimum 85% line coverage. |
+| `Coverage` | Recommended | Runs `cargo llvm-cov` summary-only with minimum 85% branch coverage. |
 | `Robustness` | Recommended | Runs fixture-backed benchmark and stress tests. |
 
 **Bypass rules**: Allow repository admins and CODEOWNERS to bypass if
@@ -125,6 +126,14 @@ Read-only API check on 2026-05-14 showed branch protection currently requires:
 admin enforcement disabled. It did not show `Pages`, `Coverage`, `Robustness`,
 or release dry-run as required checks. Changing those settings remains an
 account-side admin task outside this repo-local track.
+
+### Merge Queue
+
+Enable GitHub Merge Queue for the protected `main` branch once the required
+checks above are stable. In **Settings > Branches**, edit the `main` rule,
+enable **Require merge queue**, keep required checks aligned with CI, Security,
+Quality, Pages, Coverage, Robustness, and release dry-run, and start with small
+queue batches while the Rust and docs checks are long-running.
 
 ## Labels And Milestones
 
@@ -139,16 +148,22 @@ before the evidence ledger permits those claims.
 
 Decision: **No third-party coverage service (Codecov, Coveralls) is used.**
 
-Coverage is computed locally via `cargo llvm-cov --summary-only` in the
+Coverage is computed locally via `cargo llvm-cov --summary-only --branch` in the
 `.github/workflows/coverage.yml` workflow on a weekly scheduled trigger
 (Tuesdays at 04:37 UTC) and on `workflow_dispatch`. The summary is uploaded as
 a CI artifact (`coverage-summary`) rather than posted to a public dashboard.
 
 **Rationale**: Public coverage history is not needed at this stage. The
-`--fail-under-lines 85` threshold enforces coverage quality in CI without
+`--fail-under-branches 85` threshold enforces coverage quality in CI without
 exposing intermediate data to external services. If a public coverage badge is
 desired later, the existing artifact can be consumed by a badge service or a
 new workflow step can upload to Codecov.
+
+## Release Drafter
+
+Release Drafter is configured through `.github/release-drafter.yml` and the
+`.github/workflows/release-drafter.yml` workflow. Add `skip-changelog` to PRs
+that should be excluded from draft release notes.
 
 ## Release Environment Protection
 
@@ -169,6 +184,23 @@ Read-only API check on 2026-05-14 found three environments: `crates-io`,
 `github-pages`, and `mcp-registry`. Only `github-pages` reported a protection
 rule through that endpoint. Reviewer and secret configuration still require
 admin UI verification.
+
+### OIDC Publishing Trust Gates
+
+Future crates.io and npm publication should prefer OpenID Connect trusted
+publishing over long-lived repository secrets where the target registry supports
+it. Keep `id-token: write` only on publishing jobs, protect `crates-io`, `npm`,
+and `mcp-registry` environments with reviewers, restrict trust to
+`edithatogo/sourceright` and `refs/tags/v*.*.*`, and remove long-lived tokens
+after trusted publishing is proven.
+
+## CodeRabbit PR Review App
+
+Install the CodeRabbit GitHub App only on this repository first, grant the
+minimum PR-review permissions, run it on pull requests only, keep human
+approval required, and configure claim-boundary context around
+`conductor/requirements.md`, `conductor/evidence-ledger.json`, and
+`docs/src/feature-contract-matrix.md`.
 
 ## Notification Posture
 

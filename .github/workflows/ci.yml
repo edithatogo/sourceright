@@ -50,7 +50,7 @@ jobs:
           cargo run --locked --bin sourceright -- bench
 
   docs:
-    name: Docs build
+    name: Docs and TypeScript
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -68,6 +68,9 @@ jobs:
       - name: Install docs site deps
         working-directory: docs-site
         run: npm ci
+      - name: Type-check docs site
+        working-directory: docs-site
+        run: npm run typecheck
       - name: Build docs site
         working-directory: docs-site
         run: npm run build

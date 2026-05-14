@@ -2,13 +2,13 @@
 
 ## Goal
 
-Establish a measurable test program that combines high line coverage, mutation
+Establish a measurable test program that combines high branch coverage, mutation
 testing, property-based checks, load/stress tests, edge-case regression tests,
 unit tests, integration tests, and end-to-end CLI/MCP verification.
 
 ## Scope
 
-- Enforce a line-coverage threshold above 85 percent.
+- Enforce a branch-coverage threshold above 85 percent.
 - Add mutation testing on a scheduled/manual basis.
 - Use property-based tests for normalization and invariants.
 - Keep load tests and stress benchmarks separate from default PR gates.

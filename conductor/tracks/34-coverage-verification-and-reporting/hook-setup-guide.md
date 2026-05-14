@@ -49,7 +49,7 @@ bash .githooks/pre-commit
 2. Locates `pwsh` or `powershell` (preferring `pwsh`).
 3. Calls `scripts/verify.ps1 -CoverageMinimum 85`.
 4. Runs: `cargo fmt --check`, `cargo clippy`, `cargo test --locked`,
-   then `cargo llvm-cov --fail-under-lines 85`.
+   then `cargo llvm-cov --branch --fail-under-branches 85`.
 5. Any failure blocks the commit.
 
 ### Uninstalling
@@ -103,13 +103,13 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -SkipCoverage
 
 ## The 85% Coverage Floor
 
-All surfaces assert the same threshold: **85% line coverage**.
+All surfaces assert the same threshold: **85% branch coverage**.
 
 | Surface                         | How asserted                                             |
 |---------------------------------|----------------------------------------------------------|
 | `.githooks/pre-commit`          | `-CoverageMinimum 85`                                    |
 | `.pre-commit-config.yaml`       | `-CoverageMinimum 85` in `entry`                         |
-| `.github/workflows/coverage.yml`| `--fail-under-lines 85`                                  |
+| `.github/workflows/coverage.yml`| `--fail-under-branches 85`                               |
 | `scripts/verify.ps1`            | `[int]$CoverageMinimum = 85` default                     |
 | `CONTRIBUTING.md`               | "Keep coverage above 85 percent"                         |
 | `README.md`                     | "Coverage stays gated above 85 percent"                  |

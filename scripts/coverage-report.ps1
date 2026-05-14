@@ -7,7 +7,8 @@ $ErrorActionPreference = 'Stop'
 
 $lines = @(
     "Coverage floor: $CoverageMinimum",
-    "Primary gate: cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines $CoverageMinimum",
+    "Coverage metric: branch",
+    "Primary gate: cargo llvm-cov --locked --all-targets --summary-only --branch --fail-under-branches $CoverageMinimum",
     "Hook parity: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum $CoverageMinimum"
 )
 

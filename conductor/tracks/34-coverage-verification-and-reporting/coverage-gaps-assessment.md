@@ -5,10 +5,10 @@
 The `.github/workflows/coverage.yml` workflow runs `cargo llvm-cov` with:
 
 ```
-cargo llvm-cov --locked --all-targets --summary-only --fail-under-lines 85
+cargo llvm-cov --locked --all-targets --summary-only --branch --fail-under-branches 85
 ```
 
-This measures **line coverage** across all targets (lib, bins, tests, benches,
+This measures **branch coverage** across all targets (lib, bins, tests, benches,
 examples). The `--summary-only` flag means the workflow emits an aggregate
 percentage, not per-file detail. The output is piped through `tee` into
 `coverage-report.txt` for artifact upload.
@@ -30,7 +30,7 @@ percentage, not per-file detail. The output is piped through `tee` into
 - NOT triggered on push or PR (unlike the main CI workflow).
 
 ### What a pass/fail means:
-- **Pass:** `cargo llvm-cov` exits 0, meaning line coverage >= 85%.
+- **Pass:** `cargo llvm-cov` exits 0, meaning branch coverage >= 85%.
 - **Fail:** The step exits non-zero (coverage below 85%). The workflow job
   fails, and the badge (workflow status badge in README) goes red.
 
@@ -129,7 +129,7 @@ by the CI workflow:
 
 ```yaml
 - name: Generate coverage status
-  run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/coverage-status.ps1 -CoverageMinimum 85 -Outcome passed -OutputPath coverage-status.md
+  run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/coverage-status.ps1 -CoverageMinimum 85 -CoverageMetric branch -Outcome passed -OutputPath coverage-status.md
 ```
 
 ### What the policy tests verify:
