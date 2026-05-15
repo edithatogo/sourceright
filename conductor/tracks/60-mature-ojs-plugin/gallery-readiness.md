@@ -14,8 +14,8 @@ This document tracks readiness for PKP Plugin Gallery submission.
 | Plugin descriptor | plugins/generic/sourceright/ compatible source tree | OK Source skeleton present under `plugins/ojs/sourceright/` |
 | Localisation | locale/ with locale.po | OK English locale present |
 | Installation docs | README with install steps | OK Source skeleton README present |
-| Gallery metadata | plugin.xml | X Not created |
-| Compatibility | OJS 3.x range | X Not declared |
+| Gallery metadata | plugin.xml | OK Local descriptor present; not submitted |
+| Compatibility | OJS 3.x range | Partial version.xml declares OJS plugin type; live compatibility matrix still pending |
 | License | PKP-approved OSS | OK Apache-2.0/MIT |
 | Repository | Public source | OK GitHub |
 | Release tag | SemVer tag for plugin package | X Not created |
@@ -31,7 +31,7 @@ Based on PKP Plugin Gallery review guidelines:
 |---|---|---|
 | **Documentation** | README with install, config, uninstall | OK Source skeleton README present; live OJS install smoke pending |
 | **Localisation** | At minimum English; i18n encouraged | OK English locale present |
-| **Stability** | No fatal errors, PHP notices suppressed | X PHP lint/live OJS smoke not run locally |
+| **Stability** | No fatal errors, PHP notices suppressed | Partial repo-local lint harness exists; PHP lint skips if PHP is not on PATH; live OJS smoke pending |
 | **OJS compatibility** | Tested against OJS 3.x stable | X Not tested |
 | **No debug output** | No var_dump, print_r, error_log | N/A |
 | **Security** | CSRF, input sanitisation, XSS prevention | N/A |
@@ -40,7 +40,7 @@ Based on PKP Plugin Gallery review guidelines:
 | **License compliance** | Compatible OSS license | OK Apache-2.0/MIT |
 | **Maintainer resp.** | Issue tracker active | OK GitHub Issues |
 | **No obfuscation** | Human-readable source | OK Plaintext |
-| **Releases via tag** | Gallery uses GitHub releases | X No plugin-specific release package/tag |
+| **Releases via tag** | Gallery uses GitHub releases | Partial install-test archive builder exists; no plugin-specific release tag |
 
 ---
 
@@ -95,24 +95,28 @@ Sourceright OJS integration is a **CLI / MCP service**, not a traditional OJS PH
 | Sidecar model | Sidecar with candidates/conflicts | Fixture-backed technical preview |
 | OJS fixture | fixtures/journal/ojs-submission.json | **NEW - 2026-05-14** |
 | OJS source skeleton | plugins/ojs/sourceright/ | **NEW - 2026-05-15** |
+| OJS package builder | scripts/build-ojs-plugin-package.ps1 | Builds install-test `.tar.gz` with SHA-256 sidecar |
+| OJS repo-local lint | scripts/ojs-plugin-lint.ps1 | Runs package/XML/Rust checks and skips PHP lint unless required |
+| OJS Docker preflight | scripts/ojs-docker-install-smoke.ps1 | Stages PKP containers and reports runtime availability |
+| OJS CLI runner contract fixture | fixtures/journal/ojs-cli-runner-contract.json | Mocked CLI payload contract for future PHP runner tests |
 | Gallery readiness | This document | **NEW - 2026-05-14** |
 
 ### 6.2 Gaps Blocking Gallery Submission
 
 | # | Gap | Priority | Effort |
 |---|---|---|---|
-| 1 | Source skeleton exists under `plugins/ojs/sourceright/`; packaging as release artifact still needed | Medium | Small |
+| 1 | Source skeleton exists under `plugins/ojs/sourceright/`; install-test archive builder exists, release artifact binding still needed | Medium | Small |
 | 2 | `version.xml` exists; plugin-specific release versioning still needs release artifact binding | Medium | Small |
 | 3 | `index.php` entry point exists; live OJS smoke pending | Medium | Small |
 | 4 | `SourcerightPlugin.php` main class exists; handler/settings/workflow-template wiring pending | Medium | Medium |
 | 5 | English locale exists; broader i18n remains future work | Low | Small |
-| 6 | No gallery plugin.xml | High | Small |
+| 6 | Local `plugin.xml` descriptor exists; Gallery submission PR and accepted listing still missing | High | Small |
 | 7 | README exists; live install transcript still pending | Medium | Small |
 | 8 | No release tag | Medium | Small |
 | 9 | No OJS compatibility testing (3.3-3.5) | Medium | Medium |
 | 10 | No REST/HTTP endpoint for OJS | Medium | Medium |
 | 11 | No uninstall logic | Low | Small |
-| 12 | No live smoke test | Low | Medium |
+| 12 | No live smoke test; Docker/Compose preflight exists but local Docker daemon is not running | Low | Medium |
 
 ### 6.3 Effort Estimate
 

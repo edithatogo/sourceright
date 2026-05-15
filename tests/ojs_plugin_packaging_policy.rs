@@ -12,8 +12,10 @@ fn ojs_plugin_source_skeleton_contains_required_package_files() {
         "plugins/ojs/sourceright/SourcerightPlugin.php",
         "plugins/ojs/sourceright/classes/SourcerightCliRunner.php",
         "plugins/ojs/sourceright/version.xml",
+        "plugins/ojs/sourceright/plugin.xml",
         "plugins/ojs/sourceright/locale/en_US/locale.po",
         "plugins/ojs/sourceright/README.md",
+        "fixtures/journal/ojs-cli-runner-contract.json",
     ] {
         assert!(Path::new(path).exists(), "missing OJS plugin file {path}");
     }
@@ -53,6 +55,33 @@ fn ojs_plugin_has_install_test_package_builder_and_smoke_path() {
     assert!(readme.contains("scripts/build-ojs-plugin-package.ps1"));
     assert!(readme.contains("scripts/ojs-docker-install-smoke.ps1"));
     assert!(readme.contains("installPluginVersion.php"));
+}
+
+#[test]
+fn ojs_plugin_lint_script_covers_repo_local_checks_without_php_requirement() {
+    let lint = read("scripts/ojs-plugin-lint.ps1");
+    let contract = read("fixtures/journal/ojs-cli-runner-contract.json");
+    let plugin_xml = read("plugins/ojs/sourceright/plugin.xml");
+
+    assert!(lint.contains("build-ojs-plugin-package.ps1"));
+    assert!(lint.contains("xmllint"));
+    assert!(lint.contains("php -l"));
+    assert!(lint.contains("RequirePhp"));
+    assert!(
+        lint.contains(
+            "cargo +stable-x86_64-pc-windows-gnu test --test ojs_plugin_packaging_policy"
+        )
+    );
+    assert!(lint.contains("skipped: php not on PATH"));
+
+    assert!(contract.contains("OJS-SMOKE-1"));
+    assert!(contract.contains("expected_editor_summary"));
+    assert!(contract.contains("expected_author_checklist_count"));
+    assert!(contract.contains("expected_format"));
+
+    assert!(plugin_xml.contains("<plugin>"));
+    assert!(plugin_xml.contains("<category>generic</category>"));
+    assert!(plugin_xml.contains("not PKP Plugin Gallery accepted"));
 }
 
 #[test]

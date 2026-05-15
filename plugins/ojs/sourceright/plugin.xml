@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <category>generic</category>
+    <product>sourceright</product>
+    <name locale="en">Sourceright Reference Integrity Screening</name>
+    <summary locale="en">Adds Sourceright reference-integrity screening hooks for OJS editorial workflows.</summary>
+    <description locale="en">This generic plugin delegates screening to the Sourceright CLI/MCP core. It is a local install-test descriptor and is not PKP Plugin Gallery accepted.</description>
+    <release>0.1.0</release>
+    <version>
+        <application>ojs</application>
+        <type>plugins.generic</type>
+        <package>sourceright</package>
+        <release>0.1.0</release>
+        <date>2026-05-15</date>
+        <lazy-load>1</lazy-load>
+        <sitewide>1</sitewide>
+    </version>
+    <author>
+        <name>Sourceright Project</name>
+    </author>
+    <homepage>https://github.com/edithatogo/sourceright</homepage>
+    <license>Apache-2.0 OR MIT</license>
+</plugin>

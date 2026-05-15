@@ -129,9 +129,12 @@ deliberately narrower than PKP Plugin Gallery acceptance.
 |----------|--------|
 | OJS source skeleton | Completed in `plugins/ojs/sourceright/` |
 | Install-test archive | `scripts/build-ojs-plugin-package.ps1` builds `dist/ojs/sourceright-ojs-generic-plugin-0.1.0.tar.gz` with SHA-256 sidecar |
+| Gallery descriptor | `plugins/ojs/sourceright/plugin.xml` records local Gallery-style metadata without claiming accepted listing |
+| Repo-local lint | `scripts/ojs-plugin-lint.ps1` runs package/XML/Rust checks and optional PHP lint without Docker |
 | CLI runner safety | Escaped command arguments, configurable CLI path, timeout, preview-only export |
 | Editor/author separation | Editor output receives summary/full report; author output receives checklist |
 | Fixture proof | `fixtures/journal/ojs-submission.json` covered by CLI end-to-end test |
+| Runner contract fixture | `fixtures/journal/ojs-cli-runner-contract.json` records mocked CLI output for future PHP runner tests |
 | Policy proof | `tests/ojs_plugin_packaging_policy.rs` enforces package files and guardrails |
 | Smoke path | `ojs-install-smoke.md` documents manual and Docker OJS test routes; local preflight detected Docker 29.4.2 and Compose v5.1.3 and staged `pkp/containers` under `C:\tmp\sourceright-ojs-smoke\containers`; Docker daemon was not running, WSL was not installed, and Podman was unavailable, so live stack startup remains blocked |
 | Gallery acceptance | Not claimed; readiness remains prepared/deferred until external review |

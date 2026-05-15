@@ -1,0 +1,24 @@
+{
+  "screen": {
+    "stdout": {
+      "schema_version": "sourceright.journal_screening.v1",
+      "submission_id": "OJS-SMOKE-1",
+      "platform": "ojs",
+      "status": "screened_with_warnings",
+      "editorial_summary": "Submission OJS-SMOKE-1 screened with warnings.",
+      "author_action_checklist": [
+        "Verify one reference manually."
+      ]
+    },
+    "expected_editor_summary": "Submission OJS-SMOKE-1 screened with warnings.",
+    "expected_author_checklist_count": 1
+  },
+  "export_preview": {
+    "stdout": {
+      "format": "ris",
+      "preview": true,
+      "would_write": false
+    },
+    "expected_format": "ris"
+  }
+}

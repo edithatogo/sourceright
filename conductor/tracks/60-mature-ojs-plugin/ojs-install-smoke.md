@@ -104,6 +104,15 @@ transcript before the track can claim live OJS compatibility.
 useful historical context, but new smoke work should start with
 `pkp/containers`.
 
+For repo-local checks that do not require Docker or a live OJS instance, run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ojs-plugin-lint.ps1
+```
+
+This builds the archive, validates XML, runs the Rust OJS policy test, and
+skips PHP lint unless PHP is available or `-RequirePhp` is supplied.
+
 ## Evidence To Capture
 
 - OJS version and PHP version.

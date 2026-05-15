@@ -39,3 +39,9 @@ and register the plugin with:
 ```bash
 php lib/pkp/tools/installPluginVersion.php plugins/generic/sourceright/version.xml
 ```
+
+Repo-local OJS checks that do not require Docker can be run with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ojs-plugin-lint.ps1
+```

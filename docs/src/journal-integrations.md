@@ -67,6 +67,11 @@ php lib/pkp/tools/installPluginVersion.php plugins/generic/sourceright/version.x
 
 The detailed smoke path is tracked in
 `conductor/tracks/60-mature-ojs-plugin/ojs-install-smoke.md`.
+Repo-local OJS checks that do not require Docker can be run with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ojs-plugin-lint.ps1
+```
 
 ## Enterprise Adapters
 
