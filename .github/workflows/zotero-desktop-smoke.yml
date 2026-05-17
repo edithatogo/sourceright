@@ -36,10 +36,11 @@ jobs:
       - name: Download Zotero Linux build
         run: |
           mkdir -p .tmp/zotero-desktop
-          curl -L \
+          curl -fL \
             "https://www.zotero.org/download/client/dl?channel=release&platform=linux-x86_64" \
-            -o .tmp/zotero-desktop/zotero.tar.bz2
-          tar -xjf .tmp/zotero-desktop/zotero.tar.bz2 -C .tmp/zotero-desktop
+            -o .tmp/zotero-desktop/zotero.tar
+          file .tmp/zotero-desktop/zotero.tar
+          tar -xf .tmp/zotero-desktop/zotero.tar -C .tmp/zotero-desktop
           find .tmp/zotero-desktop -maxdepth 2 -type f -name zotero -print
       - name: Start Zotero with isolated local API profile
         run: |
