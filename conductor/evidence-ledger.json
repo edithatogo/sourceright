@@ -429,11 +429,11 @@
         "crates.io and docs.rs publicly list sourceright 0.1.20.",
         "Official MCP Registry publicly lists io.github.edithatogo/sourceright 0.1.20 as active/latest.",
         "Release workflow, crate packaging, MCP registry metadata, and release-status artifacts document the accepted core release path.",
+        "The 2026-05-17 clean-tree publish dry-run for the already-published 0.1.20 package passed package verification and aborted upload due to dry run as expected.",
         "GHCR direct package visibility, Glama, Smithery, package managers, AI clients, editor extensions, and office-suite marketplaces remain separately classified as prepared or deferred until host-specific evidence exists."
       ],
       "blockers": [
         "Future version publishes require a clean tree, human review, and successful cargo publish dry-run for that version.",
-        "The 2026-05-15 publish dry-run rerun for the already-published 0.1.20 package was blocked by local disk exhaustion after verification began.",
         "Direct GHCR package-page visibility, Glama acceptance, and Smithery acceptance still require external registry verification.",
         "Deferred package-manager and host-marketplace channels require their owning tracks to produce installable packages and accepted listing evidence."
       ]

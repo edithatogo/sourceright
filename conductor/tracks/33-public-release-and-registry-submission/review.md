@@ -88,8 +88,11 @@ Validation executed per the release runbook steps 2–5. Full results in `pre-re
    Smithery remain prepared surfaces until external listings or package pages
    are verified.
 2. **Future-version crate publish:** `cargo publish --dry-run --locked` must
-   pass again before any version after `0.1.20` is published. The 2026-05-15
-   rerun reached verification but was blocked by local disk exhaustion.
+   pass again before any version after `0.1.20` is published. The older
+   2026-05-15 rerun encountered local disk exhaustion after package
+   verification began, but the 2026-05-17 clean-tree re-validation passed for
+   the already-published `0.1.20` package and aborted upload due to dry run as
+   expected.
 3. **Deferred marketplaces:** Homebrew, Scoop, winget, npm, PyPI, VS Code,
    Word, and LibreOffice remain deferred to their owning tracks and marketplace
    evidence gates.

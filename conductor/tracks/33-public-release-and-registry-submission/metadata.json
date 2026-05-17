@@ -23,7 +23,7 @@
   ],
   "evidence": {
     "release_validation": {
-      "date": "2026-05-15",
+      "date": "2026-05-17",
       "rerun": true,
       "document": "conductor/tracks/33-public-release-and-registry-submission/pre-release-validation.md",
       "github_release": "ACCEPTED for v0.1.20 with platform binaries and SHA-256 checksums",
@@ -33,8 +33,8 @@
       "ghcr_mcp_image": "PREPARED / indirectly evidenced through official MCP Registry OCI reference; direct GHCR package page visibility remains unverified",
       "glama": "PREPARED; glama.json present, no accepted external listing recorded",
       "smithery": "PREPARED; MCPB/local package path exists, no accepted external listing recorded",
-      "cargo_package_locked": "PASSED with cargo +stable-x86_64-pc-windows-gnu package --locked and CARGO_TARGET_DIR=C:\\tmp\\sourceright-track33-gnu-target",
-      "cargo_publish_dry_run_locked": "BLOCKED by local disk exhaustion after package verification began; crates.io already lists v0.1.20, future version dry-run still required",
+      "cargo_package_locked": "PASSED on 2026-05-17 clean-tree re-validation with cargo package --locked; package verified successfully for sourceright v0.1.20",
+      "cargo_publish_dry_run_locked": "PASSED for the already-published v0.1.20 package; crates.io existing-version warning expected, package verification reached upload, and upload was aborted due to dry run; future version dry-run still required",
       "cross_artifact_consistency": "PASSED through existing release/MCP/publishing policy tests and documentation gates"
     }
   }
