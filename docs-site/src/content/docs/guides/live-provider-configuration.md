@@ -25,6 +25,10 @@ Runtime controls are explicit and conservative:
 | Retry ceiling | `SOURCERIGHT_PROVIDER_MAX_RETRIES` | `2` |
 | Cache directory | `SOURCERIGHT_PROVIDER_CACHE_DIR` | unset |
 
+Live smoke reports include a `runtime_controls` object with `timeout_secs`,
+`min_interval_ms`, `max_retries`, and `cache_enabled`. Keep that block with
+provider outcomes when recording external proof.
+
 Cache hits remain provider evidence with provenance. They must not silently
 update canonical CSL or hide rate-limit, outage, malformed-response, or
 conflict diagnostics.

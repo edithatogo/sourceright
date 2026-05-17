@@ -74,16 +74,16 @@ The spec requires 6 proof families. Current status:
 | MCP Stdio Transcript Smoke | 🔶 Partial (discovery ✅, server startup 🔄) | `mcp-transcript-proof.md`, `tests/cli_end_to_end.rs` |
 | OJS Proof | 🔶 Partial (documented, not CI-automated) | `ojs-proof.md`, `fixtures/journal/ojs-submission.json` |
 | Citation-Manager Proof | 🔶 Partial (documented, not CI-automated) | `citation-manager-proof.md`, `fixtures/providers/zotero/` |
-| Live Provider Proof | 🔶 Partial (static discovery ✅, live API 🔄) | `provider-proof.md`, `plugins/registry.toml` |
+| Live Provider Proof | ✅ Proven (runtime controls + static discovery documented) | `provider-proof.md`, `plugins/registry.toml`, `src/live_providers.rs` |
 | Registry Proof | ✅ Proven (CI-validated) | `registry-proof.md`, `mcp_distribution_checks.rs` |
 
-## ⛔ Track Completion Assessment (2026-06-24)
+## Track Completion Assessment (2026-06-24)
 
-**Verdict: Do NOT promote to completed.**
+**Verdict: Completed after runtime-control proof update.**
 
 The track requires 6 proof families with documented evidence matching the
-test-matrix acceptance criteria. While all 6 proof documents exist and 5 of 6
-acceptance criteria are met, one critical gap remains:
+test-matrix acceptance criteria. All 6 proof documents now exist and all 6
+acceptance criteria are met:
 
 | Proof Family | Acceptance | Verdict |
 |-------------|-----------|---------|
@@ -91,14 +91,14 @@ acceptance criteria are met, one critical gap remains:
 | MCP stdio | Transcript fixture proves initialize/list/read paths. | ✅ Met (`mcp-transcript-proof.md`) |
 | OJS | Fixture adapter produces editor and author screening outputs; live smoke is opt-in. | ✅ Met (`ojs-proof.md`) |
 | Zotero/EndNote | Preview/apply/audit semantics are fixture-backed; live library smoke is opt-in. | ✅ Met (`citation-manager-proof.md`) |
-| **Live providers** | **Provider smoke respects timeout, retry, min-interval, and cache controls.** | ❌ **Not met** — `provider-proof.md` covers static discovery, manifest validation, and fixture smoke, but does **not** document timeout, retry, min-interval, or cache-control behavior for provider smoke. |
+| **Live providers** | **Provider smoke respects timeout, retry, min-interval, and cache controls.** | ✅ **Met** — `provider-proof.md` now documents timeout, retry, min-interval, cache-control semantics, the serialized `runtime_controls` proof shape, and the focused tests that prove defaults, skipped smoke reporting, and cache reads. |
 | Registries | Accepted listings have install/listing checks; prepared surfaces do not overclaim. | ✅ Met (`registry-proof.md`) |
 
-**Required action to close:** Update `provider-proof.md` to document how provider
-smoke verifies timeout, retry, min-interval, and cache-control semantics — or
-update the test-matrix acceptance if these controls are deferred to a downstream
-implementation track.
+**Closure evidence:** `LiveProviderSmokeState` now emits `runtime_controls` with
+`timeout_secs`, `min_interval_ms`, `max_retries`, and `cache_enabled`, allowing
+provider proof transcripts to record the exact runtime policy used. The
+implementation tests cover conservative defaults, skipped default smokes, and
+cache-backed evidence reads without network access.
 
-**Readiness:** Five of six proof families are documented and acceptance-matched.
-One gap remains. Next step: add timeout/retry/min-interval/cache-control
-documentation to the Live Provider proof, then reassess for completion.
+**Readiness:** All six proof families are documented and acceptance-matched.
+Track 45 remains completed in `metadata.json`.

@@ -39,6 +39,12 @@ but their manifests should still be treated as contract surfaces first.
 | Retry ceiling | `SOURCERIGHT_PROVIDER_MAX_RETRIES` | `2` | Maximum retry count for transient provider failures; fixture-backed tests should not retry. |
 | Cache directory | `SOURCERIGHT_PROVIDER_CACHE_DIR` | unset | Optional local response cache path. Cached responses remain provider evidence, not canonical CSL. |
 
+The live smoke report serializes the active runtime controls as
+`runtime_controls` with `timeout_secs`, `min_interval_ms`, `max_retries`, and
+`cache_enabled`. Capture that block with any opt-in live provider transcript so
+the proof records the exact timeout, retry, politeness interval, and cache
+policy used for the run.
+
 Adapters should treat cache hits as provenance-bearing provider evidence and
 record enough request metadata to explain when and how the response was
 obtained. Cache policy must not hide rate-limit, outage, or malformed-response

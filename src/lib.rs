@@ -70,8 +70,8 @@ pub use legal::{
 };
 pub use live_providers::{
     LIVE_PROVIDER_SMOKE_SCHEMA_VERSION, LiveProviderConfig, LiveProviderExecution,
-    LiveProviderOutcome, LiveProviderSmokeState, live_provider_config_from_env,
-    live_provider_smoke_report, live_provider_smoke_report_from_env,
+    LiveProviderOutcome, LiveProviderRuntimeControls, LiveProviderSmokeState,
+    live_provider_config_from_env, live_provider_smoke_report, live_provider_smoke_report_from_env,
 };
 pub use plugins::{PluginRegistryReport, discover_plugins, discover_plugins_from};
 pub use policy::{

@@ -33,6 +33,14 @@ pub struct LiveProviderConfig {
     pub cache_dir: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct LiveProviderRuntimeControls {
+    pub timeout_secs: u64,
+    pub min_interval_ms: u64,
+    pub max_retries: u8,
+    pub cache_enabled: bool,
+}
+
 impl LiveProviderConfig {
     pub fn from_env() -> Self {
         Self {
@@ -47,6 +55,15 @@ impl LiveProviderConfig {
             min_interval_ms: env_u64("SOURCERIGHT_PROVIDER_MIN_INTERVAL_MS", 1_000),
             max_retries: env_u64("SOURCERIGHT_PROVIDER_MAX_RETRIES", 2).min(u8::MAX as u64) as u8,
             cache_dir: env_string("SOURCERIGHT_PROVIDER_CACHE_DIR"),
+        }
+    }
+
+    pub fn runtime_controls(&self) -> LiveProviderRuntimeControls {
+        LiveProviderRuntimeControls {
+            timeout_secs: self.timeout_secs,
+            min_interval_ms: self.min_interval_ms,
+            max_retries: self.max_retries,
+            cache_enabled: self.cache_dir.is_some(),
         }
     }
 }
@@ -76,6 +93,7 @@ pub struct LiveProviderSmokeState {
     pub schema_version: &'static str,
     pub enabled: bool,
     pub smoke_enabled: bool,
+    pub runtime_controls: LiveProviderRuntimeControls,
     pub retrieved_at: String,
     pub outcomes: Vec<LiveProviderOutcome>,
 }
@@ -89,6 +107,7 @@ pub fn live_provider_smoke_report(
         schema_version: LIVE_PROVIDER_SMOKE_SCHEMA_VERSION,
         enabled: config.enabled,
         smoke_enabled: config.smoke_enabled,
+        runtime_controls: config.runtime_controls(),
         retrieved_at: retrieved_at.clone(),
         outcomes: vec![
             smoke_unpaywall(canonical, config, &retrieved_at),
@@ -782,6 +801,15 @@ mod tests {
         let report = live_provider_smoke_report_from_env(&canonical_item());
 
         assert_eq!(report.schema_version, LIVE_PROVIDER_SMOKE_SCHEMA_VERSION);
+        assert_eq!(
+            report.runtime_controls,
+            LiveProviderRuntimeControls {
+                timeout_secs: 20,
+                min_interval_ms: 1_000,
+                max_retries: 2,
+                cache_enabled: false,
+            }
+        );
         assert!(
             report
                 .outcomes
@@ -818,6 +846,15 @@ mod tests {
         assert_eq!(config.min_interval_ms, 1_000);
         assert_eq!(config.max_retries, 2);
         assert!(config.cache_dir.is_none());
+        assert_eq!(
+            config.runtime_controls(),
+            LiveProviderRuntimeControls {
+                timeout_secs: 20,
+                min_interval_ms: 1_000,
+                max_retries: 2,
+                cache_enabled: false,
+            }
+        );
     }
 
     #[test]

@@ -141,9 +141,12 @@ sourceright policy [--policy <policy.json>] <references.csl.json>
 
 **Purpose:** Verify that provider runtime controls (timeout, retry, min-interval, cache)
 are configurable and respected. These are defined in `LiveProviderConfig` in
-`src/live_providers.rs` and controlled via environment variables.
+`src/live_providers.rs`, controlled via environment variables, and serialized in
+`LiveProviderSmokeState.runtime_controls` so transcripts can prove the policy
+used for a smoke run.
 
 **Configuration reference:**
+
 | Variable | Default | Controls |
 |---|---|---|
 | `SOURCERIGHT_PROVIDER_TIMEOUT_SECS` | `20` | HTTP request timeout |
@@ -153,18 +156,42 @@ are configurable and respected. These are defined in `LiveProviderConfig` in
 | `SOURCERIGHT_LIVE_PROVIDERS` | (false) | Master enable for live provider calls |
 | `SOURCERIGHT_LIVE_PROVIDER_SMOKE` | (false) | Enable smoke tests for provider adapters |
 
+**Runtime-control report shape:**
+
+```json
+{
+  "schema_version": "sourceright.live_provider_smoke.v1",
+  "enabled": false,
+  "smoke_enabled": false,
+  "runtime_controls": {
+    "timeout_secs": 20,
+    "min_interval_ms": 1000,
+    "max_retries": 2,
+    "cache_enabled": false
+  }
+}
+```
+
 **Verification approach:**
-1. Set `SOURCERIGHT_PROVIDER_TIMEOUT_SECS=1` and observe timeout behavior
-2. Set `SOURCERIGHT_PROVIDER_MAX_RETRIES=0` and confirm no retry on failure
-3. Set `SOURCERIGHT_PROVIDER_CACHE_DIR=/tmp/provider-cache` and confirm cache hits
-4. Verify default config: `cargo test live_provider_config_defaults_to_conservative_runtime_policy`
+
+1. Verify conservative defaults:
+   `cargo test live_provider_config_defaults_to_conservative_runtime_policy`.
+2. Verify skipped live smokes still emit runtime controls:
+   `cargo test default_smoke_report_skips_without_credentials`.
+3. Verify cache reads do not hit the network:
+   `cargo test provider_cache_returns_evidence_payload_without_network`.
+4. For opt-in live runs, capture the `runtime_controls` object with the provider
+   outcomes and retain it as evidence for timeout/retry/min-interval/cache policy.
 
 **Key assertions:**
+
 - Default timeout is 20 seconds (conservative)
 - Default max retries is 2
 - Default min interval is 1000ms
-- Cache is optional (None by default)
+- Cache is optional and reported as `cache_enabled: false` by default
 - Live providers are disabled by default (opt-in only)
+- Cached responses are read before network access and remain provider evidence
+  rather than canonical CSL
 
 **Exit code:** `0` when config tests pass
 
@@ -230,4 +257,3 @@ contracts."**
 | Provider fixture (others) | 🔶 Partial | Example fixtures exist |
 | Live provider API smoke | ❌ Not yet | All providers planned |
 | BYO-key provider tests | ⏸️ Deferred | Requires user API keys |
-
