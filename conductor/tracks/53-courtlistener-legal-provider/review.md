@@ -162,7 +162,7 @@ All five criteria in `test-matrix.md` have been verified against the current cod
 
 All test-matrix acceptance criteria are satisfied. The track is promoted from **in_progress** to **completed**.
 
-The remaining blockers recorded in `conductor/evidence-ledger.json` (Windows MSVC linker path issue, no live smoke, no live-provider adapter directory) are inherent to the fixture-backed evidence level and do not prevent completion of this track. Live-provider expansion is deferred as "future work" per `docs/src/legal-roadmap.md` line 52-57.
+The remaining blockers recorded in `conductor/evidence-ledger.json` (no live smoke and no live-provider adapter directory) are inherent to the fixture-backed evidence level and do not prevent completion of this track. Earlier Windows MSVC linker failures are superseded by current green CI and GNU-target local verification. Live-provider expansion is deferred as "future work" per `docs/src/legal-roadmap.md` line 52-57.
 
 ## Status
 
