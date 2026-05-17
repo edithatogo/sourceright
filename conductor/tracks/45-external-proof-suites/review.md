@@ -57,10 +57,10 @@ All six documents cross-reference existing CI tests where applicable.
 | Proof Family | Evidence | Gap |
 |-------------|----------|-----|
 | **Installed CLI smoke** | `cli_end_to_end.rs` exists. `cli-smoke-proof.md` documents all 7 commands. | **Gap closed** — all 7 commands documented with expected output and exit codes. |
-| **MCP stdio transcript smoke** | `mcp-transcript-proof.md` documents discovery surfaces. `mcp_distribution_checks.rs` validates server.json. | **Gap partially closed** — discovery surfaces are documented and CI-tested. Server startup remains opt-in only. |
-| **OJS proof** | `ojs-proof.md` documents OJS screening pipeline with synthetic fixture. | **Gap partially closed** — pipeline is documented but not automated in CI. |
-| **Citation-manager proof** | `citation-manager-proof.md` documents three Zotero fixture scenarios. | **Gap partially closed** — documented but not automated in CI. |
-| **Live provider proof** | `provider-proof.md` documents registry discovery, manifest validation, fixture smoke. | **Gap partially closed** — static fixture validation works; live provider API calls remain planned. |
+| **MCP stdio transcript smoke** | `mcp-transcript-proof.md` documents discovery surfaces. `mcp_distribution_checks.rs` validates server.json. | **Gap closed for discovery** — named-client startup remains opt-in/client-specific. |
+| **OJS proof** | `ojs-proof.md` documents OJS screening pipeline with synthetic fixture. | **Gap closed** — fixture-backed editor/author screening is covered by `cli_end_to_end.rs`; live OJS remains opt-in/deferred. |
+| **Citation-manager proof** | `citation-manager-proof.md` documents Zotero fixture scenarios. | **Gap closed for Zotero fixture-backed engine** — live library smoke is opt-in and EndNote live sync is deferred. |
+| **Live provider proof** | `provider-proof.md` documents registry discovery, manifest validation, fixture smoke, and runtime controls. | **Gap closed for runtime-control contract** — live provider API calls remain opt-in and are not claimed by default. |
 | **Registry proof** | `registry-proof.md` documents server.json, glama.json, Dockerfile, workflows. | **Gap closed** — all registry bindings are CI-validated via `mcp_distribution_checks.rs`. |
 
 
@@ -71,9 +71,9 @@ The spec requires 6 proof families. Current status:
 | Family | Status | Evidence |
 |--------|--------|----------|
 | Installed CLI Smoke | ✅ Proven (documented + CI) | `cli-smoke-proof.md`, `tests/cli_end_to_end.rs` |
-| MCP Stdio Transcript Smoke | 🔶 Partial (discovery ✅, server startup 🔄) | `mcp-transcript-proof.md`, `tests/cli_end_to_end.rs` |
-| OJS Proof | 🔶 Partial (documented, not CI-automated) | `ojs-proof.md`, `fixtures/journal/ojs-submission.json` |
-| Citation-Manager Proof | 🔶 Partial (documented, not CI-automated) | `citation-manager-proof.md`, `fixtures/providers/zotero/` |
+| MCP Stdio Transcript Smoke | ✅ Proven for discovery; named-client startup opt-in | `mcp-transcript-proof.md`, `tests/cli_end_to_end.rs` |
+| OJS Proof | ✅ Proven for fixture-backed screening | `ojs-proof.md`, `fixtures/journal/ojs-submission.json`, `tests/cli_end_to_end.rs` |
+| Citation-Manager Proof | ✅ Proven for Zotero fixture-backed engine | `citation-manager-proof.md`, `fixtures/providers/zotero/`, `src/citation_sync.rs`, `tests/cli_end_to_end.rs` |
 | Live Provider Proof | ✅ Proven (runtime controls + static discovery documented) | `provider-proof.md`, `plugins/registry.toml`, `src/live_providers.rs` |
 | Registry Proof | ✅ Proven (CI-validated) | `registry-proof.md`, `mcp_distribution_checks.rs` |
 

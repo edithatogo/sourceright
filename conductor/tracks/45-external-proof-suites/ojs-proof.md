@@ -234,12 +234,11 @@ manual-review-queued reference."**
 
 | Surface | Fixture | CI Coverage | Transcript Evidence | Status |
 |---------|---------|-------------|-------------------|--------|
-| OJS submission fixture | `fixtures/journal/ojs-submission.json` | ❌ Not yet in CI | ✅ This document | 🔶 Partial |
-| `journal-screen` CLI | N/A (uses workspace) | ❌ Not yet in CI | ✅ This document | 🔶 Partial |
+| OJS submission fixture | `fixtures/journal/ojs-submission.json` | ✅ `cli_end_to_end.rs` | ✅ This document | ✅ Proven |
+| `journal-screen` CLI | N/A (uses workspace) | ✅ `cli_end_to_end.rs` | ✅ This document | ✅ Proven |
 | `journal.screen_submission` MCP tool | N/A | ✅ `cli_end_to_end.rs` | ✅ This document | ✅ Proven |
 | `sourceright://reports/journal-screening` resource | N/A | ✅ `cli_end_to_end.rs` | ✅ This document | ✅ Proven |
 | Live OJS instance smoke | N/A | N/A (opt-in only) | 🔄 Opt-in | ⏸️ Deferred |
 
-The MCP discovery surfaces (tool + resource) are proven via CI. The fixture-backed
-screening pipeline is documented but not yet automated in CI. Live OJS smoke is
-deferred pending a disposable OJS test instance.
+The MCP discovery surfaces and fixture-backed screening pipeline are proven via
+CI. Live OJS smoke is deferred pending a disposable OJS test instance.

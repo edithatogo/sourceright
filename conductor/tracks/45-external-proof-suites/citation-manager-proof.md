@@ -269,14 +269,13 @@ exact match, title update, and apply success."**
 
 | Surface | Fixture | CI Coverage | Evidence | Status |
 |---------|---------|-------------|----------|--------|
-| Zotero exact-match | `fixtures/providers/zotero/preview-exact-match.json` | ❌ Not yet in CI | ✅ This doc | 🔶 Partial |
-| Zotero title-update | `fixtures/providers/zotero/preview-title-update.json` | ❌ Not yet in CI | ✅ This doc | 🔶 Partial |
-| Zotero apply success | `fixtures/providers/zotero/apply-success-preview.json` | ❌ Not yet in CI | ✅ This doc | 🔶 Partial |
+| Zotero exact-match | `fixtures/providers/zotero/preview-exact-match.json` plus unit fixture `zotero-exact-match.json` | ✅ `citation_sync.rs` tests and manual workflow fixture smoke | ✅ This doc | ✅ Proven |
+| Zotero title-update | `fixtures/providers/zotero/preview-title-update.json` plus unit fixture `zotero-title-update.json` | ✅ `citation_sync.rs` tests and manual workflow fixture smoke | ✅ This doc | ✅ Proven |
+| Zotero apply success | `fixtures/providers/zotero/apply-success-preview.json` | ✅ `cli_end_to_end.rs` apply surface and documented transcript | ✅ This doc | ✅ Proven |
 | `sourceright citation-sync` CLI surface | N/A | ✅ `cli_end_to_end.rs` | ✅ This doc | ✅ Proven |
 | `sourceright citation-sync --apply` CLI surface | N/A | ✅ `cli_end_to_end.rs` | ✅ This doc | ✅ Proven |
 | EndNote live sync | N/A | N/A (opt-in only) | 🔄 Missing | ⏸️ Deferred |
 
-The CLI citation-sync surface is proven via CI (`cli_end_to_end.rs`). The three
-fixture-backed scenarios are documented but not automated in CI. EndNote live
-sync is deferred pending fixture creation and adapter implementation.
-
+The CLI citation-sync surface and Zotero fixture-backed engine are proven via
+CI and the manual Zotero workflow fixture job. EndNote live sync is deferred
+pending fixture creation and adapter implementation.
