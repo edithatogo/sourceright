@@ -17,6 +17,7 @@ Use the matrix below when translating them into market-readiness wording:
 | --- | --- | --- |
 | `core_normalizer` | Technical preview | Implemented core behavior with fixture-backed and trust-gated use. |
 | `core_exporter` | Technical preview | Implemented exporter behavior with the same controlled-use limits. |
+| `fixture_tested` | Technical preview | Fixture-backed adapter or workflow evidence exists, but host/live execution remains gated. |
 | `planned_public_api` | Roadmap, not preview | Public API target is described, but implementation is still pending. |
 | `planned_byo_key` | Roadmap, not preview | BYO-key or licensed-data target is described, but implementation is still pending. |
 | `planned_adapter` | Roadmap, not preview | Adapter target is described, but implementation is still pending. |
@@ -56,7 +57,6 @@ Runtime plugin discovery is implemented. Execution remains gated by explicit
 trust policy and future capability enablement. Before Sourceright executes
 plugins at runtime, it still needs:
 
-- manifest validation wired into CI;
 - signed or pinned plugin provenance;
 - clear sandbox, network, and cache policies;
 - deterministic dry-run modes;

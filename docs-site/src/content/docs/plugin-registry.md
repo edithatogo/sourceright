@@ -14,6 +14,7 @@ Use the matrix below when translating them into market-readiness wording:
 | --- | --- | --- |
 | `core_normalizer` | Technical preview | Implemented core behavior with fixture-backed and trust-gated use. |
 | `core_exporter` | Technical preview | Implemented exporter behavior with the same controlled-use limits. |
+| `fixture_tested` | Technical preview | Fixture-backed adapter or workflow evidence exists, but host/live execution remains gated. |
 | `planned_public_api` | Roadmap, not preview | Public API target is described, but implementation is still pending. |
 | `planned_byo_key` | Roadmap, not preview | BYO-key or licensed-data target is described, but implementation is still pending. |
 | `planned_adapter` | Roadmap, not preview | Adapter target is described, but implementation is still pending. |
