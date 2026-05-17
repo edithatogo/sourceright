@@ -13,8 +13,8 @@ Turn publication registry status into a repeatable, documented process covering 
 | # | Test | Result | Evidence |
 |---|------|--------|----------|
 | 1 | Accepted registry — URL, version, date, install metadata recorded | ✅ Pass | docs/src/release-status.md — Accepted Registries table. 4 registries documented with all columns. |
-| 2 | Prepared registry — metadata exists but docs say not accepted yet | ✅ Pass | docs/src/release-status.md — Prepared Registries table. GHCR (indirection) and Glama (no external listing) documented. |
-| 3 | Deferred registry — blocking requirement and revisit trigger documented | ✅ Pass | docs/src/release-status.md — Deferred Registries table. 6 registries with blocking requirements and revisit triggers. |
+| 2 | Prepared registry — metadata exists but docs say not accepted yet | ✅ Pass | docs/src/release-status.md — Prepared Registries table. GHCR, Glama, Smithery, MCP client configs, GitHub Copilot prep, Zotero, and OJS/PKP are documented as prepared rather than accepted. |
+| 3 | Deferred registry — blocking requirement and revisit trigger documented | ✅ Pass | docs/src/release-status.md — Deferred Registries table. Package-manager and host-package surfaces record missing artifacts, blocking requirements, and revisit triggers. |
 | 4 | GHCR evidence — captured or labelled as MCP Registry indirection | ✅ Pass | GHCR listed as "prepared" with note: "Documented as MCP Registry indirection — the OCI image is published but the GHCR package listing is indirectly evidenced." |
 | 5 | Package-manager decision — each has yes/no/defer | ✅ Pass | Package-Manager Feasibility Decisions table. Homebrew (Defer), Scoop (Defer), Chocolatey (No), winget (Defer), npm (Defer), PyPI (Defer). All with rationale. |
 | 6 | Review loop — $conductor-review | ✅ Pass | This review.md file created as the track review artifact. |
@@ -39,13 +39,17 @@ Turn publication registry status into a repeatable, documented process covering 
 
 ## Evidence Summary
 
-The registry completion table now documents 13 registry surfaces:
+The registry completion table now reconciles registry, package-manager, host
+packaging, citation-manager, and journal-plugin surfaces:
 
 - **4 accepted** (GitHub Release, crates.io, docs.rs, Official MCP Registry) — each with version, URL, date, and install metadata.
-- **2 prepared** (GHCR MCP image, Glama) — metadata exists but external acceptance not verified.
-- **6 deferred** (Smithery, Homebrew, Scoop, winget, npm, PyPI) — each with blocking requirement and revisit trigger.
+- **Prepared** (GHCR MCP image, Glama, Smithery, Claude Desktop client config, Codex MCP client config, generic MCP client config, GitHub Copilot coding-agent prep, Zotero, OJS/PKP) — repository metadata, package/config source, and acceptance blockers are recorded without claiming public listing acceptance.
+- **Deferred** (Homebrew, Scoop, winget, npm launcher, PyPI launcher, VS Code Marketplace/Open VSX, Microsoft AppSource/Word add-in, LibreOffice Extensions) — each records the missing artifact, blocking requirement, and revisit trigger.
 - **1 n/a** (Chocolatey) — rationale documented.
 
 Package-manager feasibility decisions cover 6 managers with clear defer/no rationale.
 
 All docs-site mirrors are in parity with docs/src archival source.
+
+This review was reconciled after later marketplace and host-packaging tracks
+expanded prepared surfaces beyond the original GHCR/Glama-only scope.
