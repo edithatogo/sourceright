@@ -42,6 +42,9 @@ CSL.
 Prepared metadata, local configuration, and development settings are useful
 inputs, but they are not marketplace acceptance.
 
+These host entries are an explicit deferral of marketplace/plugin claims until
+the matching package artifact, install proof, and listing evidence exist.
+
 ## Track 65 Client Artifacts
 
 Track 65 keeps host examples in `examples/mcp-clients/` and uses
