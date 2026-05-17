@@ -87,8 +87,8 @@ See `docs/src/zotero-plugin-install.md` for full installation instructions.
 |---------|----------|----------|--------|
 | **GitHub Releases** | Native binaries (Linux, macOS, Windows) + source tarball | All users | 🔵 Intended shareable package channel |
 | **crates.io** | `sourceright` Rust crate | Rust developers | 🔵 Intended Rust package channel |
-| **Zotero Plugin Gallery** | `.xpi` package | Zotero desktop users | ❌ Not applicable (CLI/API model) |
 | **Zotero Forums** | Support/discussion | Community | 🔵 Deferred — no browser plugin to announce |
+| **Future official Zotero plugin directory** | `.xpi` package | Zotero desktop users | ❌ Not applicable until Sourceright ships a Zotero UI plugin |
 
 ### Shareable package vs official acceptance
 
@@ -96,10 +96,26 @@ The **shareable package** is the Sourceright binary distributed through GitHub
 Releases. This is the primary intended distribution channel and should remain
 gated by release workflows and install smoke tests.
 
-**Official acceptance** (Zotero Plugin Gallery listing) is **not applicable**
-because Sourceright is not a Zotero browser plugin. If a future use case
-emerges for a Zotero UI plugin (e.g., in-plugin citation checking), a
-separate track would handle `.xpi` packaging, signing, and Gallery submission.
+**Official acceptance** in a Zotero plugin directory is **not applicable** to
+the current adapter because Sourceright is not a Zotero `.xpi` plugin. Zotero's
+current public plugin page says plugins are installed from `.xpi` files, most
+plugins are announced in the Zotero Forums, and an official plugin directory is
+planned. If a future use case emerges for a Zotero UI plugin (e.g., in-plugin
+citation checking), a separate track would handle `.xpi` packaging, Zotero
+Desktop loading tests, signing/release hosting, forum announcement, and future
+directory submission.
+
+## CI Verification Path
+
+The repository includes `.github/workflows/zotero-live-smoke.yml` as a manual,
+secrets-gated live smoke path for the current Web API adapter. It runs fixture
+tests by default and only calls Zotero when the protected `zotero-live-smoke`
+environment supplies a disposable library API key and ID.
+
+Running Zotero Desktop in CI is possible with `xvfb`, a downloaded Zotero Linux
+build, and a temporary profile, but that proves `.xpi` installation/loading
+rather than this CLI/Web API adapter. Keep UI plugin loading tests out of the
+default CI path until a real `.xpi` package exists.
 
 ---
 

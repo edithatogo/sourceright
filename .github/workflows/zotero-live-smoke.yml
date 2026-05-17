@@ -1,0 +1,62 @@
+name: Zotero Live Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      zotero_api_url:
+        description: "Zotero API base URL"
+        required: false
+        default: "https://api.zotero.org"
+      zotero_library_type:
+        description: "Zotero library path family: users or groups"
+        required: false
+        default: "users"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zotero-live-smoke-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  fixture-smoke:
+    name: fixture-backed Zotero adapter smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: dtolnay/rust-toolchain@b3b07ba8b418998c39fb20f53e8b695cdcc8de1b # stable
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
+      - name: Run deterministic Zotero adapter tests
+        run: cargo test zotero --lib
+
+  disposable-library-smoke:
+    name: optional disposable Zotero Web API smoke
+    runs-on: ubuntu-latest
+    needs: fixture-smoke
+    environment: zotero-live-smoke
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: dtolnay/rust-toolchain@b3b07ba8b418998c39fb20f53e8b695cdcc8de1b # stable
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@98c8021b550208e191a6a3145459bfc9fb29c4c0 # v2
+      - name: Run live Zotero preview smoke when secrets are present
+        env:
+          SOURCERIGHT_ZOTERO_LIVE_SMOKE: ${{ secrets.SOURCERIGHT_ZOTERO_LIVE_SMOKE }}
+          SOURCERIGHT_ZOTERO_API_URL: ${{ inputs.zotero_api_url }}
+          SOURCERIGHT_ZOTERO_API_KEY: ${{ secrets.SOURCERIGHT_ZOTERO_API_KEY }}
+          SOURCERIGHT_ZOTERO_LIBRARY_ID: ${{ secrets.SOURCERIGHT_ZOTERO_LIBRARY_ID }}
+          SOURCERIGHT_ZOTERO_LIBRARY_TYPE: ${{ inputs.zotero_library_type }}
+        run: |
+          if [ "$SOURCERIGHT_ZOTERO_LIVE_SMOKE" != "1" ]; then
+            echo "Skipping live Zotero smoke: SOURCERIGHT_ZOTERO_LIVE_SMOKE secret is not 1."
+            exit 0
+          fi
+          if [ -z "$SOURCERIGHT_ZOTERO_API_KEY" ] || [ -z "$SOURCERIGHT_ZOTERO_LIBRARY_ID" ]; then
+            echo "Skipping live Zotero smoke: Zotero API key or library ID secret is missing."
+            exit 0
+          fi
+          cargo test zotero_disposable_library_live_smoke_skips_without_credentials --lib -- --ignored --nocapture

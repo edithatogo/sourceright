@@ -5,6 +5,13 @@ Sourceright integrates with Zotero via the **Zotero Web API (v3)** — not a tra
 preview, apply, and audit workflows against your Zotero library from the command line,
 CI pipeline, or MCP server runtime.
 
+Zotero's current public plugin documentation says plugins are installed from
+`.xpi` files, that Zotero does not currently provide a list of available
+plugins, and that most plugins are announced and discussed in the Zotero Forums.
+An official plugin directory is planned. Because Sourceright does not ship a
+`.xpi`, there is no Zotero Plugin Gallery submission to make for the current
+adapter.
+
 > **Architecture note:** The CLI/Web API approach was chosen over a `.xpi` browser plugin
 > because Sourceright is a server-side/CLI tool. The Web API integration works in CI/CD
 > pipelines, MCP server runtimes, and shared group libraries without requiring a browser
@@ -17,7 +24,7 @@ CI pipeline, or MCP server runtime.
 
 | Requirement | Version | Notes |
 |-------------|---------|-------|
-| Zotero desktop | 5.x or 6.x | Zotero desktop must be running so the Web API is accessible. |
+| Zotero desktop | 7.x+ for local API smoke | Zotero desktop must be running only when targeting the local API at `127.0.0.1:23119`. |
 | Zotero API key | N/A | Create one in [Zotero Settings](https://www.zotero.org/settings/keys). |
 | Sourceright binary | latest | `cargo install --path .` or download a GitHub Release. |
 
@@ -144,14 +151,36 @@ cat ./sync-audit.jsonl | jq '.action, .reference_id, .explanation'
 
 ---
 
+## CI and Live Smoke
+
+Default CI uses fixture-backed Zotero JSON and does not call Zotero or mutate a
+library. A manual GitHub Actions workflow, `.github/workflows/zotero-live-smoke.yml`,
+adds two gates:
+
+1. `fixture-smoke` runs deterministic Zotero adapter tests.
+2. `disposable-library-smoke` runs the ignored live Web API preview test only
+   when the protected `zotero-live-smoke` environment exposes:
+   `SOURCERIGHT_ZOTERO_LIVE_SMOKE=1`,
+   `SOURCERIGHT_ZOTERO_API_KEY`, and
+   `SOURCERIGHT_ZOTERO_LIBRARY_ID`.
+
+Use a disposable Zotero user or group library for this workflow. The live smoke
+fetches Zotero items and plans citation-sync actions with `apply=false`; it does
+not write to Zotero.
+
+Running Zotero Desktop itself inside GitHub Actions is possible with a Linux
+runner, `xvfb`, a downloaded Zotero build, and a temporary profile. That belongs
+to a future `.xpi` plugin track because it tests plugin installation/loading in
+the Zotero UI. The current Sourceright adapter is not a Zotero UI plugin, so the
+more relevant CI proof is the Web API disposable-library smoke above.
+
 ## Compatibility Matrix
 
 | Zotero Version | API Version | Local API | Public API | Notes |
 |----------------|-------------|-----------|------------|-------|
-| 5.x | v3 | Yes | Yes | Fully tested |
-| 6.x | v3 | Yes | Yes | Fully tested |
-| 7.x (beta) | v3 | Yes | Yes | Review preview output |
-| Standalone | v3 | Yes | N/A | Same as desktop |
+| 7.x+ | v3 | Expected | Yes | Fixture-backed locally; live Web API smoke is opt-in. |
+| 8.x | v3 | Expected | Yes | Local API should be rechecked before claiming desktop smoke evidence. |
+| Standalone/Desktop | v3 | Expected when local HTTP server is enabled | N/A | Use `http://127.0.0.1:23119/api/users/0/items` for the personal local library path. |
 
 ---
 
@@ -172,7 +201,7 @@ For full reasoning, see:
 | Audit log on disk | Yes (JSONL, configurable path) | No (browser storage) |
 | Installation | Binary + API key; no signing needed | `.xpi` packaging, signing, per-user install |
 | Zotero UI required | No (CLI works headless) | Yes (in-browser extension) |
-| Distribution channel | GitHub Releases, crates.io | Zotero Plugin Gallery |
+| Distribution channel | GitHub Releases, crates.io | Zotero Forums now; official plugin directory when available |
 | Write permissions | API key scoping | Extension permissions manifest |
 
 ### What this means for users
