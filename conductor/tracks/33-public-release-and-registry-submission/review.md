@@ -46,19 +46,18 @@ On `v*.*.*` tags, crate publish runs automatically with manual dispatch override
 - Crates.io publication
 - GitHub Pages docs-site deployment
 
-## Pre-Release Validation (2026-05-14, fresh re-validation)
+## Pre-Release Validation (2026-05-17, clean-tree re-validation)
 
 Validation executed per the release runbook steps 2–5. Full results in `pre-release-validation.md`.
 
 ### Step 2: `cargo package --locked`
 
-- **Strict:** BLOCKED by dirty working tree — 2 modified files (`README.md`, `docs/src/security-automation.md`) + 5 untracked entries. This is correct gate behavior; prevents packaging from uncommitted state.
+- **Strict:** PASSED on a clean tree. `cargo package --locked` packaged 248 files, 915.2 KiB uncompressed / 190.3 KiB compressed, then verified the crate successfully.
 - **With `--allow-dirty`:** `cargo package --list --allow-dirty --locked` PASSED. Full manifest produced. All include-list directories accounted for. Test exclusion warnings expected for binary crate.
 
 ### Step 3: `cargo publish --dry-run --locked`
 
-- **Strict:** BLOCKED by same dirty-tree gate.
-- **With `--allow-dirty`:** PASSED (warning: v0.1.20 already exists on crates.io). Package structure valid. Crates.io index synced successfully.
+- **Strict:** PASSED on a clean tree. `cargo publish --dry-run --locked` synced the crates.io index, warned that `sourceright@0.1.20` already exists, verified the package, reached the upload step, and aborted upload due to dry run.
 
 ### Step 4: GitHub Release artifacts
 
@@ -74,9 +73,9 @@ Validation executed per the release runbook steps 2–5. Full results in `pre-re
 
 | Gate | Result |
 |------|--------|
-| `cargo package --locked` | BLOCKED (7 uncommitted changes) — passes with --allow-dirty |
+| `cargo package --locked` | PASSED |
 | `cargo package --list --allow-dirty --locked` | PASSED |
-| `cargo publish --dry-run --locked` | BLOCKED (dirty tree) — passes with --allow-dirty |
+| `cargo publish --dry-run --locked` | PASSED (dry-run upload aborted as expected) |
 | `server.json` MCP 2025-12-11 schema | PASSED |
 | `glama.json` structure | PASSED |
 | `Dockerfile` OCI labels (6) | PASSED |
