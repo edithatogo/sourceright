@@ -76,22 +76,22 @@ status = "planned_public_api"
 [[plugins]]
 id = "matcher.local-bibliographic"
 manifest = "plugins/manifests/matcher.local-bibliographic.toml"
-status = "planned"
+status = "fixture_tested"
 
 [[plugins]]
 id = "recency.retractions"
 manifest = "plugins/manifests/recency.retractions.toml"
-status = "planned"
+status = "fixture_tested"
 
 [[plugins]]
 id = "relevance.claim-source"
 manifest = "plugins/manifests/relevance.claim-source.toml"
-status = "planned"
+status = "fixture_tested"
 
 [[plugins]]
 id = "extraction.docx-pdf"
 manifest = "plugins/manifests/extraction.docx-pdf.toml"
-status = "planned_adapter"
+status = "fixture_tested"
 
 [[plugins]]
 id = "export.citation-files"
