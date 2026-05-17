@@ -29,8 +29,10 @@ async function fetch(path) {
 }
 
 const app = await fs.readFile(new URL("app.js", import.meta.url), "utf8");
-vm.runInNewContext(app, { document, fetch, Promise, Error });
-await new Promise((resolve) => setTimeout(resolve, 25));
+const renderCompletion = vm.runInNewContext(app, { document, fetch, Promise, Error });
+if (renderCompletion && typeof renderCompletion.then === "function") {
+  await renderCompletion;
+}
 
 assert.equal(
   elements.get("#status").textContent,
