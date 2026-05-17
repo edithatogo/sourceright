@@ -416,7 +416,7 @@
         "Plugin manifest plugins/manifests/legal.courtlistener.toml exists with planned_public_api status."
       ],
       "blockers": [
-        "cargo check --lib fails on Windows due to MSVC linker issue with spaces in repo path (OneDrive - Flinders); no code-level compilation errors detected.",
+        "Earlier Windows MSVC linker failures are superseded by current green CI and GNU-target local verification; no active code-level compilation blocker is recorded for this fixture-backed track.",
         "No live smoke test gated by COURTLISTENER_API_KEY.",
         "No provider-fixtures/courtlistener/ directory for live-provider adapter (only fixture adapter exists)."
       ]
