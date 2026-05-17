@@ -87,8 +87,9 @@ jobs:
       - name: Run stress benchmarks and write metrics
         run: |
           mkdir -p sourceright-bench/metrics
+          metric_path="sourceright-bench/metrics/robustness-stress-$(date -u +%Y%m%d-%H%M%S).json"
           cargo run --locked --bin sourceright -- bench --manifest sourceright-bench/tasks-stress.yaml --json \
-            > sourceright-bench/metrics/robustness-stress-$(date -u +%Y%m%d-%H%M%S).json
+            > "$metric_path"
           python3 - <<'PY'
           import csv
           import json

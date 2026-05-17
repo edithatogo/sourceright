@@ -11,6 +11,7 @@
   "ignores": [
     "legacy/**",
     "target/**",
+    "conductor/tracks/**",
     "docs-site/dist/**",
     "docs-site/.astro/**",
     "node_modules/**"

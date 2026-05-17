@@ -58,7 +58,7 @@ jobs:
           xvfb-run --auto-servernum "$zotero_bin" -profile "$profile" -no-remote &
           echo $! > .tmp/zotero.pid
 
-          for attempt in $(seq 1 60); do
+          for _ in $(seq 1 60); do
             if curl -fsS -D .tmp/zotero-headers.txt \
               "http://127.0.0.1:23119/api/users/0/items?limit=1" \
               -o .tmp/zotero-items.json; then
