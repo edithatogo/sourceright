@@ -117,6 +117,12 @@ build, and a temporary profile, but that proves `.xpi` installation/loading
 rather than this CLI/Web API adapter. Keep UI plugin loading tests out of the
 default CI path until a real `.xpi` package exists.
 
+`.github/workflows/zotero-desktop-smoke.yml` records an experimental manual
+local-desktop API smoke. It starts Zotero with a temporary profile, enables the
+HTTP server/local API preferences, and probes `/api/users/0/items?limit=1`.
+Treat it as local API availability evidence only, not plugin submission or
+`.xpi` loading evidence.
+
 ---
 
 ## Deferred: `.xpi` Packaging

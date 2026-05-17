@@ -174,6 +174,23 @@ to a future `.xpi` plugin track because it tests plugin installation/loading in
 the Zotero UI. The current Sourceright adapter is not a Zotero UI plugin, so the
 more relevant CI proof is the Web API disposable-library smoke above.
 
+The repository also includes `.github/workflows/zotero-desktop-smoke.yml` as an
+experimental manual workflow for the local desktop API. It downloads Zotero on
+an Ubuntu runner, starts it under `xvfb` with an isolated temporary profile, sets
+`extensions.zotero.httpServer.enabled`,
+`extensions.zotero.httpServer.localAPI.enabled`, and
+`extensions.zotero.httpServer.port`, then probes
+`http://127.0.0.1:23119/api/users/0/items?limit=1`. This workflow is not a
+plugin loading test and should remain manual until its runner reliability is
+proven.
+
+On a developer machine, Zotero returning `403 Local API is not enabled` means
+the desktop app is listening on port 23119 but the local API preference is not
+enabled. In Zotero, use Settings -> Advanced -> Config Editor and confirm
+`extensions.zotero.httpServer.enabled` is `true`,
+`extensions.zotero.httpServer.localAPI.enabled` is `true`, and
+`extensions.zotero.httpServer.port` is `23119`.
+
 ## Compatibility Matrix
 
 | Zotero Version | API Version | Local API | Public API | Notes |

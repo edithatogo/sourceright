@@ -74,6 +74,21 @@ Running Zotero Desktop inside GitHub Actions is possible with `xvfb`, a
 downloaded Zotero build, and a temporary profile. That is useful only for a
 future `.xpi` plugin loading test; the current adapter is not a Zotero UI plugin.
 
+The repository also includes `.github/workflows/zotero-desktop-smoke.yml` as an
+experimental manual workflow for the local desktop API. It downloads Zotero on
+an Ubuntu runner, starts it under `xvfb` with an isolated temporary profile, sets
+the Zotero HTTP server and local API preferences, then probes
+`http://127.0.0.1:23119/api/users/0/items?limit=1`. This workflow is not a
+plugin loading test and should remain manual until its runner reliability is
+proven.
+
+On a developer machine, Zotero returning `403 Local API is not enabled` means
+the desktop app is listening on port 23119 but the local API preference is not
+enabled. In Zotero, use Settings -> Advanced -> Config Editor and confirm
+`extensions.zotero.httpServer.enabled` is `true`,
+`extensions.zotero.httpServer.localAPI.enabled` is `true`, and
+`extensions.zotero.httpServer.port` is `23119`.
+
 ## Security Notes
 
 - Store API keys in environment variables or CI secrets, never in version

@@ -1,0 +1,79 @@
+name: Zotero Desktop Smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zotero-desktop-smoke-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  local-api-smoke:
+    name: experimental Zotero Desktop local API smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - name: Install desktop runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            curl \
+            jq \
+            libasound2t64 \
+            libdbus-glib-1-2 \
+            libgtk-3-0 \
+            libnss3 \
+            libx11-xcb1 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxrandr2 \
+            libxt6 \
+            xvfb
+      - name: Download Zotero Linux build
+        run: |
+          mkdir -p .tmp/zotero-desktop
+          curl -L \
+            "https://www.zotero.org/download/client/dl?channel=release&platform=linux-x86_64" \
+            -o .tmp/zotero-desktop/zotero.tar.bz2
+          tar -xjf .tmp/zotero-desktop/zotero.tar.bz2 -C .tmp/zotero-desktop
+          find .tmp/zotero-desktop -maxdepth 2 -type f -name zotero -print
+      - name: Start Zotero with isolated local API profile
+        run: |
+          set -euo pipefail
+          profile="$PWD/.tmp/zotero-profile"
+          mkdir -p "$profile"
+          cat > "$profile/user.js" <<'EOF'
+          user_pref("extensions.zotero.httpServer.enabled", true);
+          user_pref("extensions.zotero.httpServer.localAPI.enabled", true);
+          user_pref("extensions.zotero.httpServer.port", 23119);
+          user_pref("app.update.enabled", false);
+          EOF
+
+          zotero_bin="$(find "$PWD/.tmp/zotero-desktop" -maxdepth 2 -type f -name zotero | head -n 1)"
+          xvfb-run --auto-servernum "$zotero_bin" -profile "$profile" -no-remote &
+          echo $! > .tmp/zotero.pid
+
+          for attempt in $(seq 1 60); do
+            if curl -fsS -D .tmp/zotero-headers.txt \
+              "http://127.0.0.1:23119/api/users/0/items?limit=1" \
+              -o .tmp/zotero-items.json; then
+              cat .tmp/zotero-headers.txt
+              jq type .tmp/zotero-items.json
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Zotero local API did not become available."
+          cat .tmp/zotero-headers.txt 2>/dev/null || true
+          exit 1
+      - name: Stop Zotero
+        if: always()
+        run: |
+          if [ -f .tmp/zotero.pid ]; then
+            kill "$(cat .tmp/zotero.pid)" || true
+          fi
