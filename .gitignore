@@ -13,3 +13,8 @@ dist/
 book/
 docs-site/.astro/
 coverage-report.txt
+
+# Local overlay/reference artifacts from assisted import passes.
+.codex-plan/
+AGENTS.md.backup
+*IASN2001657*
