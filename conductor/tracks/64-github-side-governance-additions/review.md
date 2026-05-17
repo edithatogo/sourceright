@@ -41,5 +41,12 @@
 | --- | --- |
 | `Get-Content conductor/evidence-ledger.json \| ConvertFrom-Json` | Passed. |
 | `rg` over track-owned docs for unobserved Dependabot enabled/visible wording | Passed after wording correction. |
-| `cargo fmt --check` | Blocked by pre-existing parse error in `src/export.rs` and unrelated formatting diff in `tests/requirements_contract_policy.rs`; no track 64 Rust files were touched. |
-| `cargo test --test requirements_contract_policy` | Blocked by Windows access denied errors writing/removing files under `target/x86_64-pc-windows-gnu/debug/deps`. Retrying with `--target-dir C:\tmp\sourceright-track64-target` also failed with `Access is denied` before compilation. No track 64 Rust files were touched. |
+| `cargo fmt --check` | Superseded by later green CI and local checks after repository formatting/parser issues were resolved. |
+| `cargo test --test requirements_contract_policy` | Superseded by later green CI; Windows target-dir access issues are no longer recorded as a Track 64 blocker. |
+
+## Current Validation
+
+Latest `main` runs after the governance and CI hardening work pass `CI`,
+`Quality`, `Security`, `Robustness`, `Pages`, and `Release Drafter`. Track 64
+therefore remains completed, with only GitHub account-side settings tasks left
+outside repo-local control.

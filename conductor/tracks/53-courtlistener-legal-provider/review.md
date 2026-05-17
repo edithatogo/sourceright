@@ -39,7 +39,9 @@
 
 6. **cargo fmt --check passes** on both `src/legal.rs` and `src/lib.rs`.
 
-7. **cargo check --lib blocked on Windows toolchain.** The MSVC `link.exe` fails due to spaces in the repo path (`OneDrive - Flinders`). This is a known Windows linker limitation and does **not** indicate a code-level compilation error.
+7. **Current CI is green.** Earlier Windows MSVC linker failures in the
+   OneDrive path are superseded by later GitHub Actions runs and local
+   `stable-x86_64-pc-windows-gnu` checks using an external target directory.
 
 ### Plugin Manifest Review
 
@@ -73,14 +75,13 @@ The manifest accurately reflects current state. The `planned_public_api` status 
 | Source structure review | ✅ Valid | `courtlistener_fixture_candidate()` is public, exported from `lib.rs`, uses correct `serde_json::Value` signature |
 | Source syntax review | ✅ Valid | All types (`LegalProvider`, `LegalProviderCandidate`, etc.), closures, pattern matches, and `include_str!` macros are syntactically correct |
 | Fixture JSON validity | ✅ Valid | Both `success.json` and `no-match.json` parse as valid JSON with expected structure |
-| `cargo check --lib` (Windows MSVC) | ❌ Blocked | MSVC `link.exe` errors due to spaces in `OneDrive - Flinders` repo path — not a code issue |
+| GitHub Actions CI | ✅ Pass | Latest `main` runs compile and test the repository after the legal-provider track was reconciled |
 
 ## Recommendations
 
-1. **Resolve build environment:** Move the repo to a path without spaces, or configure CARGO_TARGET_DIR outside OneDrive, to unblock Windows compilation checks.
-2. **Add more fixtures:** Create `fixtures/providers/courtlistener/ambiguous.json` (multiple results) and `error.json` (malformed response) for edge-case coverage.
-3. **Live smoke test:** Add opt-in integration test gated by `COURTLISTENER_API_KEY` (future work).
-4. **Provider adapter:** Eventually promote from fixture-only to a live provider adapter in `src/providers/` (separate track).
+1. **Add more fixtures:** Create `fixtures/providers/courtlistener/ambiguous.json` (multiple results) and `error.json` (malformed response) for edge-case coverage.
+2. **Live smoke test:** Add opt-in integration test gated by `COURTLISTENER_API_KEY` (future work).
+3. **Provider adapter:** Eventually promote from fixture-only to a live provider adapter in `src/providers/` (separate track).
 
 ## Claude For Legal Incorporation
 
