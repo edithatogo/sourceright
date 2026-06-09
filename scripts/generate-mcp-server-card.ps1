@@ -4,6 +4,7 @@
 .DESCRIPTION
     Writes:
       - mcp/server-card.json
+      - .well-known/mcp/server-card.json
       - docs-site/src/data/mcp-server-card.json
 
     Smithery URL publish scans `/.well-known/mcp/server-card.json` on the published
@@ -36,10 +37,14 @@ if ($LASTEXITCODE -ne 0) {
 $null = $cardJson | ConvertFrom-Json
 
 $repoCardPath = Join-Path $repoRoot "mcp/server-card.json"
+$rootCardDir = Join-Path $repoRoot ".well-known/mcp"
+$rootCardPath = Join-Path $rootCardDir "server-card.json"
 $docsDataDir = Join-Path $repoRoot "docs-site/src/data"
 $docsDataPath = Join-Path $docsDataDir "mcp-server-card.json"
 
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $repoCardPath) | Out-Null
+New-Item -ItemType Directory -Force -Path (Split-Path -Parent $repoCardPath) | Out-Null
+New-Item -ItemType Directory -Force -Path $rootCardDir | Out-Null
 New-Item -ItemType Directory -Force -Path $docsDataDir | Out-Null
 
 $prettyCard = & $binary mcp server-card
@@ -48,9 +53,11 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Set-Content -LiteralPath $repoCardPath -Value $prettyCard -Encoding utf8NoBOM
+Set-Content -LiteralPath $rootCardPath -Value $prettyCard -Encoding utf8NoBOM
 Set-Content -LiteralPath $docsDataPath -Value $prettyCard -Encoding utf8NoBOM
 
 Write-Host "Wrote MCP server card to:"
 Write-Host "  $repoCardPath"
+Write-Host "  $rootCardPath"
 Write-Host "  $docsDataPath"
 Write-Host "  (docs-site prerender route: src/pages/.well-known/mcp/server-card.json.ts)"

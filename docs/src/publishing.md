@@ -58,10 +58,15 @@ Smithery supports two publication modes relevant to Sourceright:
 - URL publishing for hosted MCP servers that expose Streamable HTTP.
 - MCPB bundle publishing for local stdio servers.
 
-Sourceright runs `sourceright mcp` over stdio. Smithery URL publish therefore
-needs a static server card at `/.well-known/mcp/server-card.json` on the docs
-homepage (`https://edithatogo.github.io/sourceright/`) so release scans can
+Sourceright runs `sourceright mcp` over stdio. Smithery URL publish needs a
+static server card at `/.well-known/mcp/server-card.json` so release scans can
 discover tools/resources/prompts without Streamable HTTP.
+
+GitHub project Pages does not currently serve dot-prefixed paths such as
+`.well-known` under `https://edithatogo.github.io/sourceright/` (Starlight
+404). Keep the prerendered docs route for future host compatibility, and also
+check in `.well-known/mcp/server-card.json` at the repository root for Smithery
+GitHub URL publish (`https://github.com/edithatogo/sourceright`).
 
 The prepared Smithery contract is:
 
