@@ -48,7 +48,7 @@ struct McpRuntime {
 impl McpRuntime {
     fn new(workspace_root: PathBuf) -> Self {
         Self {
-            workspace: SourcerightWorkspace::from_root(workspace_root),
+            workspace: SourcerightWorkspace::from_root_or_parent(workspace_root),
             initialized: false,
         }
     }
@@ -156,7 +156,7 @@ impl McpRuntime {
                 "resources": {},
                 "prompts": {},
             },
-            "instructions": "Read-only local reference verification server",
+            "instructions": "Local reference verification server with read-only resources and explicit apply-gated write tools",
         }))
     }
 
@@ -282,7 +282,7 @@ impl McpRuntime {
                 Ok(text_result(serde_json::to_string(&report)?))
             }
             "workspace.init" => {
-                let workspace = workspace_from_arguments(&self.workspace, arguments);
+                let workspace = init_workspace_from_arguments(&self.workspace, arguments);
                 let apply_requested = bool_arg(arguments, "apply").unwrap_or(false);
                 let changes = vec![
                     write_change(
@@ -336,7 +336,7 @@ impl McpRuntime {
                 Ok(text_result(serde_json::to_string(&result)?))
             }
             "review.import_decisions" => {
-                let workspace = workspace_from_arguments(&self.workspace, arguments);
+                let workspace = literal_workspace_from_arguments(&self.workspace, arguments);
                 let apply_requested = bool_arg(arguments, "apply").unwrap_or(false);
                 let decisions_value = arguments
                     .get("decisions")
@@ -394,7 +394,7 @@ impl McpRuntime {
                 Ok(text_result(serde_json::to_string(&result)?))
             }
             "exports.write" => {
-                let workspace = workspace_from_arguments(&self.workspace, arguments);
+                let workspace = literal_workspace_from_arguments(&self.workspace, arguments);
                 let apply_requested = bool_arg(arguments, "apply").unwrap_or(false);
                 let format = arguments
                     .get("format")
@@ -629,6 +629,25 @@ fn default_workspace_root() -> PathBuf {
     }
 }
 
+/// Static MCP server card for Smithery URL publish and SEP-1649 discovery.
+///
+/// Hosted at `/.well-known/mcp/server-card.json` on the docs site so registries
+/// can scan tool/resource/prompt surfaces without a Streamable HTTP transport.
+pub fn server_card() -> Value {
+    json!({
+        "serverInfo": {
+            "name": SERVER_NAME,
+            "version": env!("CARGO_PKG_VERSION"),
+        },
+        "authentication": {
+            "required": false,
+        },
+        "tools": tools_list(),
+        "resources": resources_list(),
+        "prompts": prompts_list(),
+    })
+}
+
 fn status_payload() -> Value {
     json!({
         "server_mode": "stdio",
@@ -643,12 +662,18 @@ fn status_payload() -> Value {
             "sourceright report --mcp-resource [.sourceright-directory]",
             "sourceright conflicts [.sourceright-directory]",
             "sourceright citations <manuscript.txt> [.sourceright-directory]",
-            "sourceright review queue|partitions|import-decisions",
+            "sourceright review queue|partitions",
             "sourceright journal-screen [.sourceright-directory]",
             "sourceright legal <legal-text.txt>",
             "sourceright provenance <document-text.txt>",
             "sourceright policy <references.csl.json>",
             "sourceright plugins [validate] [--json]",
+        ],
+        "implemented_apply_gated_write_surfaces": [
+            "workspace.init apply=true",
+            "sourceright review import-decisions apply=true",
+            "review.import_decisions apply=true",
+            "exports.write apply=true",
             "sourceright export --all [.sourceright-directory]",
         ],
         "resource_uris": [
@@ -732,7 +757,29 @@ fn tools_list() -> Value {
                 "type": "object",
                 "properties": {
                     "workspace": { "type": "string" },
-                    "platform": { "type": "string" },
+                    "platform": {
+                        "type": "string",
+                        "description": "Journal screening contract label. Accepted aliases include generic-webhook, ojs, arxiv-submit-ce, arxiv_submission_core, scholarone, editorial-manager, ejournalpress, and manuscript-manager.",
+                        "enum": [
+                            "generic-webhook",
+                            "generic_webhook",
+                            "ojs",
+                            "arxiv-submit-ce",
+                            "arxiv_submit_ce",
+                            "arxiv-submission-core",
+                            "arxiv_submission_core",
+                            "scholarone",
+                            "scholar_one",
+                            "editorial-manager",
+                            "editorial_manager",
+                            "ejournalpress",
+                            "e-journal-press",
+                            "e_journal_press",
+                            "manuscript-manager",
+                            "manuscript_manager"
+                        ],
+                        "examples": ["generic-webhook", "arxiv-submit-ce", "arxiv-submission-core"]
+                    },
                     "submission_id": { "type": "string" },
                     "manuscript_label": { "type": "string" }
                 },
@@ -1110,6 +1157,24 @@ fn workspace_from_arguments(
     args: &Value,
 ) -> SourcerightWorkspace {
     path_arg(args, "workspace")
+        .map(SourcerightWorkspace::from_root_or_parent)
+        .unwrap_or_else(|| default_workspace.clone())
+}
+
+fn literal_workspace_from_arguments(
+    default_workspace: &SourcerightWorkspace,
+    args: &Value,
+) -> SourcerightWorkspace {
+    path_arg(args, "workspace")
+        .map(SourcerightWorkspace::from_root)
+        .unwrap_or_else(|| default_workspace.clone())
+}
+
+fn init_workspace_from_arguments(
+    default_workspace: &SourcerightWorkspace,
+    args: &Value,
+) -> SourcerightWorkspace {
+    path_arg(args, "workspace")
         .map(SourcerightWorkspace::from_root)
         .unwrap_or_else(|| default_workspace.clone())
 }
@@ -1121,7 +1186,7 @@ fn workspace_from_query(
     query
         .get("workspace")
         .map(PathBuf::from)
-        .map(SourcerightWorkspace::from_root)
+        .map(SourcerightWorkspace::from_root_or_parent)
         .unwrap_or_else(|| default_workspace.clone())
 }
 
@@ -1181,6 +1246,10 @@ fn parse_journal_platform(value: &str) -> Result<JournalPlatform, RpcError> {
     match value.to_ascii_lowercase().as_str() {
         "generic-webhook" | "generic_webhook" => Ok(JournalPlatform::GenericWebhook),
         "ojs" => Ok(JournalPlatform::Ojs),
+        "arxiv-submit-ce" | "arxiv_submit_ce" => Ok(JournalPlatform::ArxivSubmitCe),
+        "arxiv-submission-core" | "arxiv_submission_core" => {
+            Ok(JournalPlatform::ArxivSubmissionCore)
+        }
         "scholarone" | "scholar_one" => Ok(JournalPlatform::ScholarOne),
         "editorial-manager" | "editorial_manager" => Ok(JournalPlatform::EditorialManager),
         "ejournalpress" | "e-journal-press" | "e_journal_press" => {
@@ -1214,13 +1283,54 @@ fn split_uri(uri: &str) -> (&str, BTreeMap<String, String>) {
                 continue;
             }
             let mut pair = item.splitn(2, '=');
-            let key = pair.next().unwrap_or_default().to_string();
-            let value = pair.next().unwrap_or_default().to_string();
+            let key = percent_decode_query_component(pair.next().unwrap_or_default());
+            let value = percent_decode_query_component(pair.next().unwrap_or_default());
             query.insert(key, value);
         }
     }
 
     (base, query)
+}
+
+fn percent_decode_query_component(input: &str) -> String {
+    let bytes = input.as_bytes();
+    let mut output = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+
+    while index < bytes.len() {
+        match bytes[index] {
+            b'+' => {
+                output.push(b' ');
+                index += 1;
+            }
+            b'%' if index + 2 < bytes.len() => {
+                let high = bytes[index + 1];
+                let low = bytes[index + 2];
+                if let (Some(high), Some(low)) = (hex_value(high), hex_value(low)) {
+                    output.push((high << 4) | low);
+                    index += 3;
+                } else {
+                    output.push(bytes[index]);
+                    index += 1;
+                }
+            }
+            value => {
+                output.push(value);
+                index += 1;
+            }
+        }
+    }
+
+    String::from_utf8_lossy(&output).into_owned()
+}
+
+fn hex_value(value: u8) -> Option<u8> {
+    match value {
+        b'0'..=b'9' => Some(value - b'0'),
+        b'a'..=b'f' => Some(value - b'a' + 10),
+        b'A'..=b'F' => Some(value - b'A' + 10),
+        _ => None,
+    }
 }
 
 fn is_notification(message: &Value) -> bool {
@@ -1317,6 +1427,44 @@ mod tests {
         response["result"]["messages"][0]["content"]["text"]
             .as_str()
             .expect("prompt text result")
+    }
+
+    fn arxiv_fixture(path: &str) -> Value {
+        serde_json::from_str(match path {
+            "submit-ce" => include_str!("../fixtures/journal/arxiv-submit-ce-submission.json"),
+            "submission-core" => {
+                include_str!("../fixtures/journal/arxiv-submission-core-submission.json")
+            }
+            _ => panic!("unknown arXiv fixture: {path}"),
+        })
+        .expect("arXiv fixture JSON")
+    }
+
+    fn write_arxiv_fixture_workspace(workspace: &SourcerightWorkspace, fixture: &Value) {
+        workspace.init().expect("init workspace");
+        fs::write(
+            &workspace.references_csl_json,
+            serde_json::to_string(&fixture["csl_references"]).expect("serialize CSL fixture"),
+        )
+        .expect("write CSL fixture");
+        fs::write(
+            &workspace.verification_sidecar_json,
+            serde_json::to_string(&fixture["verification_sidecar"])
+                .expect("serialize sidecar fixture"),
+        )
+        .expect("write sidecar fixture");
+    }
+
+    fn percent_encode_query(input: &str) -> String {
+        input
+            .bytes()
+            .flat_map(|byte| match byte {
+                b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
+                    vec![byte as char]
+                }
+                _ => format!("%{byte:02X}").chars().collect(),
+            })
+            .collect()
     }
 
     fn seeded_workspace() -> (tempfile::TempDir, SourcerightWorkspace) {
@@ -1728,6 +1876,39 @@ mod tests {
     }
 
     #[test]
+    fn checked_in_mcp_tools_manifest_tracks_journal_screening_platform_schema() {
+        let runtime_tools = tools_list();
+        let checked_in: Value =
+            serde_json::from_str(include_str!("../mcp/tools.v1.json")).expect("tools manifest");
+        let runtime_tool = runtime_tools
+            .as_array()
+            .expect("runtime tools")
+            .iter()
+            .find(|tool| tool["name"] == "journal.screen_submission")
+            .expect("runtime journal tool");
+        let manifest_tool = checked_in["tools"]
+            .as_array()
+            .expect("manifest tools")
+            .iter()
+            .find(|tool| tool["name"] == "journal.screen_submission")
+            .expect("manifest journal tool");
+
+        assert_eq!(manifest_tool["read_only"], true);
+        assert_eq!(
+            manifest_tool["input"]["platform_enum"],
+            runtime_tool["inputSchema"]["properties"]["platform"]["enum"]
+        );
+        assert!(manifest_tool["input"].get("submission_id").is_some());
+        assert!(manifest_tool["input"].get("manuscript_label").is_some());
+        assert!(
+            runtime_tool["inputSchema"]["properties"]["platform"]["description"]
+                .as_str()
+                .expect("platform description")
+                .contains("screening contract label")
+        );
+    }
+
+    #[test]
     fn resources_list_matches_checked_in_manifest_count() {
         let resources = resources_list();
         assert_eq!(resources.as_array().map(|items| items.len()), Some(8));
@@ -1746,6 +1927,35 @@ mod tests {
     }
 
     #[test]
+    fn server_card_matches_runtime_surface_counts() {
+        let card = server_card();
+        assert_eq!(card["serverInfo"]["name"], SERVER_NAME);
+        assert_eq!(card["serverInfo"]["version"], env!("CARGO_PKG_VERSION"));
+        assert_eq!(card["authentication"]["required"], false);
+        assert_eq!(card["tools"].as_array().map(|items| items.len()), Some(14));
+        assert_eq!(
+            card["resources"].as_array().map(|items| items.len()),
+            Some(8)
+        );
+        assert_eq!(card["prompts"].as_array().map(|items| items.len()), Some(5));
+        assert_eq!(card["tools"], tools_list());
+        assert_eq!(card["resources"], resources_list());
+        assert_eq!(card["prompts"], prompts_list());
+    }
+
+    #[test]
+    fn checked_in_server_card_tracks_runtime_surface() {
+        let runtime_card = server_card();
+        let checked_in: Value = serde_json::from_str(include_str!("../mcp/server-card.json"))
+            .expect("checked-in MCP server card");
+        assert_eq!(checked_in["serverInfo"], runtime_card["serverInfo"]);
+        assert_eq!(checked_in["authentication"], runtime_card["authentication"]);
+        assert_eq!(checked_in["tools"], runtime_card["tools"]);
+        assert_eq!(checked_in["resources"], runtime_card["resources"]);
+        assert_eq!(checked_in["prompts"], runtime_card["prompts"]);
+    }
+
+    #[test]
     fn status_payload_reports_stdio_server_mode() {
         let status = status_payload();
         assert_eq!(status["server_mode"], "stdio");
@@ -1753,6 +1963,40 @@ mod tests {
         assert_eq!(status["available_tools"], 14);
         assert_eq!(status["available_resources"], 8);
         assert_eq!(status["available_prompts"], 5);
+        assert!(
+            status["implemented_read_only_surfaces"]
+                .as_array()
+                .expect("read-only surfaces")
+                .iter()
+                .all(|surface| !surface.as_str().expect("surface").contains("export --all"))
+        );
+        assert!(
+            status["implemented_read_only_surfaces"]
+                .as_array()
+                .expect("read-only surfaces")
+                .iter()
+                .all(|surface| !surface
+                    .as_str()
+                    .expect("surface")
+                    .contains("import-decisions"))
+        );
+        assert!(
+            status["implemented_apply_gated_write_surfaces"]
+                .as_array()
+                .expect("apply-gated surfaces")
+                .iter()
+                .any(|surface| surface.as_str().expect("surface").contains("export --all"))
+        );
+        assert!(
+            status["implemented_apply_gated_write_surfaces"]
+                .as_array()
+                .expect("apply-gated surfaces")
+                .iter()
+                .any(|surface| surface
+                    .as_str()
+                    .expect("surface")
+                    .contains("import-decisions"))
+        );
     }
 
     #[test]
@@ -1892,6 +2136,116 @@ mod tests {
         assert!(workspace.verification_sidecar_json.exists());
         assert!(workspace.review_queue_jsonl.exists());
         assert!(workspace.root.join(MCP_AUDIT_LOG_NAME).exists());
+    }
+
+    #[test]
+    fn workspace_init_uses_explicit_workspace_path_literally() {
+        let tempdir = tempfile::tempdir().expect("workspace");
+        let explicit_root = tempdir.path().join("fresh-workspace");
+        fs::create_dir_all(&explicit_root).expect("create workspace root");
+        let expected_workspace = SourcerightWorkspace::from_root(&explicit_root);
+        let mut runtime = McpRuntime {
+            workspace: SourcerightWorkspace::from_root(tempdir.path().join("unused")),
+            initialized: true,
+        };
+
+        let response = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 46,
+                "method": "tools/call",
+                "params": {
+                    "name": "workspace.init",
+                    "arguments": {
+                        "workspace": explicit_root.display().to_string(),
+                        "apply": true
+                    }
+                }
+            }))
+            .expect("response");
+        let result: Value =
+            serde_json::from_str(response_text(&response)).expect("write result JSON");
+
+        assert_eq!(result["applied"], true);
+        assert!(expected_workspace.references_csl_json.exists());
+        assert!(expected_workspace.verification_sidecar_json.exists());
+        assert!(expected_workspace.review_queue_jsonl.exists());
+        assert!(!explicit_root.join(".sourceright").exists());
+    }
+
+    #[test]
+    fn arxiv_journal_platform_labels_round_trip_through_mcp_tools() {
+        for (fixture_name, platform_alias) in [
+            ("submit-ce", "arxiv-submit-ce"),
+            ("submission-core", "arxiv_submission_core"),
+        ] {
+            let tempdir = tempfile::tempdir().expect("workspace");
+            let workspace = SourcerightWorkspace::from_root(tempdir.path().join(".sourceright"));
+            let fixture = arxiv_fixture(fixture_name);
+            write_arxiv_fixture_workspace(&workspace, &fixture);
+
+            let mut runtime = McpRuntime {
+                workspace: workspace.clone(),
+                initialized: true,
+            };
+            let response = runtime
+                .handle_message(json!({
+                    "jsonrpc": "2.0",
+                    "id": 44,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "journal.screen_submission",
+                        "arguments": {
+                            "workspace": workspace.root.display().to_string(),
+                            "platform": platform_alias,
+                            "submission_id": fixture["submission"]["submission_id"],
+                            "manuscript_label": fixture["submission"]["manuscript_label"]
+                        }
+                    }
+                }))
+                .expect("journal response");
+            let report: Value =
+                serde_json::from_str(response_text(&response)).expect("journal report JSON");
+            let expected = &fixture["expected_screening_report"];
+
+            assert_eq!(report["schema_version"], expected["schema_version"]);
+            assert_eq!(report["submission_id"], expected["submission_id"]);
+            assert_eq!(report["platform"], expected["platform"]);
+            assert_eq!(report["status"], expected["status"]);
+        }
+    }
+
+    #[test]
+    fn journal_screening_resource_decodes_encoded_workspace_paths() {
+        let tempdir = tempfile::tempdir().expect("workspace");
+        let fixture = arxiv_fixture("submit-ce");
+        let encoded_parent = tempdir.path().join("workspace with spaces");
+        let workspace = SourcerightWorkspace::from_root(encoded_parent.join(".sourceright"));
+        write_arxiv_fixture_workspace(&workspace, &fixture);
+
+        let encoded_workspace = percent_encode_query(&workspace.root.display().to_string());
+        let mut runtime = McpRuntime {
+            workspace: SourcerightWorkspace::from_root(tempdir.path().join("unused")),
+            initialized: true,
+        };
+        let response = runtime
+            .handle_message(json!({
+                "jsonrpc": "2.0",
+                "id": 45,
+                "method": "resources/read",
+                "params": {
+                    "uri": format!(
+                        "sourceright://reports/journal-screening?workspace={encoded_workspace}&platform=arxiv-submit-ce&submission_id=ARXIV-CE-2026-0001&manuscript_label=source-package.tar.gz"
+                    )
+                }
+            }))
+            .expect("journal resource response");
+        let report: Value =
+            serde_json::from_str(resource_text(&response)).expect("journal resource JSON");
+
+        assert_eq!(report["submission_id"], "ARXIV-CE-2026-0001");
+        assert_eq!(report["platform"], "arxiv_submit_ce");
+        assert_eq!(report["status"], "screened_with_warnings");
     }
 
     #[test]

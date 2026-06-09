@@ -30,6 +30,9 @@ The release workflow also runs `cargo package --locked`,
 and `cargo tree -d --locked --target x86_64-unknown-linux-gnu` before any GitHub release is cut.
 The duplicate check ignores the known `wit-bindgen` split that comes from the
 WASI support crates; any other duplicate should still fail the gate.
+Release dry runs also execute `scripts/verify-release-surface-refresh.ps1` so
+accepted, prepared, deferred, and not-applicable release-surface claims stay
+aligned with the evidence table before publication wording changes.
 
 ## MCP
 
@@ -55,15 +58,26 @@ Smithery supports two publication modes relevant to Sourceright:
 - URL publishing for hosted MCP servers that expose Streamable HTTP.
 - MCPB bundle publishing for local stdio servers.
 
-Sourceright has chosen the MCPB/local path for Smithery because the current MCP
-runtime is `sourceright mcp` over stdio. The prepared bundle contract is:
+Sourceright runs `sourceright mcp` over stdio. Smithery URL publish therefore
+needs a static server card at `/.well-known/mcp/server-card.json` on the docs
+homepage (`https://edithatogo.github.io/sourceright/`) so release scans can
+discover tools/resources/prompts without Streamable HTTP.
 
+The prepared Smithery contract is:
+
+- `mcp/server-card.json` — checked-in SEP-1649 server card derived from the live
+  MCP surface (`sourceright mcp server-card`).
+- `docs-site/public/.well-known/mcp/server-card.json` — GitHub Pages copy served
+  at the well-known path Smithery scans.
+- `scripts/generate-mcp-server-card.ps1` — regenerates both files from a release
+  binary.
 - `smithery/mcpb/manifest.template.json` — MCPB manifest v0.3 template for the
-  local stdio server.
+  local stdio server (optional MCPB path; Win32 publish still blocked by Smithery
+  `400 No values to set` as of 2026-06-10).
 - `scripts/build-smithery-mcpb.ps1` — stages a `.mcpb` bundle from a supplied
   release binary and writes platform-specific manifest fields.
-- `tests/smithery_distribution_policy.rs` — keeps the manifest and docs aligned
-  with the prepared-not-accepted status.
+- `tests/smithery_distribution_policy.rs` — keeps the manifest, server card, and
+  docs aligned with the prepared-not-accepted status.
 
 Track 57 owns the Smithery publication path. It must choose and validate either
 Streamable HTTP publishing or MCPB/local packaging before release notes or docs
@@ -141,6 +155,7 @@ Release candidates should pass:
 - Formatting, clippy, tests, and locked builds.
 - Crate packaging.
 - Crates.io publish dry run.
+- Release-surface evidence refresh via `scripts/verify-release-surface-refresh.ps1`.
 - GitHub Pages docs build.
 - Security scanning.
 - Dependency policy checks.

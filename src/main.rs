@@ -76,7 +76,7 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
 
             let options = parse_report_args(args)?;
 
-            let workspace = SourcerightWorkspace::from_root(options.workspace_root);
+            let workspace = SourcerightWorkspace::from_root_or_parent(options.workspace_root);
             match options.format {
                 ReportFormat::Markdown => {
                     let report = workspace
@@ -109,7 +109,7 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 .unwrap_or_else(|| PathBuf::from(".sourceright"));
             reject_extra_args("conflicts", &args)?;
 
-            let report = SourcerightWorkspace::from_root(workspace_root)
+            let report = SourcerightWorkspace::from_root_or_parent(workspace_root)
                 .conflict_resolution_report()
                 .map_err(|error| error.to_string())?;
             println!("{}", report.to_markdown());
@@ -127,7 +127,7 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             reject_extra_args("citations", &args)?;
 
             let text = fs::read_to_string(manuscript).map_err(|error| error.to_string())?;
-            let report = SourcerightWorkspace::from_root(workspace_root)
+            let report = SourcerightWorkspace::from_root_or_parent(workspace_root)
                 .citation_reconciliation_report(&text)
                 .map_err(|error| error.to_string())?;
             println!("{}", report.to_markdown());
@@ -153,7 +153,7 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             }
             Some("partitions") => {
                 let options = parse_review_partitions_args(args)?;
-                let partitions = SourcerightWorkspace::from_root(options.workspace_root)
+                let partitions = SourcerightWorkspace::from_root_or_parent(options.workspace_root)
                     .review_queue_partitions(options.max_entries)
                     .map_err(|error| error.to_string())?;
                 println!("{}", serde_json::to_string(&partitions)?);
@@ -194,7 +194,7 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             }
 
             let options = parse_journal_screen_args(args)?;
-            let report = SourcerightWorkspace::from_root(options.workspace_root)
+            let report = SourcerightWorkspace::from_root_or_parent(options.workspace_root)
                 .journal_screening_report(
                     options.submission_id,
                     options.platform,
@@ -250,7 +250,11 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             }
 
             let options = parse_export_args(args)?;
-            let workspace = SourcerightWorkspace::from_root(options.workspace_root);
+            let workspace = if options.preview {
+                SourcerightWorkspace::from_root_or_parent(options.workspace_root)
+            } else {
+                SourcerightWorkspace::from_root(options.workspace_root)
+            };
             if options.preview {
                 let manifest = workspace
                     .export_manifest(options.format)
@@ -321,7 +325,11 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             }
 
             let options = parse_citation_sync_args(args)?;
-            let workspace = SourcerightWorkspace::from_root(options.workspace_root);
+            let workspace = if options.config.apply {
+                SourcerightWorkspace::from_root(options.workspace_root)
+            } else {
+                SourcerightWorkspace::from_root_or_parent(options.workspace_root)
+            };
             let report =
                 run_citation_sync(&workspace, options.config).map_err(|error| error.to_string())?;
             println!("{}", serde_json::to_string_pretty(&report)?);
@@ -347,6 +355,9 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             }
             Some("status") | Some("--status") => {
                 print_mcp_status(args)?;
+            }
+            Some("server-card") => {
+                print_mcp_server_card(args)?;
             }
             Some("--json") => {
                 reject_extra_args("mcp --json", &args)?;
@@ -396,6 +407,22 @@ fn print_mcp_manifest(
 
     let json: serde_json::Value = serde_json::from_str(manifest)?;
     println!("{}", serde_json::to_string(&json)?);
+    Ok(())
+}
+
+fn print_mcp_server_card(mut args: VecDeque<String>) -> Result<(), CliError> {
+    let compact = args.front().is_some_and(|arg| arg == "--json");
+    if compact {
+        args.pop_front();
+    }
+    reject_extra_args("mcp server-card", &args)?;
+
+    let card = mcp::server_card();
+    if compact {
+        println!("{}", serde_json::to_string(&card)?);
+    } else {
+        println!("{}", serde_json::to_string_pretty(&card)?);
+    }
     Ok(())
 }
 
@@ -585,6 +612,10 @@ fn parse_journal_platform(value: &str) -> Result<JournalPlatform, CliError> {
     match value {
         "generic-webhook" | "generic_webhook" => Ok(JournalPlatform::GenericWebhook),
         "ojs" => Ok(JournalPlatform::Ojs),
+        "arxiv-submit-ce" | "arxiv_submit_ce" => Ok(JournalPlatform::ArxivSubmitCe),
+        "arxiv-submission-core" | "arxiv_submission_core" => {
+            Ok(JournalPlatform::ArxivSubmissionCore)
+        }
         "scholarone" => Ok(JournalPlatform::ScholarOne),
         "editorial-manager" | "editorial_manager" => Ok(JournalPlatform::EditorialManager),
         "ejournalpress" | "e-journal-press" => Ok(JournalPlatform::EJournalPress),
@@ -839,6 +870,7 @@ struct McpStatusOutput {
     available_resources: usize,
     available_prompts: usize,
     implemented_read_only_surfaces: Vec<&'static str>,
+    implemented_apply_gated_write_surfaces: Vec<&'static str>,
     resource_uris: Vec<&'static str>,
     message: &'static str,
 }
@@ -851,12 +883,18 @@ impl McpStatusOutput {
             "sourceright report --mcp-resource [.sourceright-directory]",
             "sourceright conflicts [.sourceright-directory]",
             "sourceright citations <manuscript.txt> [.sourceright-directory]",
-            "sourceright review queue|partitions|import-decisions",
+            "sourceright review queue|partitions",
             "sourceright journal-screen [.sourceright-directory]",
             "sourceright legal <legal-text.txt>",
             "sourceright provenance <document-text.txt>",
             "sourceright policy <references.csl.json>",
             "sourceright plugins [validate] [--json]",
+        ];
+        let implemented_apply_gated_write_surfaces = vec![
+            "workspace.init apply=true",
+            "sourceright review import-decisions apply=true",
+            "review.import_decisions apply=true",
+            "exports.write apply=true",
             "sourceright export --all [.sourceright-directory]",
         ];
         let resource_uris = vec![
@@ -878,6 +916,7 @@ impl McpStatusOutput {
             available_resources: 8,
             available_prompts: 5,
             implemented_read_only_surfaces,
+            implemented_apply_gated_write_surfaces,
             resource_uris,
             message: "MCP server mode is implemented; run `sourceright mcp` to start the stdio server.",
         }
@@ -975,7 +1014,7 @@ Usage:
   sourceright citation-sync [--preview|--apply] [options] [.sourceright-directory]
   sourceright mcp
   sourceright mcp status|--status|--json
-  sourceright mcp tools|resources|prompts [--json]
+  sourceright mcp tools|resources|prompts|server-card [--json]
 
 Commands:
   init          Create or confirm a local .sourceright workspace.
@@ -1083,7 +1122,7 @@ Usage:
   sourceright journal-screen [--platform <platform>] [--submission-id <id>] [--manuscript <label>] [.sourceright-directory]
 
 Platforms:
-  generic-webhook, ojs, scholarone, editorial-manager, ejournalpress, manuscript-manager";
+  generic-webhook, ojs, arxiv-submit-ce, arxiv-submission-core, scholarone, editorial-manager, ejournalpress, manuscript-manager";
 
 const LEGAL_HELP: &str = "sourceright legal
 
@@ -1204,6 +1243,8 @@ Behavior:
   `sourceright mcp status` prints the same readiness status and exits successfully.
   `sourceright mcp tools|resources|prompts --json` prints compact read-only
   manifest JSON for adapter development.
+  `sourceright mcp server-card [--json]` prints the static Smithery/SEP-1649
+  server card derived from the live MCP surface.
   The MCP server also exposes `plugins.list` and `sourceright://plugins/registry`
   for validated plugin discovery.
   `--json` prints a compact machine-readable readiness envelope.";
@@ -1221,12 +1262,17 @@ implemented_read_only_surfaces:
   - sourceright report --mcp-resource [.sourceright-directory]
   - sourceright conflicts [.sourceright-directory]
   - sourceright citations <manuscript.txt> [.sourceright-directory]
-  - sourceright review queue|partitions|import-decisions
+  - sourceright review queue|partitions
   - sourceright journal-screen [.sourceright-directory]
   - sourceright legal <legal-text.txt>
   - sourceright provenance <document-text.txt>
   - sourceright policy <references.csl.json>
   - sourceright plugins [validate] [--json]
+implemented_apply_gated_write_surfaces:
+  - workspace.init apply=true
+  - sourceright review import-decisions apply=true
+  - review.import_decisions apply=true
+  - exports.write apply=true
   - sourceright export --all [.sourceright-directory]
 resource_uris:
   - sourceright://reports/reference-integrity
@@ -1338,6 +1384,25 @@ mod tests {
         assert_eq!(options.platform, JournalPlatform::Ojs);
         assert_eq!(options.submission_id, "SUB-1");
         assert_eq!(options.manuscript_label, "manuscript.docx");
+    }
+
+    #[test]
+    fn journal_screen_options_parse_arxiv_platform_aliases() {
+        let submit_ce = parse_journal_screen_args(VecDeque::from(vec![
+            "--platform".to_string(),
+            "arxiv-submit-ce".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse submit-ce platform");
+        let legacy = parse_journal_screen_args(VecDeque::from(vec![
+            "--platform".to_string(),
+            "arxiv_submission_core".to_string(),
+            ".sourceright".to_string(),
+        ]))
+        .expect("parse legacy platform");
+
+        assert_eq!(submit_ce.platform, JournalPlatform::ArxivSubmitCe);
+        assert_eq!(legacy.platform, JournalPlatform::ArxivSubmissionCore);
     }
 
     #[test]
@@ -1488,6 +1553,7 @@ mod tests {
         assert!(MCP_STATUS.contains("available_tools: 14"));
         assert!(MCP_STATUS.contains("available_resources: 8"));
         assert!(MCP_STATUS.contains("available_prompts: 5"));
+        assert!(MCP_STATUS.contains("implemented_apply_gated_write_surfaces:"));
         assert!(MCP_STATUS.contains("sourceright://reports/reference-integrity"));
         assert!(MCP_STATUS.contains("sourceright://plugins/registry"));
 
@@ -1498,6 +1564,40 @@ mod tests {
         assert_eq!(json["available_tools"], 14);
         assert_eq!(json["available_resources"], 8);
         assert_eq!(json["available_prompts"], 5);
+        assert!(
+            json["implemented_read_only_surfaces"]
+                .as_array()
+                .expect("read-only surfaces")
+                .iter()
+                .all(|surface| !surface.as_str().expect("surface").contains("export --all"))
+        );
+        assert!(
+            json["implemented_read_only_surfaces"]
+                .as_array()
+                .expect("read-only surfaces")
+                .iter()
+                .all(|surface| !surface
+                    .as_str()
+                    .expect("surface")
+                    .contains("import-decisions"))
+        );
+        assert!(
+            json["implemented_apply_gated_write_surfaces"]
+                .as_array()
+                .expect("apply-gated surfaces")
+                .iter()
+                .any(|surface| surface.as_str().expect("surface").contains("export --all"))
+        );
+        assert!(
+            json["implemented_apply_gated_write_surfaces"]
+                .as_array()
+                .expect("apply-gated surfaces")
+                .iter()
+                .any(|surface| surface
+                    .as_str()
+                    .expect("surface")
+                    .contains("import-decisions"))
+        );
     }
 
     #[test]

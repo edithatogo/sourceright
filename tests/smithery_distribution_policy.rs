@@ -80,3 +80,28 @@ fn smithery_builder_and_docs_preserve_prepared_not_accepted_boundary() {
     assert!(release_status.contains("No accepted Smithery listing recorded"));
     assert!(track_review.contains("Smithery MCPB readiness is implemented"));
 }
+
+#[test]
+fn smithery_server_card_is_checked_in_for_url_publish_scan() {
+    let card: Value = serde_json::from_str(&read_repo_file("mcp/server-card.json"))
+        .expect("mcp/server-card.json must be valid JSON");
+    let docs_card: Value = serde_json::from_str(&read_repo_file(
+        "docs-site/public/.well-known/mcp/server-card.json",
+    ))
+    .expect("docs-site public server card must be valid JSON");
+
+    assert_eq!(card, docs_card);
+    assert_eq!(card["serverInfo"]["name"], json!("sourceright"));
+    assert_eq!(card["serverInfo"]["version"], json!(cargo_version()));
+    assert_eq!(card["authentication"]["required"], json!(false));
+    assert_eq!(card["tools"].as_array().map(|items| items.len()), Some(14));
+    assert_eq!(
+        card["resources"].as_array().map(|items| items.len()),
+        Some(8)
+    );
+    assert_eq!(card["prompts"].as_array().map(|items| items.len()), Some(5));
+
+    let publishing = read_repo_file("docs/src/publishing.md");
+    assert!(publishing.contains("generate-mcp-server-card.ps1"));
+    assert!(publishing.contains(".well-known/mcp/server-card.json"));
+}
