@@ -20,20 +20,26 @@ Deploy log required `/.well-known/mcp/server-card.json` or a scannable HTTP MCP.
 Local docs build copies the card to
 `docs-site/dist/.well-known/mcp/server-card.json` (verified 2026-06-10).
 
-## Pre-deploy verification
+## Deploy verification (2026-06-10)
 
-- `npm run build` in `docs-site/` emits
-  `dist/.well-known/mcp/server-card.json` (**11650** bytes, 2026-06-10).
-- Live Pages URL still **404** before merge/deploy:
-  `https://edithatogo.github.io/sourceright/.well-known/mcp/server-card.json`
+- Astro prerender route builds on CI:
+  `/.well-known/mcp/server-card.json (+5ms)` in Pages workflow `27230037375`.
+- **GitHub project Pages still returns Starlight 404** for dot-prefixed paths
+  (`/.well-known/...`, `/.nojekyll`) even though non-dot static assets such as
+  `/pagefind/pagefind.js` return **200**.
+- Repo-root card is live on raw GitHub:
+  `https://raw.githubusercontent.com/edithatogo/sourceright/main/.well-known/mcp/server-card.json`
 
-## Republish attempt (pre-deploy)
+## Smithery republish attempts
 
-```text
-smithery mcp publish https://edithatogo.github.io/sourceright/ -n edithatogo/sourceright
-→ release 5d60e7ac-a5f2-4ef6-aa95-c041cf279a9e accepted (PENDING)
-→ scan: Connection error 405 — server-card not yet reachable on homepage
-```
+| Publish URL | Release | Scan result |
+| --- | --- | --- |
+| `https://edithatogo.github.io/sourceright/` | `5d60e7ac`, `909ffec2` | **405** — no reachable server-card on homepage |
+| `https://github.com/edithatogo/sourceright` | `8bbcb81c` | **422** — server-card not found at publish-origin well-known path |
+
+Smithery requires `/.well-known/mcp/server-card.json` on the **publish URL origin**;
+raw GitHub and prerendered dist output are not sufficient while project Pages
+blocks dot paths.
 
 ## Remaining operator steps
 

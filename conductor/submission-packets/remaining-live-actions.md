@@ -10,7 +10,7 @@ repo evidence alone. Use it after the local readiness checks are green.
 
 | Surface | Result | Operator action |
 | --- | --- | --- |
-| Smithery | Server-card fix **landed in repo** (`mcp/server-card.json`, docs `public/.well-known/...`). GitHub Pages URL still **404** until next `pages.yml` deploy. Homepage republish `5d60e7ac` scan failed **405** (no live card yet). Win32 MCPB still **400**. | Deploy docs to Pages, confirm `https://edithatogo.github.io/sourceright/.well-known/mcp/server-card.json` → **200**, then `smithery mcp publish https://edithatogo.github.io/sourceright/ -n edithatogo/sourceright` |
+| Smithery | Server-card **implemented** (`mcp/server-card.json`, repo `.well-known/`, docs prerender route). **Blocker:** GitHub project Pages serves Starlight **404** for `/.well-known/*` (dot paths); Smithery scans still **405/422**. Win32 MCPB still **400**. | Unblock via MCPB publish fix, Streamable HTTP host, or docs host that serves dot paths; or ask Smithery to ingest repo-root/raw card |
 | Glama | API and listing URLs return **404**; search has no match | Sign in at `glama.ai/mcp/servers`, use **Add Server** with `https://github.com/edithatogo/sourceright` |
 | OJS/PKP | No `sourceright` entry in `pkp/plugin-gallery` | Open Gallery PR or run disposable OJS smoke when infrastructure exists |
 | arXiv `submit-ce` | Issue **#72 open**; no maintainer acceptance yet | Monitor and reply on #72 if needed |
