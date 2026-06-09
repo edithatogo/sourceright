@@ -1,0 +1,21 @@
+{
+  "id": "72-submission-requirements-contracts",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["publication", "plugin-packaging", "release-governance"],
+  "dependencies": [
+    "47-contract-evidence-and-overclaim-gates",
+    "63-plugin-packaging-and-supply-chain-maturity",
+    "69-marketplace-submission-evidence",
+    "70-release-surface-refresh-cadence"
+  ],
+  "owned_paths": [
+    "conductor/submission-contracts.md",
+    "docs/src/submission-contracts.md",
+    "docs-site/src/content/docs/submission-contracts.md",
+    "tests/submission_contracts_policy.rs",
+    "conductor/tracks/72-submission-requirements-contracts/downstream-requirements-handoff.md",
+    "conductor/tracks/72-submission-requirements-contracts/approval-boundary.md",
+    "conductor/tracks/72-submission-requirements-contracts/review.md"
+  ]
+}
