@@ -1,0 +1,411 @@
+{
+  "authentication": {
+    "required": false
+  },
+  "prompts": [
+    {
+      "description": "Guide manual review of queued references using CSL and sidecar evidence.",
+      "name": "manual_reference_review",
+      "title": "Manual reference review"
+    },
+    {
+      "description": "Explain reference report issues without claiming author intent.",
+      "name": "citation_integrity_explanation",
+      "title": "Citation integrity explanation"
+    },
+    {
+      "description": "Explain provider/canonical conflicts and the no-silent-overwrite rule.",
+      "name": "provider_conflict_explanation",
+      "title": "Provider conflict explanation"
+    },
+    {
+      "description": "Review separate legal citation records, jurisdiction/provider issues, and attorney-review flags without giving legal advice.",
+      "name": "legal_citation_review",
+      "title": "Legal citation review"
+    },
+    {
+      "description": "Review claim/source linkage without claim-truth scoring.",
+      "name": "claim_source_provenance_review",
+      "title": "Claim/source provenance review"
+    }
+  ],
+  "resources": [
+    {
+      "description": "Reference integrity report derived from the workspace.",
+      "mimeType": "application/json",
+      "name": "reference-integrity",
+      "title": "Reference integrity report",
+      "uri": "sourceright://reports/reference-integrity"
+    },
+    {
+      "description": "Citation reconciliation report derived from a manuscript text input.",
+      "mimeType": "text/markdown",
+      "name": "citation-reconciliation",
+      "title": "Citation reconciliation report",
+      "uri": "sourceright://reports/citation-reconciliation"
+    },
+    {
+      "description": "Derived JSONL review queue for the local workspace.",
+      "mimeType": "application/jsonl",
+      "name": "review-queue",
+      "title": "Review queue",
+      "uri": "sourceright://workspaces/local/review-queue"
+    },
+    {
+      "description": "Journal screening report derived from workspace references and screening inputs.",
+      "mimeType": "application/json",
+      "name": "journal-screening",
+      "title": "Journal screening report",
+      "uri": "sourceright://reports/journal-screening"
+    },
+    {
+      "description": "Legal citation report derived from a local legal text input.",
+      "mimeType": "application/json",
+      "name": "legal-citations",
+      "title": "Legal citation report",
+      "uri": "sourceright://reports/legal-citations"
+    },
+    {
+      "description": "Claim/source provenance report derived from a local text input.",
+      "mimeType": "application/json",
+      "name": "claim-source-provenance",
+      "title": "Claim/source provenance report",
+      "uri": "sourceright://reports/claim-source-provenance"
+    },
+    {
+      "description": "Deterministic policy report derived from the workspace CSL file.",
+      "mimeType": "application/json",
+      "name": "policy",
+      "title": "Policy report",
+      "uri": "sourceright://reports/policy"
+    },
+    {
+      "description": "Validated plugin registry and manifest discovery report.",
+      "mimeType": "application/json",
+      "name": "plugin-registry",
+      "title": "Plugin registry report",
+      "uri": "sourceright://plugins/registry"
+    }
+  ],
+  "serverInfo": {
+    "name": "sourceright",
+    "version": "0.1.20"
+  },
+  "tools": [
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Inspect server readiness and the read-only MCP surface.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "enum": [
+              "json"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "mcp.status"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Validate canonical CSL JSON and return deterministic diagnostics.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "name": "references.validate_csl"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Generate the reference integrity report from a local workspace.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "references.report"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Return the derived review queue as JSONL.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "references.review_queue"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Reconcile in-text citations against the workspace references.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "manuscript": {
+            "type": "string"
+          },
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "manuscript"
+        ],
+        "type": "object"
+      },
+      "name": "references.citations"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Generate a journal screening report from workspace references.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "manuscript_label": {
+            "type": "string"
+          },
+          "platform": {
+            "description": "Journal screening contract label. Accepted aliases include generic-webhook, ojs, arxiv-submit-ce, arxiv_submission_core, scholarone, editorial-manager, ejournalpress, and manuscript-manager.",
+            "enum": [
+              "generic-webhook",
+              "generic_webhook",
+              "ojs",
+              "arxiv-submit-ce",
+              "arxiv_submit_ce",
+              "arxiv-submission-core",
+              "arxiv_submission_core",
+              "scholarone",
+              "scholar_one",
+              "editorial-manager",
+              "editorial_manager",
+              "ejournalpress",
+              "e-journal-press",
+              "e_journal_press",
+              "manuscript-manager",
+              "manuscript_manager"
+            ],
+            "examples": [
+              "generic-webhook",
+              "arxiv-submit-ce",
+              "arxiv-submission-core"
+            ],
+            "type": "string"
+          },
+          "submission_id": {
+            "type": "string"
+          },
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "journal.screen_submission"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Audit legal citations into the separate legal model with jurisdiction/provider hints and attorney-review flags; does not provide legal advice.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "name": "legal.analyze_citations"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Build a claim/source provenance report from document text.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      },
+      "name": "provenance.analyze_claim_sources"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Evaluate deterministic style and recency policy checks.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "policy_json": {
+            "type": "string"
+          },
+          "references_csl_json": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "references_csl_json"
+        ],
+        "type": "object"
+      },
+      "name": "references.policy"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Preview export artifacts without writing files.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "enum": [
+              "yaml",
+              "xml",
+              "ris",
+              "enw",
+              "biblatex"
+            ],
+            "type": "string"
+          },
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "exports.preview"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "description": "Discover validated plugin manifests and runtime execution gates.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "plugins.list"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false
+      },
+      "description": "Create the local workspace structure with dry-run planning and explicit apply.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "apply": {
+            "type": "boolean"
+          },
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "workspace.init"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false
+      },
+      "description": "Import review decisions with dry-run planning and audit logging.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "apply": {
+            "type": "boolean"
+          },
+          "decisions": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "decisions"
+        ],
+        "type": "object"
+      },
+      "name": "review.import_decisions"
+    },
+    {
+      "annotations": {
+        "readOnlyHint": false
+      },
+      "description": "Write export files with dry-run planning and audit logging.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "apply": {
+            "type": "boolean"
+          },
+          "format": {
+            "enum": [
+              "yaml",
+              "xml",
+              "ris",
+              "enw",
+              "biblatex"
+            ],
+            "type": "string"
+          },
+          "workspace": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "name": "exports.write"
+    }
+  ]
+}
