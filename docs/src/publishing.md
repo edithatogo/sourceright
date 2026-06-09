@@ -67,8 +67,10 @@ The prepared Smithery contract is:
 
 - `mcp/server-card.json` — checked-in SEP-1649 server card derived from the live
   MCP surface (`sourceright mcp server-card`).
-- `docs-site/public/.well-known/mcp/server-card.json` — GitHub Pages copy served
-  at the well-known path Smithery scans.
+- `docs-site/src/pages/.well-known/mcp/server-card.json.ts` — prerendered Astro
+  route so GitHub Pages serves the well-known path Smithery scans.
+- `docs-site/src/data/mcp-server-card.json` — build input kept in sync with
+  `mcp/server-card.json`.
 - `scripts/generate-mcp-server-card.ps1` — regenerates both files from a release
   binary.
 - `smithery/mcpb/manifest.template.json` — MCPB manifest v0.3 template for the

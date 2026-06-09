@@ -4,7 +4,7 @@
 .DESCRIPTION
     Writes:
       - mcp/server-card.json
-      - docs-site/public/.well-known/mcp/server-card.json
+      - docs-site/src/data/mcp-server-card.json
 
     Smithery URL publish scans `/.well-known/mcp/server-card.json` on the published
     homepage (https://edithatogo.github.io/sourceright/).
@@ -36,11 +36,11 @@ if ($LASTEXITCODE -ne 0) {
 $null = $cardJson | ConvertFrom-Json
 
 $repoCardPath = Join-Path $repoRoot "mcp/server-card.json"
-$docsCardDir = Join-Path $repoRoot "docs-site/public/.well-known/mcp"
-$docsCardPath = Join-Path $docsCardDir "server-card.json"
+$docsDataDir = Join-Path $repoRoot "docs-site/src/data"
+$docsDataPath = Join-Path $docsDataDir "mcp-server-card.json"
 
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $repoCardPath) | Out-Null
-New-Item -ItemType Directory -Force -Path $docsCardDir | Out-Null
+New-Item -ItemType Directory -Force -Path $docsDataDir | Out-Null
 
 $prettyCard = & $binary mcp server-card
 if ($LASTEXITCODE -ne 0) {
@@ -48,8 +48,9 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Set-Content -LiteralPath $repoCardPath -Value $prettyCard -Encoding utf8NoBOM
-Set-Content -LiteralPath $docsCardPath -Value $prettyCard -Encoding utf8NoBOM
+Set-Content -LiteralPath $docsDataPath -Value $prettyCard -Encoding utf8NoBOM
 
 Write-Host "Wrote MCP server card to:"
 Write-Host "  $repoCardPath"
-Write-Host "  $docsCardPath"
+Write-Host "  $docsDataPath"
+Write-Host "  (docs-site prerender route: src/pages/.well-known/mcp/server-card.json.ts)"
