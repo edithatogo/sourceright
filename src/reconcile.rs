@@ -50,6 +50,7 @@ pub struct CitationOccurrence {
 #[serde(rename_all = "snake_case")]
 pub enum CitationStyle {
     AuthorDate,
+    Identifier,
     Numeric,
     FootnoteLike,
 }
@@ -153,7 +154,9 @@ pub fn reconcile_citations(text: &str, references: &CslDocument) -> CitationReco
                 match_source,
             } => {
                 cited_ids.insert(reference_id.clone());
-                *citation_counts.entry(reference_id.clone()).or_default() += 1;
+                if occurrence.style != CitationStyle::Identifier {
+                    *citation_counts.entry(reference_id.clone()).or_default() += 1;
+                }
                 if match_source == ReferenceMatchSource::TitleFallback {
                     issues.push(CitationReconciliationIssue {
                         issue_type: CitationReconciliationIssueType::TitleFallbackMatch,
@@ -220,10 +223,189 @@ pub fn reconcile_citations(text: &str, references: &CslDocument) -> CitationReco
 pub fn extract_citation_occurrences(text: &str) -> Vec<CitationOccurrence> {
     let mut occurrences = Vec::new();
     for (line_index, line) in text.lines().enumerate() {
-        extract_parenthetical(line, line_index + 1, &mut occurrences);
-        extract_numeric(line, line_index + 1, &mut occurrences);
+        let masked_ranges = extract_latex_citations(line, line_index + 1, &mut occurrences);
+        let masked_line = mask_ranges(line, &masked_ranges);
+        extract_parenthetical(&masked_line, line_index + 1, &mut occurrences);
+        extract_numeric(&masked_line, line_index + 1, &mut occurrences);
+    }
+    if occurrences
+        .iter()
+        .any(|occurrence| occurrence.style == CitationStyle::Identifier)
+    {
+        occurrences.retain(|occurrence| occurrence.style == CitationStyle::Identifier);
     }
     occurrences
+}
+
+fn extract_latex_citations(
+    line: &str,
+    line_number: usize,
+    occurrences: &mut Vec<CitationOccurrence>,
+) -> Vec<(usize, usize)> {
+    let bytes = line.as_bytes();
+    let mut cursor = 0;
+    let mut masked_ranges = Vec::new();
+
+    while cursor < bytes.len() {
+        if bytes[cursor] != b'\\' {
+            cursor += 1;
+            continue;
+        }
+
+        let command_start = cursor;
+        cursor += 1;
+        let command_name_start = cursor;
+        while cursor < bytes.len() && bytes[cursor].is_ascii_alphabetic() {
+            cursor += 1;
+        }
+
+        if command_name_start == cursor {
+            continue;
+        }
+
+        let command_name = &line[command_name_start..cursor];
+        if !is_latex_citation_command(command_name) {
+            continue;
+        }
+
+        if cursor < bytes.len() && bytes[cursor] == b'*' {
+            cursor += 1;
+        }
+
+        cursor = skip_latex_whitespace(line, cursor);
+        cursor = skip_latex_optional_arguments(line, cursor);
+        cursor = skip_latex_whitespace(line, cursor);
+
+        let Some((group_end, key_group)) = find_balanced_latex_group(line, cursor, b'{', b'}')
+        else {
+            continue;
+        };
+
+        for key in split_latex_citation_keys(key_group) {
+            occurrences.push(CitationOccurrence {
+                text: line[command_start..group_end].to_string(),
+                style: CitationStyle::Identifier,
+                key,
+                span: format!("line:{line_number}:{}-{group_end}", command_start + 1),
+            });
+        }
+
+        masked_ranges.push((command_start, group_end));
+        cursor = group_end;
+    }
+
+    masked_ranges
+}
+
+fn is_latex_citation_command(command_name: &str) -> bool {
+    matches!(
+        command_name,
+        "cite"
+            | "Cite"
+            | "parencite"
+            | "Parencite"
+            | "textcite"
+            | "Textcite"
+            | "autocite"
+            | "Autocite"
+            | "citep"
+            | "Citep"
+            | "citet"
+            | "Citet"
+            | "citealp"
+            | "citeauthor"
+            | "citeyear"
+            | "citeyearpar"
+            | "footcite"
+            | "Footcite"
+            | "fullcite"
+            | "smartcite"
+            | "Smartcite"
+            | "supercite"
+            | "Supercite"
+            | "nocite"
+    )
+}
+
+fn skip_latex_whitespace(line: &str, mut cursor: usize) -> usize {
+    let bytes = line.as_bytes();
+    while cursor < bytes.len() && bytes[cursor].is_ascii_whitespace() {
+        cursor += 1;
+    }
+    cursor
+}
+
+fn skip_latex_optional_arguments(line: &str, mut cursor: usize) -> usize {
+    loop {
+        cursor = skip_latex_whitespace(line, cursor);
+        let Some((end, _)) = find_balanced_latex_group(line, cursor, b'[', b']') else {
+            return cursor;
+        };
+        cursor = end;
+    }
+}
+
+fn find_balanced_latex_group(
+    line: &str,
+    start: usize,
+    open: u8,
+    close: u8,
+) -> Option<(usize, &str)> {
+    let bytes = line.as_bytes();
+    if bytes.get(start).copied() != Some(open) {
+        return None;
+    }
+
+    let mut depth = 0usize;
+    let mut cursor = start;
+    while cursor < bytes.len() {
+        match bytes[cursor] {
+            b'\\' => {
+                cursor += 2;
+                continue;
+            }
+            byte if byte == open => depth += 1,
+            byte if byte == close => {
+                depth = depth.checked_sub(1)?;
+                if depth == 0 {
+                    let end = cursor + 1;
+                    return Some((end, &line[start + 1..cursor]));
+                }
+            }
+            _ => {}
+        }
+        cursor += 1;
+    }
+
+    None
+}
+
+fn split_latex_citation_keys(key_group: &str) -> Vec<String> {
+    key_group
+        .split(',')
+        .map(str::trim)
+        .filter(|key| !key.is_empty())
+        .map(ToOwned::to_owned)
+        .collect()
+}
+
+fn mask_ranges(line: &str, ranges: &[(usize, usize)]) -> String {
+    if ranges.is_empty() {
+        return line.to_string();
+    }
+
+    let mut masked = String::with_capacity(line.len());
+    for (index, ch) in line.char_indices() {
+        if ranges
+            .iter()
+            .any(|(start, end)| index >= *start && index < *end)
+        {
+            masked.push(' ');
+        } else {
+            masked.push(ch);
+        }
+    }
+    masked
 }
 
 fn extract_parenthetical(
@@ -409,12 +591,14 @@ struct ReferenceIndex<'a> {
     references: &'a CslDocument,
     author_keys: BTreeMap<String, Vec<ReferenceEntry>>,
     fallback_keys: BTreeMap<String, Vec<ReferenceEntry>>,
+    id_keys: BTreeMap<String, Vec<ReferenceEntry>>,
 }
 
 impl<'a> ReferenceIndex<'a> {
     fn new(references: &'a CslDocument) -> Self {
         let mut author_keys = BTreeMap::<String, Vec<ReferenceEntry>>::new();
         let mut fallback_keys = BTreeMap::<String, Vec<ReferenceEntry>>::new();
+        let mut id_keys = BTreeMap::<String, Vec<ReferenceEntry>>::new();
         for (order, item) in references.items.iter().enumerate() {
             let author_entry = ReferenceEntry {
                 id: item.id.clone(),
@@ -422,11 +606,26 @@ impl<'a> ReferenceIndex<'a> {
                 order,
                 source: ReferenceMatchSource::AuthorKey,
             };
+            let id_entry = ReferenceEntry {
+                id: item.id.clone(),
+                year: reference_year(item),
+                order,
+                source: ReferenceMatchSource::IdFallback,
+            };
             for key in reference_author_keys(item) {
                 author_keys
                     .entry(key)
                     .or_default()
                     .push(author_entry.clone());
+            }
+
+            id_keys
+                .entry(item.id.clone())
+                .or_default()
+                .push(id_entry.clone());
+            let normalized_id = normalize_identifier(&item.id).to_ascii_lowercase();
+            if normalized_id != item.id && !normalized_id.is_empty() {
+                id_keys.entry(normalized_id).or_default().push(id_entry);
             }
 
             for (key, source) in reference_fallback_keys(item) {
@@ -442,11 +641,40 @@ impl<'a> ReferenceIndex<'a> {
             references,
             author_keys,
             fallback_keys,
+            id_keys,
         }
     }
 
     fn match_occurrence(&self, occurrence: &CitationOccurrence) -> MatchResult {
         match occurrence.style {
+            CitationStyle::Identifier => {
+                let mut candidate_entries = self
+                    .id_keys
+                    .get(&occurrence.key)
+                    .cloned()
+                    .unwrap_or_default();
+                if candidate_entries.is_empty() {
+                    let normalized_key = normalize_identifier(&occurrence.key).to_ascii_lowercase();
+                    candidate_entries = self
+                        .id_keys
+                        .get(&normalized_key)
+                        .cloned()
+                        .unwrap_or_default();
+                }
+
+                let candidate_entries = dedupe_reference_entries(candidate_entries);
+                match candidate_entries.as_slice() {
+                    [] => MatchResult::Missing,
+                    [entry] => MatchResult::Matched {
+                        reference_id: entry.id.clone(),
+                        confidence: CitationMatchConfidence::Exact,
+                        match_source: ReferenceMatchSource::IdFallback,
+                    },
+                    entries => MatchResult::Ambiguous(
+                        entries.iter().map(|entry| entry.id.clone()).collect(),
+                    ),
+                }
+            }
             CitationStyle::Numeric | CitationStyle::FootnoteLike => occurrence
                 .key
                 .parse::<usize>()
@@ -696,6 +924,178 @@ mod tests {
 
     use super::*;
     use crate::csl::CslItem;
+
+    #[test]
+    fn latex_citations_match_reference_ids() {
+        let references = CslDocument {
+            items: vec![
+                CslItem {
+                    id: "smith2024".to_string(),
+                    item_type: "article-journal".to_string(),
+                    title: Some("Smith study".to_string()),
+                    doi: None,
+                    extra: BTreeMap::new(),
+                },
+                CslItem {
+                    id: "doe-2023".to_string(),
+                    item_type: "article-journal".to_string(),
+                    title: Some("Doe study".to_string()),
+                    doi: None,
+                    extra: BTreeMap::new(),
+                },
+            ],
+        };
+
+        let report = reconcile_citations(
+            r"Evidence draws on \cite{smith2024, doe-2023}.",
+            &references,
+        );
+
+        assert_eq!(report.occurrences.len(), 2);
+        assert_eq!(
+            report
+                .matches
+                .iter()
+                .map(|citation| citation.reference_id.as_str())
+                .collect::<Vec<_>>(),
+            ["smith2024", "doe-2023"]
+        );
+        assert!(report.issues.is_empty());
+    }
+
+    #[test]
+    fn latex_citations_skip_optional_arguments_and_starred_forms() {
+        let references = CslDocument {
+            items: vec![
+                CslItem {
+                    id: "smith2024".to_string(),
+                    item_type: "article-journal".to_string(),
+                    title: Some("Smith study".to_string()),
+                    doi: None,
+                    extra: BTreeMap::new(),
+                },
+                CslItem {
+                    id: "doe-2023".to_string(),
+                    item_type: "article-journal".to_string(),
+                    title: Some("Doe study".to_string()),
+                    doi: None,
+                    extra: BTreeMap::new(),
+                },
+            ],
+        };
+
+        let report = reconcile_citations(
+            r"See \parencite[see][12]{smith2024} and \textcite*{doe-2023}.",
+            &references,
+        );
+
+        assert_eq!(
+            report
+                .occurrences
+                .iter()
+                .map(|occurrence| (&occurrence.style, occurrence.key.as_str()))
+                .collect::<Vec<_>>(),
+            [
+                (&CitationStyle::Identifier, "smith2024"),
+                (&CitationStyle::Identifier, "doe-2023")
+            ]
+        );
+        assert_eq!(report.matches.len(), 2);
+        assert!(report.issues.is_empty());
+    }
+
+    #[test]
+    fn latex_unknown_keys_report_missing_reference() {
+        let references = CslDocument {
+            items: vec![CslItem {
+                id: "smith2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Smith study".to_string()),
+                doi: None,
+                extra: BTreeMap::new(),
+            }],
+        };
+
+        let report = reconcile_citations(r"Evidence draws on \cite{missing2024}.", &references);
+
+        assert!(
+            report
+                .issues
+                .iter()
+                .any(|issue| issue.issue_type == CitationReconciliationIssueType::MissingReference)
+        );
+        assert!(
+            report
+                .issues
+                .iter()
+                .any(|issue| issue.issue_type == CitationReconciliationIssueType::UncitedReference)
+        );
+    }
+
+    #[test]
+    fn latex_optional_numeric_arguments_are_not_numeric_citations() {
+        let references = CslDocument {
+            items: vec![CslItem {
+                id: "smith2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Smith study".to_string()),
+                doi: None,
+                extra: BTreeMap::new(),
+            }],
+        };
+
+        let report = reconcile_citations(r"See \parencite[see][12]{smith2024}.", &references);
+
+        assert_eq!(report.occurrences.len(), 1);
+        assert_eq!(report.occurrences[0].style, CitationStyle::Identifier);
+        assert_eq!(report.matches[0].reference_id, "smith2024");
+        assert!(report.issues.is_empty());
+    }
+
+    #[test]
+    fn latex_mode_ignores_non_citation_parentheticals() {
+        let references = CslDocument {
+            items: vec![CslItem {
+                id: "smith2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Smith study".to_string()),
+                doi: None,
+                extra: BTreeMap::new(),
+            }],
+        };
+
+        let report = reconcile_citations(
+            r"Model inputs (mean, 2024 dollars) are documented in \cite{smith2024}.",
+            &references,
+        );
+
+        assert_eq!(report.occurrences.len(), 1);
+        assert_eq!(report.occurrences[0].key, "smith2024");
+        assert_eq!(report.matches.len(), 1);
+        assert!(report.issues.is_empty());
+    }
+
+    #[test]
+    fn latex_repeated_reference_keys_are_not_duplicate_citation_issues() {
+        let references = CslDocument {
+            items: vec![CslItem {
+                id: "smith2024".to_string(),
+                item_type: "article-journal".to_string(),
+                title: Some("Smith study".to_string()),
+                doi: None,
+                extra: BTreeMap::new(),
+            }],
+        };
+
+        let report = reconcile_citations(
+            r"First use \cite{smith2024}. Later use \parencite{smith2024}.",
+            &references,
+        );
+
+        assert_eq!(report.occurrences.len(), 2);
+        assert_eq!(report.matches.len(), 2);
+        assert!(report.issues.is_empty());
+    }
 
     #[test]
     fn author_date_citations_match_reference_author_keys() {

@@ -1,0 +1,45 @@
+{
+  "$schema": "../../schemas/arxiv-submission-fixture.json",
+  "fixture_name": "arxiv-submit-ce-synthetic-001",
+  "description": "Synthetic arXiv Submit CE fixture exercising journal screening platform aliases.",
+  "created": "2026-05-14T00:00:00Z",
+  "submission": {
+    "submission_id": "ARXIV-CE-2026-0001",
+    "platform": "arxiv-submit-ce",
+    "manuscript_label": "source-package.tar.gz"
+  },
+  "csl_references": [
+    {
+      "id": "smith-2026-arxiv",
+      "type": "article-journal",
+      "title": "Reference integrity checks for arXiv source packages",
+      "author": [
+        {
+          "family": "Smith",
+          "given": "Alex"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2026
+          ]
+        ]
+      }
+    }
+  ],
+  "verification_sidecar": {
+    "schema_version": "sourceright.verification.v1",
+    "references": {
+      "smith-2026-arxiv": {
+        "review_status": "queued"
+      }
+    }
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "ARXIV-CE-2026-0001",
+    "platform": "arxiv_submit_ce",
+    "status": "screened_with_warnings"
+  }
+}

@@ -16,6 +16,8 @@ pub struct JournalScreeningRequest {
 pub enum JournalPlatform {
     GenericWebhook,
     Ojs,
+    ArxivSubmitCe,
+    ArxivSubmissionCore,
     ScholarOne,
     EditorialManager,
     EJournalPress,

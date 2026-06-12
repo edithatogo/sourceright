@@ -1,0 +1,45 @@
+{
+  "$schema": "../../schemas/arxiv-submission-fixture.json",
+  "fixture_name": "arxiv-submission-core-synthetic-001",
+  "description": "Synthetic arXiv Submission Core fixture exercising journal screening platform aliases.",
+  "created": "2026-05-14T00:00:00Z",
+  "submission": {
+    "submission_id": "ARXIV-CORE-2026-0001",
+    "platform": "arxiv-submission-core",
+    "manuscript_label": "submission-core-package.tar.gz"
+  },
+  "csl_references": [
+    {
+      "id": "doe-2026-arxiv",
+      "type": "article-journal",
+      "title": "Reference integrity checks for arXiv submission workflows",
+      "author": [
+        {
+          "family": "Doe",
+          "given": "Jordan"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2026
+          ]
+        ]
+      }
+    }
+  ],
+  "verification_sidecar": {
+    "schema_version": "sourceright.verification.v1",
+    "references": {
+      "doe-2026-arxiv": {
+        "review_status": "queued"
+      }
+    }
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "ARXIV-CORE-2026-0001",
+    "platform": "arxiv_submission_core",
+    "status": "screened_with_warnings"
+  }
+}
