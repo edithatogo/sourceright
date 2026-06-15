@@ -1,5 +1,5 @@
 param(
-    [string]$InventoryPath = (Join-Path $PSScriptRoot '..' 'conductor' 'submission-inventory.json')
+    [string]$InventoryPath = (Join-Path (Split-Path $PSScriptRoot -Parent) 'conductor' 'submission-inventory.json')
 )
 
 $ErrorActionPreference = 'Stop'
