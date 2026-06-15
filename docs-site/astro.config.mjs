@@ -7,8 +7,6 @@ export default defineConfig({
   site: 'https://edithatogo.github.io',
   base: '/sourceright/',
   integrations: [
-    mdx(),
-    sitemap(),
     starlight({
       title: 'SourceRight',
       description: 'Legal NZ documentation portal for SourceRight.',
@@ -16,5 +14,7 @@ export default defineConfig({
         { label: 'Start', items: ['index', 'docs-tooling-audit'] },
       ],
     }),
+    mdx(),
+    sitemap(),
   ],
 });
