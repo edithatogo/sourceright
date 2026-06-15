@@ -46,10 +46,28 @@
           ]
         ]
       }
+    },
+    {
+      "id": "unverified-2026-legacy-preprint",
+      "type": "article-journal",
+      "title": "Unverified legacy preprint reference requiring author review",
+      "author": [
+        {
+          "family": "Rivera",
+          "given": "Sam"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2026
+          ]
+        ]
+      }
     }
   ],
   "verification_sidecar": {
-    "schema": "sourceright.sidecar.v1",
+    "schema_version": "sourceright.verification.v1",
     "references": {
       "iyer-2026-legacy-screening": {
         "provider_candidates": [
@@ -67,5 +85,11 @@
         "review_status": "not_required"
       }
     }
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "ARXIV-CORE-2026-0001",
+    "platform": "arxiv_submission_core",
+    "status": "screened_with_warnings"
   }
 }

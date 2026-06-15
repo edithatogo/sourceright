@@ -48,7 +48,27 @@
       "read_only": true,
       "input": {
         "workspace": ".sourceright",
-        "platform": "generic-webhook"
+        "platform": "generic-webhook",
+        "platform_enum": [
+          "generic-webhook",
+          "generic_webhook",
+          "ojs",
+          "arxiv-submit-ce",
+          "arxiv_submit_ce",
+          "arxiv-submission-core",
+          "arxiv_submission_core",
+          "scholarone",
+          "scholar_one",
+          "editorial-manager",
+          "editorial_manager",
+          "ejournalpress",
+          "e-journal-press",
+          "e_journal_press",
+          "manuscript-manager",
+          "manuscript_manager"
+        ],
+        "submission_id": "mcp-submission",
+        "manuscript_label": "manuscript"
       },
       "output_contract": "sourceright.journal_screening.v1"
     },
