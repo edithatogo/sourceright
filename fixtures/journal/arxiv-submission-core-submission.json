@@ -1,0 +1,71 @@
+{
+  "$schema": "../../schemas/ojs-submission-fixture.json",
+  "fixture_name": "arxiv-submission-core-submission-synthetic-001",
+  "description": "Synthetic legacy arXiv submission-core fixture for journal screening contract smoke tests.",
+  "created": "2026-06-10T00:00:00Z",
+  "submission": {
+    "submission_id": "ARXIV-CORE-2026-0001",
+    "platform": "arxiv-submission-core",
+    "manuscript_label": "legacy-source-package.tar.gz"
+  },
+  "manuscript": {
+    "title": "Legacy Preprint Submission Citation Screening",
+    "authors": [
+      {
+        "given": "Morgan",
+        "family": "Iyer",
+        "affiliation": "Open Research Systems Lab"
+      }
+    ],
+    "abstract": "A synthetic legacy submission package used to exercise Sourceright journal screening integration boundaries.",
+    "keywords": [
+      "preprint",
+      "legacy submission",
+      "citation integrity"
+    ],
+    "submission_date": "2026-06-10",
+    "section": "Computer Science",
+    "language": "en"
+  },
+  "csl_references": [
+    {
+      "id": "iyer-2026-legacy-screening",
+      "type": "article-journal",
+      "title": "Legacy preprint submission citation screening",
+      "DOI": "10.1234/arxiv-core-2026-001",
+      "author": [
+        {
+          "family": "Iyer",
+          "given": "Morgan"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2026
+          ]
+        ]
+      }
+    }
+  ],
+  "verification_sidecar": {
+    "schema": "sourceright.sidecar.v1",
+    "references": {
+      "iyer-2026-legacy-screening": {
+        "provider_candidates": [
+          {
+            "provider": "crossref",
+            "confidence": 0.95,
+            "retrieved_at": "2026-06-10T00:00:00Z",
+            "data": {
+              "DOI": "10.1234/arxiv-core-2026-001",
+              "title": "Legacy preprint submission citation screening"
+            }
+          }
+        ],
+        "conflicts": [],
+        "review_status": "not_required"
+      }
+    }
+  }
+}
