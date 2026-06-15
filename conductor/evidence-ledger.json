@@ -561,10 +561,10 @@
       "evidence_level": "contracted",
       "allowed_claims": [
         "Health loop spec defines inventory schema, readiness script, policy test, and health >= 9.5 target.",
-        "All 10 submission surfaces are tracked with dependencies in metadata."
+        "All 10 submission surfaces are tracked with dependencies in metadata.",
+        "submission-inventory.json created with initial readiness matrix (health score: 2.52)."
       ],
       "blockers": [
-        "submission-inventory.json not yet created.",
         "check-submission-readiness.ps1 not yet implemented.",
         "submission_health_policy.rs not yet implemented.",
         "CI gating at health >= 9.5 not yet active."
