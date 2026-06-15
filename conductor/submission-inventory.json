@@ -156,20 +156,20 @@
       "name": "Self-improving submission and health loop",
       "category": "governance",
       "readiness": {
-        "gates_passed": 1,
-        "total_gates": 9,
+        "gates_passed": 19,
+        "total_gates": 39,
         "evidence_level": "contracted",
-        "health_contribution": 0.1111
+        "health_contribution": 0.4872
       },
       "blockers": [
-        "check-submission-readiness.ps1 not yet implemented.",
-        "submission_health_policy.rs not yet implemented.",
-        "CI gating at health >= 9.5 not yet active."
+        "CI gating at health >= 9.5 not yet active.",
+        "Run checks (Phase 6) not yet completed.",
+        "conductor-review (Phase 7) not yet completed."
       ],
       "last_updated": "2026-06-15"
     }
   ],
-  "health_score": 2.52,
+  "health_score": 2.90,
   "health_target": 9.5,
   "surface_count": 10
 }

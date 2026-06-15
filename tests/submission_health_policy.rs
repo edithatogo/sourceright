@@ -51,11 +51,17 @@ fn submission_inventory_has_all_ten_surfaces() {
             "surface {required_id} has total_gates == 0"
         );
         assert!(
-            surface["readiness"]["health_contribution"].as_f64().unwrap_or(-1.0) >= 0.0,
+            surface["readiness"]["health_contribution"]
+                .as_f64()
+                .unwrap_or(-1.0)
+                >= 0.0,
             "surface {required_id} has negative health_contribution"
         );
         assert!(
-            surface["readiness"]["health_contribution"].as_f64().unwrap_or(2.0) <= 1.0,
+            surface["readiness"]["health_contribution"]
+                .as_f64()
+                .unwrap_or(2.0)
+                <= 1.0,
             "surface {required_id} has health_contribution > 1.0"
         );
         assert!(
@@ -76,7 +82,12 @@ fn submission_inventory_health_score_is_consistent() {
 
     let computed_score: f64 = surfaces
         .iter()
-        .map(|s| s["readiness"]["health_contribution"].as_f64().unwrap_or(0.0) * 10.0)
+        .map(|s| {
+            s["readiness"]["health_contribution"]
+                .as_f64()
+                .unwrap_or(0.0)
+                * 10.0
+        })
         .sum::<f64>()
         / surfaces.len() as f64;
 
@@ -100,7 +111,12 @@ fn submission_inventory_surfaces_have_required_readiness_fields() {
         let track_id = surface["track_id"].as_str().unwrap_or("unknown");
         let readiness = &surface["readiness"];
 
-        for field in &["gates_passed", "total_gates", "evidence_level", "health_contribution"] {
+        for field in &[
+            "gates_passed",
+            "total_gates",
+            "evidence_level",
+            "health_contribution",
+        ] {
             assert!(
                 readiness.get(*field).is_some(),
                 "surface {track_id} readiness missing field {field}"
@@ -108,7 +124,8 @@ fn submission_inventory_surfaces_have_required_readiness_fields() {
         }
 
         assert!(
-            readiness["gates_passed"].as_u64().unwrap_or(0) <= readiness["total_gates"].as_u64().unwrap_or(0),
+            readiness["gates_passed"].as_u64().unwrap_or(0)
+                <= readiness["total_gates"].as_u64().unwrap_or(0),
             "surface {track_id} has gates_passed > total_gates"
         );
     }
