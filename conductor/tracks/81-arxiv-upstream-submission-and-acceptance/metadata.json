@@ -1,0 +1,20 @@
+{
+  "id": "81-arxiv-upstream-submission-and-acceptance",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": ["arxiv-integration", "publication"],
+  "dependencies": [
+    "78-arxiv-upstream-requirements-reconnaissance",
+    "79-arxiv-submit-ce-maturity-hardening",
+    "80-arxiv-submission-core-maturity-hardening",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/81-arxiv-upstream-submission-and-acceptance/metadata.json",
+    "conductor/tracks/81-arxiv-upstream-submission-and-acceptance/spec.md",
+    "conductor/tracks/81-arxiv-upstream-submission-and-acceptance/plan.md",
+    "conductor/tracks/81-arxiv-upstream-submission-and-acceptance/test-matrix.md",
+    "conductor/tracks/81-arxiv-upstream-submission-and-acceptance/submission-drafts.md",
+    "conductor/tracks/81-arxiv-upstream-submission-and-acceptance/upstream-monitor-2026-06-10.md"
+  ]
+}

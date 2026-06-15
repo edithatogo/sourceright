@@ -1,0 +1,176 @@
+{
+  "schema": "sourceright.conductor.submission-inventory.v1",
+  "generated_at": "2026-06-15T12:00:00Z",
+  "surfaces": [
+    {
+      "track_id": "73-mcp-directory-submission-hardening",
+      "name": "MCP directory submission hardening",
+      "category": "publication",
+      "readiness": {
+        "gates_passed": 5,
+        "total_gates": 9,
+        "evidence_level": "contracted",
+        "health_contribution": 0.5556
+      },
+      "blockers": [
+        "GitHub Pages serves Starlight 404 for /.well-known/* dot paths.",
+        "Smithery listing still 404; Glama listing still 404.",
+        "Win32 MCPB deployment returns 400 'No values to set'."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "74-citation-manager-publication-hardening",
+      "name": "Citation-manager publication hardening",
+      "category": "publication",
+      "readiness": {
+        "gates_passed": 0,
+        "total_gates": 7,
+        "evidence_level": "contracted",
+        "health_contribution": 0
+      },
+      "blockers": [
+        "Zotero .xpi package build not yet verified.",
+        "EndNote ENW roundtrip test not yet run.",
+        "Marketplace listing evidence requires opt-in verification."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "75-journal-platform-publication-hardening",
+      "name": "Journal-platform publication hardening",
+      "category": "publication",
+      "readiness": {
+        "gates_passed": 4,
+        "total_gates": 9,
+        "evidence_level": "contracted",
+        "health_contribution": 0.4444
+      },
+      "blockers": [
+        "No PKP Plugin Gallery PR opened.",
+        "No disposable OJS test-instance smoke run."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "76-ai-client-extension-publication-hardening",
+      "name": "AI client extension publication hardening",
+      "category": "publication",
+      "readiness": {
+        "gates_passed": 0,
+        "total_gates": 7,
+        "evidence_level": "contracted",
+        "health_contribution": 0
+      },
+      "blockers": [
+        "Claude/Codex/Copilot/Gemini/Qwen config examples need audit.",
+        "Transcript smoke not yet run for each client.",
+        "No-package decisions need documentation."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "77-vscode-openvsx-publication-hardening",
+      "name": "VS Code / Open VSX publication hardening",
+      "category": "publication",
+      "readiness": {
+        "gates_passed": 0,
+        "total_gates": 40,
+        "evidence_level": "contracted",
+        "health_contribution": 0
+      },
+      "blockers": [
+        "Demand assessment not yet triggered.",
+        "No VSIX package, install smoke, or listing evidence exists.",
+        "Marketplace/Open VSX acceptance evidence is deferred to Track 69."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "78-arxiv-upstream-requirements-reconnaissance",
+      "name": "arXiv upstream requirements reconnaissance",
+      "category": "requirements",
+      "readiness": {
+        "gates_passed": 0,
+        "total_gates": 33,
+        "evidence_level": "contracted",
+        "health_contribution": 0
+      },
+      "blockers": [
+        "Requirements derived from public repo inspection only.",
+        "No live API or maintainer confirmation of requirements accuracy."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "79-arxiv-submit-ce-maturity-hardening",
+      "name": "arXiv submit-ce maturity hardening",
+      "category": "integration",
+      "readiness": {
+        "gates_passed": 4,
+        "total_gates": 9,
+        "evidence_level": "fixture-backed",
+        "health_contribution": 0.4444
+      },
+      "blockers": [
+        "No maintainer acceptance of integration hook proposal yet.",
+        "No live arXiv API calls tested."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "80-arxiv-submission-core-maturity-hardening",
+      "name": "arXiv submission-core maturity hardening",
+      "category": "integration",
+      "readiness": {
+        "gates_passed": 14,
+        "total_gates": 49,
+        "evidence_level": "contracted",
+        "health_contribution": 0.2857
+      },
+      "blockers": [
+        "No active users identified for migration.",
+        "Legacy repo may not accept new contributions."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "81-arxiv-upstream-submission-and-acceptance",
+      "name": "arXiv upstream submission and acceptance",
+      "category": "publication",
+      "readiness": {
+        "gates_passed": 28,
+        "total_gates": 41,
+        "evidence_level": "submitted",
+        "health_contribution": 0.6829
+      },
+      "blockers": [
+        "submit-ce #72 maintainer response pending.",
+        "submission-core #88 closed as legacy without acceptance.",
+        "No PRs merged or acceptance URLs recorded."
+      ],
+      "last_updated": "2026-06-15"
+    },
+    {
+      "track_id": "82-self-improving-submission-and-health-loop",
+      "name": "Self-improving submission and health loop",
+      "category": "governance",
+      "readiness": {
+        "gates_passed": 0,
+        "total_gates": 0,
+        "evidence_level": "contracted",
+        "health_contribution": 0
+      },
+      "blockers": [
+        "submission-inventory.json not yet created.",
+        "check-submission-readiness.ps1 not yet implemented.",
+        "submission_health_policy.rs not yet implemented.",
+        "CI gating at health >= 9.5 not yet active."
+      ],
+      "last_updated": "2026-06-15"
+    }
+  ],
+  "health_score": 2.41,
+  "health_target": 9.5,
+  "surface_count": 10
+}

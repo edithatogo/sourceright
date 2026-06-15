@@ -437,6 +437,138 @@
         "Direct GHCR package-page visibility, Glama acceptance, and Smithery acceptance still require external registry verification.",
         "Deferred package-manager and host-marketplace channels require their owning tracks to produce installable packages and accepted listing evidence."
       ]
+    },
+    "73-mcp-directory-submission-hardening": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Server-card fix implemented 2026-06-10: mcp::server_card(), CLI emission, generate script, policy test, dual-location card writing.",
+        "Browser listing verification recorded for Smithery and Glama (2026-06-10): both return 404/not-listed.",
+        "Track structure (metadata, spec, plan, test-matrix) is in place."
+      ],
+      "blockers": [
+        "GitHub Pages serves Starlight 404 for /.well-known/* dot paths.",
+        "Smithery listing still 404; Glama listing still 404.",
+        "Win32 MCPB deployment returns 400 'No values to set'."
+      ]
+    },
+    "74-citation-manager-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Track structure (metadata, spec, plan, test-matrix) is in place.",
+        "Zotero plugin packaging, EndNote ENW handoff, and RIS roundtrip scenarios are defined."
+      ],
+      "blockers": [
+        "Zotero .xpi package build not yet verified.",
+        "EndNote ENW roundtrip test not yet run.",
+        "Marketplace listing evidence requires opt-in verification."
+      ]
+    },
+    "75-journal-platform-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "PKP Gallery browser search shows no Sourceright match (2026-06-10).",
+        "OJS generic plugin skeleton and fixture smoke exist.",
+        "Track structure (metadata, spec, plan, test-matrix) is in place."
+      ],
+      "blockers": [
+        "No PKP Plugin Gallery PR opened.",
+        "No disposable OJS test-instance smoke run."
+      ]
+    },
+    "76-ai-client-extension-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Package decisions contract, transcript smoke, and docs updates are scoped.",
+        "Track structure (metadata, spec, plan, test-matrix) is in place."
+      ],
+      "blockers": [
+        "Claude/Codex/Copilot/Gemini/Qwen config examples need audit.",
+        "Transcript smoke not yet run for each client.",
+        "No-package decisions need documentation."
+      ]
+    },
+    "77-vscode-openvsx-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "VS Code extension packaging is explicitly deferred with documented VSIX future contract.",
+        "Track structure (metadata, spec, plan, test-matrix) is in place."
+      ],
+      "blockers": [
+        "Demand assessment not yet triggered.",
+        "No VSIX package, install smoke, or listing evidence exists.",
+        "Marketplace/Open VSX acceptance evidence is deferred to Track 69."
+      ]
+    },
+    "78-arxiv-upstream-requirements-reconnaissance": {
+      "category": "requirements",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Requirements matrix documents both arXiv/submit-ce (active) and arXiv/arxiv-submission-core (legacy/inactive).",
+        "submit-ce: OpenAPI 3.1.0, Python 3.11/uv, pytest, ruff/flake8, OAuth2, GCR deploy.",
+        "submission-core: Gitflow, Travis CI, Python 3.6/Pipenv, nose2, legacy/archived.",
+        "Handoff documented for Tracks 79 and 80."
+      ],
+      "blockers": [
+        "Requirements derived from public repo inspection only.",
+        "No live API or maintainer confirmation of requirements accuracy."
+      ]
+    },
+    "79-arxiv-submit-ce-maturity-hardening": {
+      "category": "integration",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "journal-screen smoke recorded 2026-06-10 against synthetic submit-ce fixture: exit code 0, status screened_with_warnings.",
+        "Integration hook proposed on arXiv/submit-ce Issue #72.",
+        "Platform detection and screening report schema defined."
+      ],
+      "blockers": [
+        "No maintainer acceptance of integration hook proposal yet.",
+        "No live arXiv API calls tested."
+      ]
+    },
+    "80-arxiv-submission-core-maturity-hardening": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "arXiv/arxiv-submission-core confirmed legacy/inactive by maintainer @dginev on issue #88.",
+        "Evidence packet documents current state, security boundaries, and migration path to submit-ce."
+      ],
+      "blockers": [
+        "No active users identified for migration.",
+        "Legacy repo may not accept new contributions."
+      ]
+    },
+    "81-arxiv-upstream-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "submitted",
+      "allowed_claims": [
+        "Issues filed: arXiv/submit-ce #72 (open, 2026-06-09), arXiv/arxiv-submission-core #88 (closed/legacy).",
+        "Approval boundary verified before submission."
+      ],
+      "blockers": [
+        "submit-ce #72 maintainer response pending.",
+        "submission-core #88 closed as legacy without acceptance.",
+        "No PRs merged or acceptance URLs recorded."
+      ]
+    },
+    "82-self-improving-submission-health-loop": {
+      "category": "governance",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Health loop spec defines inventory schema, readiness script, policy test, and health >= 9.5 target.",
+        "All 10 submission surfaces are tracked with dependencies in metadata."
+      ],
+      "blockers": [
+        "submission-inventory.json not yet created.",
+        "check-submission-readiness.ps1 not yet implemented.",
+        "submission_health_policy.rs not yet implemented.",
+        "CI gating at health >= 9.5 not yet active."
+      ]
     }
   }
 }

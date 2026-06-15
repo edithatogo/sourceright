@@ -1,0 +1,20 @@
+{
+  "id": "78-arxiv-upstream-requirements-reconnaissance",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "arxiv-integration",
+    "requirements"
+  ],
+  "dependencies": [
+    "72-submission-requirements-contracts",
+    "16-journal-workflow-integrations"
+  ],
+  "owned_paths": [
+    "conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/metadata.json",
+    "conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/spec.md",
+    "conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/plan.md",
+    "conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/test-matrix.md",
+    "conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/requirements-matrix.md"
+  ]
+}

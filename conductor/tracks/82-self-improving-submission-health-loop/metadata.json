@@ -1,0 +1,27 @@
+{
+  "id": "82-self-improving-submission-health-loop",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": ["governance", "automation"],
+  "dependencies": [
+    "72-submission-requirements-contracts",
+    "73-mcp-directory-submission-hardening",
+    "74-citation-manager-publication-hardening",
+    "75-journal-platform-publication-hardening",
+    "76-ai-client-extension-publication-hardening",
+    "77-vscode-openvsx-publication-hardening",
+    "78-arxiv-upstream-requirements-reconnaissance",
+    "79-arxiv-submit-ce-maturity-hardening",
+    "80-arxiv-submission-core-maturity-hardening",
+    "81-arxiv-upstream-submission-and-acceptance"
+  ],
+  "owned_paths": [
+    "conductor/tracks/82-self-improving-submission-health-loop/metadata.json",
+    "conductor/tracks/82-self-improving-submission-health-loop/spec.md",
+    "conductor/tracks/82-self-improving-submission-health-loop/plan.md",
+    "conductor/tracks/82-self-improving-submission-health-loop/test-matrix.md",
+    "conductor/submission-inventory.json",
+    "scripts/check-submission-readiness.ps1",
+    "tests/submission_health_policy.rs"
+  ]
+}

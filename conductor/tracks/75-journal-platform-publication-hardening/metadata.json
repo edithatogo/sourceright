@@ -1,0 +1,28 @@
+{
+  "id": "75-journal-platform-publication-hardening",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "publication",
+    "ojs-integration"
+  ],
+  "dependencies": [
+    "60-mature-ojs-plugin",
+    "72-submission-requirements-contracts",
+    "69-marketplace-submission-evidence"
+  ],
+  "owned_paths": [
+    "conductor/tracks/75-journal-platform-publication-hardening/metadata.json",
+    "conductor/tracks/75-journal-platform-publication-hardening/spec.md",
+    "conductor/tracks/75-journal-platform-publication-hardening/plan.md",
+    "conductor/tracks/75-journal-platform-publication-hardening/test-matrix.md",
+    "conductor/tracks/75-journal-platform-publication-hardening/browser-gallery-verification-2026-06-10.md",
+    "plugins/ojs/sourceright/",
+    "scripts/build-ojs-plugin-package.ps1",
+    "scripts/ojs-docker-install-smoke.ps1",
+    "scripts/ojs-plugin-lint.ps1",
+    "fixtures/journal/ojs-submission.json",
+    "tests/ojs_plugin_packaging_policy.rs",
+    "docs/src/journal-integrations.md"
+  ]
+}

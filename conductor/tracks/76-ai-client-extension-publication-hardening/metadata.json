@@ -1,0 +1,27 @@
+{
+  "id": "76-ai-client-extension-publication-hardening",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "publication",
+    "ai-client-integration"
+  ],
+  "dependencies": [
+    "65-ai-client-mcp-packaging",
+    "69-marketplace-submission-evidence",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/76-ai-client-extension-publication-hardening/metadata.json",
+    "conductor/tracks/76-ai-client-extension-publication-hardening/spec.md",
+    "conductor/tracks/76-ai-client-extension-publication-hardening/plan.md",
+    "conductor/tracks/76-ai-client-extension-publication-hardening/test-matrix.md",
+    "conductor/tracks/76-ai-client-extension-publication-hardening/package-decisions-2026-07-01.md",
+    "conductor/tracks/76-ai-client-extension-publication-hardening/transcript-smoke-2026-07-01.md",
+    "conductor/submission-packets/ai-client-extensions.md",
+    "conductor/evidence-ledger.json",
+    "examples/mcp-clients/",
+    "docs/src/mcp.md",
+    "docs-site/src/content/docs/mcp.md"
+  ]
+}
