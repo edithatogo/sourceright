@@ -1,0 +1,20 @@
+{
+  "id": "87-self-improving-platform-registry",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "journal-platforms",
+    "registry-automation"
+  ],
+  "dependencies": [
+    "83-janeway-platform-reconnaissance",
+    "86-proprietary-journal-platform-matrix",
+    "82-self-improving-submission-and-health-loop"
+  ],
+  "owned_paths": [
+    "conductor/tracks/87-self-improving-platform-registry/metadata.json",
+    "conductor/tracks/87-self-improving-platform-registry/spec.md",
+    "conductor/tracks/87-self-improving-platform-registry/plan.md",
+    "conductor/tracks/87-self-improving-platform-registry/test-matrix.md"
+  ]
+}

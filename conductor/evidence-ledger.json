@@ -619,6 +619,32 @@
         "No live install transcript or report transcript exists yet.",
         "No publication claim may be made until smoke evidence is captured."
       ]
+    },
+    "86-proprietary-journal-platform-matrix": {
+      "status": "in_progress",
+      "category": "requirements",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "The proprietary journal-platform matrix identifies official developer pages, access models, and sandbox or test-environment blockers for ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager.",
+        "The matrix separates documented capability from inferred integration potential."
+      ],
+      "blockers": [
+        "Do not claim vendor support without official documentation or test access.",
+        "Do not treat public marketing pages as proof of API or plugin access."
+      ]
+    },
+    "87-self-improving-platform-registry": {
+      "status": "in_progress",
+      "category": "workflow",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "The self-improving platform registry can encode platform evidence, blockers, and confidence for future track suggestions.",
+        "The registry can propose candidate tracks from official sources while keeping human review as the final gate."
+      ],
+      "blockers": [
+        "Do not imply autonomous support publication.",
+        "Do not bypass human approval for new platform claims."
+      ]
     }
   }
 }
