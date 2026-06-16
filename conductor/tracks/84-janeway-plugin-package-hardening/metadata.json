@@ -1,0 +1,20 @@
+{
+  "id": "84-janeway-plugin-package-hardening",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "journal-platforms",
+    "janeway"
+  ],
+  "dependencies": [
+    "83-janeway-platform-reconnaissance",
+    "16-journal-workflow-integrations",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/84-janeway-plugin-package-hardening/metadata.json",
+    "conductor/tracks/84-janeway-plugin-package-hardening/spec.md",
+    "conductor/tracks/84-janeway-plugin-package-hardening/plan.md",
+    "conductor/tracks/84-janeway-plugin-package-hardening/test-matrix.md"
+  ]
+}

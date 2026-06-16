@@ -1,0 +1,20 @@
+{
+  "id": "85-janeway-install-smoke-evidence",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "journal-platforms",
+    "janeway"
+  ],
+  "dependencies": [
+    "83-janeway-platform-reconnaissance",
+    "84-janeway-plugin-package-hardening",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/85-janeway-install-smoke-evidence/metadata.json",
+    "conductor/tracks/85-janeway-install-smoke-evidence/spec.md",
+    "conductor/tracks/85-janeway-install-smoke-evidence/plan.md",
+    "conductor/tracks/85-janeway-install-smoke-evidence/test-matrix.md"
+  ]
+}

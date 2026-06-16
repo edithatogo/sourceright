@@ -1,0 +1,24 @@
+{
+  "id": "83-janeway-platform-reconnaissance",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "journal-platforms",
+    "janeway"
+  ],
+  "dependencies": [
+    "16-journal-workflow-integrations",
+    "72-submission-requirements-contracts",
+    "75-journal-platform-publication-hardening"
+  ],
+  "owned_paths": [
+    "conductor/tracks/83-janeway-platform-reconnaissance/metadata.json",
+    "conductor/tracks/83-janeway-platform-reconnaissance/spec.md",
+    "conductor/tracks/83-janeway-platform-reconnaissance/plan.md",
+    "conductor/tracks/83-janeway-platform-reconnaissance/test-matrix.md",
+    "conductor/tracks.md",
+    "conductor/implementation-order.md",
+    "docs/src/journal-integrations.md",
+    "docs-site/src/content/docs/journal-integrations.md"
+  ]
+}

@@ -36,6 +36,14 @@ These can run in parallel when their owned paths do not overlap:
 - Track 66: VS Code extension packaging.
 - Track 67: Microsoft Word add-in packaging.
 - Track 68: LibreOffice extension packaging.
+- Track 83: Janeway platform reconnaissance.
+- Track 84: Janeway plugin package hardening.
+- Track 85: Janeway install and smoke evidence.
+
+## Platform Expansion
+
+- Track 86: proprietary journal-platform matrix.
+- Track 87: self-improving platform registry.
 
 ## Publication And Proof
 

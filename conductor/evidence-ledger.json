@@ -69,8 +69,12 @@
     "45-external-proof-suites": {
       "category": "proof",
       "evidence_level": "contracted",
-      "allowed_claims": ["External proof suites are planned and opt-in."],
-      "blockers": ["Fixture and live-smoke evidence required per host."]
+      "allowed_claims": [
+        "External proof suites are planned and opt-in."
+      ],
+      "blockers": [
+        "Fixture and live-smoke evidence required per host."
+      ]
     },
     "55-benchmark-robustness-contract": {
       "category": "benchmark",
@@ -105,8 +109,12 @@
     "58-mature-zotero-plugin": {
       "category": "integration",
       "evidence_level": "contracted",
-      "allowed_claims": ["Mature Zotero integration is planned."],
-      "blockers": ["Installable package or adapter proof, preview/apply/audit tests, and distribution notes."]
+      "allowed_claims": [
+        "Mature Zotero integration is planned."
+      ],
+      "blockers": [
+        "Installable package or adapter proof, preview/apply/audit tests, and distribution notes."
+      ]
     },
     "60-mature-ojs-plugin": {
       "category": "integration",
@@ -568,6 +576,48 @@
         "check-submission-readiness.ps1 not yet implemented.",
         "submission_health_policy.rs not yet implemented.",
         "CI gating at health >= 9.5 not yet active."
+      ]
+    },
+    "83-janeway-platform-reconnaissance": {
+      "category": "requirements",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Janeway is documented as the next open-source journal platform candidate.",
+        "The integration contract distinguishes plugin-first, sidecar, and hybrid shapes.",
+        "Track structure and docs updates are in place."
+      ],
+      "blockers": [
+        "Janeway docs survey not yet completed.",
+        "No package or smoke evidence exists yet.",
+        "No Janeway claim may move past reconnaissance."
+      ]
+    },
+    "84-janeway-plugin-package-hardening": {
+      "category": "integration",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "A Janeway adapter package contract is being defined around a thin Rust-core boundary.",
+        "Preview-first and packageable are the intended claims.",
+        "Track structure is in place."
+      ],
+      "blockers": [
+        "No adapter skeleton has been implemented.",
+        "No fixture-backed Janeway package checks exist yet.",
+        "No live install or publication claim is allowed."
+      ]
+    },
+    "85-janeway-install-smoke-evidence": {
+      "category": "publication",
+      "evidence_level": "opt-in-live-proven",
+      "allowed_claims": [
+        "Disposable-instance install and screening smoke are the target evidence.",
+        "Blocker documentation is acceptable when the live path is unavailable.",
+        "Track structure is in place."
+      ],
+      "blockers": [
+        "No disposable Janeway smoke has been recorded yet.",
+        "No live install transcript or report transcript exists yet.",
+        "No publication claim may be made until smoke evidence is captured."
       ]
     }
   }
