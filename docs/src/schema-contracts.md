@@ -38,6 +38,8 @@ models change.
   contracts, capabilities, fixtures, and safety posture.
 - `sourceright.mcp-status.schema.json`: machine-readable readiness output for
   the MCP placeholder/status surface.
+- `sourceright.live-submission-evidence.schema.json`: live submission evidence
+  records for external submission surfaces and their public URLs.
 
 ## Compatibility Rules
 
