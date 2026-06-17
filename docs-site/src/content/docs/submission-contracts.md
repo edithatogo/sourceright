@@ -1,4 +1,8 @@
-# Submission Contracts
+---
+title: Submission Contracts
+---
+
+## Submission Contracts
 
 Sourceright uses a shared submission contract for every external registry,
 marketplace, plugin host, and upstream repository submission surface. This
