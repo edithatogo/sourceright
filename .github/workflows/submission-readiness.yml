@@ -3,6 +3,9 @@ name: Submission readiness
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   submission-readiness:
     runs-on: windows-latest
