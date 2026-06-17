@@ -1,0 +1,19 @@
+{
+  "id": "82-self-improving-submission-and-health-loop",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "publication",
+    "workflow-automation"
+  ],
+  "dependencies": [
+    "72-submission-requirements-contracts",
+    "70-release-surface-refresh-cadence"
+  ],
+  "owned_paths": [
+    "conductor/tracks/82-self-improving-submission-and-health-loop/metadata.json",
+    "conductor/tracks/82-self-improving-submission-and-health-loop/spec.md",
+    "conductor/tracks/82-self-improving-submission-and-health-loop/plan.md",
+    "conductor/tracks/82-self-improving-submission-and-health-loop/test-matrix.md"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "sourceright.submission-packets.v1",
+  "schema_version": "sourceright.submission_packets.v1",
+  "approval_rule": "explicit approval is required before external submission",
+  "packets": [
+    {
+      "id": "mcp-directories",
+      "path": "conductor/submission-packets/mcp-directories.md",
+      "owning_tracks": ["73-mcp-directory-submission-hardening"],
+      "surfaces": ["official-mcp-registry", "smithery", "glama"],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No public listing evidence has been recorded yet."]
+    },
+    {
+      "id": "citation-managers",
+      "path": "conductor/submission-packets/citation-managers.md",
+      "owning_tracks": ["74-citation-manager-publication-hardening"],
+      "surfaces": ["zotero", "endnote"],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No citation-manager package evidence has been recorded yet."]
+    },
+    {
+      "id": "journal-platforms",
+      "path": "conductor/submission-packets/journal-platforms.md",
+      "owning_tracks": ["75-journal-platform-publication-hardening"],
+      "surfaces": ["ojs-pkp", "arxiv-submit-ce", "arxiv-submission-core"],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No journal-platform package evidence has been recorded yet."]
+    },
+    {
+      "id": "arxiv-upstream",
+      "path": "conductor/submission-packets/arxiv-upstream.md",
+      "owning_tracks": [
+        "78-arxiv-upstream-requirements-recon",
+        "79-arxiv-submit-ce-maturity-hardening",
+        "80-arxiv-submission-core-maturity-hardening",
+        "81-arxiv-upstream-submission-and-acceptance"
+      ],
+      "surfaces": ["arxiv-submit-ce", "arxiv-submission-core"],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No arXiv upstream acceptance evidence has been recorded yet."]
+    },
+    {
+      "id": "ai-client-extensions",
+      "path": "conductor/submission-packets/ai-client-extensions.md",
+      "owning_tracks": ["76-ai-client-extension-publication-hardening"],
+      "surfaces": ["claude-cowork", "codex-app", "github-copilot", "gemini-cli-extensions", "qwen-cli-extensions"],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No AI-client package evidence has been recorded yet."]
+    },
+    {
+      "id": "vscode-open-vsx",
+      "path": "conductor/submission-packets/vscode-open-vsx.md",
+      "owning_tracks": ["77-vscode-open-vsx-publication-hardening"],
+      "surfaces": ["vscode-open-vsx"],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No VS Code or Open VSX evidence has been recorded yet."]
+    },
+    {
+      "id": "agent-workflow",
+      "path": "conductor/submission-packets/agent-workflow.md",
+      "owning_tracks": ["82-self-improving-submission-and-health-loop"],
+      "surfaces": ["official-mcp-registry", "smithery", "glama"],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No agent or workflow submission evidence has been recorded yet."]
+    }
+  ]
+}

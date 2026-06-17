@@ -1,0 +1,44 @@
+{
+  "$id": "sourceright.submission-packets.v1",
+  "type": "object",
+  "required": ["schema_version", "$schema", "packets"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "type": "string" },
+    "approval_rule": { "type": "string" },
+    "packets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/packet"
+      }
+    }
+  },
+  "$defs": {
+    "packet": {
+      "type": "object",
+      "required": [
+        "id",
+        "path",
+        "owning_tracks",
+        "surfaces",
+        "status",
+        "approval_required",
+        "local_validation",
+        "blockers"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "path": { "type": "string" },
+        "owning_tracks": { "type": "array" },
+        "surfaces": { "type": "array" },
+        "status": {
+          "type": "string",
+          "enum": ["blocked", "active-control", "ready-local", "submitted", "accepted"]
+        },
+        "approval_required": { "type": "boolean" },
+        "local_validation": { "type": "array" },
+        "blockers": { "type": "array" }
+      }
+    }
+  }
+}

@@ -29,6 +29,25 @@ Conductor track ownership, review gates, and claim boundaries.
 - Deprecation follows `conductor/deprecation-policy.md`.
 - Architectural decisions are recorded under `conductor/adrs/`.
 
+The downstream submission tracks are grouped as:
+
+- Submission requirements contracts, which own the shared surface model.
+- arXiv upstream submission contracts for tracks 78, 79, 80, 81.
+
+## Submission Requirements Contracts
+
+Submission requirements contracts define the approval-gated path for external
+registries, marketplaces, plugin hosts, and upstream repositories. The shared
+contract is tracked in `conductor/submission-contracts.md`, the inventory in
+`conductor/submission-requirements.json`, and the packet families in
+`conductor/submission-packets/`.
+
+## Self-improving Submission Readiness
+
+Self-improving submission readiness keeps the submission workflow machine
+readable and workflow-checked. It is owned by track 82 and the repo-health
+controls it defines.
+
 ## MoSCoW Matrix
 
 | Requirement | MoSCoW | Track owner | Completion contract | Overclaim guard |
@@ -45,6 +64,7 @@ Conductor track ownership, review gates, and claim boundaries.
 | Publication inventory | Must | 25, 32, 33, 43 | Accepted, submitted, prepared, and deferred registries are separated. | Do not claim registry acceptance without public listing evidence. |
 | Documentation parity | Must | 28, 30, 35 | Docs-site and source docs stay aligned. | Do not describe docs cutover as finished until redirect/archive checks pass. |
 | Coverage and robustness evidence | Must | 31, 34 | Coverage, robustness, mutation/property/load claims are reproducible. | Do not use coverage badges as proof without current artifacts. |
+| Self-improving submission readiness | Should | 82 | Keep submission readiness machine-readable and workflow-checked. | Do not auto-promote external submission claims without approval. |
 | DOCX/PDF extraction hardening | Should | 36 | Real document fixtures produce provenance spans and OCR diagnostics. | Do not claim robust extraction until messy DOCX/PDF fixtures pass. |
 | Live core providers | Should | 37 | Crossref, DataCite, OpenAlex, PubMed, DOI, and ORCID opt-in smokes pass. | Do not run live checks in default CI or hide rate-limit/cache behavior. |
 | Citation disambiguation | Should | 38 | Institutional authors, same-author/year, styles, and ambiguity cases are tested. | Do not auto-correct ambiguous citations without review. |

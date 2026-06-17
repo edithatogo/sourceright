@@ -1,0 +1,9 @@
+{
+  "$schema": "sourceright.live-submission-evidence.v1",
+  "surface_id": "REPLACE_WITH_SURFACE_ID",
+  "status": "draft",
+  "public_url": "REPLACE_WITH_URL",
+  "artifact_id": "REPLACE_WITH_ARTIFACT_ID",
+  "evidence_type": "REPLACE_WITH_EVIDENCE_TYPE",
+  "notes": "REPLACE_WITH_NOTES"
+}

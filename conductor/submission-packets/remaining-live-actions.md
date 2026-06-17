@@ -30,7 +30,7 @@ Evidence files:
 | Smithery | `mcp-directories` | Listing **200**; release scan blocked until Pages serves server-card (repo fix done 2026-06-10). | Deploy GitHub Pages, verify well-known URL, republish homepage URL to Smithery. | Public listing URL, passing release scan, install metadata, and date. |
 | Glama | `mcp-directories` | No accepted Glama listing or API evidence (browser/API: 404). | Sign in, **Add Server**, paste `https://github.com/edithatogo/sourceright`, then claim via `glama.json`. | Listing URL or API result URL/body identifying Sourceright, plus date. |
 | OJS/PKP | `journal-platforms` | Live OJS compatibility proof and PKP Gallery evidence missing (gallery search: no match). | Run disposable OJS smoke if infrastructure is available, then open a PKP Plugin Gallery PR or record why it is deferred. | Smoke log path, Gallery PR URL, or accepted Gallery listing URL. |
-| arXiv `submit-ce` | `arxiv-upstream` | ~~No upstream issue~~ **Done 2026-06-09** | Monitor https://github.com/arXiv/submit-ce/issues/72 for maintainer response. | Maintainer acceptance or PR merge URL when available. |
+| arXiv `submit-ce` | `arxiv-upstream` | ~~No upstream issue~~ **Done 2026-06-09** | Monitor [arXiv/submit-ce issue #72](https://github.com/arXiv/submit-ce/issues/72) for maintainer response. | Maintainer acceptance or PR merge URL when available. |
 | arXiv `arxiv-submission-core` | `arxiv-upstream` | ~~No upstream issue~~ **Done 2026-06-09**; issue **closed** without acceptance | No further action unless maintainers reopen or redirect to another repo. | Maintainer acceptance or PR merge URL when available. |
 
 ## Exact Promotion Rules
@@ -47,25 +47,25 @@ Evidence files:
 ## Evidence Capture
 
 1. Copy `conductor/submission-packets/live-evidence.template.json` to
-   `conductor/submission-packets/live-evidence.json`.
-2. Replace placeholder URLs with the real listing, API, PR, issue, or smoke log
-   evidence.
-3. Run:
+  `conductor/submission-packets/live-evidence.json`.
+1. Replace placeholder URLs with the real listing, API, PR, issue, or smoke log
+  evidence.
+1. Run:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-live-submission-evidence.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-submission-readiness.ps1
 ```
 
-4. Promote the relevant gates only after the evidence verifier passes.
+1. Promote the relevant gates only after the evidence verifier passes.
 
 ## Browser Submission Order
 
 1. ~~arXiv `submit-ce` issue~~ (filed 2026-06-09, issue #72).
-2. ~~arXiv `arxiv-submission-core` issue~~ (filed 2026-06-09, issue #88).
-3. Glama listing/API verification.
-4. Smithery listing verification or publish flow.
-5. OJS disposable smoke and PKP Gallery PR.
+1. ~~arXiv `arxiv-submission-core` issue~~ (filed 2026-06-09, issue #88).
+1. Glama listing/API verification.
+1. Smithery listing verification or publish flow.
+1. OJS disposable smoke and PKP Gallery PR.
 
 This order records low-risk maintainer questions first and leaves the heavier
 OJS live-instance work last.

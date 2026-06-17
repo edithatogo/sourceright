@@ -1,0 +1,34 @@
+{
+  "$id": "../schemas/sourceright.submission-requirements.schema.json",
+  "type": "object",
+  "required": ["schema_version", "$schema", "repo_health_target", "surfaces"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "type": "string" },
+    "repo_health_target": { "type": "number" },
+    "self_improving_controls": { "type": "object" },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "approval_required",
+          "external_submission_allowed",
+          "requirements_sources",
+          "gates",
+          "blockers"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "approval_required": { "type": "boolean" },
+          "external_submission_allowed": { "type": "boolean" },
+          "requirements_sources": { "type": "array" },
+          "gates": { "type": "object" },
+          "blockers": { "type": "array" }
+        }
+      }
+    }
+  }
+}
