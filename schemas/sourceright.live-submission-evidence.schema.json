@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "sourceright.live-submission-evidence.v1",
+  "title": "Live submission evidence",
   "type": "object",
   "required": ["$schema", "surface_id", "status", "public_url"],
   "properties": {
