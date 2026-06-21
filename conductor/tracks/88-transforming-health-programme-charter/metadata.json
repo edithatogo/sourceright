@@ -1,0 +1,20 @@
+{
+  "id": "88-transforming-health-programme-charter",
+  "status": "planned",
+  "priority": "high",
+  "owners": [
+    "future-publishing",
+    "transforming-health"
+  ],
+  "dependencies": [
+    "16-journal-workflow-integrations",
+    "87-self-improving-platform-registry"
+  ],
+  "owned_paths": [
+    "conductor/tracks/88-transforming-health-programme-charter/metadata.json",
+    "conductor/tracks/88-transforming-health-programme-charter/spec.md",
+    "conductor/tracks/88-transforming-health-programme-charter/plan.md",
+    "conductor/tracks/88-transforming-health-programme-charter/test-matrix.md",
+    "conductor/programmes/future-scholarly-communication/README.md"
+  ]
+}
