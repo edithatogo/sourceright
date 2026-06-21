@@ -1,0 +1,17 @@
+{
+  "id": "89-machine-readable-research-package",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["future-publishing", "knowledge-graph"],
+  "dependencies": [
+    "88-transforming-health-programme-charter",
+    "14-claim-source-provenance",
+    "16-journal-workflow-integrations"
+  ],
+  "owned_paths": [
+    "conductor/tracks/89-machine-readable-research-package/metadata.json",
+    "conductor/tracks/89-machine-readable-research-package/spec.md",
+    "conductor/tracks/89-machine-readable-research-package/plan.md",
+    "conductor/tracks/89-machine-readable-research-package/test-matrix.md"
+  ]
+}
