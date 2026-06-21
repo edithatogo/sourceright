@@ -1,0 +1,17 @@
+{
+  "id": "93-agent-first-editorial-workflow-engine",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["agentic-workflows", "editorial-governance"],
+  "dependencies": [
+    "89-machine-readable-research-package",
+    "91-journal-article-requirements-workflow",
+    "92-reporting-checklist-contract-workflow"
+  ],
+  "owned_paths": [
+    "conductor/tracks/93-agent-first-editorial-workflow-engine/metadata.json",
+    "conductor/tracks/93-agent-first-editorial-workflow-engine/spec.md",
+    "conductor/tracks/93-agent-first-editorial-workflow-engine/plan.md",
+    "conductor/tracks/93-agent-first-editorial-workflow-engine/test-matrix.md"
+  ]
+}
