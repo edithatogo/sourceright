@@ -1,0 +1,17 @@
+{
+  "id": "91-journal-article-requirements-workflow",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["journal-requirements", "agentic-workflows"],
+  "dependencies": [
+    "89-machine-readable-research-package",
+    "90-open-platform-preprint-coverage",
+    "16-journal-workflow-integrations"
+  ],
+  "owned_paths": [
+    "conductor/tracks/91-journal-article-requirements-workflow/metadata.json",
+    "conductor/tracks/91-journal-article-requirements-workflow/spec.md",
+    "conductor/tracks/91-journal-article-requirements-workflow/plan.md",
+    "conductor/tracks/91-journal-article-requirements-workflow/test-matrix.md"
+  ]
+}
