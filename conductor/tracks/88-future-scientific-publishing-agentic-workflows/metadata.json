@@ -1,0 +1,25 @@
+{
+  "id": "88-future-scientific-publishing-agentic-workflows",
+  "status": "planned",
+  "priority": "medium",
+  "owners": [
+    "journal-platforms",
+    "editorial-workflows",
+    "research-strategy"
+  ],
+  "dependencies": [
+    "16-journal-workflow-integrations",
+    "87-self-improving-platform-registry",
+    "14-claim-source-provenance",
+    "23-provider-backed-recency-evidence"
+  ],
+  "owned_paths": [
+    "conductor/tracks/88-future-scientific-publishing-agentic-workflows/metadata.json",
+    "conductor/tracks/88-future-scientific-publishing-agentic-workflows/spec.md",
+    "conductor/tracks/88-future-scientific-publishing-agentic-workflows/plan.md",
+    "conductor/tracks/88-future-scientific-publishing-agentic-workflows/research-brief.md",
+    "conductor/tracks/88-future-scientific-publishing-agentic-workflows/test-matrix.md",
+    "docs/src/future-scientific-publishing.md",
+    "docs-site/src/content/docs/future-scientific-publishing.md"
+  ]
+}
