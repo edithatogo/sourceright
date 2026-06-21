@@ -1,0 +1,16 @@
+{
+  "id": "94-reproducibility-replication-evidence",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["reproducibility", "executable-research"],
+  "dependencies": [
+    "89-machine-readable-research-package",
+    "93-agent-first-editorial-workflow-engine"
+  ],
+  "owned_paths": [
+    "conductor/tracks/94-reproducibility-replication-evidence/metadata.json",
+    "conductor/tracks/94-reproducibility-replication-evidence/spec.md",
+    "conductor/tracks/94-reproducibility-replication-evidence/plan.md",
+    "conductor/tracks/94-reproducibility-replication-evidence/test-matrix.md"
+  ]
+}
