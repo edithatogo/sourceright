@@ -1,0 +1,16 @@
+{
+  "id": "92-reporting-checklist-contract-workflow",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["reporting-guidelines", "agentic-workflows"],
+  "dependencies": [
+    "89-machine-readable-research-package",
+    "91-journal-article-requirements-workflow"
+  ],
+  "owned_paths": [
+    "conductor/tracks/92-reporting-checklist-contract-workflow/metadata.json",
+    "conductor/tracks/92-reporting-checklist-contract-workflow/spec.md",
+    "conductor/tracks/92-reporting-checklist-contract-workflow/plan.md",
+    "conductor/tracks/92-reporting-checklist-contract-workflow/test-matrix.md"
+  ]
+}
