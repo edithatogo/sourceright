@@ -1,0 +1,16 @@
+{
+  "id": "95-multi-format-presentation-reader-interaction",
+  "status": "planned",
+  "priority": "medium",
+  "owners": ["presentation-surfaces", "reader-interaction"],
+  "dependencies": [
+    "89-machine-readable-research-package",
+    "93-agent-first-editorial-workflow-engine"
+  ],
+  "owned_paths": [
+    "conductor/tracks/95-multi-format-presentation-reader-interaction/metadata.json",
+    "conductor/tracks/95-multi-format-presentation-reader-interaction/spec.md",
+    "conductor/tracks/95-multi-format-presentation-reader-interaction/plan.md",
+    "conductor/tracks/95-multi-format-presentation-reader-interaction/test-matrix.md"
+  ]
+}
