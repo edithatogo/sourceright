@@ -1,0 +1,16 @@
+{
+  "id": "96-contribution-ledger-publishing-economics",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["contribution-credit", "publishing-economics"],
+  "dependencies": [
+    "88-transforming-health-programme-charter",
+    "89-machine-readable-research-package"
+  ],
+  "owned_paths": [
+    "conductor/tracks/96-contribution-ledger-publishing-economics/metadata.json",
+    "conductor/tracks/96-contribution-ledger-publishing-economics/spec.md",
+    "conductor/tracks/96-contribution-ledger-publishing-economics/plan.md",
+    "conductor/tracks/96-contribution-ledger-publishing-economics/test-matrix.md"
+  ]
+}
