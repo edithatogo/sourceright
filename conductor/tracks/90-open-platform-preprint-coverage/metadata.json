@@ -1,0 +1,18 @@
+{
+  "id": "90-open-platform-preprint-coverage",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["journal-platforms", "preprint-platforms"],
+  "dependencies": [
+    "83-janeway-platform-reconnaissance",
+    "86-proprietary-journal-platform-matrix",
+    "87-self-improving-platform-registry"
+  ],
+  "owned_paths": [
+    "conductor/tracks/90-open-platform-preprint-coverage/metadata.json",
+    "conductor/tracks/90-open-platform-preprint-coverage/spec.md",
+    "conductor/tracks/90-open-platform-preprint-coverage/plan.md",
+    "conductor/tracks/90-open-platform-preprint-coverage/test-matrix.md",
+    "conductor/programmes/future-scholarly-communication/platform-coverage.md"
+  ]
+}
