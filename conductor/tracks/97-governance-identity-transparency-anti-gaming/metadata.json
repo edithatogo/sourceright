@@ -1,0 +1,16 @@
+{
+  "id": "97-governance-identity-transparency-anti-gaming",
+  "status": "planned",
+  "priority": "high",
+  "owners": ["governance", "research-integrity", "editorial-ai"],
+  "dependencies": [
+    "93-agent-first-editorial-workflow-engine",
+    "96-contribution-ledger-publishing-economics"
+  ],
+  "owned_paths": [
+    "conductor/tracks/97-governance-identity-transparency-anti-gaming/metadata.json",
+    "conductor/tracks/97-governance-identity-transparency-anti-gaming/spec.md",
+    "conductor/tracks/97-governance-identity-transparency-anti-gaming/plan.md",
+    "conductor/tracks/97-governance-identity-transparency-anti-gaming/test-matrix.md"
+  ]
+}
