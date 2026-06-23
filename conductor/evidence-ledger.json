@@ -548,7 +548,18 @@
         "Marketplace/Open VSX acceptance evidence is deferred to Track 69."
       ]
     },
-    "78-arxiv-upstream-requirements-reconnaissance": {
+    "77-vscode-open-vsx-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "VS Code and Open VSX publication hardening is tracked as a deferred publication lane.",
+        "The alias path is available for registry checks."
+      ],
+      "blockers": [
+        "No VSIX package, install smoke, or listing evidence is claimed here.",
+        "Open VSX publication remains deferred until demand justifies it."
+      ]
+    },    "78-arxiv-upstream-requirements-reconnaissance": {
       "category": "requirements",
       "evidence_level": "contracted",
       "allowed_claims": [

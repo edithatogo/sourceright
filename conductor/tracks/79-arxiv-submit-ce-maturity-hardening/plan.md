@@ -104,3 +104,5 @@
 - If Track 81 is ready, hand off evidence for upstream submission and
   acceptance elevation.
 - Commit all evidence docs.
+
+- [ ] Do not submit upstream. This track only documents requirements; upstream submission is handled by Track 81 after Tracks 79/80 hardening evidence packets are complete.
