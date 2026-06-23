@@ -2,7 +2,7 @@
 
 ## Goal
 
-Create and track arXiv upstream issues/PRs only after requirements and hardening gates pass and approval is recorded.
+Create and track arXiv upstream issues/PRs only after requirements and hardening maturity gates pass and approval is recorded.
 
 ## User outcome
 

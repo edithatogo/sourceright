@@ -61,4 +61,5 @@ Shared contracts, schemas, and public docs are edited serially by the lead.
 
 ## Submission Hardening
 
+- Track 72: submission requirements contracts and readiness checks.
 - Tracks 72 through 81 are the submission hardening lane.
