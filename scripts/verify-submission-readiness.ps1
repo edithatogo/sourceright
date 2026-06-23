@@ -1,3 +1,4 @@
+# $schema: submission-readiness-v1
 param(
     [string]$InventoryPath = "conductor/submission-requirements.json"
 )
