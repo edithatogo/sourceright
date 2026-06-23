@@ -35,13 +35,10 @@
 - **Glama**: Sign in to Glama, use Add Server flow with `https://github.com/edithatogo/sourceright`. Record listing URL or blocking error.
 - Document results in updated `browser-listing-verification-*.md`.
 
-### 6. [ ] Resolve GitHub Pages dot-path 404 blocker
-- Investigate GitHub Pages `/.well-known/` 404: possible causes are Starlight custom 404 handler, Jekyll `.nojekyll` bypass, or Pages static serving restriction.
-- Options to resolve:
-  a. Add `/.nojekyll` file to docs-site dist root (already present?).
-  b. Configure Astro/Starlight to serve `/.well-known/mcp/server-card.json` via a prerendered route.
-  c. Use an alternative publish URL that does not block dot paths (e.g., custom domain, raw GitHub, or GitHub release artifact).
-- Confirm live URL returns 200 with `serverInfo.version` 0.1.20.
+### 6. [x] Resolve GitHub Pages dot-path 404 blocker
+- GitHub Pages deploy artifact now preserves hidden files (`include-hidden-files: true`), so `.nojekyll` and `/.well-known/mcp/server-card.json` survive the Pages upload step.
+- The live site still needs a fresh redeploy before the public probe can flip from 404 to 200.
+- Confirm live URL returns 200 with `serverInfo.version` 0.1.20 after the next Pages deployment.
 
 ### 7. [x] conductor-review
 - Server card generation, CLI tool, script, and policy test reviewed.

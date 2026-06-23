@@ -48,6 +48,17 @@ UI at `smithery.ai/new` or contact Smithery support with the deployment error.
 Indexing requires pasting `https://github.com/edithatogo/sourceright` into
 Glama's Add Server flow while signed in.
 
+## Current live probe (2026-06-23)
+
+| Check | URL | Result |
+| --- | --- | --- |
+| Pages root | `https://edithatogo.github.io/sourceright/` | **200** |
+| Hidden-file sentinel | `https://edithatogo.github.io/sourceright/.nojekyll` | **404** |
+| Well-known card | `https://edithatogo.github.io/sourceright/.well-known/mcp/server-card.json` | **404** |
+
+This confirms the source build is correct but the published Pages artifact was
+still dropping hidden files. The Pages workflow now needs a redeploy with
+`include-hidden-files: true` before Smithery can re-scan the publish origin.
 ## Blocker status
 
 Smithery and Glama blockers in `conductor/submission-requirements.json` remain
