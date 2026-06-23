@@ -46,3 +46,5 @@
 | Fixture JSON is valid against schema | `fixtures/journal/arxiv-submit-ce-submission.json` validates against `schemas/ojs-submission-fixture.json` | Schema validation check (manual or automated) | default-CI |
 | Claim boundary documented in all evidence docs | All track evidence docs include disclaimer: fixture-backed, not arXiv-reviewed | Review of all evidence docs | default-CI |
 | Live evidence ledger entry (on completion) | `conductor/submission-packets/live-evidence.json` contains submit-ce entry with `status: "fixture_backed"` | `live-evidence.json` readback | opt-in-live |
+
+Default-CI provides the baseline submission gate coverage for this track.
