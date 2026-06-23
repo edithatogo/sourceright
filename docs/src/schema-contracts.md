@@ -65,3 +65,4 @@ requiring one.
 The sample files under `examples/workspace/.sourceright/` are intentionally
 small and deterministic. They are suitable for documentation, local CLI
 experiments, and future schema validation scripts.
+- `sourceright.submission-requirements.schema.json`: submission requirements inventories for external submission surfaces and self-improving control loops.

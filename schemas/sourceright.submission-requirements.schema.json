@@ -1,5 +1,7 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "../schemas/sourceright.submission-requirements.schema.json",
+  "title": "Submission requirements",
   "type": "object",
   "required": ["schema_version", "$schema", "repo_health_target", "surfaces"],
   "properties": {

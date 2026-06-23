@@ -1,11 +1,29 @@
 name: Submission readiness
 
 on:
+  pull_request:
+    paths:
+      - conductor/requirements.md
+      - conductor/evidence-ledger.json
+      - conductor/submission-requirements.json
+      - conductor/submission-packets/**
+      - schemas/**
+      - scripts/**
+      - .github/workflows/submission-readiness.yml
+  push:
+    branches: [main]
+    paths:
+      - conductor/requirements.md
+      - conductor/evidence-ledger.json
+      - conductor/submission-requirements.json
+      - conductor/submission-packets/**
+      - schemas/**
+      - scripts/**
+      - .github/workflows/submission-readiness.yml
   workflow_dispatch:
 
 permissions:
   contents: read
-
 jobs:
   submission-readiness:
     runs-on: windows-latest
