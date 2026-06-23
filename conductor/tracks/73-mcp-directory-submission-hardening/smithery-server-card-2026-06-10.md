@@ -41,6 +41,12 @@ Smithery requires `/.well-known/mcp/server-card.json` on the **publish URL origi
 raw GitHub and prerendered dist output are not sufficient while project Pages
 blocks dot paths.
 
+## 2026-06-23 live probe
+
+- GitHub Pages now serves `https://edithatogo.github.io/sourceright/.well-known/mcp/server-card.json` with HTTP 200.
+- Smithery publish against `https://edithatogo.github.io/sourceright/` still fails its scan with `405`.
+- The deployment log says to advertise `/.well-known/mcp/server-card.json`, which suggests Smithery is checking the origin root rather than the project subpath.
+- That keeps the publishing gate open even though the repo-side Pages fix is correct.
 ## Remaining operator steps
 
 1. Merge and deploy GitHub Pages (`pages.yml` uploads `docs-site/dist`).

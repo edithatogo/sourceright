@@ -31,7 +31,7 @@
 - CLI tool tested: `cargo run -- sourceright mcp server-card --json` produces valid SEP-1649 JSON.
 
 ### 5. [ ] Browser listing verification for Smithery and Glama
-- **Smithery**: Re-probe `https://smithery.ai/servers/edithatogo/sourceright` once server-card is reachable on Pages or alternative URL. Attempt republish with `smithery mcp publish https://edithatogo.github.io/sourceright/`. Record scan result (green/422/405).
+- **Smithery**: Re-probe `https://smithery.ai/servers/edithatogo/sourceright` once server-card is reachable on Pages or alternative URL. Republish with `smithery mcp publish https://edithatogo.github.io/sourceright/`. Current state: listing page is 200, but Smithery still returns a `405` scan failure and appears to require a root-origin static card.
 - **Glama**: Sign in to Glama, use Add Server flow with `https://github.com/edithatogo/sourceright`. Record listing URL or blocking error.
 - Document results in updated `browser-listing-verification-*.md`.
 
