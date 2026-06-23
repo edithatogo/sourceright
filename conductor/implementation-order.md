@@ -59,7 +59,6 @@ These can run in parallel when their owned paths do not overlap:
 Subagents may work in parallel only when their owned paths do not overlap.
 Shared contracts, schemas, and public docs are edited serially by the lead.
 
-## Submission Hardening
 
-- Track 72: submission requirements contracts and readiness checks.
+- Track 77: editor and registry publication hardening.
 - Tracks 72 through 81 are the submission hardening lane.
