@@ -73,6 +73,25 @@ Glama's Add Server flow while signed in.
 This confirms the source build is correct but the published Pages artifact was
 still dropping hidden files. The Pages workflow now needs a redeploy with
 `include-hidden-files: true` before Smithery can re-scan the publish origin.
+
+## 2026-06-23 browser live probe
+
+### Smithery
+
+- `smithery mcp publish https://github.com/edithatogo/sourceright -n edithatogo/sourceright`
+  still returns `422` and asks for a reachable `/.well-known/mcp/server-card.json`.
+- `smithery mcp publish https://edithatogo.github.io/sourceright/ -n edithatogo/sourceright`
+  now reaches the site but still fails the scan with `405`.
+- `smithery mcp publish dist\\sourceright-smithery-0.1.20-win32.mcpb -n edithatogo/sourceright --config-schema ...`
+  is rejected by the CLI because `--config-schema` is URL-only.
+
+### Glama
+
+- The server page and schema page are reachable.
+- The install action is still disabled and the page still reports `license - not found`.
+- Pushing a top-level `LICENSE` file did not change the immediate directory state,
+  so Glama likely needs a recrawl or manual directory refresh.
+
 ## Blocker status
 
 Smithery and Glama blockers in `conductor/submission-requirements.json` remain

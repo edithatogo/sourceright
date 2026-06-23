@@ -47,6 +47,15 @@ blocks dot paths.
 - Smithery publish against `https://edithatogo.github.io/sourceright/` still fails its scan with `405`.
 - The deployment log says to advertise `/.well-known/mcp/server-card.json`, which suggests Smithery is checking the origin root rather than the project subpath.
 - That keeps the publishing gate open even though the repo-side Pages fix is correct.
+
+## 2026-06-23 bundle and URL publish probe
+
+- `smithery mcp publish https://github.com/edithatogo/sourceright -n edithatogo/sourceright`
+  still fails the scan with `422`.
+- `smithery mcp publish dist\\sourceright-smithery-0.1.20-win32.mcpb -n edithatogo/sourceright --config-schema ...`
+  is rejected because `--config-schema` can only be used when publishing a URL.
+- The bundle path is therefore not an escape hatch for this repo's current Smithery
+  configuration.
 ## Remaining operator steps
 
 1. Merge and deploy GitHub Pages (`pages.yml` uploads `docs-site/dist`).
