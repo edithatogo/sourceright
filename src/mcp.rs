@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::fs;
-use std::io::{self, BufRead, BufWriter, Write};
+use std::io::{self, BufRead, BufWriter, Read, Write};
+use std::net::{SocketAddr, TcpListener};
 use std::path::PathBuf;
 
 use serde_json::{Map, Value, json};
@@ -38,6 +39,175 @@ pub fn serve_stdio() -> io::Result<()> {
     }
 
     Ok(())
+}
+
+/// Minimal Streamable HTTP surface for Smithery URL scans and local smoke tests.
+///
+/// Serves `GET /.well-known/mcp/server-card.json` and `POST /mcp` JSON-RPC batches.
+pub fn serve_http(listen: &str) -> io::Result<()> {
+    let addr: SocketAddr = listen
+        .parse()
+        .map_err(|error| io::Error::new(io::ErrorKind::InvalidInput, error))?;
+    let listener = TcpListener::bind(addr)?;
+    eprintln!("sourceright mcp serve-http listening on http://{addr}");
+
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                if let Err(error) = handle_http_connection(stream) {
+                    eprintln!("mcp serve-http connection error: {error}");
+                }
+            }
+            Err(error) => return Err(error),
+        }
+    }
+
+    Ok(())
+}
+
+fn handle_http_connection(mut stream: std::net::TcpStream) -> io::Result<()> {
+    let request = read_http_request(&mut stream)?;
+    let response = match request.method.as_str() {
+        "OPTIONS" => http_response(204, "text/plain", ""),
+        "GET" if request.path == "/.well-known/mcp/server-card.json" => {
+            let body = serde_json::to_string_pretty(&server_card()).expect("server card json");
+            http_response(200, "application/json; charset=utf-8", &body)
+        }
+        "GET" if request.path == "/health" => {
+            http_response(200, "application/json; charset=utf-8", r#"{"ok":true}"#)
+        }
+        "POST" if request.path == "/mcp" => handle_mcp_post(&request.body),
+        _ => http_response(404, "text/plain; charset=utf-8", "Not Found"),
+    };
+    stream.write_all(response.as_bytes())?;
+    stream.flush()?;
+    Ok(())
+}
+
+fn handle_mcp_post(body: &str) -> String {
+    let mut runtime = McpRuntime::new(default_workspace_root());
+    let mut responses = Vec::new();
+
+    match serde_json::from_str::<Value>(body.trim()) {
+        Ok(Value::Array(messages)) => {
+            for message in messages {
+                if let Some(response) = runtime.handle_message(message) {
+                    responses.push(response);
+                }
+            }
+        }
+        Ok(message) => {
+            if let Some(response) = runtime.handle_message(message) {
+                responses.push(response);
+            }
+        }
+        Err(error) => {
+            responses.push(jsonrpc_error(
+                Value::Null,
+                -32700,
+                "Parse error",
+                Some(json!({"detail": error.to_string()})),
+            ));
+        }
+    }
+
+    let body = if responses.len() == 1 {
+        serde_json::to_string(&responses[0]).expect("serialize mcp response")
+    } else {
+        serde_json::to_string(&responses).expect("serialize mcp responses")
+    };
+    http_response(200, "application/json; charset=utf-8", &body)
+}
+
+struct HttpRequest {
+    method: String,
+    path: String,
+    body: String,
+}
+
+fn read_http_request(stream: &mut std::net::TcpStream) -> io::Result<HttpRequest> {
+    let mut buffer = Vec::with_capacity(8192);
+    let mut chunk = [0_u8; 4096];
+    loop {
+        let read = stream.read(&mut chunk)?;
+        if read == 0 {
+            break;
+        }
+        buffer.extend_from_slice(&chunk[..read]);
+        if buffer.windows(4).any(|window| window == b"\r\n\r\n") {
+            break;
+        }
+        if buffer.len() > 1_048_576 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "request too large",
+            ));
+        }
+    }
+
+    let header_end = buffer
+        .windows(4)
+        .position(|window| window == b"\r\n\r\n")
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "malformed request"))?;
+    let header_bytes = &buffer[..header_end];
+    let body_bytes = &buffer[header_end + 4..];
+    let header_text = String::from_utf8_lossy(header_bytes);
+    let mut lines = header_text.lines();
+    let request_line = lines
+        .next()
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "missing request line"))?;
+    let mut request_parts = request_line.split_whitespace();
+    let method = request_parts
+        .next()
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "missing method"))?
+        .to_string();
+    let path = request_parts
+        .next()
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "missing path"))?
+        .split('?')
+        .next()
+        .unwrap_or("/")
+        .to_string();
+
+    let mut content_length = 0usize;
+    for line in lines {
+        if let Some((name, value)) = line.split_once(':')
+            && name.trim().eq_ignore_ascii_case("content-length")
+        {
+            content_length = value.trim().parse().unwrap_or(0);
+        }
+    }
+
+    let mut body = String::from_utf8_lossy(body_bytes).into_owned();
+    while body.len() < content_length {
+        let read = stream.read(&mut chunk)?;
+        if read == 0 {
+            break;
+        }
+        body.push_str(&String::from_utf8_lossy(&chunk[..read]));
+    }
+    if body.len() > content_length && content_length > 0 {
+        body.truncate(content_length);
+    }
+
+    Ok(HttpRequest {
+        method,
+        path,
+        body,
+    })
+}
+
+fn http_response(status: u16, content_type: &str, body: &str) -> String {
+    let reason = match status {
+        200 => "OK",
+        204 => "No Content",
+        404 => "Not Found",
+        _ => "OK",
+    };
+    format!(
+        "HTTP/1.1 {status} {reason}\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nConnection: close\r\nAccess-Control-Allow-Origin: *\r\n\r\n{body}",
+        body.len()
+    )
 }
 
 struct McpRuntime {
@@ -621,6 +791,14 @@ impl McpRuntime {
 }
 
 fn default_workspace_root() -> PathBuf {
+    if let Ok(path) = std::env::var("SOURCERIGHT_WORKSPACE") {
+        let path = PathBuf::from(path);
+        if path.file_name().and_then(|name| name.to_str()) == Some(".sourceright") {
+            return path;
+        }
+        return path.join(".sourceright");
+    }
+
     let cwd = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
     if cwd.file_name().and_then(|name| name.to_str()) == Some(".sourceright") {
         cwd

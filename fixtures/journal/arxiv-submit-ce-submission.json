@@ -1,0 +1,64 @@
+{
+  "$schema": "../../schemas/sourceright.arxiv-submission-fixture.schema.json",
+  "fixture_name": "arxiv-submit-ce-synthetic-001",
+  "description": "Synthetic current arXiv submit-ce submission fixture for Sourceright journal-screen platform contracts.",
+  "created": "2026-05-18T00:00:00Z",
+  "upstream_target": {
+    "repository": "https://github.com/arXiv/submit-ce",
+    "platform_generation": "current",
+    "integration_boundary": "submission source bundle to Sourceright journal-screen"
+  },
+  "submission": {
+    "submission_id": "ARXIV-CE-2026-0001",
+    "platform": "arxiv_submit_ce",
+    "manuscript_label": "source-package.tar.gz"
+  },
+  "source_bundle": {
+    "primary_tex": "main.tex",
+    "references": "references.bib",
+    "extracted_text": "We build on citation-integrity screening for preprints."
+  },
+  "csl_references": [
+    {
+      "id": "lee-2026-preprint",
+      "type": "article-journal",
+      "title": "Submission screening for preprint reference integrity",
+      "DOI": "10.1234/arxiv-2601-00001"
+    },
+    {
+      "id": "nguyen-2025-missing",
+      "type": "article-journal",
+      "title": "A preprint reference that needs metadata review"
+    }
+  ],
+  "verification_sidecar": {
+    "schema_version": "sourceright.verification.v1",
+    "references": {
+      "lee-2026-preprint": {
+        "provider_candidates": [
+          {
+            "provider": "arxiv",
+            "confidence": 0.97,
+            "retrieved_at": "2026-05-18T00:00:00Z",
+            "data": {
+              "id": "2601.00001",
+              "version": "v1",
+              "title": "Submission screening for preprint reference integrity"
+            }
+          }
+        ],
+        "review_status": "not_required"
+      },
+      "nguyen-2025-missing": {
+        "provider_candidates": [],
+        "review_status": "queued"
+      }
+    }
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "ARXIV-CE-2026-0001",
+    "platform": "arxiv_submit_ce",
+    "status": "screened_with_warnings"
+  }
+}

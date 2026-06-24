@@ -24,7 +24,9 @@ fn tag_creation_triggers_release_publishing_workflows() {
     assert!(mcp_publish.contains("workflow_run:"));
     assert!(mcp_publish.contains("workflows: [\"Release\"]"));
     assert!(runbook.contains("MCP registry workflow follows the release workflow completion"));
+    assert!(runbook.contains("scripts/verify-release-surface-refresh.ps1"));
     assert!(publishing.contains("follows the release workflow completion"));
+    assert!(publishing.contains("scripts/verify-release-surface-refresh.ps1"));
     assert!(release.contains("release-status.ps1"));
     assert!(crate_publish.contains("release-status.ps1"));
     assert!(mcp_publish.contains("release-status.ps1"));

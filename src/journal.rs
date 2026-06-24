@@ -16,6 +16,8 @@ pub struct JournalScreeningRequest {
 pub enum JournalPlatform {
     GenericWebhook,
     Ojs,
+    ArxivSubmitCe,
+    ArxivSubmissionCore,
     ScholarOne,
     EditorialManager,
     EJournalPress,
@@ -183,5 +185,43 @@ mod tests {
         );
 
         assert_eq!(report.status, JournalScreeningStatus::BlockedForExtraction);
+    }
+
+    #[test]
+    fn arxiv_platform_variants_reuse_journal_screening_contract() {
+        let csl = CslDocument {
+            items: vec![CslItem {
+                id: "preprint-2026".to_string(),
+                item_type: "article".to_string(),
+                title: Some("Submission screening for preprints".to_string()),
+                doi: Some("10.48550/arxiv.2601.00001".to_string()),
+                extra: BTreeMap::new(),
+            }],
+        };
+        let mut sidecar = VerificationSidecar::empty();
+        sidecar.references.insert(
+            "preprint-2026".to_string(),
+            ReferenceVerification::default(),
+        );
+
+        for platform in [
+            JournalPlatform::ArxivSubmitCe,
+            JournalPlatform::ArxivSubmissionCore,
+        ] {
+            let report = screen_journal_submission(
+                JournalScreeningRequest {
+                    submission_id: "ARXIV-SUB-1".to_string(),
+                    platform: platform.clone(),
+                    manuscript_label: "source.tar.gz".to_string(),
+                },
+                &csl,
+                &sidecar,
+            );
+
+            assert_eq!(report.schema_version, JOURNAL_SCREENING_SCHEMA_VERSION);
+            assert_eq!(report.platform, platform);
+            assert!(!report.editorial_summary.contains("AI-generated"));
+            assert!(!report.editorial_summary.contains("AI authorship"));
+        }
     }
 }

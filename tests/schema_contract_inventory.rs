@@ -70,3 +70,21 @@ fn schema_contract_docs_name_every_public_schema() {
         );
     }
 }
+
+#[test]
+fn mcp_status_schema_matches_current_stdio_status_contract() {
+    let schema: serde_json::Value =
+        serde_json::from_str(&read("schemas/sourceright.mcp-status.schema.json"))
+            .expect("MCP status schema should parse");
+
+    assert_eq!(schema["properties"]["server_mode"]["const"], "stdio");
+    assert_eq!(schema["properties"]["transport"]["const"], "stdio");
+    assert!(
+        schema["required"]
+            .as_array()
+            .expect("required fields should be an array")
+            .iter()
+            .any(|field| field == "implemented_apply_gated_write_surfaces"),
+        "MCP status schema should require apply-gated write surfaces"
+    );
+}

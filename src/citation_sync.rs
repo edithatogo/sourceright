@@ -114,6 +114,12 @@ pub fn run_citation_sync(
     workspace: &SourcerightWorkspace,
     config: CitationSyncConfig,
 ) -> Result<CitationSyncReport, CitationSyncError> {
+    if config.apply && !config.preview && config.remote_fixture_path.is_none() {
+        return Err(CitationSyncError::Configuration(
+            "live citation-sync apply is not implemented; use --preview for live Zotero reads or --remote-fixture for fixture-backed apply".to_string(),
+        ));
+    }
+
     let csl = load_csl(workspace)?;
     let remote_records = load_remote_records(&config)?;
     let actions = plan_sync_actions(&csl, &remote_records);
@@ -122,12 +128,9 @@ pub fn run_citation_sync(
     let mut audit_log_path = None;
     if config.apply && !config.preview {
         applied = true;
-        let audit_path = config.audit_log_path.unwrap_or_else(|| {
-            workspace
-                .root
-                .join(".sourceright")
-                .join("zotero-sync-audit.jsonl")
-        });
+        let audit_path = config
+            .audit_log_path
+            .unwrap_or_else(|| workspace.root.join("zotero-sync-audit.jsonl"));
         if let Some(parent) = audit_path.parent() {
             fs::create_dir_all(parent)?;
         }
@@ -623,7 +626,10 @@ fn count_actions(actions: &[CitationSyncAction]) -> (usize, usize, usize, usize,
             CitationSyncAction::Conflict {
                 suggestion: CitationSyncSuggestionKind::ReviewRequired,
                 ..
-            } => review_required_count += 1,
+            } => {
+                conflict_count += 1;
+                review_required_count += 1;
+            }
             CitationSyncAction::Create {
                 suggestion: CitationSyncSuggestionKind::Conflict,
                 ..
@@ -923,7 +929,7 @@ mod tests {
         )
         .expect("run sync");
 
-        assert_eq!(report.conflict_count, 0);
+        assert_eq!(report.conflict_count, 1);
         assert_eq!(report.review_required_count, 1);
         assert!(matches!(
             report.actions[0],
@@ -970,6 +976,38 @@ mod tests {
     }
 
     #[test]
+    fn apply_default_audit_log_stays_inside_workspace_root() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        let remote_path = tempdir.path().join("remote.json");
+        fs::write(&remote_path, "[]").expect("write remote");
+
+        let report = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: false,
+                apply: true,
+                audit_log_path: None,
+                remote_fixture_path: Some(remote_path),
+                zotero_api_url: None,
+                zotero_api_key: None,
+                zotero_library_id: None,
+                zotero_library_type: None,
+            },
+        )
+        .expect("run sync");
+
+        let expected_audit_log = workspace.root.join("zotero-sync-audit.jsonl");
+        let expected_audit_log_text = expected_audit_log.display().to_string();
+        assert_eq!(
+            report.audit_log_path.as_deref(),
+            Some(expected_audit_log_text.as_str())
+        );
+        assert!(expected_audit_log.exists());
+        assert!(!workspace.root.join(".sourceright").exists());
+    }
+
+    #[test]
     fn conflicts_are_reported_without_silent_overwrite() {
         let tempdir = sample_workspace();
         let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
@@ -995,7 +1033,7 @@ mod tests {
         )
         .expect("run sync");
 
-        assert_eq!(report.conflict_count, 0);
+        assert_eq!(report.conflict_count, 1);
         assert_eq!(report.review_required_count, 1);
         assert!(matches!(
             report.actions[0],
@@ -1268,6 +1306,33 @@ mod tests {
                 ..
             } if zotero_key == "ABC123DEF456"
         ));
+    }
+
+    #[test]
+    fn live_apply_without_fixture_is_rejected_until_writeback_exists() {
+        let tempdir = sample_workspace();
+        let workspace = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+
+        let error = run_citation_sync(
+            &workspace,
+            CitationSyncConfig {
+                preview: false,
+                apply: true,
+                audit_log_path: None,
+                remote_fixture_path: None,
+                zotero_api_url: Some("https://api.zotero.example".to_string()),
+                zotero_api_key: Some("secret".to_string()),
+                zotero_library_id: Some("123".to_string()),
+                zotero_library_type: Some("users".to_string()),
+            },
+        )
+        .expect_err("live apply should be rejected");
+
+        assert!(
+            error
+                .to_string()
+                .contains("live citation-sync apply is not implemented")
+        );
     }
 
     #[test]

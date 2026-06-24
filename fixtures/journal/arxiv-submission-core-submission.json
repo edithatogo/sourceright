@@ -1,0 +1,87 @@
+{
+  "$schema": "../../schemas/sourceright.arxiv-submission-fixture.schema.json",
+  "fixture_name": "arxiv-submission-core-synthetic-001",
+  "description": "Synthetic legacy arXiv submission-core fixture for Sourceright journal-screen platform contracts.",
+  "created": "2026-05-18T00:00:00Z",
+  "upstream_target": {
+    "repository": "https://github.com/arXiv/arxiv-submission-core",
+    "platform_generation": "legacy",
+    "integration_boundary": "submission event/domain payload to Sourceright journal-screen"
+  },
+  "submission": {
+    "submission_id": "ARXIV-LEGACY-2026-0001",
+    "platform": "arxiv_submission_core",
+    "manuscript_label": "legacy-source.tar.gz"
+  },
+  "submission_events": [
+    {
+      "event_type": "submission_created",
+      "event_id": "evt-legacy-1"
+    },
+    {
+      "event_type": "source_processed",
+      "event_id": "evt-legacy-2"
+    }
+  ],
+  "csl_references": [
+    {
+      "id": "patel-2026-legacy",
+      "type": "article-journal",
+      "title": "Legacy submission event screening for preprint archives",
+      "DOI": "10.1234/arxiv-2601-00002"
+    },
+    {
+      "id": "rivera-2024-conflict",
+      "type": "article-journal",
+      "title": "Conflicting metadata in preprint submission references",
+      "DOI": "10.1234/arxiv-2401-00003"
+    }
+  ],
+  "verification_sidecar": {
+    "schema_version": "sourceright.verification.v1",
+    "references": {
+      "patel-2026-legacy": {
+        "provider_candidates": [
+          {
+            "provider": "arxiv",
+            "confidence": 0.96,
+            "retrieved_at": "2026-05-18T00:00:00Z",
+            "data": {
+              "id": "2601.00002",
+              "version": "v1",
+              "title": "Legacy submission event screening for preprint archives"
+            }
+          }
+        ],
+        "review_status": "not_required"
+      },
+      "rivera-2024-conflict": {
+        "provider_candidates": [
+          {
+            "provider": "arxiv",
+            "confidence": 0.88,
+            "retrieved_at": "2026-05-18T00:00:00Z",
+            "data": {
+              "id": "2401.00003",
+              "version": "v2",
+              "title": "Different preprint metadata title"
+            }
+          }
+        ],
+        "conflicts": [
+          {
+            "field": "title",
+            "message": "arXiv fixture title differs from canonical CSL title"
+          }
+        ],
+        "review_status": "not_required"
+      }
+    }
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "ARXIV-LEGACY-2026-0001",
+    "platform": "arxiv_submission_core",
+    "status": "screened_with_warnings"
+  }
+}

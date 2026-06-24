@@ -50,6 +50,17 @@ fn smithery_mcpb_manifest_template_matches_stdio_runtime_contract() {
     assert_eq!(manifest["server"]["mcp_config"]["args"], json!(["mcp"]));
     assert_eq!(manifest["tools_generated"], json!(true));
     assert_eq!(manifest["prompts_generated"], json!(true));
+    assert!(
+        manifest["user_config"]["workspace_root"]["type"] == json!("directory"),
+        "Smithery stdio deploy expects MCPB user_config for configSchema extraction"
+    );
+
+    let server_card: Value =
+        serde_json::from_str(&read_repo_file("mcp/server-card.json")).expect("server card json");
+    assert_eq!(
+        server_card["tools"].as_array().map(|items| items.len()),
+        Some(14)
+    );
 
     let command = manifest["server"]["mcp_config"]["command"]
         .as_str()
@@ -71,13 +82,15 @@ fn smithery_builder_and_docs_preserve_prepared_not_accepted_boundary() {
     assert!(builder.contains("sourceright-smithery-$version-$Platform.mcpb"));
     assert!(builder.contains("manifest.template.json"));
     assert!(builder.contains("mcp"));
+    assert!(builder.contains("server-card.json"));
+    assert!(builder.contains(r#"$manifest["tools"] = $serverCard["tools"]"#));
 
     assert!(publishing.contains("smithery/mcpb/manifest.template.json"));
     assert!(publishing.contains("scripts/build-smithery-mcpb.ps1"));
     assert!(publishing.contains("not accepted-listing evidence"));
 
-    assert!(release_status.contains("| Smithery | prepared |"));
-    assert!(release_status.contains("No accepted Smithery listing recorded"));
+    assert!(release_status.contains("| Smithery | submitted |"));
+    assert!(release_status.contains("not publicly_accepted"));
     assert!(track_review.contains("Smithery MCPB readiness is implemented"));
 }
 

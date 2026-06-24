@@ -22,6 +22,7 @@ fn dependency_policy_uses_cargo_deny_for_advisories_bans_and_sources_plus_cargo_
 
     assert!(release_check.contains("cargo deny check advisories bans sources"));
     assert!(release_check.contains("cargo tree -d --locked --target x86_64-unknown-linux-gnu"));
+    assert!(release_check.contains("verify-release-surface-refresh.ps1"));
     assert!(deny.contains("wit-bindgen"));
     assert!(publishing.contains("cargo deny check advisories bans sources"));
     assert!(publishing.contains("cargo tree -d --locked --target x86_64-unknown-linux-gnu"));

@@ -17,6 +17,7 @@ fn release_status_artifacts_are_emitted_by_all_tag_triggered_publish_workflows()
     assert!(publish_crate.contains("release-status.md"));
     assert!(publish_mcp.contains("release-status.md"));
     assert!(runbook.contains("release-status.md"));
+    assert!(runbook.contains("scripts/verify-release-surface-refresh.ps1"));
     assert!(docs_page.contains("single human-readable summary"));
     assert!(docs_site_page.contains("single human-readable summary"));
 }

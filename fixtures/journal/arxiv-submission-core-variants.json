@@ -1,0 +1,77 @@
+{
+  "$schema": "../../schemas/sourceright.arxiv-submission-fixture.schema.json",
+  "fixture_name": "arxiv-submission-core-variant-suite",
+  "description": "Synthetic submission-core variant suite covering accepted, held, rejected, malformed, and unknown-event cases.",
+  "created": "2026-05-18T00:00:00Z",
+  "upstream_target": {
+    "repository": "https://github.com/arXiv/arxiv-submission-core",
+    "platform_generation": "legacy",
+    "integration_boundary": "submission event/domain payload to Sourceright journal-screen"
+  },
+  "submission": {
+    "submission_id": "ARXIV-LEGACY-VARIANTS",
+    "platform": "arxiv_submission_core",
+    "manuscript_label": "legacy-variant-suite.tar.gz"
+  },
+  "submission_events": [
+    {
+      "case": "accepted",
+      "event_type": "submission_accepted",
+      "expected_status": "screened"
+    },
+    {
+      "case": "held",
+      "event_type": "submission_on_hold",
+      "expected_status": "screened_with_warnings"
+    },
+    {
+      "case": "rejected",
+      "event_type": "submission_rejected",
+      "expected_status": "screened_with_errors"
+    },
+    {
+      "case": "malformed",
+      "event_type": "",
+      "expected_status": "screened_with_errors"
+    },
+    {
+      "case": "unknown-event",
+      "event_type": "legacy_custom_event",
+      "expected_status": "screened_with_warnings"
+    }
+  ],
+  "csl_references": [
+    {
+      "id": "legacy-variant-2026",
+      "type": "article-journal",
+      "title": "Legacy submission-core variant fixture",
+      "DOI": "10.1234/arxiv-2601-02000"
+    }
+  ],
+  "verification_sidecar": {
+    "schema_version": "sourceright.verification.v1",
+    "references": {
+      "legacy-variant-2026": {
+        "provider_candidates": [
+          {
+            "provider": "arxiv",
+            "confidence": 0.96,
+            "retrieved_at": "2026-05-18T00:00:00Z",
+            "data": {
+              "id": "2601.02000",
+              "version": "v1",
+              "title": "Legacy submission-core variant fixture"
+            }
+          }
+        ],
+        "review_status": "not_required"
+      }
+    }
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "ARXIV-LEGACY-VARIANTS",
+    "platform": "arxiv_submission_core",
+    "status": "screened_with_warnings"
+  }
+}

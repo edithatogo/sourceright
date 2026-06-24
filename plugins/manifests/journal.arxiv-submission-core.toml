@@ -1,0 +1,22 @@
+[plugin]
+id = "journal.arxiv-submission-core"
+name = "arXiv submission-core integration"
+category = "journal"
+status = "planned_adapter"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Fixture-backed screening contract for legacy arXiv submission-core workflows."
+
+[auth]
+required = true
+mode = "platform_session_or_api"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["submission_events", "sourceright.reference_report.v1"]
+writes = ["sourceright.journal_screening.v1"]

@@ -1,0 +1,22 @@
+[plugin]
+id = "journal.arxiv-submit-ce"
+name = "arXiv submit-ce integration"
+category = "journal"
+status = "planned_adapter"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "open"
+summary = "Fixture-backed screening contract for the current arXiv submit-ce submission platform."
+
+[auth]
+required = true
+mode = "platform_session_or_api"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["submission_source_bundle", "sourceright.reference_report.v1"]
+writes = ["sourceright.journal_screening.v1"]

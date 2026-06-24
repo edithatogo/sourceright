@@ -41,6 +41,12 @@ impl SourcerightWorkspace {
     /// Derives the workspace location for a document or directory.
     pub fn for_document_or_dir(path: impl AsRef<Path>) -> Self {
         let path = path.as_ref();
+        if path.file_name().and_then(|name| name.to_str()) == Some(".sourceright")
+            || path.join("references.csl.json").exists()
+        {
+            return Self::from_root(path);
+        }
+
         let root = if path.extension().is_some() {
             let name = path
                 .file_name()
@@ -57,6 +63,24 @@ impl SourcerightWorkspace {
     /// Constructs a workspace from an explicit root directory.
     pub fn from_root(root: impl Into<PathBuf>) -> Self {
         let root = root.into();
+        Self {
+            references_csl_json: root.join("references.csl.json"),
+            verification_sidecar_json: root.join("references.verification.json"),
+            review_queue_jsonl: root.join("review-queue.jsonl"),
+            exports_dir: root.join("exports"),
+            root,
+        }
+    }
+
+    /// Constructs a workspace from an explicit root or an existing child workspace.
+    ///
+    /// Resolution is intentionally shallow and deterministic: a path named
+    /// `.sourceright` is used literally; a path containing `references.csl.json`
+    /// is used literally; a direct child `.sourceright` is used only when it
+    /// already exists; otherwise the supplied path remains the workspace root.
+    /// This does not search ancestors or create an implicit nested workspace.
+    pub fn from_root_or_parent(root: impl Into<PathBuf>) -> Self {
+        let root = normalize_workspace_root(root.into());
         Self {
             references_csl_json: root.join("references.csl.json"),
             verification_sidecar_json: root.join("references.verification.json"),
@@ -247,6 +271,17 @@ impl SourcerightWorkspace {
     }
 }
 
+fn normalize_workspace_root(root: PathBuf) -> PathBuf {
+    if root.file_name().and_then(|name| name.to_str()) == Some(".sourceright")
+        || root.join("references.csl.json").exists()
+    {
+        return root;
+    }
+
+    let nested = root.join(".sourceright");
+    if nested.is_dir() { nested } else { root }
+}
+
 fn write_text_if_missing(path: &Path, value: &str) -> Result<(), WorkspaceError> {
     if path.exists() {
         return Ok(());
@@ -318,6 +353,36 @@ mod tests {
         assert_eq!(report.summary.total_references, 0);
         assert_eq!(resource.uri, "sourceright://reports/reference-integrity");
         assert_eq!(resource.mime_type, "application/json");
+    }
+
+    #[test]
+    fn from_root_or_parent_accepts_parent_directory_when_sourceright_workspace_exists() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let explicit = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        explicit.init().expect("init workspace");
+
+        let from_parent = SourcerightWorkspace::from_root_or_parent(tempdir.path());
+
+        assert_eq!(from_parent.root, explicit.root);
+        assert_eq!(
+            from_parent.references_csl_json,
+            explicit.references_csl_json
+        );
+    }
+
+    #[test]
+    fn from_root_keeps_explicit_root_literal() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let explicit = SourcerightWorkspace::for_document_or_dir(tempdir.path());
+        explicit.init().expect("init workspace");
+
+        let from_parent = SourcerightWorkspace::from_root(tempdir.path());
+
+        assert_eq!(from_parent.root, tempdir.path());
+        assert_eq!(
+            from_parent.references_csl_json,
+            tempdir.path().join("references.csl.json")
+        );
     }
 
     #[test]

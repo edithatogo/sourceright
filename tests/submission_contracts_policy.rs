@@ -225,6 +225,65 @@ fn arxiv_submission_tracks_are_granular_and_high_maturity() {
 }
 
 #[test]
+fn host_plugin_submission_tracks_are_scaffolded() {
+    let tracks = read("conductor/tracks.md");
+    let order = read("conductor/implementation-order.md");
+    let ledger = read("conductor/evidence-ledger.json");
+    let contract = read("conductor/submission-contracts.md");
+
+    for (id, marker) in [
+        (
+            "83-vscode-open-vsx-submission-and-acceptance",
+            "83 VS Code and Open VSX submission and acceptance",
+        ),
+        (
+            "84-claude-desktop-package-submission-and-acceptance",
+            "84 Claude Desktop package submission and acceptance",
+        ),
+        (
+            "85-codex-app-package-submission-and-acceptance",
+            "85 Codex app package submission and acceptance",
+        ),
+        (
+            "86-github-copilot-extension-submission-and-acceptance",
+            "86 GitHub Copilot extension submission and acceptance",
+        ),
+        (
+            "87-gemini-cli-extension-submission-and-acceptance",
+            "87 Gemini CLI extension submission and acceptance",
+        ),
+        (
+            "88-qwen-cli-extension-submission-and-acceptance",
+            "88 Qwen CLI extension submission and acceptance",
+        ),
+        (
+            "89-opencode-plugin-submission-and-acceptance",
+            "89 OpenCode plugin submission and acceptance",
+        ),
+        (
+            "90-cline-mcp-marketplace-submission-and-acceptance",
+            "90 Cline MCP Marketplace submission and acceptance",
+        ),
+    ] {
+        let base = format!("conductor/tracks/{id}");
+        assert!(Path::new(&format!("{base}/metadata.json")).exists());
+        assert!(Path::new(&format!("{base}/spec.md")).exists());
+        assert!(Path::new(&format!("{base}/plan.md")).exists());
+        assert!(Path::new(&format!("{base}/test-matrix.md")).exists());
+        assert!(Path::new(&format!("{base}/requirements-evidence.md")).exists());
+        assert!(Path::new(&format!("{base}/submission-drafts.md")).exists());
+        assert!(tracks.contains(marker), "tracks.md missing {marker}");
+        assert!(ledger.contains(id), "ledger missing {id}");
+    }
+
+    assert!(order.contains("Host Plugin Submission and Acceptance"));
+    assert!(order.contains("Track 83"));
+    assert!(order.contains("Track 90"));
+    assert!(contract.contains("OpenCode"));
+    assert!(contract.contains("Cline MCP Marketplace"));
+}
+
+#[test]
 fn submission_requirements_inventory_is_machine_readable_and_complete() {
     let inventory = read_json("conductor/submission-requirements.json");
     let contract = read("conductor/submission-contracts.md");
@@ -277,6 +336,8 @@ fn submission_requirements_inventory_is_machine_readable_and_complete() {
         "gemini-cli-extensions",
         "qwen-cli-extensions",
         "vscode-open-vsx",
+        "opencode",
+        "cline",
     ];
 
     for required in required_surfaces {
@@ -541,6 +602,8 @@ fn local_submission_packets_exist_for_each_surface_family() {
         "gemini-cli-extensions",
         "qwen-cli-extensions",
         "vscode-open-vsx",
+        "opencode",
+        "cline",
     ];
 
     for required in required_packet_ids {
