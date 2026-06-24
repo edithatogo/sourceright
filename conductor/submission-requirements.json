@@ -1,0 +1,616 @@
+{
+  "$schema": "../schemas/sourceright.submission-requirements.schema.json",
+  "schema_version": "sourceright.submission_requirements.v1",
+  "repo_health_target": 9.5,
+  "generated_for": "tracks-72-90",
+  "claim_rule": "A surface may not move beyond its lowest unmet evidence gate.",
+  "approval_rule": "External issues, pull requests, marketplace listings, and registry submissions require explicit approval before execution.",
+  "evidence_gates": [
+    "requirements_searched",
+    "contracted",
+    "hardened_local_package",
+    "submission_ready",
+    "submitted",
+    "publicly_accepted"
+  ],
+  "self_improving_controls": {
+    "readiness_script": "scripts/verify-submission-readiness.ps1",
+    "ci_workflow": ".github/workflows/submission-readiness.yml",
+    "policy_test": "tests/submission_contracts_policy.rs",
+    "packet_manifest": "conductor/submission-packets/manifest.json",
+    "health_target": "Repo health must stay at least 9.5 before external submission claims.",
+    "agents_and_skills": "Use Conductor tracks as the self-improving work router; add host-specific agents or skills only after a package path is proven and has a stable workflow contract."
+  },
+  "surfaces": [
+    {
+      "id": "official-mcp-registry",
+      "name": "Official MCP Registry",
+      "category": "mcp-directory",
+      "owning_tracks": [
+        "56",
+        "72",
+        "73"
+      ],
+      "current_state": "accepted-refresh-required",
+      "required_artifact": "server.json plus versioned OCI image and stdio transcript proof",
+      "submission_target": "Official MCP Registry",
+      "requirements_sources": [
+        {
+          "label": "MCP Registry server metadata requirements",
+          "kind": "official-registry-docs",
+          "url_or_path": "https://registry.modelcontextprotocol.io/",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Keep server metadata, Cargo version, OCI labels, and registry listing aligned.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": true,
+        "publicly_accepted": true
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [],
+      "maintenance_notes": [
+        "Refresh evidence before any future version claim."
+      ]
+    },
+    {
+      "id": "smithery",
+      "name": "Smithery",
+      "category": "mcp-directory",
+      "owning_tracks": [
+        "57",
+        "72",
+        "73"
+      ],
+      "current_state": "accepted",
+      "required_artifact": "Release-derived .mcpb bundle and install smoke",
+      "submission_target": "Smithery registry",
+      "requirements_sources": [
+        {
+          "label": "Smithery publishing requirements",
+          "kind": "official-registry-docs",
+          "url_or_path": "https://smithery.ai/",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Build from release binary, validate MCPB manifest, run local install smoke, then submit listing.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": true,
+        "publicly_accepted": true
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [],
+      "maintenance_notes": [
+        "Listing accepted 2026-06-10: https://smithery.ai/servers/edithatogo/sourceright",
+        "Release 263ee636-5d24-4010-9dd9-e199d4f7b848 (MCPB stdio, win32 0.1.20).",
+        "Registry gateway install smoke recorded 2026-06-10 (smithery mcp add --client cursor; see smithery-install-smoke-2026-06-10.md)."
+      ]
+    },
+    {
+      "id": "glama",
+      "name": "Glama",
+      "category": "mcp-directory",
+      "owning_tracks": [
+        "27",
+        "72",
+        "73"
+      ],
+      "current_state": "accepted",
+      "required_artifact": "glama.json plus repository metadata and listing/API verification",
+      "submission_target": "Glama MCP directory",
+      "requirements_sources": [
+        {
+          "label": "Glama MCP server metadata requirements",
+          "kind": "official-registry-docs",
+          "url_or_path": "https://glama.ai/",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Validate glama.json, public license metadata, server discovery, and accepted listing evidence.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": true,
+        "publicly_accepted": true
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [],
+      "maintenance_notes": [
+        "Listing accepted 2026-06-10: https://glama.ai/mcp/servers/c7qsbvekc1",
+        "API evidence: https://glama.ai/api/mcp/v1/servers/c7qsbvekc1 (namespace edithatogo, slug sourceright)."
+      ]
+    },
+    {
+      "id": "zotero",
+      "name": "Zotero",
+      "category": "citation-manager",
+      "owning_tracks": [
+        "58",
+        "72",
+        "74"
+      ],
+      "current_state": "hardened-local-adapter",
+      "required_artifact": "CLI/Web API adapter package or explicit .xpi decision",
+      "submission_target": "GitHub Release, Zotero forum/listing path, or Zotero plugin path if chosen",
+      "requirements_sources": [
+        {
+          "label": "Zotero plugin and extension distribution requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://www.zotero.org/support/dev/client_coding/plugin_development",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Preview/apply/audit semantics, disposable-library smoke, install notes, and no .xpi claim unless a real .xpi exists.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "endnote",
+      "name": "EndNote",
+      "category": "citation-manager",
+      "owning_tracks": [
+        "59",
+        "72",
+        "74"
+      ],
+      "current_state": "hardened-local-file-handoff",
+      "required_artifact": "ENW/RIS handoff package and reparse proof",
+      "submission_target": "GitHub Release/docs distribution; EndNote plugin path only if a real plugin exists",
+      "requirements_sources": [
+        {
+          "label": "EndNote import/export or plugin requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://endnote.com/",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "File-based export/import proof unless a separate installable EndNote plugin contract is created.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "ojs-pkp",
+      "name": "OJS/PKP",
+      "category": "journal-platform",
+      "owning_tracks": [
+        "60",
+        "72",
+        "75"
+      ],
+      "current_state": "hardened-local-package",
+      "required_artifact": "Installable OJS generic plugin package",
+      "submission_target": "PKP Plugin Gallery or GitHub Release distribution",
+      "requirements_sources": [
+        {
+          "label": "PKP Plugin Gallery and OJS plugin requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://docs.pkp.sfu.ca/dev/plugin-guide/",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Package build, permissions/settings docs, compatibility matrix, fixture smoke, optional disposable OJS smoke.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [
+        "No PKP Plugin Gallery acceptance evidence."
+      ],
+      "maintenance_notes": [
+        "Fixture + plugin archive smoke recorded 2026-06-10 (ojs-colab-smoke-2026-06-10.md).",
+        "Disposable Docker OJS install remains operator-gated when Docker is available."
+      ]
+    },
+    {
+      "id": "arxiv-submit-ce",
+      "name": "arXiv submit-ce",
+      "category": "upstream-repository",
+      "owning_tracks": [
+        "71",
+        "78",
+        "79",
+        "81"
+      ],
+      "current_state": "submitted",
+      "required_artifact": "Upstream-compatible module or documented integration patch",
+      "submission_target": "arXiv/submit-ce issue or pull request",
+      "requirements_sources": [
+        {
+          "label": "arXiv submit-ce repository requirements",
+          "kind": "upstream-repository",
+          "url_or_path": "https://github.com/arXiv/submit-ce",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Requirements recon, schema/API drift checks, expanded fixtures, security/no-writeback review, maintainer-ready issue/PR packet.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": true,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [],
+      "maintenance_notes": [
+        "Issue submitted 2026-06-09: https://github.com/arXiv/submit-ce/issues/72",
+        "Accepted status requires maintainer response, merged PR, or public acceptance URL."
+      ]
+    },
+    {
+      "id": "arxiv-submission-core",
+      "name": "arXiv submission-core",
+      "category": "upstream-repository",
+      "owning_tracks": [
+        "71",
+        "78",
+        "80",
+        "81"
+      ],
+      "current_state": "submitted",
+      "required_artifact": "Legacy-compatible module or documented integration patch",
+      "submission_target": "arXiv/arxiv-submission-core issue or pull request",
+      "requirements_sources": [
+        {
+          "label": "arXiv submission-core repository requirements",
+          "kind": "upstream-repository",
+          "url_or_path": "https://github.com/arXiv/arxiv-submission-core",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Requirements recon, legacy event/domain compatibility, migration-safe fixtures, security/no-writeback review, maintainer-ready issue/PR packet.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": true,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [],
+      "maintenance_notes": [
+        "Issue submitted 2026-06-09: https://github.com/arXiv/arxiv-submission-core/issues/88",
+        "Accepted status requires maintainer response, merged PR, or public acceptance URL."
+      ]
+    },
+    {
+      "id": "claude-cowork",
+      "name": "Claude Cowork / Claude Desktop",
+      "category": "ai-client",
+      "owning_tracks": [
+        "65",
+        "72",
+        "76",
+        "84"
+      ],
+      "current_state": "submission_ready",
+      "required_artifact": "Host-specific package only if supported; otherwise no-package decision and MCP config smoke",
+      "submission_target": "Claude/Cowork package path or documented no-package decision",
+      "requirements_sources": [
+        {
+          "label": "Claude Desktop MCP configuration and package requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://docs.anthropic.com/",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Transcript smoke and no plugin claim unless a host-specific package/listing exists.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "codex-app",
+      "name": "Codex app",
+      "category": "ai-client",
+      "owning_tracks": [
+        "65",
+        "72",
+        "76",
+        "85"
+      ],
+      "current_state": "submission_ready",
+      "required_artifact": "Codex-compatible package only if supported; otherwise no-package decision and MCP config smoke",
+      "submission_target": "Codex app/plugin registry or documented no-package decision",
+      "requirements_sources": [
+        {
+          "label": "Codex app MCP/plugin requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://developers.openai.com/",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Target build requirements, MCP config smoke, and no Codex-plugin claim without listing evidence.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "category": "ai-client",
+      "owning_tracks": [
+        "64",
+        "65",
+        "72",
+        "76",
+        "86"
+      ],
+      "current_state": "submission_ready",
+      "required_artifact": "Copilot extension/package or coding-agent setup evidence",
+      "submission_target": "GitHub Marketplace/Copilot extension path if available",
+      "requirements_sources": [
+        {
+          "label": "GitHub Copilot extension or coding agent requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://docs.github.com/copilot",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Entitlement/settings proof for coding-agent claims; separate package/listing evidence before extension claims.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "gemini-cli-extensions",
+      "name": "Gemini CLI extensions",
+      "category": "ai-client",
+      "owning_tracks": [
+        "72",
+        "76",
+        "87"
+      ],
+      "current_state": "submission_ready",
+      "required_artifact": "Gemini CLI extension package or no-package decision",
+      "submission_target": "Gemini CLI extension repository/registry path",
+      "requirements_sources": [
+        {
+          "label": "Gemini CLI extension requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://github.com/google-gemini/gemini-cli",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Official extension schema, install smoke, MCP/CLI invocation proof, and issue/PR or registry evidence.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "qwen-cli-extensions",
+      "name": "Qwen CLI extensions",
+      "category": "ai-client",
+      "owning_tracks": [
+        "72",
+        "76",
+        "88"
+      ],
+      "current_state": "submission_ready",
+      "required_artifact": "Qwen CLI extension package or no-package decision",
+      "submission_target": "Qwen CLI extension repository/registry path",
+      "requirements_sources": [
+        {
+          "label": "Qwen CLI extension requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://github.com/QwenLM/qwen-code",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Official extension schema, install smoke, MCP/CLI invocation proof, and issue/PR or registry evidence.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "vscode-open-vsx",
+      "name": "VS Code / Open VSX",
+      "category": "editor-extension",
+      "owning_tracks": [
+        "66",
+        "72",
+        "77",
+        "83"
+      ],
+      "current_state": "submission_ready",
+      "required_artifact": "VSIX extension package",
+      "submission_target": "VS Code Marketplace and Open VSX",
+      "requirements_sources": [
+        {
+          "label": "VS Code Marketplace publishing requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://code.visualstudio.com/api/working-with-extensions/publishing-extension",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        },
+        {
+          "label": "Open VSX publishing requirements",
+          "kind": "official-host-docs",
+          "url_or_path": "https://github.com/eclipse/openvsx/wiki/Publishing-Extensions",
+          "status": "searched",
+          "retrieved_at": "2026-05-18"
+        }
+      ],
+      "package_contract": "Workspace Trust, diagnostics fixture, preview-first writes, VSIX build, install/uninstall smoke, listing evidence.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [],
+      "maintenance_notes": [
+        "VSIX built 2026-06-10 (Track 83); publish via scripts/publish-host-submissions.ps1 when VSCE_PAT/OVSX_PAT are set."
+      ]
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "category": "ai-client",
+      "owning_tracks": [
+        "72",
+        "76",
+        "89"
+      ],
+      "current_state": "submission_ready",
+      "required_artifact": "OpenCode MCP config, npm plugin, or OCX registry bundle",
+      "submission_target": "OpenCode npm plugin array and/or OCX registry",
+      "requirements_sources": [
+        {
+          "label": "OpenCode MCP and plugin documentation",
+          "kind": "official-host-docs",
+          "url_or_path": "https://open-code.ai/en/docs/plugins",
+          "status": "searched",
+          "retrieved_at": "2026-06-10"
+        }
+      ],
+      "package_contract": "MCP stdio launch, plugin load smoke, npm/OCX publish evidence, and no OpenCode plugin claim without listing URL.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": []
+    },
+    {
+      "id": "cline",
+      "name": "Cline MCP Marketplace",
+      "category": "mcp-directory",
+      "owning_tracks": [
+        "72",
+        "76",
+        "90"
+      ],
+      "current_state": "submitted",
+      "required_artifact": "Cline marketplace submission assets and install proof",
+      "submission_target": "cline/mcp-marketplace GitHub issue",
+      "requirements_sources": [
+        {
+          "label": "Cline MCP Marketplace submission template",
+          "kind": "official-host-docs",
+          "url_or_path": "https://github.com/cline/mcp-marketplace",
+          "status": "searched",
+          "retrieved_at": "2026-06-10"
+        }
+      ],
+      "package_contract": "400x400 logo, README/llms-install.md install smoke, marketplace issue URL, and accepted listing evidence.",
+      "gates": {
+        "requirements_searched": true,
+        "contracted": true,
+        "hardened_local_package": true,
+        "submission_ready": true,
+        "submitted": true,
+        "publicly_accepted": false
+      },
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "blockers": [],
+      "maintenance_notes": [
+        "Marketplace issue submitted 2026-06-10: https://github.com/cline/mcp-marketplace/issues/1764"
+      ]
+    }
+  ]
+}

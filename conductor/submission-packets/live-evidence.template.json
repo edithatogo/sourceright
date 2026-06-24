@@ -1,0 +1,57 @@
+{
+  "$schema": "sourceright.live-submission-evidence.v1",
+  "schema_version": "sourceright.live_submission_evidence.v1",
+  "generated_for": "remaining-live-submission-blockers",
+  "evidence": [
+    {
+      "surface_id": "smithery",
+      "packet_id": "mcp-directories",
+      "status": "accepted",
+      "url": "https://smithery.ai/server/REPLACE_WITH_LISTING",
+      "recorded_at": "2026-05-19",
+      "evidence_type": "public_listing",
+      "claim_boundary": "Accepted only after the listing is public and installable.",
+      "next_gate": "publicly_accepted"
+    },
+    {
+      "surface_id": "glama",
+      "packet_id": "mcp-directories",
+      "status": "accepted",
+      "url": "https://glama.ai/mcp/servers/REPLACE_WITH_LISTING",
+      "recorded_at": "2026-05-19",
+      "evidence_type": "public_listing",
+      "claim_boundary": "Accepted only after the listing or API result identifies Sourceright.",
+      "next_gate": "publicly_accepted"
+    },
+    {
+      "surface_id": "ojs-pkp",
+      "packet_id": "journal-platforms",
+      "status": "submitted",
+      "url": "https://github.com/pkp/plugin-gallery/pull/REPLACE_WITH_PR",
+      "recorded_at": "2026-05-19",
+      "evidence_type": "gallery_pr",
+      "claim_boundary": "Submitted is not accepted; PKP acceptance needs a merged PR or public listing.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "arxiv-submit-ce",
+      "packet_id": "arxiv-upstream",
+      "status": "submitted",
+      "url": "https://github.com/arXiv/submit-ce/issues/REPLACE_WITH_ISSUE",
+      "recorded_at": "2026-05-19",
+      "evidence_type": "issue_url",
+      "claim_boundary": "Issue submission is not upstream acceptance.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "arxiv-submission-core",
+      "packet_id": "arxiv-upstream",
+      "status": "submitted",
+      "url": "https://github.com/arXiv/arxiv-submission-core/issues/REPLACE_WITH_ISSUE",
+      "recorded_at": "2026-05-19",
+      "evidence_type": "issue_url",
+      "claim_boundary": "Issue submission is not upstream acceptance.",
+      "next_gate": "submitted"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "sourceright.live-submission-evidence.v1",
+  "schema_version": "sourceright.live_submission_evidence.v1",
+  "generated_for": "host-plugin-submissions-2026-06-10",
+  "evidence": [
+    {
+      "surface_id": "smithery",
+      "packet_id": "mcp-directories",
+      "status": "accepted",
+      "url": "https://smithery.ai/servers/edithatogo/sourceright",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "public_listing",
+      "claim_boundary": "Public listing, MCPB release 263ee636-5d24-4010-9dd9-e199d4f7b848, and registry gateway install smoke (smithery mcp add --client cursor; bundle cache + running stdio server) are recorded in smithery-install-smoke-2026-06-10.md.",
+      "next_gate": "publicly_accepted"
+    },
+    {
+      "surface_id": "glama",
+      "packet_id": "mcp-directories",
+      "status": "accepted",
+      "url": "https://glama.ai/api/mcp/v1/servers/c7qsbvekc1",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "api_result",
+      "claim_boundary": "Glama API lists namespace edithatogo, slug sourceright, id c7qsbvekc1. Slug-path listing URLs still 404; use id-based listing URL for public proof.",
+      "next_gate": "publicly_accepted"
+    },
+    {
+      "surface_id": "ojs-pkp",
+      "packet_id": "journal-platforms",
+      "status": "verified",
+      "url": "conductor/tracks/75-journal-platform-publication-hardening/ojs-colab-smoke-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "Fixture-backed journal-screen and plugin archive smoke passed; PKP Gallery acceptance and disposable Docker OJS install are not claimed.",
+      "next_gate": "submission_ready"
+    },
+    {
+      "surface_id": "arxiv-submit-ce",
+      "packet_id": "arxiv-upstream",
+      "status": "submitted",
+      "url": "https://github.com/arXiv/submit-ce/issues/72",
+      "recorded_at": "2026-06-09",
+      "evidence_type": "issue_url",
+      "claim_boundary": "Issue submission is not upstream acceptance.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "arxiv-submission-core",
+      "packet_id": "arxiv-upstream",
+      "status": "submitted",
+      "url": "https://github.com/arXiv/arxiv-submission-core/issues/88",
+      "recorded_at": "2026-06-09",
+      "evidence_type": "issue_url",
+      "claim_boundary": "Issue submission is not upstream acceptance.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "vscode-open-vsx",
+      "packet_id": "vscode-open-vsx",
+      "status": "verified",
+      "url": "conductor/tracks/83-vscode-open-vsx-submission-and-acceptance/vsix-submission-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "VSIX 0.1.20 built with feature-complete commands; GitHub Release asset at https://github.com/edithatogo/sourceright/releases/download/v0.1.20/edithatogo.sourceright-0.1.20.vsix; Marketplace/Open VSX publish awaits VSCE_PAT/OVSX_PAT.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "cline",
+      "packet_id": "mcp-directories",
+      "status": "submitted",
+      "url": "https://github.com/cline/mcp-marketplace/issues/1764",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "issue_url",
+      "claim_boundary": "Marketplace issue filed; accepted listing not claimed until maintainer approval.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "claude-cowork",
+      "packet_id": "ai-client-extensions",
+      "status": "verified",
+      "url": "conductor/tracks/84-claude-desktop-package-submission-and-acceptance/claude-mcpb-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "Claude Desktop MCPB + stdio config packaged; GitHub Release asset at https://github.com/edithatogo/sourceright/releases/download/v0.1.20/sourceright-claude-desktop-0.1.20-win32.mcpb; connector marketplace acceptance not claimed.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "codex-app",
+      "packet_id": "ai-client-extensions",
+      "status": "verified",
+      "url": "conductor/tracks/85-codex-app-package-submission-and-acceptance/package-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "Codex MCP config npm package in repo; tarball on GitHub Release v0.1.20; no Codex marketplace listing claimed.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "github-copilot",
+      "packet_id": "ai-client-extensions",
+      "status": "verified",
+      "url": "conductor/tracks/86-github-copilot-extension-submission-and-acceptance/package-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "Copilot MCP config + VSIX integration documented; no GitHub Marketplace extension listing claimed.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "gemini-cli-extensions",
+      "packet_id": "ai-client-extensions",
+      "status": "verified",
+      "url": "conductor/tracks/87-gemini-cli-extension-submission-and-acceptance/package-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "gemini-extension.json package in repo; geminicli.com gallery publish optional.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "qwen-cli-extensions",
+      "packet_id": "ai-client-extensions",
+      "status": "verified",
+      "url": "conductor/tracks/88-qwen-cli-extension-submission-and-acceptance/package-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "qwen-extension.json package in repo; tarball on GitHub Release v0.1.20; npm registry publish optional.",
+      "next_gate": "submitted"
+    },
+    {
+      "surface_id": "opencode",
+      "packet_id": "ai-client-extensions",
+      "status": "verified",
+      "url": "conductor/tracks/89-opencode-plugin-submission-and-acceptance/package-2026-06-10.md",
+      "recorded_at": "2026-06-10",
+      "evidence_type": "live_smoke_log",
+      "claim_boundary": "OpenCode plugin + MCP config template in repo; tarball on GitHub Release v0.1.20; npm registry publish optional.",
+      "next_gate": "submitted"
+    }
+  ]
+}

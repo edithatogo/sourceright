@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sourceright.submission-packets.v1",
+  "title": "Sourceright submission packet manifest",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schema_version",
+    "generated_for",
+    "approval_rule",
+    "packets"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "const": "sourceright.submission-packets.v1" },
+    "schema_version": { "const": "sourceright.submission_packets.v1" },
+    "generated_for": { "type": "string", "minLength": 1 },
+    "approval_rule": { "type": "string", "minLength": 1 },
+    "packets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/packet" }
+    }
+  },
+  "$defs": {
+    "packet": {
+      "type": "object",
+      "required": [
+        "id",
+        "path",
+        "owning_tracks",
+        "surfaces",
+        "status",
+        "approval_required",
+        "local_validation",
+        "blockers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "owning_tracks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "surfaces": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["blocked", "active-control", "ready-local", "submitted", "accepted"]
+        },
+        "approval_required": { "type": "boolean" },
+        "local_validation": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

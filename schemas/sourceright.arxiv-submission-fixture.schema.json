@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.arxiv-submission-fixture.schema.json",
+  "title": "Sourceright arXiv submission fixture",
+  "type": "object",
+  "required": [
+    "$schema",
+    "fixture_name",
+    "description",
+    "created",
+    "upstream_target",
+    "submission",
+    "csl_references",
+    "verification_sidecar",
+    "expected_screening_report"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": {
+      "const": "../../schemas/sourceright.arxiv-submission-fixture.schema.json"
+    },
+    "fixture_name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "created": { "type": "string", "format": "date-time" },
+    "upstream_target": {
+      "type": "object",
+      "required": [
+        "repository",
+        "platform_generation",
+        "integration_boundary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "repository": { "type": "string", "format": "uri" },
+        "platform_generation": {
+          "enum": ["current", "legacy"]
+        },
+        "integration_boundary": { "type": "string", "minLength": 1 }
+      }
+    },
+    "submission": {
+      "type": "object",
+      "required": ["submission_id", "platform", "manuscript_label"],
+      "additionalProperties": false,
+      "properties": {
+        "submission_id": { "type": "string", "minLength": 1 },
+        "platform": {
+          "enum": ["arxiv_submit_ce", "arxiv_submission_core"]
+        },
+        "manuscript_label": { "type": "string", "minLength": 1 }
+      }
+    },
+    "csl_references": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "object" }
+    },
+    "verification_sidecar": {
+      "type": "object",
+      "required": ["schema_version", "references"],
+      "additionalProperties": true,
+      "properties": {
+        "schema_version": { "const": "sourceright.verification.v1" },
+        "references": { "type": "object" }
+      }
+    },
+    "expected_screening_report": {
+      "type": "object",
+      "required": ["schema_version", "submission_id", "platform", "status"],
+      "additionalProperties": true,
+      "properties": {
+        "schema_version": { "const": "sourceright.journal_screening.v1" },
+        "submission_id": { "type": "string", "minLength": 1 },
+        "platform": {
+          "enum": ["arxiv_submit_ce", "arxiv_submission_core"]
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "screened",
+            "blocked_for_extraction",
+            "screened_with_warnings",
+            "screened_with_errors"
+          ]
+        }
+      }
+    }
+  }
+}

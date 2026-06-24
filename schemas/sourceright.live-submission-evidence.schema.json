@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sourceright.live-submission-evidence.v1",
+  "title": "Sourceright live submission evidence",
+  "type": "object",
+  "required": ["$schema", "schema_version", "generated_for", "evidence"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "const": "sourceright.live-submission-evidence.v1" },
+    "schema_version": { "const": "sourceright.live_submission_evidence.v1" },
+    "generated_for": { "type": "string", "minLength": 1 },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence_item" }
+    }
+  },
+  "$defs": {
+    "evidence_item": {
+      "type": "object",
+      "required": [
+        "surface_id",
+        "packet_id",
+        "status",
+        "url",
+        "recorded_at",
+        "evidence_type",
+        "claim_boundary",
+        "next_gate"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "surface_id": { "type": "string", "minLength": 1 },
+        "packet_id": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["verified", "submitted", "accepted", "rejected", "deferred"]
+        },
+        "url": { "type": "string", "minLength": 1 },
+        "recorded_at": { "type": "string", "format": "date" },
+        "evidence_type": {
+          "type": "string",
+          "enum": [
+            "public_listing",
+            "api_result",
+            "issue_url",
+            "pull_request_url",
+            "gallery_pr",
+            "live_smoke_log",
+            "submission_receipt"
+          ]
+        },
+        "claim_boundary": { "type": "string", "minLength": 1 },
+        "next_gate": {
+          "type": "string",
+          "enum": ["submission_ready", "submitted", "publicly_accepted"]
+        }
+      }
+    }
+  }
+}

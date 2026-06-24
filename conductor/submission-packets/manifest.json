@@ -1,0 +1,124 @@
+{
+  "$schema": "sourceright.submission-packets.v1",
+  "schema_version": "sourceright.submission_packets.v1",
+  "generated_for": "tracks-73-82",
+  "approval_rule": "External issues, pull requests, marketplace listings, and registry submissions require explicit approval before execution.",
+  "packets": [
+    {
+      "id": "mcp-directories",
+      "path": "conductor/submission-packets/mcp-directories.md",
+      "owning_tracks": ["73", "90"],
+      "surfaces": ["official-mcp-registry", "smithery", "glama", "cline"],
+      "status": "ready-local",
+      "approval_required": true,
+      "local_validation": [
+        "validate server.json, glama.json, and Smithery MCPB metadata",
+        "build Smithery MCPB from a release binary",
+        "run stdio MCP transcript smoke",
+        "record directory URL, version/date, and install metadata"
+      ],
+      "blockers": [
+        "Glama listing/API evidence missing"
+      ]
+    },
+    {
+      "id": "citation-managers",
+      "path": "conductor/submission-packets/citation-managers.md",
+      "owning_tracks": ["74"],
+      "surfaces": ["zotero", "endnote"],
+      "status": "ready-local",
+      "approval_required": true,
+      "local_validation": [
+        "decide Zotero adapter package, XPI, or both",
+        "run disposable Zotero library preview/apply/audit smoke",
+        "run EndNote ENW/RIS reparse and import proof",
+        "publish release notes that separate adapter/file handoff from listing claims"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "journal-platforms",
+      "path": "conductor/submission-packets/journal-platforms.md",
+      "owning_tracks": ["75"],
+      "surfaces": ["ojs-pkp"],
+      "status": "ready-local",
+      "approval_required": true,
+      "local_validation": [
+        "build OJS package",
+        "record OJS compatibility matrix",
+        "run fixture smoke and optional disposable OJS instance smoke",
+        "prepare Gallery submission draft with rollback/support notes"
+      ],
+      "blockers": [
+        "live or disposable instance compatibility proof missing",
+        "PKP Plugin Gallery PR or accepted listing evidence missing"
+      ]
+    },
+    {
+      "id": "arxiv-upstream",
+      "path": "conductor/submission-packets/arxiv-upstream.md",
+      "owning_tracks": ["78", "79", "80", "81"],
+      "surfaces": ["arxiv-submit-ce", "arxiv-submission-core"],
+      "status": "submitted",
+      "approval_required": true,
+      "local_validation": [
+        "complete Track 78 requirements matrix",
+        "complete Track 79 current-platform fixtures and no-writeback proof",
+        "complete Track 80 legacy event/domain fixtures and no-writeback proof",
+        "complete Track 81 readiness review"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "ai-client-extensions",
+      "path": "conductor/submission-packets/ai-client-extensions.md",
+      "owning_tracks": ["76", "84", "85", "86", "87", "88", "89"],
+      "surfaces": [
+        "claude-cowork",
+        "codex-app",
+        "github-copilot",
+        "gemini-cli-extensions",
+        "qwen-cli-extensions",
+        "opencode"
+      ],
+      "status": "ready-local",
+      "approval_required": true,
+      "local_validation": [
+        "record no-package decision or package scaffold per host",
+        "run MCP transcript smoke",
+        "run Gemini/Qwen install smoke when package exists",
+        "record Copilot entitlement/settings proof before enabled claims"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "vscode-open-vsx",
+      "path": "conductor/submission-packets/vscode-open-vsx.md",
+      "owning_tracks": ["77", "83"],
+      "surfaces": ["vscode-open-vsx"],
+      "status": "ready-local",
+      "approval_required": true,
+      "local_validation": [
+        "create thin VSIX scaffold",
+        "prove Workspace Trust behavior",
+        "run diagnostics fixture coverage",
+        "run package build and install/uninstall smoke"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "agent-workflow",
+      "path": "conductor/submission-packets/agent-workflow.md",
+      "owning_tracks": ["82"],
+      "surfaces": [],
+      "status": "active-control",
+      "approval_required": true,
+      "local_validation": [
+        "only add host-specific skills after stable package workflow contracts",
+        "only add CI workflows for deterministic checks with small path triggers",
+        "keep submission mutations approval-gated"
+      ],
+      "blockers": []
+    }
+  ]
+}
