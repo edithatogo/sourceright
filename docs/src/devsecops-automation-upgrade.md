@@ -10,7 +10,7 @@ and TypeScript surfaces.
 | Rust CI | `.github/workflows/ci.yml` runs `cargo fmt --all --check`, `cargo clippy --all-targets -- -D warnings`, tests, locked check, command smokes, `cargo-deny`, `cargo-machete`, Taplo, and `typos --config typos.toml`. |
 | Rust caching | Rust jobs use `Swatinem/rust-cache@v2` pinned by commit SHA. |
 | TypeScript CI | The docs-site job runs `npm run typecheck`, which executes `tsc --noEmit` against the strict Astro `tsconfig.json`. |
-| Coverage | `.github/workflows/coverage.yml` runs `cargo llvm-cov --branch --fail-under-lines 85` and uploads `coverage-status.md`. |
+| Coverage | `.github/workflows/coverage.yml` runs `cargo llvm-cov --fail-under-lines 85` and uploads `coverage-status.md`. |
 | Renovate | `renovate.json` groups routine Rust crates, GitHub Actions/MCP release automation, and docs-site Node modules separately while keeping majors manual. |
 | Release notes | `.github/release-drafter.yml` and `.github/workflows/release-drafter.yml` maintain a draft changelog by PR label and refresh on `main` and `v*.*.*` tag pushes. |
 

@@ -134,7 +134,7 @@ default branch (`main`):
 | `TOML lint` | Yes | Blocks invalid Cargo, plugin, workflow-adjacent, and configuration TOML files through Taplo. |
 | `Pages` | Yes | Docs-site build and deployment check. |
 | `release-dry-run` | Recommended | Validates release packaging without publishing. |
-| `Coverage` | Recommended | Runs `cargo llvm-cov` summary-only with minimum 85% branch coverage. |
+| `Coverage` | Recommended | Runs `cargo llvm-cov` minimum 85% line coverage. |
 | `Robustness` | Recommended | Runs fixture-backed benchmark and stress tests. |
 
 **Bypass rules**: Allow repository admins and CODEOWNERS to bypass if
@@ -196,7 +196,7 @@ before the evidence ledger permits those claims.
 
 Decision: **No third-party coverage service (Codecov, Coveralls) is used.**
 
-Coverage is computed locally via `cargo llvm-cov --branch` in the
+Coverage is computed locally via `cargo llvm-cov` in the
 `.github/workflows/coverage.yml` workflow on a weekly scheduled trigger
 (Tuesdays at 04:37 UTC) and on `workflow_dispatch`. The summary is uploaded as
 a CI artifact (`coverage-summary`) rather than posted to a public dashboard.

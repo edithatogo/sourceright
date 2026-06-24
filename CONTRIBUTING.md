@@ -16,7 +16,7 @@ cargo package --locked
 cargo publish --dry-run --locked
 cargo deny check advisories bans sources duplicates
 typos --config typos.toml
-cargo llvm-cov --locked --all-targets --branch --fail-under-lines 85
+cargo llvm-cov --locked --all-targets --fail-under-lines 85
 cargo mutants --workspace
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 85
 ```

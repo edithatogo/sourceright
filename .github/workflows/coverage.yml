@@ -29,7 +29,7 @@ jobs:
         run: cargo install cargo-llvm-cov --locked
       - name: Generate coverage
         shell: bash
-        run: cargo llvm-cov --locked --all-targets --branch --fail-under-lines 85 | tee coverage-report.txt
+        run: cargo llvm-cov --locked --all-targets --fail-under-lines 85 | tee coverage-report.txt
       - name: Generate coverage status
         run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/coverage-status.ps1 -CoverageMinimum 85 -CoverageMetric line -Outcome passed -OutputPath coverage-status.md
       - name: Upload coverage summary

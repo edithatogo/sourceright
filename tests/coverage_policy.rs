@@ -13,7 +13,7 @@ fn coverage_threshold_is_enforced_in_ci_and_hooks() {
     let contributing = read("CONTRIBUTING.md");
     let readme = read("README.md");
 
-    assert!(ci.contains("--branch"));
+    assert!(!ci.contains("--branch"));
     assert!(ci.contains("--fail-under-lines 85"));
     assert!(hook.contains("CoverageMinimum 85"));
     assert!(pre_commit.contains("CoverageMinimum 85"));

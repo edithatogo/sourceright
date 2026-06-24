@@ -30,6 +30,6 @@ the summary text report.
 ## Caveat
 
 The Windows toolchain in this environment cannot currently produce a fresh
-`cargo llvm-cov --branch` report, so the repo documents the line-coverage
+`cargo llvm-cov` report, so the repo documents the line-coverage
 threshold and enforces it in workflow configuration even when the numeric report
 itself must be generated in another supported environment.

@@ -124,7 +124,7 @@ npx --yes markdownlint-cli2@0.18.1 README.md "docs/**/*.md" ".github/**/*.md"
 lychee --config lychee.toml --offline README.md docs/src/**/*.md docs/import-manifest.md
 actionlint
 zizmor --min-severity medium .github/workflows
-cargo llvm-cov --locked --all-targets --branch --fail-under-lines 85
+cargo llvm-cov --locked --all-targets --fail-under-lines 85
 cargo mutants --workspace
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 85
 ```
