@@ -20,6 +20,8 @@
       "enum": [
         "generic_webhook",
         "ojs",
+        "arxiv_submit_ce",
+        "arxiv_submission_core",
         "scholar_one",
         "editorial_manager",
         "e_journal_press",

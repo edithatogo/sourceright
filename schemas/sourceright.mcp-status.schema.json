@@ -11,18 +11,23 @@
     "available_resources",
     "available_prompts",
     "implemented_read_only_surfaces",
+    "implemented_apply_gated_write_surfaces",
     "resource_uris",
     "message"
   ],
   "additionalProperties": false,
   "properties": {
-    "server_mode": { "const": "not-implemented" },
-    "transport": { "const": "none" },
+    "server_mode": { "const": "stdio" },
+    "transport": { "const": "stdio" },
     "server_started": { "const": false },
     "available_tools": { "type": "integer", "minimum": 0 },
     "available_resources": { "type": "integer", "minimum": 0 },
     "available_prompts": { "type": "integer", "minimum": 0 },
     "implemented_read_only_surfaces": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "implemented_apply_gated_write_surfaces": {
       "type": "array",
       "items": { "type": "string" }
     },

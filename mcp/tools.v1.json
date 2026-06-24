@@ -48,7 +48,34 @@
       "read_only": true,
       "input": {
         "workspace": ".sourceright",
-        "platform": "generic-webhook"
+        "submission_id": "SUB-1",
+        "manuscript_label": "manuscript.docx",
+        "platform": "generic-webhook",
+        "platform_description": "Journal screening contract label, not a live platform integration.",
+        "platform_examples": [
+          "generic-webhook",
+          "ojs",
+          "arxiv-submit-ce",
+          "arxiv-submission-core"
+        ],
+        "platform_enum": [
+          "generic-webhook",
+          "generic_webhook",
+          "ojs",
+          "arxiv-submit-ce",
+          "arxiv_submit_ce",
+          "arxiv-submission-core",
+          "arxiv_submission_core",
+          "scholarone",
+          "scholar_one",
+          "editorial-manager",
+          "editorial_manager",
+          "ejournalpress",
+          "e-journal-press",
+          "e_journal_press",
+          "manuscript-manager",
+          "manuscript_manager"
+        ]
       },
       "output_contract": "sourceright.journal_screening.v1"
     },

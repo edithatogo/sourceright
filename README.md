@@ -78,7 +78,7 @@ writing audit logs or remote fixture snapshots.
 - crates.io package after release dry runs pass.
 - OCI MCP image metadata for the official MCP Registry via `server.json` +
   `Dockerfile` labels.
-- Smithery readiness (Streamable HTTP first; MCPB/local path until then).
+- Smithery readiness for the local stdio/MCPB path; hosted HTTP transport remains deferred.
 - Glama ownership metadata via `glama.json`.
 - `release-status.md` artifacts from the release and tag-triggered publish workflows.
 - `coverage-status.md` artifacts from the scheduled coverage workflow.
