@@ -8,6 +8,30 @@ platforms.
 
 - Keep the contract platform-neutral where possible.
 - Preserve the editorial screening boundary.
+- Treat agentic workflow outputs as decision-support evidence, not editorial decisions.
+
+## Agentic submission management
+
+Track 88 extends journal integrations from citation screening toward a structured submission-management and validation layer.
+
+The target submission package can include article text, references, key claims, datasets, code, ethics metadata, reporting checklists, author contributions, conflicts, AI-use declarations, review history, and persistent identifiers.
+
+| Stage | Sourceright-facing role |
+| --- | --- |
+| Pre-submission guidance | Check scope, article type, reporting guideline, ethics, data, code, contribution, funding, and AI-use readiness. |
+| Structured intake | Normalize manuscript text, references, claims, datasets, code, protocols, checklists, conflicts, and identifiers. |
+| Triage and routing | Classify submissions by topic, method, article type, computational dependency, ethical risk, and reporting requirements. |
+| Reviewer selection support | Provide conflict-aware reviewer suggestions while preserving editor authority. |
+| Technical validation | Run citation, source, recency, link, data, code, reporting, and integrity checks. |
+| Briefing packs | Summarize claims, methods, datasets, code, reporting status, missing items, versions, and review history. |
+| Decision support | Synthesize reviews and draft decision letters without taking the final decision. |
+| Post-publication monitoring | Monitor broken links, data or code access, corrections, retractions, public comments, and update triggers. |
+
+Editors remain accountable for editorial decisions, reviewers remain accountable for reviews, and authors remain responsible for submissions.
+
+## Future research object models
+
+Journal adapters should be compatible with living evidence records, executable research objects, refereed preprint network papers, machine-actionable claim graphs, and experimental community-governed research ledgers. The detailed roadmap is in the Future scientific publishing page and Track 88.
 
 ## OJS plugin source skeleton
 

@@ -30,6 +30,7 @@
 - [Citation Manager Integrations](citation-manager-integrations.md)
 - [Zotero Plugin Install](zotero-plugin-install.md)
 - [Journal Workflow Integrations](journal-integrations.md)
+- [Future Scientific Publishing](future-scientific-publishing.md)
 - [Policy Engine](policy-engine.md)
 - [Style And Recency](style-and-recency.md)
 - [Publishing Plan](publishing.md)
