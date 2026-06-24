@@ -196,13 +196,13 @@ before the evidence ledger permits those claims.
 
 Decision: **No third-party coverage service (Codecov, Coveralls) is used.**
 
-Coverage is computed locally via `cargo llvm-cov --summary-only --branch` in the
+Coverage is computed locally via `cargo llvm-cov --branch` in the
 `.github/workflows/coverage.yml` workflow on a weekly scheduled trigger
 (Tuesdays at 04:37 UTC) and on `workflow_dispatch`. The summary is uploaded as
 a CI artifact (`coverage-summary`) rather than posted to a public dashboard.
 
 **Rationale**: Public coverage history is not needed at this stage. The
-`--fail-under-branches 85` threshold enforces coverage quality in CI without
+`--fail-under-lines 85` threshold enforces coverage quality in CI without
 exposing intermediate data to external services. If a public coverage badge is
 desired later, the existing artifact can be consumed by a badge service or a
 new workflow step can upload to Codecov.

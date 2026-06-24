@@ -4,7 +4,8 @@ Coverage is treated as a hard quality floor, not an informal dashboard number.
 
 ## Policy
 
-- The repository target is above 85 percent branch coverage.
+- The repository target is above 85 percent line coverage, with branch data
+  still collected in CI.
 - The same floor is referenced in CI, the pre-commit hook, and contributor
   guidance.
 - Coverage checks should remain deterministic and should not become flaky
@@ -29,6 +30,6 @@ the summary text report.
 ## Caveat
 
 The Windows toolchain in this environment cannot currently produce a fresh
-`cargo llvm-cov --branch` report, so the repo documents the threshold and enforces it in
-workflow configuration even when the numeric report itself must be generated in
-another supported environment.
+`cargo llvm-cov --branch` report, so the repo documents the line-coverage
+threshold and enforces it in workflow configuration even when the numeric report
+itself must be generated in another supported environment.

@@ -14,12 +14,12 @@ fn coverage_threshold_is_enforced_in_ci_and_hooks() {
     let readme = read("README.md");
 
     assert!(ci.contains("--branch"));
-    assert!(ci.contains("--fail-under-branches 85"));
+    assert!(ci.contains("--fail-under-lines 85"));
     assert!(hook.contains("CoverageMinimum 85"));
     assert!(pre_commit.contains("CoverageMinimum 85"));
     assert!(verify.contains("CoverageMinimum = 85"));
     assert!(verify.contains("cargo llvm-cov"));
-    assert!(verify.contains("--fail-under-branches $CoverageMinimum"));
+    assert!(verify.contains("--fail-under-lines $CoverageMinimum"));
     assert!(contributing.contains("85 percent floor"));
-    assert!(readme.contains("Coverage stays gated above 85 percent branch coverage"));
+    assert!(readme.contains("Coverage stays gated above 85 percent line coverage"));
 }

@@ -3,6 +3,7 @@
 [![Release](https://github.com/edithatogo/sourceright/actions/workflows/release.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/release.yml)
 [![Publish crate](https://github.com/edithatogo/sourceright/actions/workflows/publish-crate.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/publish-crate.yml)
 [![Coverage](https://github.com/edithatogo/sourceright/actions/workflows/coverage.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/coverage.yml)
+[![smithery badge](https://smithery.ai/badge/edithatogo/sourceright)](https://smithery.ai/servers/edithatogo/sourceright)
 
 Sourceright is Rust-first reference triage and verification infrastructure for academic writing, agent workflows, and future legal citation work. It is currently a technical preview suitable for developer evaluation and pilot conversations.
 
@@ -123,12 +124,12 @@ npx --yes markdownlint-cli2@0.18.1 README.md "docs/**/*.md" ".github/**/*.md"
 lychee --config lychee.toml --offline README.md docs/src/**/*.md docs/import-manifest.md
 actionlint
 zizmor --min-severity medium .github/workflows
-cargo llvm-cov --locked --all-targets --summary-only --branch --fail-under-branches 85
+cargo llvm-cov --locked --all-targets --branch --fail-under-lines 85
 cargo mutants --workspace
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 85
 ```
 
-Coverage stays gated above 85 percent branch coverage in CI and in the checked-in pre-commit
+Coverage stays gated above 85 percent line coverage in CI and in the checked-in pre-commit
 hook.
 
 Release and publish workflows each emit a `release-status.md` artifact so the

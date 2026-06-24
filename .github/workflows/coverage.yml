@@ -29,9 +29,9 @@ jobs:
         run: cargo install cargo-llvm-cov --locked
       - name: Generate coverage
         shell: bash
-        run: cargo llvm-cov --locked --all-targets --summary-only --branch --fail-under-branches 85 | tee coverage-report.txt
+        run: cargo llvm-cov --locked --all-targets --branch --fail-under-lines 85 | tee coverage-report.txt
       - name: Generate coverage status
-        run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/coverage-status.ps1 -CoverageMinimum 85 -CoverageMetric branch -Outcome passed -OutputPath coverage-status.md
+        run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/coverage-status.ps1 -CoverageMinimum 85 -CoverageMetric line -Outcome passed -OutputPath coverage-status.md
       - name: Upload coverage summary
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
