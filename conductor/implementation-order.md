@@ -36,6 +36,30 @@ These can run in parallel when their owned paths do not overlap:
 - Track 66: VS Code extension packaging.
 - Track 67: Microsoft Word add-in packaging.
 - Track 68: LibreOffice extension packaging.
+- Track 71: arXiv submission platform adapters. Start with shared schema,
+  CLI/MCP, registry, and overclaim dependencies, then split current `submit-ce`
+  and legacy `arxiv-submission-core` fixture lanes.
+
+## Submission Hardening
+
+These tracks convert prepared/deferred surfaces into mature submission packages.
+They are dependency-first: shared requirements and claim boundaries must land
+before host package lanes submit externally.
+
+1. Track 72: submission requirements contracts.
+2. Track 73: MCP directory submission hardening.
+3. Track 74: citation-manager publication hardening.
+4. Track 75: journal-platform publication hardening.
+5. Track 76: AI client extension publication hardening.
+6. Track 77: VS Code and Open VSX publication hardening.
+
+arXiv is more granular and runs behind Track 72 plus Track 71:
+
+1. Track 78: arXiv upstream requirements reconnaissance.
+2. Track 79: arXiv submit-ce maturity hardening.
+3. Track 80: arXiv submission-core maturity hardening.
+4. Track 81: arXiv upstream submission and acceptance.
+5. Track 82: self-improving submission and health loop.
 
 ## Publication And Proof
 
@@ -45,6 +69,28 @@ These can run in parallel when their owned paths do not overlap:
 - Track 57 closes Smithery.
 - Track 54 proves demos.
 - Track 69 records marketplace submission evidence for host packages.
+- Track 70 refreshes release-surface evidence before publication wording changes.
+- Track 81 records arXiv upstream submission and acceptance evidence after
+  requirements, maturity, stability, testing, and approval gates pass.
+- Track 82 validates the submission inventory and repo-health target before
+  submission-related wording changes.
+
+## Host Plugin Submission and Acceptance
+
+Tracks 83–90 convert hardened local MCP/config artifacts into feature-complete
+host packages and approval-gated public submissions. Run after Track 82.
+
+1. Track 83: VS Code and Open VSX submission and acceptance.
+2. Track 84: Claude Desktop package submission and acceptance.
+3. Track 85: Codex app package submission and acceptance.
+4. Track 86: GitHub Copilot extension submission and acceptance.
+5. Track 87: Gemini CLI extension submission and acceptance.
+6. Track 88: Qwen CLI extension submission and acceptance.
+7. Track 89: OpenCode plugin submission and acceptance.
+8. Track 90: Cline MCP Marketplace submission and acceptance.
+
+Tracks 87–89 can run in parallel when extension scaffolds do not overlap.
+Track 83 should land before Track 86 if a shared VS Code/Copilot MCP surface is reused.
 
 ## Parallelization Rule
 

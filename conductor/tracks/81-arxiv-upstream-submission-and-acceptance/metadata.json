@@ -1,0 +1,16 @@
+{
+  "id": "81-arxiv-upstream-submission-and-acceptance",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["journal", "arxiv-upstream", "publication"],
+  "dependencies": [
+    "78-arxiv-upstream-requirements-recon",
+    "79-arxiv-submit-ce-maturity-hardening",
+    "80-arxiv-submission-core-maturity-hardening"
+  ],
+  "owned_paths": [
+    "conductor/tracks/81-arxiv-upstream-submission-and-acceptance/",
+    "conductor/evidence-ledger.json",
+    "conductor/submission-contracts.md"
+  ]
+}

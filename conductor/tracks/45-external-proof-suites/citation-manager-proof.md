@@ -178,16 +178,16 @@ jq -r '.action' /tmp/audit.jsonl | sort | uniq -c
 
 ---
 
-### 7. MCP Surface: CLI Citation-Sync in Read-Only Surfaces
+### 7. MCP Surface: Citation-Sync Is Not A Read-Only MCP Surface
 
 **Command:**
 ```text
-sourceright mcp status --json | jq '.implemented_read_only_surfaces[] | select(contains("citation-sync"))'
+sourceright mcp status --json | jq 'all(.implemented_read_only_surfaces[]; contains("citation-sync") | not)'
 ```
 
 **Expected output:**
 ```
-"sourceright citation-sync --preview [.sourceright-directory]"
+true
 ```
 
 **Exit code:** `0`
@@ -245,8 +245,8 @@ test -f /tmp/citation-audit.jsonl || { echo "FAIL: audit log missing"; exit 1; }
 echo "  Apply: PASS"
 
 echo "5. Verify MCP tool surface"
-sourceright mcp status --json | jq -e '.implemented_read_only_surfaces[] | contains("citation-sync")' > /dev/null
-sourceright mcp status --json | jq -e '.implemented_read_only_surfaces[] | contains("citation-sync")' > /dev/null
+sourceright mcp status --json | jq -e 'all(.implemented_read_only_surfaces[]; contains("citation-sync") | not)' > /dev/null
+sourceright mcp status --json | jq -e '.implemented_apply_gated_write_surfaces[] | contains("exports.write")' > /dev/null
 echo "  MCP surface: PASS"
 
 echo "=== ALL PASSED ==="

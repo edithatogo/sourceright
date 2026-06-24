@@ -1,0 +1,48 @@
+{
+  "stamp": "2026-06-10T13:21:13.163671+00:00",
+  "runner": "colab-or-linux-python",
+  "probes": [
+    {
+      "label": "smithery_listing",
+      "url": "https://smithery.ai/servers/edithatogo/sourceright",
+      "http_code": 200,
+      "body_snippet": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" href=\"/_next/static/media/gt_pantheon_micro_medium-s.p.f530ffb4.woff2\" as=\"font\" crossorigi"
+    },
+    {
+      "label": "smithery_search",
+      "url": "https://smithery.ai/search?q=sourceright",
+      "http_code": 200,
+      "body_snippet": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/c3d5a6be71213922.css?dpl=dpl_7Jo88iKKkNrzzxdJCVVV2eJTwme2\" da"
+    },
+    {
+      "label": "glama_listing",
+      "url": "https://glama.ai/mcp/servers/c7qsbvekc1",
+      "http_code": 200,
+      "body_snippet": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta content=\"width=device-width, initial-scale=1\" name=\"viewport\"/><link rel=\"preload\" as=\"image\" href=\"/avatars/edithatogo.png?size=200\"/><link rel=\"preload\" as=\"image\" href=\"/m"
+    },
+    {
+      "label": "glama_api",
+      "url": "https://glama.ai/api/mcp/v1/servers/c7qsbvekc1",
+      "http_code": 200,
+      "body_snippet": "{\"attributes\":[\"hosting:remote-capable\"],\"description\":\"reference and citation validation, verification, enrichment, replacement and improvement\",\"environmentVariablesJsonSchema\":{\"properties\":{},\"type\":\"object\",\"required\":[]},\"id\":\"c7qsbve"
+    },
+    {
+      "label": "glama_slug_listing",
+      "url": "https://glama.ai/mcp/servers/edithatogo/sourceright",
+      "http_code": 200,
+      "body_snippet": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta content=\"width=device-width, initial-scale=1\" name=\"viewport\"/><link rel=\"preload\" as=\"image\" href=\"/avatars/edithatogo.png?size=200\"/><link rel=\"preload\" as=\"image\" href=\"/m"
+    },
+    {
+      "label": "glama_search",
+      "url": "https://glama.ai/mcp/servers?q=sourceright",
+      "http_code": 200,
+      "body_snippet": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta content=\"width=device-width, initial-scale=1\" name=\"viewport\"/><link as=\"font\" crossorigin=\"anonymous\" href=\"https://static.glama.ai/client/fonts/inter/Inter-VariableFont.wof"
+    },
+    {
+      "label": "mcp_registry",
+      "url": "https://registry.modelcontextprotocol.io/v0.1/servers/edithatogo/sourceright",
+      "http_code": 404,
+      "body_snippet": "{\"detail\":\"Endpoint not found. See /docs for the API documentation.\",\"status\":404,\"title\":\"Not Found\"}"
+    }
+  ]
+}

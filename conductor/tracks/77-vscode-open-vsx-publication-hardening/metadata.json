@@ -1,0 +1,16 @@
+{
+  "id": "77-vscode-open-vsx-publication-hardening",
+  "status": "completed",
+  "priority": "medium",
+  "owners": ["editor-extension", "publication"],
+  "dependencies": [
+    "66-vscode-extension-packaging",
+    "69-marketplace-submission-evidence",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/66-vscode-extension-packaging/",
+    "docs/src/host-packaging.md",
+    "conductor/tracks/77-vscode-open-vsx-publication-hardening/"
+  ]
+}

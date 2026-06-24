@@ -1,0 +1,19 @@
+{
+  "id": "76-ai-client-extension-publication-hardening",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["ai-clients", "mcp", "publication"],
+  "dependencies": [
+    "65-ai-client-mcp-packaging",
+    "69-marketplace-submission-evidence",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "examples/mcp-clients/",
+    "docs/src/mcp.md",
+    "docs/src/host-packaging.md",
+    "conductor/tracks/76-ai-client-extension-publication-hardening/",
+    "conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md",
+    "tests/ai_client_extension_publication_hardening_policy.rs"
+  ]
+}

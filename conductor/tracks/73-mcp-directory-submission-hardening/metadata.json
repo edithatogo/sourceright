@@ -1,0 +1,24 @@
+{
+  "id": "73-mcp-directory-submission-hardening",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["mcp", "publication"],
+  "dependencies": [
+    "56-mcp-registry-release-binding",
+    "57-smithery-distribution-readiness",
+    "70-release-surface-refresh-cadence",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "server.json",
+    "glama.json",
+    "smithery/mcpb/manifest.template.json",
+    "scripts/build-smithery-mcpb.ps1",
+    "conductor/tracks/73-mcp-directory-submission-hardening/",
+    "conductor/submission-packets/mcp-directories.md",
+    "docs/src/release-status.md",
+    "docs-site/src/content/docs/release-status.md",
+    "conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md",
+    "tests/mcp_directory_submission_hardening_policy.rs"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "78-arxiv-upstream-requirements-recon",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["journal", "arxiv-upstream"],
+  "dependencies": [
+    "71-arxiv-submission-platform-adapters",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/78-arxiv-upstream-requirements-recon/",
+    "docs/src/journal-integrations.md",
+    "docs-site/src/content/docs/journal-integrations.md"
+  ]
+}

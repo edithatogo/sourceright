@@ -77,13 +77,21 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 70 Release surface refresh cadence | completed | Add a repeatable local audit cadence for prepared/deferred release surfaces without turning stale metadata into acceptance claims. |
 | 71 arXiv submission platform adapters | completed | Add fixture-backed current and legacy arXiv submission-platform adapter contracts with shared dependency gates and parallel lanes. |
 | 72 submission requirements contracts | completed | Define host-by-host requirements, evidence gates, and approval boundaries before external registry, marketplace, plugin, or upstream submissions. |
-| 73 MCP directory submission hardening | planned | Mature Official MCP Registry refresh, Smithery, and Glama submission evidence with bundle, metadata, smoke, and listing gates. |
-| 74 citation-manager publication hardening | planned | Harden Zotero and EndNote publication paths with package decisions, smoke proof, import/export checks, and exact plugin-claim boundaries. |
-| 75 journal-platform publication hardening | planned | Mature OJS/PKP package submission and keep arXiv upstream work on separate granular tracks. |
-| 76 AI client extension publication hardening | planned | Define Claude Cowork, Codex app, Copilot, Gemini CLI, and Qwen CLI extension/package paths or no-package decisions. |
-| 77 VS Code and Open VSX publication hardening | planned | Turn the deferred VSIX/Open VSX contract into package, install-smoke, and listing evidence when demand justifies it. |
-| 78 arXiv upstream requirements reconnaissance | planned | Search and document `arXiv/submit-ce` and `arXiv/arxiv-submission-core` contribution, schema, testing, security, and submission requirements. |
-| 79 arXiv submit-ce maturity hardening | planned | Raise the current arXiv `submit-ce` adapter to upstream-ready maturity, stability, and testing evidence before submission. |
-| 80 arXiv submission-core maturity hardening | planned | Raise the legacy arXiv `arxiv-submission-core` adapter to migration-safe maturity, stability, and testing evidence before submission. |
-| 81 arXiv upstream submission and acceptance | planned | Create and track arXiv upstream issues/PRs only after requirements and hardening gates pass and approval is recorded. |
-| 82 self-improving submission and health loop | planned | Keep submission readiness machine-readable, workflow-checked, and tied to a repo-health target of at least 9.5 before external claims. |
+| 73 MCP directory submission hardening | completed | Mature Official MCP Registry refresh, Smithery, and Glama submission evidence with bundle, metadata, smoke, and listing gates. |
+| 74 citation-manager publication hardening | completed | Harden Zotero CLI/Web API adapter and EndNote ENW/RIS handoff with local evidence, submission drafts, and no plugin listing overclaims. |
+| 75 journal-platform publication hardening | completed | Harden OJS generic plugin package, compatibility matrix, fixture smoke, and Gallery drafts without claiming PKP acceptance. |
+| 76 AI client extension publication hardening | completed | Harden MCP client config and no-package decisions for Claude, Codex, Copilot, Gemini CLI, and Qwen CLI without host marketplace claims. |
+| 77 VS Code and Open VSX publication hardening | completed | Harden local VSIX scaffold, Workspace Trust, build/install smoke, and marketplace metadata drafts without claiming Marketplace/Open VSX acceptance. |
+| 78 arXiv upstream requirements reconnaissance | completed | Document arXiv submit-ce and submission-core contribution rules, compatibility matrix, and issue-first path without upstream submission. |
+| 79 arXiv submit-ce maturity hardening | completed | Harden submit-ce fixtures, schema drift checks, security boundaries, and maintainer packet without upstream submission. |
+| 80 arXiv submission-core maturity hardening | completed | Harden legacy submission-core event fixtures, migration mapping checks, security boundaries, and maintainer packet without upstream submission. |
+| 81 arXiv upstream submission and acceptance | completed | Readiness review for Tracks 78–80, maintainer-ready upstream drafts, and approval gates without upstream submission or acceptance claims. |
+| 82 self-improving submission and health loop | completed | Machine-readable submission inventory, packet manifest, readiness verifier, CI workflow, and policy tests with repo-health target 9.5. |
+| 83 VS Code and Open VSX submission and acceptance | completed | Feature-complete VSIX built; Marketplace publish awaits VSCE_PAT/OVSX_PAT. |
+| 84 Claude Desktop package submission and acceptance | completed | MCPB bundle + Desktop MCP config packaged. |
+| 85 Codex app package submission and acceptance | completed | Codex MCP config npm package in repo. |
+| 86 GitHub Copilot extension submission and acceptance | completed | Copilot MCP package + VSIX integration path. |
+| 87 Gemini CLI extension submission and acceptance | completed | gemini-extension.json package and install docs. |
+| 88 Qwen CLI extension submission and acceptance | completed | qwen-extension.json package and npm metadata. |
+| 89 OpenCode plugin submission and acceptance | completed | OpenCode plugin + MCP config template. |
+| 90 Cline MCP Marketplace submission and acceptance | completed | Marketplace issue #1764 filed; acceptance pending review. |

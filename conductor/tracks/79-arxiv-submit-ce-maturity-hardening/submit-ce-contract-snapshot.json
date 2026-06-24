@@ -1,0 +1,22 @@
+{
+  "schema_version": "sourceright.arxiv_submit_ce_contract_snapshot.v1",
+  "retrieved_at": "2026-06-09",
+  "upstream_repository": "https://github.com/arXiv/submit-ce",
+  "platform_generation": "current",
+  "platform_labels": ["arxiv-submit-ce", "arxiv_submit_ce"],
+  "journal_screening_schema_version": "sourceright.journal_screening.v1",
+  "fixture_schema_path": "schemas/sourceright.arxiv-submission-fixture.schema.json",
+  "submission_platform_enum": "arxiv_submit_ce",
+  "required_submission_fields": ["submission_id", "platform", "manuscript_label"],
+  "required_source_bundle_fields": ["primary_tex", "references", "extracted_text"],
+  "variant_cases": ["complete", "warning", "rejected", "malformed"],
+  "expected_statuses": [
+    "screened",
+    "screened_with_warnings",
+    "blocked_for_extraction",
+    "screened_with_errors"
+  ],
+  "integration_boundary": "submission source bundle to Sourceright journal-screen",
+  "no_writeback": true,
+  "no_live_credentials_default_ci": true
+}

@@ -1,0 +1,20 @@
+{
+  "id": "75-journal-platform-publication-hardening",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["journal", "publication"],
+  "dependencies": [
+    "16-journal-workflow-integrations",
+    "60-mature-ojs-plugin",
+    "71-arxiv-submission-platform-adapters",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "plugins/ojs/sourceright/",
+    "scripts/build-ojs-plugin-package.ps1",
+    "docs/src/journal-integrations.md",
+    "conductor/tracks/75-journal-platform-publication-hardening/",
+    "conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md",
+    "tests/journal_platform_publication_hardening_policy.rs"
+  ]
+}

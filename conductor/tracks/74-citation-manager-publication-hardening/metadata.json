@@ -1,0 +1,20 @@
+{
+  "id": "74-citation-manager-publication-hardening",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["citation-manager", "publication"],
+  "dependencies": [
+    "51-citation-manager-adapter-proof",
+    "58-mature-zotero-plugin",
+    "59-other-citation-manager-integrations",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "plugins/manifests/citation-manager.zotero.toml",
+    "plugins/manifests/citation-manager.endnote.toml",
+    "docs/src/zotero-plugin-install.md",
+    "conductor/tracks/74-citation-manager-publication-hardening/",
+    "conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md",
+    "tests/citation_manager_publication_hardening_policy.rs"
+  ]
+}

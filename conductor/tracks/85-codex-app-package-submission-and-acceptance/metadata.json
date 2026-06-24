@@ -1,0 +1,20 @@
+﻿{
+    "id":  "codex-app-package-submission-and-acceptance",
+    "status":  "completed",
+    "priority":  "high",
+    "owners":  [
+                   "ai-clients",
+                   "mcp",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "65-ai-client-mcp-packaging",
+                         "76-ai-client-extension-publication-hardening",
+                         "82-self-improving-submission-and-health-loop"
+                     ],
+    "owned_paths":  [
+                        "examples/mcp-clients/codex-config.toml",
+                        "examples/mcp-clients/codex-mcp.json",
+                        "conductor/tracks/85-codex-app-package-submission-and-acceptance/"
+                    ]
+}

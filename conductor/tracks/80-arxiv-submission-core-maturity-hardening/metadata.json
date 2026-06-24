@@ -1,0 +1,16 @@
+{
+  "id": "80-arxiv-submission-core-maturity-hardening",
+  "status": "completed",
+  "priority": "high",
+  "owners": ["journal", "arxiv-submission-core"],
+  "dependencies": [
+    "71-arxiv-submission-platform-adapters",
+    "78-arxiv-upstream-requirements-recon"
+  ],
+  "owned_paths": [
+    "fixtures/journal/arxiv-submission-core-submission.json",
+    "plugins/manifests/journal.arxiv-submission-core.toml",
+    "schemas/sourceright.arxiv-submission-fixture.schema.json",
+    "conductor/tracks/80-arxiv-submission-core-maturity-hardening/"
+  ]
+}
