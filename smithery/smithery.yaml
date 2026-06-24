@@ -1,0 +1,22 @@
+# Smithery stdio publish config — publish from repo root without a URL argument:
+#   smithery mcp publish -n edithatogo/sourceright
+# See https://smithery.ai/docs/build/publish
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      workspace_root:
+        type: string
+        title: Sourceright workspace
+        description: Optional path to a .sourceright workspace directory.
+    additionalProperties: false
+  commandFunction: |-
+    config => ({
+      command: 'sourceright',
+      args: ['mcp'],
+      env: config.workspace_root
+        ? { SOURCERIGHT_WORKSPACE: config.workspace_root }
+        : {}
+    })

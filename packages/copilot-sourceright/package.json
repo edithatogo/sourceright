@@ -1,0 +1,17 @@
+{
+  "name": "@edithatogo/sourceright-copilot",
+  "version": "0.1.20",
+  "description": "GitHub Copilot MCP config and coding-agent workflow for Sourceright",
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edithatogo/sourceright.git",
+    "directory": "packages/copilot-sourceright"
+  },
+  "files": [
+    "vscode-mcp.json",
+    "copilot-instructions.md",
+    "README.md"
+  ],
+  "keywords": ["github-copilot", "mcp", "sourceright"]
+}

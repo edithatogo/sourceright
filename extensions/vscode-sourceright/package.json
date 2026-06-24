@@ -1,0 +1,74 @@
+{
+  "name": "sourceright",
+  "displayName": "Sourceright Reference Screening",
+  "description": "VS Code integration for Sourceright CLI reference verification, CSL validation, and journal screening diagnostics.",
+  "version": "0.1.20",
+  "publisher": "edithatogo",
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edithatogo/sourceright.git"
+  },
+  "homepage": "https://edithatogo.github.io/sourceright/",
+  "bugs": {
+    "url": "https://github.com/edithatogo/sourceright/issues"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "citations",
+    "references",
+    "csl",
+    "mcp",
+    "verification",
+    "copilot"
+  ],
+  "activationEvents": [
+    "onCommand:sourceright.report",
+    "onCommand:sourceright.init",
+    "onCommand:sourceright.validateCsl",
+    "onCommand:sourceright.journalScreen"
+  ],
+  "main": "./extension.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true,
+      "description": "Read-only Sourceright diagnostics run in untrusted workspaces. Write-capable CLI paths are not exposed."
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "sourceright.init",
+        "title": "Sourceright: Init Workspace"
+      },
+      {
+        "command": "sourceright.report",
+        "title": "Sourceright: Reference Report (JSON)"
+      },
+      {
+        "command": "sourceright.validateCsl",
+        "title": "Sourceright: Validate CSL File"
+      },
+      {
+        "command": "sourceright.journalScreen",
+        "title": "Sourceright: Journal Screen (OJS)"
+      }
+    ],
+    "configuration": {
+      "title": "Sourceright",
+      "properties": {
+        "sourceright.cliPath": {
+          "type": "string",
+          "default": "sourceright",
+          "description": "Path to the Sourceright CLI executable."
+        }
+      }
+    }
+  }
+}

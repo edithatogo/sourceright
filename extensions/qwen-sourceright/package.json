@@ -1,0 +1,17 @@
+{
+  "name": "@edithatogo/sourceright-qwen-extension",
+  "version": "0.1.20",
+  "description": "Qwen Code extension wiring Sourceright stdio MCP",
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edithatogo/sourceright.git",
+    "directory": "extensions/qwen-sourceright"
+  },
+  "files": [
+    "qwen-extension.json",
+    "QWEN.md",
+    "README.md"
+  ],
+  "keywords": ["qwen", "mcp", "citations", "sourceright"]
+}

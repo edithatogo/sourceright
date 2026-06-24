@@ -1,0 +1,17 @@
+{
+  "name": "@edithatogo/sourceright-codex-mcp",
+  "version": "0.1.20",
+  "description": "Codex-compatible MCP server config for Sourceright stdio",
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edithatogo/sourceright.git",
+    "directory": "packages/codex-sourceright-mcp"
+  },
+  "files": [
+    "codex-mcp.json",
+    "codex-config.toml",
+    "README.md"
+  ],
+  "keywords": ["codex", "mcp", "openai", "sourceright"]
+}
