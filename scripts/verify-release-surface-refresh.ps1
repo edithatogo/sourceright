@@ -199,7 +199,10 @@ function Assert-TrackEvidenceParity {
         'Codex' = @('Codex MCP client config')
         'Generic MCP clients' = @('Generic MCP client config')
         'GitHub Copilot' = @('GitHub Copilot coding-agent prep')
+        'Gemini CLI extensions' = @('Gemini CLI extensions')
+        'Qwen CLI extensions' = @('Qwen CLI extensions')
         'Zotero' = @('Zotero')
+        'EndNote' = @('EndNote')
         'OJS/PKP' = @('OJS/PKP')
         'VS Code Marketplace / Open VSX' = @('VS Code Marketplace / Open VSX')
         'Microsoft AppSource / Word add-in' = @('Microsoft AppSource / Word add-in')
@@ -248,8 +251,8 @@ $requiredRows = @(
     '| docs.rs | accepted |',
     '| Official MCP Registry | accepted |',
     '| GHCR MCP image | prepared |',
-    '| Glama | prepared |',
-    '| Smithery | submitted |',
+    '| Glama | accepted |',
+    '| Smithery | accepted |',
     '| Claude Desktop client config | prepared |',
     '| Codex MCP client config | prepared |',
     '| Generic MCP client config | prepared |',

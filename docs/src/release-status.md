@@ -32,14 +32,14 @@ Registries are classified into four statuses:
 | crates.io | accepted | 0.1.20 | <https://crates.io/crates/sourceright> | 2026-05-11 | `cargo install sourceright`. Package metadata in `Cargo.toml`. `Publish crate` workflow is manual and token-gated. |
 | docs.rs | accepted | 0.1.20 | <https://docs.rs/crate/sourceright/0.1.20> | 2026-05-11 | Auto-built from crates.io publish. `package.metadata.docs.rs` configures `all-features = true`. |
 | Official MCP Registry | accepted | 0.1.20 | <https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.edithatogo/sourceright> | 2026-05-13 | Listed as active and latest. Server metadata from `server.json`. OCI image target: `ghcr.io/edithatogo/sourceright-mcp:0.1.20`. |
+| Smithery | accepted | 0.1.20 | <https://smithery.ai/servers/edithatogo/sourceright> (release `263ee636-5d24-4010-9dd9-e199d4f7b848`); install smoke in `smithery-install-smoke-2026-06-10.md`. | 2026-06-10 | Install via `npx -y @smithery/cli@latest run edithatogo/sourceright`. |
+| Glama | accepted | 0.1.20 | <https://glama.ai/mcp/servers/c7qsbvekc1> (id `c7qsbvekc1`, namespace `edithatogo`, slug `sourceright`); API verification in `glama-acceptance-2026-06-10.md`. | 2026-06-10 | Slug-path listing URLs still 404; use the id-based listing URL for public proof. |
 
 ### Prepared Registries
 
 | Registry | Status | Version | URL / Evidence | Date | Blocking Requirement |
 |----------|--------|---------|---------------|------|---------------------|
 | GHCR MCP image | prepared | 0.1.20 | Referenced by MCP Registry listing; direct GHCR package page requires package read permissions. | 2026-05-13 | GHCR package visibility must be confirmed after registry submission. Documented as MCP Registry indirection — the OCI image is published but the GHCR package listing is indirectly evidenced. |
-| Glama | prepared | 0.1.20 | `glama.json` with valid schema and maintainer handle `edithatogo`; local verification in `conductor/tracks/73-mcp-directory-submission-hardening/glama-metadata-verification.md`. | 2026-06-09 | No accepted external listing recorded. Glama listing or API verification remains approval-gated. |
-| Smithery | accepted | 0.1.20 | Listing https://smithery.ai/servers/edithatogo/sourceright (release `263ee636-5d24-4010-9dd9-e199d4f7b848`); install smoke in `smithery-install-smoke-2026-06-10.md`. | 2026-06-10 | Install via `npx -y @smithery/cli@latest run edithatogo/sourceright`. |
 | Claude Desktop client config | prepared | 0.1.20 | Hardened in `conductor/tracks/76-ai-client-extension-publication-hardening/mcp-client-smoke-2026-06-09.md`; `claude-desktop.json` and MCP docs. | 2026-06-09 | No Claude plugin or Cowork marketplace package. Client transcript smoke remains opt-in. |
 | Codex MCP client config | prepared | 0.1.20 | Hardened in Track 76 MCP smoke evidence; `codex-config.toml` and `codex-mcp.json`. | 2026-06-09 | No Codex app plugin package. Codex UI configuration proof remains opt-in. |
 | Generic MCP client config | prepared | 0.1.20 | Track 76 MCP smoke evidence; `generic-mcp-client.json`, `generic-stdio.json`, and `smoke-requests.jsonl`. | 2026-06-09 | Requires transcript smoke per named client before claiming client-specific compatibility. No Claude, Codex, or Copilot marketplace package exists. |
