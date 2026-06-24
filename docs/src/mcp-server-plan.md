@@ -21,7 +21,7 @@ Current read-only tools:
 - analyze legal citations;
 - build a claim/source provenance report;
 - evaluate deterministic style and recency policy checks;
-- preview export artifacts.
+- preview export artifacts with `exports.preview`;
 - discover validated plugin manifests and execution gates.
 
 Write-capable tools should remain dry-run by default, require explicit apply,

@@ -11,6 +11,15 @@ export default defineConfig({
         'Reference verification for academic, legal, and provenance-sensitive workflows.',
       sidebar: [
         {
+          label: 'Overview',
+          items: [
+            { label: 'MCP Server Plan', slug: 'mcp-server-plan' },
+            { label: 'Provider Strategy', slug: 'reference/providers' },
+            { label: 'Plugin Authoring', slug: 'plugin-authoring' },
+            { label: 'Plugin Registry', slug: 'plugin-registry' },
+          ],
+        },
+        {
           label: 'Guides',
           items: [{ autogenerate: { directory: 'guides' } }],
         },

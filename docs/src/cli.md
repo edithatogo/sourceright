@@ -86,6 +86,9 @@ sourceright report [--json|--mcp-resource] [.sourceright-directory]
 ```
 
 Default Markdown output renders the editor-facing audit report. `--json` emits compact `sourceright.reference_report.v1` JSON with summary counters and stable issue records. `--mcp-resource` wraps the JSON report as an MCP-ready resource envelope at `sourceright://reports/reference-integrity`.
+Workspace-reading commands accept either the `.sourceright` directory itself or
+its parent project directory when that parent contains `.sourceright`, for
+example `sourceright report --json examples/workspace`.
 
 ## `citations` contract
 
@@ -117,7 +120,10 @@ Usage:
 sourceright journal-screen [--platform <platform>] [--submission-id <id>] [--manuscript <label>] [.sourceright-directory]
 ```
 
-Supported platform labels are `generic-webhook`, `ojs`, `scholarone`, `editorial-manager`, `ejournalpress`, and `manuscript-manager`. The command emits `sourceright.journal_screening.v1` JSON for editorial workflow adapters.
+Supported platform labels are `generic-webhook`, `ojs`, `arxiv-submit-ce`,
+`arxiv-submission-core`, `scholarone`, `editorial-manager`, `ejournalpress`, and
+`manuscript-manager`. The command emits `sourceright.journal_screening.v1` JSON
+for editorial workflow adapters.
 
 ## `legal` contract
 

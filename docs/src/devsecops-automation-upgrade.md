@@ -13,6 +13,7 @@ and TypeScript surfaces.
 | Coverage | `.github/workflows/coverage.yml` runs `cargo llvm-cov --branch --fail-under-branches 85` and uploads `coverage-status.md`. |
 | Renovate | `renovate.json` groups routine Rust crates, GitHub Actions/MCP release automation, and docs-site Node modules separately while keeping majors manual. |
 | Release notes | `.github/release-drafter.yml` and `.github/workflows/release-drafter.yml` maintain a draft changelog by PR label and refresh on `main` and `v*.*.*` tag pushes. |
+| Release surface evidence | `.github/workflows/release-dry-run.yml` runs `scripts/verify-release-surface-refresh.ps1` so release wording cannot drift beyond accepted/prepared/deferred evidence. |
 
 ## GitHub UI Settings
 

@@ -17,7 +17,7 @@ The current core can support a platform adapter through:
 - `sourceright export`.
 - JSON-ready report and sidecar models in the Rust library.
 
-The remaining platform work is adapter glue: retrieving submission files, running extraction, storing reports, and returning editor-facing or author-facing summaries. The Rust contract already models OJS, generic webhooks, ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager as screening platform targets.
+The remaining platform work is adapter glue: retrieving submission files, running extraction, storing reports, and returning editor-facing or author-facing summaries. The Rust contract already models OJS, arXiv submit-ce, arXiv submission-core, generic webhooks, ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager as screening platform targets.
 
 ## OJS First
 
@@ -72,6 +72,34 @@ Repo-local OJS checks that do not require Docker can be run with:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ojs-plugin-lint.ps1
 ```
+
+## arXiv Platform Adapter Contracts
+
+arXiv support has two separate meanings in Sourceright:
+
+- `provider.arxiv` records preprint identity and version evidence as sidecar-only provider evidence.
+- `journal.arxiv-submit-ce` and `journal.arxiv-submission-core` are supported journal-screening platform labels with adapter contract fixtures.
+
+The arXiv platform labels are fixture-backed contract fixtures, not upstream
+arXiv patches and not live arXiv integrations. They exist so future work against
+the current `submit-ce` platform and the legacy `arxiv-submission-core` platform
+can share the same `sourceright.journal_screening.v1` output, CLI/MCP parsing,
+and overclaim gates before any upstream module work starts.
+
+Current supported platform values are:
+
+- `arxiv-submit-ce` / `arxiv_submit_ce` for the current submission platform.
+- `arxiv-submission-core` / `arxiv_submission_core` for legacy/event-core compatibility.
+
+The first implementation slice is deliberately dependency-first:
+
+- shared schema, CLI, MCP, and registry contracts are owned centrally;
+- `submit-ce` fixtures and docs can progress independently from legacy fixtures and docs;
+- Track 79 hardening records schema drift checks in `conductor/tracks/79-arxiv-submit-ce-maturity-hardening/schema-drift-check-2026-06-09.md` with a pinned `submit-ce-contract-snapshot.json`;
+- Track 80 hardening records migration mapping checks in `conductor/tracks/80-arxiv-submission-core-maturity-hardening/migration-mapping-check-2026-06-09.md` with a pinned `submission-core-contract-snapshot.json`;
+- Track 81 readiness review records upstream draft readiness in `conductor/tracks/81-arxiv-upstream-submission-and-acceptance/readiness-review-2026-06-09.md`; no upstream issue or PR is claimed;
+- external proof-suite text remains opt-in until a real arXiv test environment exists;
+- no platform adapter writes back to arXiv systems or canonical CSL.
 
 ## Enterprise Adapters
 

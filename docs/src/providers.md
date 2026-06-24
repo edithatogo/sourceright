@@ -2,7 +2,7 @@
 
 Academic verification should be built as an ordered provider roadmap. Each provider adds candidates, provenance, and confidence signals; provider data must never silently overwrite the canonical reference record.
 
-Use the registry status matrix in [Plugin Registry](plugin-registry#status-matrix)
+Use the registry status matrix in [Plugin Registry](plugin-registry.md#status-matrix)
 when describing readiness. In practice, `core_normalizer` and `core_exporter`
 are the only statuses that should be described as technical preview; the
 `planned_*` and `planned` statuses remain roadmap-only.

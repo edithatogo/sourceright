@@ -26,6 +26,8 @@ Track 69 adds the repo-local marketplace evidence model at
   not accepted-listing evidence.
 - Tag-triggered publish workflows emit a `release-status.md` artifact as the
   first-line release checklist.
+- Release dry runs execute `scripts/verify-release-surface-refresh.ps1` before
+  publication wording changes can claim accepted surfaces.
 - `docs/src/` remains the archival Markdown source for parity review.
 - Duplicate-dependency checks use `cargo tree -d --locked`.
 

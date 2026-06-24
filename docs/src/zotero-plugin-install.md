@@ -3,7 +3,7 @@
 Sourceright integrates with Zotero via the **Zotero Web API (v3)** — not a traditional
 `.xpi` browser plugin. This means a single `sourceright citation-sync` command handles
 preview, apply, and audit workflows against your Zotero library from the command line,
-CI pipeline, or MCP server runtime.
+or CI pipeline.
 
 Zotero's current public plugin documentation says plugins are installed from
 `.xpi` files, that Zotero does not currently provide a list of available
@@ -14,7 +14,7 @@ adapter.
 
 > **Architecture note:** The CLI/Web API approach was chosen over a `.xpi` browser plugin
 > because Sourceright is a server-side/CLI tool. The Web API integration works in CI/CD
-> pipelines, MCP server runtimes, and shared group libraries without requiring a browser
+> pipelines and shared group libraries without requiring a browser
 > extension. See the [Architecture Decision section](#architecture-decision-cliweb-api-mode) below
 > and the full [Packaging Decision document](../../conductor/tracks/58-mature-zotero-plugin/packaging-decision.md).
 
@@ -213,7 +213,7 @@ For full reasoning, see:
 | Criterion | CLI/Web API (chosen) | .xpi Plugin (deferred) |
 |-----------|---------------------|------------------------|
 | CI/CD use | Yes (no browser needed) | No (requires Firefox/Chrome runtime) |
-| MCP integration | Yes (stdio/HTTP transport) | No (browser-scoped API) |
+| MCP integration | Not advertised as an MCP tool surface; CLI outputs remain usable by MCP-aware automation | No (browser-scoped API) |
 | Group libraries | Yes (via `/groups/{id}` endpoint) | No (user profile scope) |
 | Audit log on disk | Yes (JSONL, configurable path) | No (browser storage) |
 | Installation | Binary + API key; no signing needed | `.xpi` packaging, signing, per-user install |
@@ -227,7 +227,7 @@ For full reasoning, see:
    Releases or `cargo install`, configure a few environment variables, and run
    `sourceright citation-sync --preview` to verify.
 2. **Works everywhere.** The same binary works on your desktop, in CI/CD pipelines,
-   in MCP server runtimes, and on remote/headless servers (using the public API).
+   and on remote/headless servers (using the public API).
 3. **Same preview/apply contract.** The `--preview`/`--apply` flags and JSONL audit
    logs behave identically regardless of whether you target the local Zotero API
    (`127.0.0.1:23119`) or the public API (`api.zotero.org`).

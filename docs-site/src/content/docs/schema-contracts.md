@@ -21,6 +21,12 @@ workflow artifacts.
   report JSON and MCP resource payloads.
 - `sourceright.journal-screening.schema.json`:
   `sourceright.journal_screening.v1` editorial screening output.
+- `sourceright.arxiv-submission-fixture.schema.json`: synthetic current and
+  legacy arXiv submission-platform fixtures for the journal screening contract.
+- `sourceright.submission-requirements.schema.json`: machine-readable
+  submission-readiness inventory, evidence gates, blockers, and health target.
+- `sourceright.submission-packets.schema.json`: machine-readable submission
+  packet index for packet paths, local validation, blockers, and approval gates.
 - `sourceright.legal-citation-report.schema.json`: legal citation reports that
   stay separate from CSL JSON.
 - `sourceright.provenance-report.schema.json`: claim/source provenance graphs
@@ -39,3 +45,22 @@ workflow artifacts.
   contracts, capabilities, fixtures, and safety posture.
 - `sourceright.mcp-status.schema.json`: machine-readable readiness output for
   the MCP status surface.
+
+## Compatibility Rules
+
+`references.csl.json` remains canonical CSL data. Provider candidates,
+extraction provenance, conflicts, review decisions, and report findings belong
+in the sidecar or derived reports.
+
+Schema versions match current Rust constants where those constants exist:
+
+- `sourceright.verification.v1`
+- `sourceright.reference_report.v1`
+- `sourceright.journal_screening.v1`
+- `sourceright.export.v1`
+- `sourceright.citation_sync.v1`
+- `sourceright.policy_report.v1`
+
+The legal citation and provenance reports currently do not emit a top-level
+`schema_version`, so their schemas describe the live output shape without
+requiring one.

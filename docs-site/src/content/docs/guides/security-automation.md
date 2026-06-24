@@ -60,6 +60,21 @@ not modify repository settings or alert state.
 - **Status**: GitHub-side setting to verify in the repository Security tab. No
   repo-local configuration is required for public repositories.
 
+### Rust developer tooling
+
+On Windows workstations where the MSVC host linker is unavailable or blocked,
+use the local GNU validation wrapper instead of plain `cargo`:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-local-windows-gnu.ps1
+```
+
+The wrapper selects `stable-x86_64-pc-windows-gnu`, writes build artifacts to an
+explicit `C:\tmp` target directory, and runs format, clippy, tests, locked
+check, plugin validation, benchmark smoke, and the example report smoke. This
+keeps validation out of OneDrive-locked `target/` directories and avoids the
+MSVC `link.exe` path that can fail before Sourceright code is compiled.
+
 ## Installed GitHub Apps And Marketplace Integrations
 
 The current environment token can read repository alerts, workflows, branch
@@ -113,7 +128,7 @@ default branch (`main`):
 | `CI` | Yes | Runs `cargo fmt --check`, `cargo clippy`, `cargo test`, `cargo check --locked`, docs build, and docs-site TypeScript `tsc --noEmit`. |
 | `Security` | Yes | Runs CodeQL, Scorecard, Dependabot review, and cargo/npm audit steps. |
 | `Pages` | Yes | Docs-site build and deployment check. |
-| `release-dry-run` | Recommended | Validates release packaging without publishing. |
+| `release-dry-run` | Recommended | Validates release packaging and runs `scripts/verify-release-surface-refresh.ps1` without publishing. |
 | `Coverage` | Recommended | Runs `cargo llvm-cov` summary-only with minimum 85% branch coverage. |
 | `Robustness` | Recommended | Runs fixture-backed benchmark and stress tests. |
 
@@ -124,7 +139,9 @@ Read-only API check on 2026-05-14 showed branch protection currently requires:
 `Rust ubuntu-latest`, `Rust macos-latest`, `Rust windows-latest`, `Docs build`,
 `CodeQL`, `Cargo audit`, and `Dependency review`, with one approving review and
 admin enforcement disabled. It did not show `Pages`, `Coverage`, `Robustness`,
-or release dry-run as required checks. Changing those settings remains an
+or release dry-run as required checks. The release dry-run gate now also checks
+release-surface evidence boundaries before publication wording can change.
+Changing those settings remains an
 account-side admin task outside this repo-local track.
 
 ### Merge Queue
