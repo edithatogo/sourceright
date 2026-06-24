@@ -98,10 +98,9 @@ fn smithery_builder_and_docs_preserve_prepared_not_accepted_boundary() {
 fn smithery_server_card_is_checked_in_for_url_publish_scan() {
     let card: Value = serde_json::from_str(&read_repo_file("mcp/server-card.json"))
         .expect("mcp/server-card.json must be valid JSON");
-    let root_card: Value = serde_json::from_str(&read_repo_file(
-        ".well-known/mcp/server-card.json",
-    ))
-    .expect("repo-root well-known server card must be valid JSON");
+    let root_card: Value =
+        serde_json::from_str(&read_repo_file(".well-known/mcp/server-card.json"))
+            .expect("repo-root well-known server card must be valid JSON");
     assert_eq!(card, root_card);
     assert_eq!(card["serverInfo"]["name"], json!("sourceright"));
     assert_eq!(card["serverInfo"]["version"], json!(cargo_version()));

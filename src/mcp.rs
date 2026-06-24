@@ -190,11 +190,7 @@ fn read_http_request(stream: &mut std::net::TcpStream) -> io::Result<HttpRequest
         body.truncate(content_length);
     }
 
-    Ok(HttpRequest {
-        method,
-        path,
-        body,
-    })
+    Ok(HttpRequest { method, path, body })
 }
 
 fn http_response(status: u16, content_type: &str, body: &str) -> String {

@@ -420,9 +420,9 @@ fn parse_mcp_serve_http_listen(args: &mut VecDeque<String>) -> Result<String, Cl
     while let Some(arg) = args.front() {
         if arg == "--listen" {
             args.pop_front();
-            let value = args.pop_front().ok_or_else(|| {
-                CliError::usage("missing value for `mcp serve-http --listen`")
-            })?;
+            let value = args
+                .pop_front()
+                .ok_or_else(|| CliError::usage("missing value for `mcp serve-http --listen`"))?;
             listen = value;
         } else {
             break;
