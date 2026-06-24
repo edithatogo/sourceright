@@ -7,9 +7,23 @@ on:
       - "Cargo.lock"
       - ".github/workflows/release*.yml"
       - ".github/workflows/publish-crate.yml"
+      - ".github/workflows/publish-mcp-registry.yml"
       - "deny.toml"
       - "typos.toml"
+      - "conductor/evidence-ledger.json"
+      - "conductor/implementation-order.md"
+      - "conductor/release-channels.md"
+      - "conductor/requirements.md"
+      - "conductor/tracks.md"
+      - "conductor/tracks/69-marketplace-submission-evidence/**"
+      - "conductor/tracks/70-release-surface-refresh-cadence/**"
       - "docs/src/**"
+      - "docs-site/src/content/docs/**"
+      - "scripts/release-check.ps1"
+      - "scripts/release-status.ps1"
+      - "scripts/verify-release-surface-refresh.ps1"
+      - "tests/public_surface_refresh_policy.rs"
+      - "tests/quality_policy.rs"
       - "server.json"
       - "Dockerfile"
       - "src/**"
@@ -32,6 +46,9 @@ jobs:
         run: cargo build --release --locked
       - name: Package crate
         run: cargo package --locked
+      - name: Release surface evidence
+        shell: pwsh
+        run: ./scripts/verify-release-surface-refresh.ps1
       - name: Install cargo-deny
         run: cargo install cargo-deny --locked
       - name: Dependency policy

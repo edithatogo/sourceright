@@ -32,6 +32,12 @@ jobs:
       - name: Build docs site
         working-directory: docs-site
         run: npm run build
+      - name: Stamp well-known artifacts for Pages upload
+        run: |
+          mkdir -p docs-site/dist/.well-known/mcp
+          cp docs-site/src/data/mcp-server-card.json docs-site/dist/.well-known/mcp/server-card.json
+          touch docs-site/dist/.nojekyll
+          ls -la docs-site/dist/.well-known/mcp/
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
       - name: Upload artifact

@@ -29,3 +29,6 @@ codev/.update-hashes.json
 # Local browser automation caches (machine-specific, not repo content)
 .playwright-cli/
 .playwright-profile/
+
+# Local agent skills caches (machine/agent-specific, not repo content)
+.claude/

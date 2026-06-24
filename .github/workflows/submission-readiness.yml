@@ -1,0 +1,40 @@
+name: Submission readiness
+
+on:
+  pull_request:
+    paths:
+      - "conductor/submission-contracts.md"
+      - "conductor/submission-requirements.json"
+      - "conductor/submission-packets/**"
+      - "schemas/sourceright.submission-requirements.schema.json"
+      - "schemas/sourceright.submission-packets.schema.json"
+      - "conductor/requirements.md"
+      - "conductor/tracks.md"
+      - "conductor/evidence-ledger.json"
+      - "conductor/implementation-order.md"
+      - "conductor/tracks/7*/**"
+      - "conductor/tracks/8*/**"
+      - "docs/src/submission-contracts.md"
+      - "docs-site/src/content/docs/submission-contracts.md"
+      - "scripts/verify-submission-readiness.ps1"
+      - ".github/workflows/submission-readiness.yml"
+      - "tests/submission_contracts_policy.rs"
+      - "tests/schema_contract_inventory.rs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submission-readiness:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+      - name: Validate submission requirements inventory
+        shell: pwsh
+        run: ./scripts/verify-submission-readiness.ps1
+      - name: Run submission contract policy tests
+        shell: pwsh
+        run: cargo test --locked --test submission_contracts_policy
