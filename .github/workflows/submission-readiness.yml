@@ -6,9 +6,11 @@ on:
       - conductor/requirements.md
       - conductor/evidence-ledger.json
       - conductor/submission-requirements.json
+      - conductor/submission-inventory.json
       - conductor/submission-packets/**
       - schemas/**
       - scripts/**
+      - tests/submission_health_policy.rs
       - .github/workflows/submission-readiness.yml
   push:
     branches: [main]
@@ -16,9 +18,11 @@ on:
       - conductor/requirements.md
       - conductor/evidence-ledger.json
       - conductor/submission-requirements.json
+      - conductor/submission-inventory.json
       - conductor/submission-packets/**
       - schemas/**
       - scripts/**
+      - tests/submission_health_policy.rs
       - .github/workflows/submission-readiness.yml
   workflow_dispatch:
 
@@ -35,6 +39,12 @@ jobs:
       - name: Run submission readiness verifier
         shell: pwsh
         run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-submission-readiness.ps1
+      - name: Run submission health inventory verifier
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-submission-readiness.ps1
       - name: Run submission contract tests
         shell: pwsh
         run: cargo test --locked --test submission_contracts_policy
+      - name: Run submission health policy tests
+        shell: pwsh
+        run: cargo test --locked --test submission_health_policy

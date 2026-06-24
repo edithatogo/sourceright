@@ -1,11 +1,14 @@
 use std::fs;
+use std::path::Path;
 
 use serde_json::Value;
 
+fn read(path: &str) -> String {
+    fs::read_to_string(path).unwrap_or_else(|err| panic!("failed to read {path}: {err}"))
+}
+
 fn read_json(path: &str) -> Value {
-    let content =
-        fs::read_to_string(path).unwrap_or_else(|err| panic!("failed to read {path}: {err}"));
-    serde_json::from_str(&content).unwrap_or_else(|err| panic!("failed to parse {path}: {err}"))
+    serde_json::from_str(&read(path)).unwrap_or_else(|err| panic!("failed to parse {path}: {err}"))
 }
 
 #[test]
@@ -68,6 +71,19 @@ fn submission_inventory_has_all_ten_surfaces() {
             surface["last_updated"].is_string(),
             "surface {required_id} missing last_updated"
         );
+
+        let track_path = format!("conductor/tracks/{required_id}");
+        assert!(
+            Path::new(&track_path).is_dir(),
+            "surface {required_id} does not map to an on-disk conductor track"
+        );
+        for required_file in ["metadata.json", "plan.md", "test-matrix.md"] {
+            let required_path = format!("{track_path}/{required_file}");
+            assert!(
+                Path::new(&required_path).exists(),
+                "surface {required_id} missing track file {required_file}"
+            );
+        }
     }
 
     assert_eq!(surfaces.len() as u64, 10);
@@ -150,9 +166,28 @@ fn submission_inventory_surfaces_have_blockers() {
 }
 
 #[test]
+fn submission_health_readiness_script_and_ci_are_wired() {
+    let workflow = read(".github/workflows/submission-readiness.yml");
+    let script = read("scripts/check-submission-readiness.ps1");
+    let local_windows_gnu = read("scripts/verify-local-windows-gnu.ps1");
+
+    assert!(workflow.contains("scripts/check-submission-readiness.ps1"));
+    assert!(workflow.contains("cargo test --locked --test submission_health_policy"));
+    assert!(workflow.contains("persist-credentials: false"));
+
+    assert!(script.contains("schema_valid"));
+    assert!(script.contains("surface_count"));
+    assert!(script.contains("MinimumEvidenceLevel"));
+    assert!(script.contains("conductor\\tracks\\$trackId"));
+    assert!(script.contains("health_contribution"));
+    assert!(script.contains("gates_passed / total_gates"));
+    assert!(script.contains("ConvertTo-Json -Depth 10"));
+
+    assert!(local_windows_gnu.contains("verify-submission-readiness.ps1"));
+}
+
+#[test]
 fn submission_health_meets_minimum_threshold_when_gated() {
-    // When SOURCERIGHT_CLAIM_GATE=1, enforce health_score >= 9.5
-    // In default CI, this test is informational (no assertion on threshold)
     if std::env::var("SOURCERIGHT_CLAIM_GATE").as_deref() == Ok("1") {
         let inventory = read_json("conductor/submission-inventory.json");
         let health_score = inventory["health_score"].as_f64().unwrap_or(0.0);

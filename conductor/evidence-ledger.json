@@ -478,8 +478,8 @@
         "submission-inventory.json captures the current readiness matrix."
       ],
       "blockers": [
-        "check-submission-readiness.ps1 not yet implemented.",
-        "submission_health_policy.rs not yet implemented.",
+        "Readiness script and policy test are implemented; remaining blocker is health score below 9.5.",
+        "SOURCERIGHT_CLAIM_GATE=1 promotion remains intentionally failing until health reaches 9.5.",
         "CI gating at health >= 9.5 not yet active."
       ]
     },    "73-mcp-directory-submission-hardening": {
@@ -620,8 +620,8 @@
         "submission-inventory.json created with initial readiness matrix (health score: 2.52)."
       ],
       "blockers": [
-        "check-submission-readiness.ps1 not yet implemented.",
-        "submission_health_policy.rs not yet implemented.",
+        "Readiness script and policy test are implemented; remaining blocker is health score below 9.5.",
+        "SOURCERIGHT_CLAIM_GATE=1 promotion remains intentionally failing until health reaches 9.5.",
         "CI gating at health >= 9.5 not yet active."
       ]
     },
