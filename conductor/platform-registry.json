@@ -1,0 +1,167 @@
+{
+  "$schema": "sourceright.conductor.platform-registry.v1",
+  "schema_version": "sourceright.conductor.platform_registry.v1",
+  "policy": {
+    "candidate_track_required": true,
+    "ad_hoc_notes_allowed": false,
+    "human_review_required": true,
+    "auto_open_tracks": false
+  },
+  "candidate_track_template": {
+    "required_fields": [
+      "track_slug",
+      "title",
+      "proposed_status",
+      "trigger",
+      "scope",
+      "acceptance_gates",
+      "human_review_required",
+      "auto_open"
+    ],
+    "default_status": "candidate",
+    "approval_gate": "human-review-required-before-track-open",
+    "output_contract": "scripts/propose-platform-track-candidates.ps1 emits candidate_tracks JSON; no file edits, commits, issues, or track directories are created automatically."
+  },
+  "platforms": [
+    {
+      "platform_id": "janeway",
+      "name": "Janeway",
+      "family": "open-source-journal-platform",
+      "owner_track": "83-janeway-platform-reconnaissance",
+      "status": "reconnaissance-candidate",
+      "evidence_sources": [
+        {
+          "kind": "track-contract",
+          "path": "conductor/tracks/83-janeway-platform-reconnaissance/spec.md",
+          "summary": "Janeway is the first non-OJS open-source journal platform candidate."
+        }
+      ],
+      "capabilities": ["plugin-surface-reconnaissance", "sidecar-bridge-candidate", "hybrid-bridge-candidate"],
+      "blockers": ["Official plugin and packaging evidence must be reviewed before implementation.", "No Janeway support or publication claim is allowed from this registry entry alone."],
+      "confidence": 0.65,
+      "approval_state": "needs-human-review",
+      "candidate_track": {
+        "track_slug": "candidate-janeway-plugin-bridge",
+        "title": "Janeway plugin bridge package and smoke plan",
+        "proposed_status": "candidate",
+        "trigger": "Open only after Track 83 reconnaissance evidence is reviewed and a maintainer approves a packaging lane.",
+        "scope": ["Map plugin or sidecar bridge contract.", "Define install/package fixture requirements.", "Add disposable Janeway smoke evidence only after test environment approval."],
+        "acceptance_gates": ["Official Janeway docs cited.", "Claim boundary remains reconnaissance until smoke passes.", "Human review approves opening the track."],
+        "human_review_required": true,
+        "auto_open": false
+      }
+    },
+    {
+      "platform_id": "scholarone",
+      "name": "ScholarOne Manuscripts",
+      "family": "proprietary-journal-platform",
+      "owner_track": "86-proprietary-journal-platform-matrix",
+      "status": "contract-only-candidate",
+      "evidence_sources": [
+        {
+          "kind": "track-contract",
+          "path": "conductor/tracks/86-proprietary-journal-platform-matrix/spec.md",
+          "summary": "ScholarOne is named in the proprietary platform matrix."
+        }
+      ],
+      "capabilities": ["api-access-assessment", "batch-or-webhook-assessment", "test-environment-assessment"],
+      "blockers": ["No documented Sourceright test tenant exists.", "Vendor certification or support claims require direct evidence."],
+      "confidence": 0.45,
+      "approval_state": "needs-human-review",
+      "candidate_track": {
+        "track_slug": "candidate-scholarone-access-reconnaissance",
+        "title": "ScholarOne access and adapter feasibility reconnaissance",
+        "proposed_status": "candidate",
+        "trigger": "Open only when official access documentation or a test-environment path is available for review.",
+        "scope": ["Record official integration/access requirements.", "Classify read-only, fixture-backed, and live-test possibilities.", "Identify procurement or tenant blockers without implying support."],
+        "acceptance_gates": ["Official vendor source cited.", "Sandbox or tenant prerequisite recorded.", "Human review approves opening the track."],
+        "human_review_required": true,
+        "auto_open": false
+      }
+    },
+    {
+      "platform_id": "editorial-manager",
+      "name": "Editorial Manager",
+      "family": "proprietary-journal-platform",
+      "owner_track": "86-proprietary-journal-platform-matrix",
+      "status": "contract-only-candidate",
+      "evidence_sources": [
+        {
+          "kind": "track-contract",
+          "path": "conductor/tracks/86-proprietary-journal-platform-matrix/spec.md",
+          "summary": "Editorial Manager is named in the proprietary platform matrix."
+        }
+      ],
+      "capabilities": ["api-access-assessment", "submission-workflow-assessment", "test-environment-assessment"],
+      "blockers": ["No live integration access has been recorded.", "Any adapter claim needs vendor-specific evidence."],
+      "confidence": 0.45,
+      "approval_state": "needs-human-review",
+      "candidate_track": {
+        "track_slug": "candidate-editorial-manager-adapter-reconnaissance",
+        "title": "Editorial Manager adapter feasibility reconnaissance",
+        "proposed_status": "candidate",
+        "trigger": "Open only after official documentation or a controlled test path is reviewed.",
+        "scope": ["Map documented integration surfaces.", "Separate fixture-backed feasibility from live integration.", "Record access and certification blockers."],
+        "acceptance_gates": ["Official source cited.", "No support claim before fixture or live-smoke evidence.", "Human review approves opening the track."],
+        "human_review_required": true,
+        "auto_open": false
+      }
+    },
+    {
+      "platform_id": "ejournalpress",
+      "name": "eJournalPress",
+      "family": "proprietary-journal-platform",
+      "owner_track": "86-proprietary-journal-platform-matrix",
+      "status": "contract-only-candidate",
+      "evidence_sources": [
+        {
+          "kind": "track-contract",
+          "path": "conductor/tracks/86-proprietary-journal-platform-matrix/spec.md",
+          "summary": "eJournalPress is named in the proprietary platform matrix."
+        }
+      ],
+      "capabilities": ["workflow-integration-assessment", "access-model-assessment"],
+      "blockers": ["No public Sourceright-compatible integration contract has been verified.", "A candidate track must start with official source review."],
+      "confidence": 0.35,
+      "approval_state": "needs-human-review",
+      "candidate_track": {
+        "track_slug": "candidate-ejournalpress-integration-reconnaissance",
+        "title": "eJournalPress integration feasibility reconnaissance",
+        "proposed_status": "candidate",
+        "trigger": "Open only after official integration evidence is captured.",
+        "scope": ["Identify public integration or import/export surfaces.", "Record access blockers.", "Define fixture evidence before any implementation claim."],
+        "acceptance_gates": ["Official source cited.", "Access blocker recorded.", "Human review approves opening the track."],
+        "human_review_required": true,
+        "auto_open": false
+      }
+    },
+    {
+      "platform_id": "manuscript-manager",
+      "name": "Manuscript Manager",
+      "family": "proprietary-journal-platform",
+      "owner_track": "86-proprietary-journal-platform-matrix",
+      "status": "contract-only-candidate",
+      "evidence_sources": [
+        {
+          "kind": "track-contract",
+          "path": "conductor/tracks/86-proprietary-journal-platform-matrix/spec.md",
+          "summary": "Manuscript Manager is named in the proprietary platform matrix."
+        }
+      ],
+      "capabilities": ["workflow-integration-assessment", "test-access-assessment"],
+      "blockers": ["No live tenant or official Sourceright adapter path has been recorded.", "Support claims require platform-specific evidence."],
+      "confidence": 0.35,
+      "approval_state": "needs-human-review",
+      "candidate_track": {
+        "track_slug": "candidate-manuscript-manager-integration-reconnaissance",
+        "title": "Manuscript Manager integration feasibility reconnaissance",
+        "proposed_status": "candidate",
+        "trigger": "Open only after official source review and maintainer approval.",
+        "scope": ["Survey official integration surfaces.", "Classify fixture-backed and live-test options.", "Record tenant or access blockers."],
+        "acceptance_gates": ["Official source cited.", "No support claim before evidence.", "Human review approves opening the track."],
+        "human_review_required": true,
+        "auto_open": false
+      }
+    }
+  ]
+}
