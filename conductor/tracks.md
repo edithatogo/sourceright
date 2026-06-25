@@ -92,3 +92,4 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 85 Janeway install and smoke evidence | in_progress | Prove disposable-instance Janeway install and screening smoke, or record blockers, before any publication claim. |
 | 86 Proprietary journal-platform matrix | in_progress | Map ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager integration patterns, API access, and test environments. |
 | 87 Self-improving platform registry | in_progress | Build the agentic registry, skill/workflow hooks, and track-synthesis loop that keeps platform evidence current. |
+| 88 Open source documentation and maintenance hardening | planned | Audit and harden Sourceright public GitHub documentation, contributor experience, release hygiene, community-health files, and maintenance posture. |
