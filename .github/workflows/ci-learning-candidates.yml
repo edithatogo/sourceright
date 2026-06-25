@@ -28,7 +28,7 @@ jobs:
           python3 scripts/record_learning_candidate.py \
             --backlog conductor/improvement-backlog.md \
             --snapshot conductor/.tmp/ci-learning-candidates-${{ github.event.workflow_run.id }}.md \
-            --message "CI failure summary candidate for `${{ github.event.workflow_run.name }}`" \
+            --message "CI failure summary candidate for ${{ github.event.workflow_run.name }}" \
             --evidence "workflow=${{ github.event.workflow_run.name }}" \
             --evidence "run_id=${{ github.event.workflow_run.id }}" \
             --evidence "run_url=${{ github.event.workflow_run.html_url }}" \

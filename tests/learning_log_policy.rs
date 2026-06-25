@@ -46,14 +46,14 @@ fn parse_learning_entries(markdown: &str) -> Vec<LearningEntry> {
             continue;
         }
 
-        if let Some(item) = line.strip_prefix("  - ") {
-            if let Some(key) = current_list.as_ref() {
-                entry
-                    .lists
-                    .entry(key.clone())
-                    .or_default()
-                    .push(item.trim().to_string());
-            }
+        if let Some(item) = line.strip_prefix("  - ")
+            && let Some(key) = current_list.as_ref()
+        {
+            entry
+                .lists
+                .entry(key.clone())
+                .or_default()
+                .push(item.trim().to_string());
         }
     }
 
