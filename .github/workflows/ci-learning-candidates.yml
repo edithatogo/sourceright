@@ -1,6 +1,8 @@
 name: CI Learning Candidates
 
 on:
+  # zizmor: ignore[dangerous-triggers] This workflow captures failed workflow
+  # outcomes as non-committing learning-candidate artifacts only.
   workflow_run:
     workflows:
       - "CI"
@@ -24,16 +26,22 @@ jobs:
           persist-credentials: false
 
       - name: Record CI failure candidate
+        env:
+          WORKFLOW_RUN_ACTOR: ${{ github.event.workflow_run.actor.login }}
+          WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
+          WORKFLOW_RUN_NAME: ${{ github.event.workflow_run.name }}
+          WORKFLOW_RUN_URL: ${{ github.event.workflow_run.html_url }}
         run: |
           python3 scripts/record_learning_candidate.py \
             --backlog conductor/improvement-backlog.md \
-            --snapshot conductor/.tmp/ci-learning-candidates-${{ github.event.workflow_run.id }}.md \
-            --message "CI failure summary candidate for ${{ github.event.workflow_run.name }}" \
-            --evidence "workflow=${{ github.event.workflow_run.name }}" \
-            --evidence "run_id=${{ github.event.workflow_run.id }}" \
-            --evidence "run_url=${{ github.event.workflow_run.html_url }}" \
-            --evidence "actor=${{ github.event.workflow_run.actor.login }}" \
-            --evidence "head_sha=${{ github.event.workflow_run.head_sha }}"
+            --snapshot "conductor/.tmp/ci-learning-candidates-${WORKFLOW_RUN_ID}.md" \
+            --message "CI failure summary candidate for ${WORKFLOW_RUN_NAME}" \
+            --evidence "workflow=${WORKFLOW_RUN_NAME}" \
+            --evidence "run_id=${WORKFLOW_RUN_ID}" \
+            --evidence "run_url=${WORKFLOW_RUN_URL}" \
+            --evidence "actor=${WORKFLOW_RUN_ACTOR}" \
+            --evidence "head_sha=${WORKFLOW_RUN_HEAD_SHA}"
 
       - name: Upload non-committing learning candidate artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

@@ -35,13 +35,12 @@ fn parse_learning_entries(markdown: &str) -> Vec<LearningEntry> {
             if let Some((key, value)) = rest.split_once("`: ") {
                 let key = key.to_string();
                 let value = value.trim().trim_matches('`').to_string();
-                if value.is_empty() {
-                    entry.lists.entry(key.clone()).or_default();
-                    current_list = Some(key);
-                } else {
-                    entry.fields.insert(key, value);
-                    current_list = None;
-                }
+                entry.fields.insert(key, value);
+                current_list = None;
+            } else if let Some(key) = rest.strip_suffix("`:") {
+                let key = key.to_string();
+                entry.lists.entry(key.clone()).or_default();
+                current_list = Some(key);
             }
             continue;
         }
