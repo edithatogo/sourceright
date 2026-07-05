@@ -57,7 +57,8 @@ pub use export::{
 };
 pub use intake::{
     InTextCitationCandidate, IntakeDiagnostic, IntakeDocument, IntakeResult, IntakeSourceKind,
-    ReferenceCandidate, extract_in_text_citations, extract_intake, extract_references_from_text,
+    ManuscriptReadError, ReferenceCandidate, extract_in_text_citations, extract_intake,
+    extract_references_from_text, read_manuscript_text,
 };
 pub use journal::{
     JOURNAL_SCREENING_SCHEMA_VERSION, JournalPlatform, JournalScreeningReport,

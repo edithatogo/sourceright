@@ -8,7 +8,7 @@ use serde::Serialize;
 use sourceright::{
     CitationSyncConfig, ExportFormat, JournalPlatform, ReviewDecisionImport, SourcerightPolicy,
     SourcerightWorkspace, discover_plugins, evaluate_policy, parse_csl_json, run_benchmark_suite,
-    run_citation_sync,
+    run_citation_sync, read_manuscript_text,
 };
 
 mod mcp;
@@ -126,7 +126,7 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 .unwrap_or_else(|| PathBuf::from(".sourceright"));
             reject_extra_args("citations", &args)?;
 
-            let text = fs::read_to_string(manuscript).map_err(|error| error.to_string())?;
+            let text = read_manuscript_text(&manuscript).map_err(|error| error.to_string())?;
             let report = SourcerightWorkspace::from_root_or_parent(workspace_root)
                 .citation_reconciliation_report(&text)
                 .map_err(|error| error.to_string())?;
@@ -1097,7 +1097,7 @@ const CITATIONS_HELP: &str = "sourceright citations
 Reconcile in-text citations against canonical references.
 
 Usage:
-  sourceright citations <manuscript.txt> [.sourceright-directory]
+  sourceright citations <manuscript.txt|manuscript.docx> [.sourceright-directory]
 
 Output:
   Prints a Markdown citation reconciliation report.";

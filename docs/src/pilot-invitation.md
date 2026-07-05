@@ -23,8 +23,9 @@ provider checks should be treated as opt-in evidence gathering.
 - Whether review queues reduce manual triage time.
 - Whether provider evidence and canonical CSL remain understandable.
 - Whether export previews are low-risk for downstream tools.
-- Where DOCX/PDF extraction, URL checking, archive checks, or writeback
-  suggestions need stronger handling.
+- Where PDF extraction, URL checking, archive checks, or writeback suggestions
+  need stronger handling. DOCX intake is now parsed directly, so feedback there
+  should focus on fidelity and edge cases rather than the absence of a parser.
 
 ## What is out of scope
 
