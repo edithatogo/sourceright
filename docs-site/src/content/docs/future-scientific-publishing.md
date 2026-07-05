@@ -7,6 +7,17 @@ Sourceright's journal workflow roadmap treats the future scientific paper as bot
 
 The detailed Conductor context is tracked in `conductor/tracks/88-future-scientific-publishing-agentic-workflows/`.
 
+## Design requirements
+
+A post-PDF scholarly record should be:
+
+- modular, so claims, methods, datasets, code, reviews, corrections, and author contributions can be addressed separately;
+- executable where relevant, especially for computational and AI-heavy work;
+- machine-actionable, so metadata and claims can flow into knowledge graphs, living reviews, policy tools, and review systems;
+- versioned and auditable, so readers can see status, provenance, corrections, and update history;
+- operationally structured at submission, so the journal receives a research package rather than only a manuscript file;
+- human-governed, so agents can support checks and synthesis without replacing editorial accountability.
+
 ## Future paper options
 
 ### Living evidence record
