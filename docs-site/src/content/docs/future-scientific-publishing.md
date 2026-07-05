@@ -56,14 +56,14 @@ Agentic workflows should structure, check, route, summarize, and monitor. They s
 
 | Stage | Sourceright-facing role |
 | --- | --- |
-| Pre-submission guidance | Check scope, reporting guideline, data, code, ethics, contribution, funding, and AI-use readiness. |
-| Structured intake | Receive manuscript text, references, claims, datasets, code, protocols, ethics metadata, checklists, conflicts, and persistent identifiers. |
-| Triage and routing | Classify submissions by topic, method, article type, computational dependency, ethical risk, and reporting requirements. |
-| Reviewer selection support | Propose reviewers while preserving editor authority and conflict checks. |
-| Technical validation | Run citation, source, recency, link, data, code, reporting, and integrity checks. |
-| Briefing packs | Summarize key claims, methods, datasets, code, reporting status, missing items, versions, and review history. |
-| Decision support | Synthesize reviews and draft decision letters without taking the final decision. |
-| Post-publication monitoring | Monitor broken links, data or code access, retractions, corrections, comments, replication attempts, and update triggers. |
+| Pre-submission guidance | Check scope, article type, reporting guideline, ethics, data, code, contributions, funding, and AI-use readiness. |
+| Structured submission intake | Normalize manuscript text, references, claims, datasets, code, protocols, checklists, conflicts, and persistent identifiers into a validation package. |
+| Automated triage and routing | Classify submissions by topic, method, article type, computational dependency, ethical risk, recency risk, and reporting requirements. |
+| Reviewer selection support | Provide conflict-aware reviewer suggestions while preserving editor authority over invitations. |
+| Technical validation | Run citation, source, recency, link, data, code, reporting, and integrity checks as editor-facing evidence. |
+| Reviewer and editor briefing packs | Summarize key claims, methods, datasets, code, reporting status, missing items, prior versions, and review history. |
+| Decision support | Synthesize reviewer comments and draft decision letters without taking the editorial decision. |
+| Post-publication monitoring | Monitor broken links, data or code access, corrections, retractions, public comments, replication attempts, and living-update triggers. |
 
 ## Governance boundary
 
