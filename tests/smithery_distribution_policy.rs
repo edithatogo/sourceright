@@ -100,10 +100,12 @@ fn smithery_server_card_is_checked_in_for_url_publish_scan() {
     assert_eq!(card["prompts"].as_array().map(|items| items.len()), Some(5));
 
     let publishing = read_repo_file("docs/src/publishing.md");
+    let pages_workflow = read_repo_file(".github/workflows/pages.yml");
     let docs_route = read_repo_file("docs-site/src/pages/.well-known/mcp/server-card.json.ts");
     let docs_data = read_repo_file("docs-site/src/data/mcp-server-card.json");
     assert!(publishing.contains("generate-mcp-server-card.ps1"));
     assert!(publishing.contains(".well-known/mcp/server-card.json"));
+    assert!(pages_workflow.contains("include-hidden-files: true"));
     assert!(docs_route.contains("prerender = true"));
     let docs_data_card: Value =
         serde_json::from_str(&docs_data).expect("docs-site MCP server card data");

@@ -54,3 +54,5 @@
 - [ ] Update `docs/src/release-status.md` to reflect arXiv acceptance.
 - [ ] Run `scripts/verify-live-submission-evidence.ps1` to confirm evidence file passes validation.
 - [ ] Run `scripts/verify-submission-readiness.ps1` to confirm gate promotion.
+
+- [ ] Do not submit upstream. This track only documents requirements; upstream submission is handled by Track 81 after Tracks 79/80 hardening evidence packets are complete.

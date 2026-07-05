@@ -1,0 +1,54 @@
+{
+  "id": 88,
+  "slug": "open-source-documentation-maintenance-hardening",
+  "title": "Open Source Documentation and Maintenance Hardening",
+  "status": "planned",
+  "priority": "high",
+  "track_type": "governance-documentation",
+  "summary": "Audit and harden Sourceright's public GitHub documentation, contributor experience, release hygiene, and maintenance posture.",
+  "owner": "maintainers",
+  "created_by": "codex",
+  "created_at": "2026-06-25",
+  "scope": {
+    "in_scope": [
+      "README and docs-site first-run experience",
+      "installation, release status, and release notes consistency",
+      "GitHub community-health files",
+      "issue and pull request templates",
+      "CI, docs, coverage, release, and dependency maintenance presentation",
+      "public claim discipline for technical preview and benchmark wording",
+      "Conductor-to-public-governance documentation mapping"
+    ],
+    "out_of_scope": [
+      "Changing product behavior",
+      "Rewriting provider, extraction, or verification implementations",
+      "Publishing a new release",
+      "Changing repository branch protection or GitHub org settings directly"
+    ]
+  },
+  "owned_paths": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "docs/",
+    ".github/",
+    "conductor/tracks/88-open-source-documentation-maintenance-hardening/"
+  ],
+  "related_tracks": [
+    "36-docx-pdf-extraction",
+    "37-live-provider-integration",
+    "38-disambiguation",
+    "39-url-archive-checks",
+    "40-writeback",
+    "87-self-improving-platform-registry"
+  ],
+  "acceptance_gates": [
+    "The documentation audit records concrete stale, missing, or inconsistent public documentation surfaces.",
+    "The implementation plan separates track creation from public documentation rewrites.",
+    "Community-health and maintenance improvements have explicit acceptance criteria.",
+    "Public claims are tied to repository evidence and avoid overstating product readiness.",
+    "Markdown and policy validation steps are documented for future implementation."
+  ],
+  "human_review_required": true
+}

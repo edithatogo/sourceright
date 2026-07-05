@@ -37,8 +37,9 @@ The downstream submission tracks are grouped as:
 ## Submission Requirements Contracts
 
 Submission requirements contracts define the approval-gated path for external
-registries, marketplaces, plugin hosts, and upstream repositories. The shared
-contract is tracked in `conductor/submission-contracts.md`, the inventory in
+registries, marketplaces, plugin hosts, and upstream repositories. Track 72
+documents the shared submission requirements contract. The shared contract is
+tracked in `conductor/submission-contracts.md`, the inventory in
 `conductor/submission-requirements.json`, and the packet families in
 `conductor/submission-packets/`.
 

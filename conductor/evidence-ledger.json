@@ -446,7 +446,43 @@
         "Deferred package-manager and host-marketplace channels require their owning tracks to produce installable packages and accepted listing evidence."
       ]
     },
-    "73-mcp-directory-submission-hardening": {
+    "71-arxiv-submission-platform-adapters": {
+      "category": "integration",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Shared arXiv submission-platform adapter contracts are documented for current and legacy lanes.",
+        "The short alias is available for downstream dependency gating."
+      ],
+      "blockers": [
+        "No live adapter package or install smoke is claimed here.",
+        "Platform-specific publication remains owned by downstream tracks."
+      ]
+    },
+    "72-submission-requirements-contracts": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Submission contracts define host-by-host requirements, evidence gates, and approval boundaries.",
+        "The policy test and supporting docs anchor the submission contract surface."
+      ],
+      "blockers": [
+        "No external submission claim is allowed without host-specific evidence.",
+        "Prepared or deferred surfaces remain separate from acceptance claims."
+      ]
+    },
+    "82-self-improving-submission-and-health-loop": {
+      "category": "governance",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Health loop spec defines inventory schema, readiness script, policy test, and health >= 9.5 target.",
+        "submission-inventory.json captures the current readiness matrix."
+      ],
+      "blockers": [
+        "Readiness script and policy test are implemented; remaining blocker is health score below 9.5.",
+        "SOURCERIGHT_CLAIM_GATE=1 promotion remains intentionally failing until health reaches 9.5.",
+        "CI gating at health >= 9.5 not yet active."
+      ]
+    },    "73-mcp-directory-submission-hardening": {
       "category": "publication",
       "evidence_level": "contracted",
       "allowed_claims": [
@@ -512,7 +548,18 @@
         "Marketplace/Open VSX acceptance evidence is deferred to Track 69."
       ]
     },
-    "78-arxiv-upstream-requirements-reconnaissance": {
+    "77-vscode-open-vsx-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "VS Code and Open VSX publication hardening is tracked as a deferred publication lane.",
+        "The alias path is available for registry checks."
+      ],
+      "blockers": [
+        "No VSIX package, install smoke, or listing evidence is claimed here.",
+        "Open VSX publication remains deferred until demand justifies it."
+      ]
+    },    "78-arxiv-upstream-requirements-reconnaissance": {
       "category": "requirements",
       "evidence_level": "contracted",
       "allowed_claims": [
@@ -573,8 +620,8 @@
         "submission-inventory.json created with initial readiness matrix (health score: 2.52)."
       ],
       "blockers": [
-        "check-submission-readiness.ps1 not yet implemented.",
-        "submission_health_policy.rs not yet implemented.",
+        "Readiness script and policy test are implemented; remaining blocker is health score below 9.5.",
+        "SOURCERIGHT_CLAIM_GATE=1 promotion remains intentionally failing until health reaches 9.5.",
         "CI gating at health >= 9.5 not yet active."
       ]
     },

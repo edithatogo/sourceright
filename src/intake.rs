@@ -1,4 +1,11 @@
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
+
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
+
+const WORDPROCESSING_NS: &str = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct IntakeDocument {
@@ -44,6 +51,113 @@ pub struct InTextCitationCandidate {
 pub struct IntakeDiagnostic {
     pub code: String,
     pub message: String,
+}
+
+#[derive(Debug, Error)]
+pub enum ManuscriptReadError {
+    #[error("I/O error: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("DOCX archive error: {0}")]
+    Zip(#[from] zip::result::ZipError),
+    #[error("DOCX XML error: {0}")]
+    Xml(#[from] roxmltree::Error),
+}
+
+pub fn read_manuscript_text(path: impl AsRef<Path>) -> Result<String, ManuscriptReadError> {
+    let path = path.as_ref();
+    let is_docx = path
+        .extension()
+        .and_then(|extension| extension.to_str())
+        .map(|extension| extension.eq_ignore_ascii_case("docx"))
+        .unwrap_or(false);
+
+    if is_docx {
+        return read_docx_text(path);
+    }
+
+    Ok(std::fs::read_to_string(path)?)
+}
+
+fn read_docx_text(path: &Path) -> Result<String, ManuscriptReadError> {
+    let file = File::open(path)?;
+    let mut archive = zip::ZipArchive::new(file)?;
+    let mut document_xml = String::new();
+    archive
+        .by_name("word/document.xml")?
+        .read_to_string(&mut document_xml)?;
+
+    let xml = roxmltree::Document::parse(&document_xml)?;
+    let mut paragraphs = Vec::new();
+
+    for paragraph in xml
+        .descendants()
+        .filter(|node| node.is_element() && node.tag_name().name() == "p")
+    {
+        paragraphs.push(render_docx_paragraph(paragraph));
+    }
+
+    Ok(paragraphs.join("\n"))
+}
+
+fn render_docx_paragraph(paragraph: roxmltree::Node<'_, '_>) -> String {
+    let mut text = String::new();
+    render_docx_node(paragraph, &mut text, false);
+    text
+}
+
+fn render_docx_node(node: roxmltree::Node<'_, '_>, output: &mut String, superscript: bool) {
+    for child in node.children() {
+        if child.is_text() {
+            render_docx_text(child.text().unwrap_or_default(), output, superscript);
+            continue;
+        }
+
+        if !child.is_element() {
+            continue;
+        }
+
+        match child.tag_name().name() {
+            "r" => {
+                let child_superscript = run_is_superscript(child);
+                render_docx_node(child, output, child_superscript);
+            }
+            "t" => {
+                render_docx_text(child.text().unwrap_or_default(), output, superscript);
+            }
+            "tab" | "br" | "cr" => {
+                if !matches!(output.chars().last(), Some(' ' | '\n' | '\t')) {
+                    output.push(' ');
+                }
+            }
+            _ => render_docx_node(child, output, superscript),
+        }
+    }
+}
+
+fn render_docx_text(text: &str, output: &mut String, superscript: bool) {
+    let trimmed = text.trim();
+    if superscript && !trimmed.is_empty() && trimmed.chars().all(|ch| ch.is_ascii_digit()) {
+        if !output.is_empty() && !matches!(output.chars().last(), Some(' ' | '\n' | '\t')) {
+            output.push(' ');
+        }
+        output.push('[');
+        output.push_str(trimmed);
+        output.push(']');
+        return;
+    }
+
+    output.push_str(text);
+}
+
+fn run_is_superscript(run: roxmltree::Node<'_, '_>) -> bool {
+    run.children()
+        .filter(|node| node.is_element() && node.tag_name().name() == "rPr")
+        .flat_map(|rpr| rpr.descendants())
+        .any(|node| {
+            node.is_element()
+                && node.tag_name().name() == "vertAlign"
+                && node.attribute((WORDPROCESSING_NS, "val")) == Some("superscript")
+        })
 }
 
 pub fn extract_intake(document: &IntakeDocument) -> IntakeResult {
@@ -374,6 +488,59 @@ fn unsupported(code: &str, message: &str) -> IntakeResult {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::extract_citation_occurrences;
+    use std::io::Write;
+    use zip::write::SimpleFileOptions;
+
+    fn write_test_docx(path: &Path, document_xml: &str) {
+        let file = File::create(path).expect("create docx");
+        let mut writer = zip::ZipWriter::new(file);
+        writer
+            .start_file("word/document.xml", SimpleFileOptions::default())
+            .expect("start document.xml");
+        writer
+            .write_all(document_xml.as_bytes())
+            .expect("write document.xml");
+        writer.finish().expect("finish docx");
+    }
+
+    #[test]
+    fn docx_manuscript_text_is_extracted_with_superscript_citations_normalized() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let docx_path = tempdir.path().join("manuscript.docx");
+        write_test_docx(
+            &docx_path,
+            r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>
+    <w:p>
+      <w:r><w:t>Body paragraph with a citation marker</w:t></w:r>
+      <w:r><w:rPr><w:vertAlign w:val="superscript"/></w:rPr><w:t>1</w:t></w:r>
+    </w:p>
+    <w:p><w:r><w:t>References</w:t></w:r></w:p>
+    <w:p><w:r><w:t>1. Smith J. Trial paper. Journal. doi:10.1/example</w:t></w:r></w:p>
+  </w:body>
+</w:document>"#,
+        );
+
+        let text = read_manuscript_text(&docx_path).expect("read docx text");
+        assert!(text.contains("[1]"));
+        assert_eq!(extract_citation_occurrences(&text).len(), 1);
+        assert_eq!(extract_citation_occurrences(&text)[0].text, "[1]");
+
+        let document = IntakeDocument {
+            source: "manuscript.docx".to_string(),
+            kind: IntakeSourceKind::Docx,
+            text,
+        };
+        let result = extract_intake(&document);
+
+        assert_eq!(result.references.len(), 1);
+        assert_eq!(
+            result.references[0].text,
+            "Smith J. Trial paper. Journal. doi:10.1/example"
+        );
+    }
 
     #[test]
     fn pasted_bibliography_is_segmented_with_original_text() {

@@ -1,21 +1,22 @@
 {
-  "id": "80-arxiv-submission-core-maturity-hardening",
-  "status": "in_progress",
-  "priority": "low",
-  "owners": [
-    "arxiv-integration",
-    "publication"
-  ],
-  "dependencies": [
-    "78-arxiv-upstream-requirements-reconnaissance",
-    "72-submission-requirements-contracts"
-  ],
-  "owned_paths": [
-    "conductor/tracks/80-arxiv-submission-core-maturity-hardening/metadata.json",
-    "conductor/tracks/80-arxiv-submission-core-maturity-hardening/spec.md",
-    "conductor/tracks/80-arxiv-submission-core-maturity-hardening/plan.md",
-    "conductor/tracks/80-arxiv-submission-core-maturity-hardening/test-matrix.md",
-    "conductor/tracks/80-arxiv-submission-core-maturity-hardening/evidence-packet.md",
-    "conductor/tracks/80-arxiv-submission-core-maturity-hardening/security-boundaries.md"
-  ]
+    "id":  "80-arxiv-submission-core-maturity-hardening",
+    "status":  "in_progress",
+    "priority":  "low",
+    "owners":  [
+                   "arxiv-integration",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "71-arxiv-submission-platform-adapters",
+                         "78-arxiv-upstream-requirements-recon",
+                         "72-submission-requirements-contracts"
+                     ],
+    "owned_paths":  [
+                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/metadata.json",
+                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/spec.md",
+                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/plan.md",
+                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/test-matrix.md",
+                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/evidence-packet.md",
+                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/security-boundaries.md"
+                    ]
 }

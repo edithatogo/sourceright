@@ -60,13 +60,13 @@
 
 ## Phase 6: Run checks [ ]
 
-- [ ] `cargo fmt --check` on all new Rust test code.
+- [x] `cargo fmt --check` on all new Rust test code.
 - [ ] `cargo clippy --all-targets -- -D warnings` passes.
 - [ ] `cargo test` passes (ungated health policy test is informational).
-- [ ] `scripts/check-submission-readiness.ps1` exits 0 with valid output.
+- [x] `scripts/check-submission-readiness.ps1` exits 0 with valid output.
 - [ ] `cargo test --test submission_health_policy` passes in default mode.
-- [ ] All surfaces verified present in inventory.
-- [ ] Inventory schema validated by both the PS1 script and Rust test.
+- [x] All surfaces verified present in inventory.
+- [x] Inventory schema validated by the PS1 script; Rust policy test is wired in CI but local execution is blocked by Windows target access/linker errors.
 
 ## Phase 7: conductor-review [ ]
 
@@ -77,7 +77,7 @@
 ## Phase 8: Apply fixes [ ]
 
 - [ ] Fix any schema, formula, or data issues found during review.
-- [ ] Fix any CI integration issues (workflow steps to run the PS1 script and Rust test).
+- [x] Fix any CI integration issues (workflow steps to run the PS1 script and Rust test).
 - [ ] Re-run checks after fixes.
 
 ## Phase 9: Progress [ ]

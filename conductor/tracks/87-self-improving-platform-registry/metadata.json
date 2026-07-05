@@ -12,6 +12,10 @@
     "82-self-improving-submission-and-health-loop"
   ],
   "owned_paths": [
+    "conductor/platform-registry.json",
+    "conductor/platform-registry.schema.json",
+    "scripts/propose-platform-track-candidates.ps1",
+    "tests/platform_registry_policy.rs",
     "conductor/tracks/87-self-improving-platform-registry/metadata.json",
     "conductor/tracks/87-self-improving-platform-registry/spec.md",
     "conductor/tracks/87-self-improving-platform-registry/plan.md",

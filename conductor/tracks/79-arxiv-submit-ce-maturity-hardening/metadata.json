@@ -1,23 +1,24 @@
 {
-  "id": "79-arxiv-submit-ce-maturity-hardening",
-  "status": "in_progress",
-  "priority": "medium",
-  "owners": [
-    "arxiv-integration",
-    "publication"
-  ],
-  "dependencies": [
-    "72-submission-requirements-contracts",
-    "78-arxiv-submission-core-maturity-hardening",
-    "16-journal-workflow-integrations"
-  ],
-  "owned_paths": [
-    "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/metadata.json",
-    "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/spec.md",
-    "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/plan.md",
-    "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/test-matrix.md",
-    "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/journal-screen-smoke-2026-06-10.md",
-    "fixtures/journal/arxiv-submit-ce-submission.json",
-    "src/journal.rs"
-  ]
+    "id":  "79-arxiv-submit-ce-maturity-hardening",
+    "status":  "in_progress",
+    "priority":  "medium",
+    "owners":  [
+                   "arxiv-integration",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "72-submission-requirements-contracts",
+                         "71-arxiv-submission-platform-adapters",
+                         "78-arxiv-upstream-requirements-recon",
+                         "16-journal-workflow-integrations"
+                     ],
+    "owned_paths":  [
+                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/metadata.json",
+                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/spec.md",
+                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/plan.md",
+                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/test-matrix.md",
+                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/journal-screen-smoke-2026-06-10.md",
+                        "fixtures/journal/arxiv-submit-ce-submission.json",
+                        "src/journal.rs"
+                    ]
 }

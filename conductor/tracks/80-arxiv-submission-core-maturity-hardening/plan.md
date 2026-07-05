@@ -117,3 +117,5 @@
 - [ ] Close Track 80 as **informational** — no active users identified, no
       further hardening required for legacy/inactive adapter.
 - [ ] Commit all track files.
+
+- [ ] Do not submit upstream. This track only documents requirements; upstream submission is handled by Track 81 after Tracks 79/80 hardening evidence packets are complete.

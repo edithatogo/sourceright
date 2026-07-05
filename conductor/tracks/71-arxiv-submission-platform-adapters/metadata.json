@@ -1,0 +1,19 @@
+{
+    "id":  "71-arxiv-submission-platform-adapters",
+    "status":  "completed",
+    "priority":  "medium",
+    "owners":  [
+                   "arxiv-integration",
+                   "plugin-packaging"
+               ],
+    "dependencies":  [
+                         "72-submission-requirements-contracts",
+                         "16-journal-workflow-integrations"
+                     ],
+    "owned_paths":  [
+                        "conductor/tracks/71-arxiv-submission-platform-adapters/metadata.json",
+                        "conductor/tracks/71-arxiv-submission-platform-adapters/spec.md",
+                        "conductor/tracks/71-arxiv-submission-platform-adapters/plan.md",
+                        "conductor/tracks/71-arxiv-submission-platform-adapters/test-matrix.md"
+                    ]
+}

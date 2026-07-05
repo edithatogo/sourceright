@@ -43,3 +43,4 @@ workflow artifacts.
   and live evidence manifests for external submission surfaces.
 - `sourceright.live-submission-evidence.schema.json`: live submission evidence
   records for external submission surfaces and their public URLs.
+- `sourceright.submission-requirements.schema.json`: submission requirements inventories for external submission surfaces and self-improving control loops.

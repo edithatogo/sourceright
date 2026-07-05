@@ -3,6 +3,7 @@
 [![Release](https://github.com/edithatogo/sourceright/actions/workflows/release.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/release.yml)
 [![Publish crate](https://github.com/edithatogo/sourceright/actions/workflows/publish-crate.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/publish-crate.yml)
 [![Coverage](https://github.com/edithatogo/sourceright/actions/workflows/coverage.yml/badge.svg)](https://github.com/edithatogo/sourceright/actions/workflows/coverage.yml)
+[![smithery badge](https://smithery.ai/badge/edithatogo/sourceright)](https://smithery.ai/servers/edithatogo/sourceright)
 
 Sourceright is Rust-first reference triage and verification infrastructure for academic writing, agent workflows, and future legal citation work. It is currently a technical preview suitable for developer evaluation and pilot conversations.
 
@@ -17,7 +18,7 @@ Sourceright is Rust-first reference triage and verification infrastructure for a
 
 Sourceright takes references from documents or text, produces canonical CSL JSON, standardises and cleans the records, collects provider evidence, routes uncertain records to manual review, and exports clean reference files for tools such as EndNote, Zotero, and BibLaTeX.
 
-It does not claim to be a production-ready institutional product, a court filing compliance system, or a substitute for examiner-grade final verification. Robust DOCX/PDF extraction, live core-provider checks, better citation disambiguation, URL/archive integrity, and low-noise writeback suggestions remain hardening tracks.
+It does not claim to be a production-ready institutional product, a court filing compliance system, or a substitute for examiner-grade final verification. DOCX manuscripts are now parsed directly for citation intake, but broader PDF extraction, live core-provider checks, better citation disambiguation, URL/archive integrity, and low-noise writeback suggestions remain hardening tracks.
 
 ## Workflow
 
@@ -42,7 +43,7 @@ document/text
 - CLI and MCP server interfaces over the same Rust core.
 - Legal citation analysis with a separate legal citation model and public-provider slots.
 - Claim/source/provenance graphs built over detected citation support without asserting claim truth.
-- Examiner-grade audit hardening for real DOCX/PDF extraction, live provider evidence, institutional-author matching, URL/archive checks, and explicit writeback plans.
+- Examiner-grade audit hardening for broader PDF extraction, live provider evidence, institutional-author matching, URL/archive checks, and explicit writeback plans.
 
 See [conductor/tracks.md](conductor/tracks.md) for the implementation track map.
 The canonical requirements and repo contract are in
@@ -51,7 +52,7 @@ the design diagrams in [docs/src/design.md](docs/src/design.md).
 
 ## Current Status
 
-The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. It should be treated as a structured triage and audit workflow and technical preview until tracks 36-40 close the examiner-grade verification gaps. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
+The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. It should be treated as a structured triage and audit workflow and technical preview until tracks 36-40 close the remaining verification gaps. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
 
 ## CLI
 
@@ -123,12 +124,12 @@ npx --yes markdownlint-cli2@0.18.1 README.md "docs/**/*.md" ".github/**/*.md"
 lychee --config lychee.toml --offline README.md docs/src/**/*.md docs/import-manifest.md
 actionlint
 zizmor --min-severity medium .github/workflows
-cargo llvm-cov --locked --all-targets --summary-only --branch --fail-under-branches 85
+cargo llvm-cov --locked --all-targets --fail-under-lines 85
 cargo mutants --workspace
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1 -CoverageMinimum 85
 ```
 
-Coverage stays gated above 85 percent branch coverage in CI and in the checked-in pre-commit
+Coverage stays gated above 85 percent line coverage in CI and in the checked-in pre-commit
 hook.
 
 Release and publish workflows each emit a `release-status.md` artifact so the
