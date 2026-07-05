@@ -4,6 +4,8 @@
 
 Make Sourceright usable by journals, publishers, and editorial offices as a citation-integrity screening service for submitted manuscripts.
 
+Track 88 extends this completed integration contract with a strategic roadmap for future scientific papers and agentic editorial workflows. Track 16 remains the implemented screening surface; Track 88 defines the longer-term research-object and submission-management context.
+
 ## Scope
 
 - Define a generic journal screening adapter contract that accepts manuscript files or extracted text and returns reference integrity outputs.
@@ -11,6 +13,7 @@ Make Sourceright usable by journals, publishers, and editorial offices as a cita
 - Define adapter plans for ScholarOne, Editorial Manager, eJournalPress, Manuscript Manager, and similar SaaS editorial systems where vendor or publisher access may be required.
 - Return editor-facing and author-facing outputs without claiming that errors are AI-generated.
 - Preserve manuscript privacy, auditability, and deterministic execution.
+- Keep the adapter contract compatible with agentic pre-submission checks, structured intake, triage support, reviewer briefing packs, and post-publication monitoring.
 
 ## Outputs
 
@@ -20,6 +23,19 @@ Make Sourceright usable by journals, publishers, and editorial offices as a cita
 - Editorial triage summary.
 - Author-facing citation action checklist.
 - Platform adapter contracts for OJS, generic webhooks, and enterprise systems.
+- Agent-ready JSON artifacts for later workflow automation.
+
+## Agentic workflow boundary
+
+Journal integrations may support agents that structure, check, route, summarize, and monitor submissions. They must not make autonomous accept, reject, clinical-use, or publication-support decisions.
+
+The workflow boundary is:
+
+- authors remain responsible for submitted content;
+- reviewers remain responsible for reviews;
+- editors remain accountable for editorial decisions;
+- any agentic recommendation must be auditable and overridable;
+- confidential manuscripts must stay inside the journal-controlled processing boundary unless explicit policy and permission allow another path.
 
 ## Boundaries
 

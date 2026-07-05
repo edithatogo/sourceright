@@ -19,6 +19,37 @@ The current core can support a platform adapter through:
 
 The remaining platform work is adapter glue: retrieving submission files, running extraction, storing reports, and returning editor-facing or author-facing summaries. The Rust contract already models OJS, generic webhooks, ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager as screening platform targets.
 
+## Agentic Submission Management
+
+Track 88 extends this integration surface from citation screening into a broader submission-management and validation layer. The future journal workflow should receive a structured research package rather than only a manuscript file. That package can include article text, references, key claims, datasets, code, ethics metadata, reporting checklists, author contributions, conflicts, AI-use declarations, review history, and persistent identifiers.
+
+Agentic workflow support should remain decision-support only. Agents may structure, check, route, summarize, and monitor. Editors remain accountable for editorial decisions, reviewers remain accountable for reviews, and authors remain accountable for submitted content.
+
+Useful agentic stages include:
+
+| Stage | Sourceright-facing role |
+| --- | --- |
+| Pre-submission guidance | Check scope, article type, reporting guideline, ethics, data, code, contributions, funding, and AI-use readiness. |
+| Structured submission intake | Normalize manuscript text, references, claims, datasets, code, protocols, checklists, conflicts, and persistent identifiers into a validation package. |
+| Automated triage and routing | Classify submissions by topic, method, article type, computational dependency, ethical risk, recency risk, and reporting requirements. |
+| Reviewer selection support | Provide conflict-aware reviewer suggestions while preserving editor authority over invitations. |
+| Technical validation | Run citation, source, recency, link, data, code, reporting, and integrity checks as editor-facing evidence. |
+| Reviewer and editor briefing packs | Summarize key claims, methods, datasets, code, reporting status, missing items, prior versions, and review history. |
+| Decision support | Synthesize reviewer comments and draft decision letters without taking the editorial decision. |
+| Post-publication monitoring | Monitor broken links, data or code access, corrections, retractions, public comments, replication attempts, and living-update triggers. |
+
+## Future Research Object Models
+
+Sourceright's journal adapters should be compatible with several future paper models:
+
+- **Living evidence records** need recency, correction, retraction, link, and superseded-guideline monitoring.
+- **Executable research objects** need data and software citation validation, reproducibility-readiness reports, and environment provenance checks.
+- **Refereed preprint network papers** need version comparison, review provenance, curation packets, and clear preprint status labels.
+- **Machine-actionable claim graphs** need source linkage, claim provenance, citation integrity, and recency-aware evidence alerts.
+- **Community-governed research ledgers** can consume Sourceright audit artifacts, but token mechanics or decentralized governance must not become core integrity dependencies.
+
+The detailed research brief is in `conductor/tracks/88-future-scientific-publishing-agentic-workflows/research-brief.md` and the user-facing roadmap page is `future-scientific-publishing.md`.
+
 ## OJS First
 
 Open Journal Systems is the preferred first public integration target because it is open source and has a plugin ecosystem. An OJS track should map submission files or extracted text into Sourceright intake, run the citation-integrity report, and store outputs in a way that fits editorial workflows.

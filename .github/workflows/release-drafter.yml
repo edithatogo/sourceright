@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: read
 
 concurrency:
@@ -19,6 +19,9 @@ jobs:
   update-release-draft:
     name: Update release draft
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
     steps:
       - name: Update draft release
         uses: release-drafter/release-drafter@da8b9b696abad2ad997580e49f4c1c2e03cc2bd2 # v7

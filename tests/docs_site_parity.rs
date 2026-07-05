@@ -96,6 +96,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/citation-manager-integrations.md",
         ),
         (
+            "future-scientific-publishing.md",
+            "docs-site/src/content/docs/future-scientific-publishing.md",
+        ),
+        (
             "zotero-plugin-install.md",
             "docs-site/src/content/docs/guides/zotero-plugin-install.md",
         ),
