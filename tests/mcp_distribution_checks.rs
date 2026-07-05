@@ -209,6 +209,10 @@ fn glama_metadata_is_present_and_valid() {
         .as_array()
         .expect("glama maintainers must be array");
     assert!(maintainers.iter().any(|value| value == "edithatogo"));
+    assert!(
+        read_repo_file("LICENSE").contains("Dual-licensed under Apache-2.0 OR MIT"),
+        "top-level LICENSE should advertise the repo-wide dual license"
+    );
 }
 
 #[test]

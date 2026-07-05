@@ -1,0 +1,20 @@
+{
+  "id": "86-proprietary-journal-platform-matrix",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": [
+    "journal-platforms",
+    "vendor-adapters"
+  ],
+  "dependencies": [
+    "83-janeway-platform-reconnaissance",
+    "72-submission-requirements-contracts",
+    "75-journal-platform-publication-hardening"
+  ],
+  "owned_paths": [
+    "conductor/tracks/86-proprietary-journal-platform-matrix/metadata.json",
+    "conductor/tracks/86-proprietary-journal-platform-matrix/spec.md",
+    "conductor/tracks/86-proprietary-journal-platform-matrix/plan.md",
+    "conductor/tracks/86-proprietary-journal-platform-matrix/test-matrix.md"
+  ]
+}

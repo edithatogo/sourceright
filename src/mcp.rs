@@ -8,7 +8,7 @@ use serde_json::{Map, Value, json};
 use sourceright::{
     ExportFormat, JournalPlatform, SourcerightPolicy, SourcerightWorkspace,
     analyze_claim_source_provenance, analyze_legal_citations, discover_plugins, evaluate_policy,
-    parse_csl_json,
+    parse_csl_json, read_manuscript_text,
 };
 
 const SERVER_NAME: &str = "sourceright";
@@ -196,7 +196,7 @@ impl McpRuntime {
             "references.citations" => {
                 let manuscript = required_path(arguments, "manuscript", "manuscript.txt")?;
                 let workspace = workspace_from_arguments(&self.workspace, arguments);
-                let text = fs::read_to_string(&manuscript)
+                let text = read_manuscript_text(&manuscript)
                     .map_err(|error| RpcError::new(-32603, error.to_string(), None))?;
                 let report = workspace
                     .citation_reconciliation_report(&text)
@@ -661,7 +661,7 @@ fn status_payload() -> Value {
             "sourceright report --json [.sourceright-directory]",
             "sourceright report --mcp-resource [.sourceright-directory]",
             "sourceright conflicts [.sourceright-directory]",
-            "sourceright citations <manuscript.txt> [.sourceright-directory]",
+            "sourceright citations <manuscript.txt|manuscript.docx> [.sourceright-directory]",
             "sourceright review queue|partitions",
             "sourceright journal-screen [.sourceright-directory]",
             "sourceright legal <legal-text.txt>",

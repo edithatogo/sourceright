@@ -7,7 +7,8 @@ issues before the document leaves the local workspace.
 
 ## Inputs
 
-- Manuscript text or a text export from the manuscript editor.
+- Manuscript text, a text export from the manuscript editor, or a `.docx`
+  manuscript.
 - `references.csl.json` as the clean canonical reference file.
 - `references.verification.json` as the provider and review sidecar.
 - `review-queue.jsonl` for unresolved items.
@@ -33,10 +34,14 @@ issues before the document leaves the local workspace.
    ```
 
 4. Reconcile in-text citations against the reference list when you have a text
-   manuscript.
+   manuscript or a `.docx` manuscript.
 
    ```text
    sourceright citations manuscript.txt
+   ```
+
+   ```text
+   sourceright citations manuscript.docx
    ```
 
 5. Inspect and resolve the review queue.
@@ -59,6 +64,9 @@ issues before the document leaves the local workspace.
 - Treat unresolved queue items as a signal to stop and inspect the source
   record, not as a reason to force export.
 - Use preview or JSON output when you need to inspect results in a script.
+- If your manuscript is in Word format, Sourceright extracts the manuscript
+  text directly from the `.docx` package and normalizes superscript numeric
+  markers before reconciliation.
 
 ## Good stopping point
 

@@ -1,0 +1,21 @@
+{
+  "id": "74-citation-manager-publication-hardening",
+  "status": "in_progress",
+  "priority": "medium",
+  "owners": ["publication", "citation-manager-integration"],
+  "dependencies": [
+    "58-mature-zotero-plugin",
+    "59-other-citation-manager-integrations",
+    "69-marketplace-submission-evidence",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/74-citation-manager-publication-hardening/metadata.json",
+    "conductor/tracks/74-citation-manager-publication-hardening/spec.md",
+    "conductor/tracks/74-citation-manager-publication-hardening/plan.md",
+    "conductor/tracks/74-citation-manager-publication-hardening/test-matrix.md",
+    "plugins/zotero/",
+    "docs/src/citation-manager-integration.md",
+    "docs-site/src/content/docs/guides/citation-manager.md"
+  ]
+}

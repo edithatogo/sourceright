@@ -38,6 +38,10 @@ models change.
   contracts, capabilities, fixtures, and safety posture.
 - `sourceright.mcp-status.schema.json`: machine-readable readiness output for
   the MCP placeholder/status surface.
+- `sourceright.submission-packets.schema.json`: submission packet inventories
+  and live evidence manifests for external submission surfaces.
+- `sourceright.live-submission-evidence.schema.json`: live submission evidence
+  records for external submission surfaces and their public URLs.
 
 ## Compatibility Rules
 
@@ -61,3 +65,5 @@ requiring one.
 The sample files under `examples/workspace/.sourceright/` are intentionally
 small and deterministic. They are suitable for documentation, local CLI
 experiments, and future schema validation scripts.
+
+- `sourceright.submission-requirements.schema.json`: submission requirements inventories for external submission surfaces and self-improving control loops.

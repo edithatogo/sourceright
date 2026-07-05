@@ -1,21 +1,59 @@
 {
-  "$schema": "../../schemas/arxiv-submission-fixture.json",
-  "fixture_name": "arxiv-submit-ce-synthetic-001",
-  "description": "Synthetic arXiv Submit CE fixture exercising journal screening platform aliases.",
-  "created": "2026-05-14T00:00:00Z",
+  "$schema": "../../schemas/ojs-submission-fixture.json",
+  "fixture_name": "arxiv-submit-ce-submission-synthetic-001",
+  "description": "Synthetic arXiv submit-ce submission fixture for journal screening contract smoke tests.",
+  "created": "2026-06-10T00:00:00Z",
   "submission": {
     "submission_id": "ARXIV-CE-2026-0001",
     "platform": "arxiv-submit-ce",
     "manuscript_label": "source-package.tar.gz"
   },
+  "manuscript": {
+    "title": "Citation Integrity Checks for Preprint Submission Packages",
+    "authors": [
+      {
+        "given": "Riley",
+        "family": "Ng",
+        "affiliation": "Open Research Systems Lab"
+      }
+    ],
+    "abstract": "A synthetic submission package used to exercise Sourceright journal screening integration boundaries.",
+    "keywords": [
+      "preprint",
+      "citation integrity",
+      "submission screening"
+    ],
+    "submission_date": "2026-06-10",
+    "section": "Computer Science",
+    "language": "en"
+  },
   "csl_references": [
     {
-      "id": "smith-2026-arxiv",
+      "id": "ng-2026-preprint-screening",
       "type": "article-journal",
-      "title": "Reference integrity checks for arXiv source packages",
+      "title": "Citation integrity checks for preprint submission packages",
+      "DOI": "10.1234/arxiv-ce-2026-001",
       "author": [
         {
-          "family": "Smith",
+          "family": "Ng",
+          "given": "Riley"
+        }
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            2026
+          ]
+        ]
+      }
+    },
+    {
+      "id": "unverified-2026-preprint",
+      "type": "article-journal",
+      "title": "Unverified preprint reference requiring author review",
+      "author": [
+        {
+          "family": "Stone",
           "given": "Alex"
         }
       ],
@@ -31,8 +69,20 @@
   "verification_sidecar": {
     "schema_version": "sourceright.verification.v1",
     "references": {
-      "smith-2026-arxiv": {
-        "review_status": "queued"
+      "ng-2026-preprint-screening": {
+        "provider_candidates": [
+          {
+            "provider": "crossref",
+            "confidence": 0.96,
+            "retrieved_at": "2026-06-10T00:00:00Z",
+            "data": {
+              "DOI": "10.1234/arxiv-ce-2026-001",
+              "title": "Citation integrity checks for preprint submission packages"
+            }
+          }
+        ],
+        "conflicts": [],
+        "review_status": "not_required"
       }
     }
   },

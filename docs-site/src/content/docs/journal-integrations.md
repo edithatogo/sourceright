@@ -45,3 +45,42 @@ Repo-local OJS checks that do not require Docker can be run with:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ojs-plugin-lint.ps1
 ```
+
+## Janeway Next
+
+Janeway is the next open-source journal platform to map because it is plugin-oriented and keeps the extension story inside a documented open-source project rather than a vendor-only API surface.
+
+The Janeway tracks should start with:
+
+- plugin hook discovery and install packaging boundaries;
+- a Sourceright adapter contract that keeps screening logic in the Rust core;
+- disposable-instance or local-package smoke evidence before any publication claim.
+
+The target integration shapes are:
+
+- plugin-first where Janeway exposes stable hooks and packaging;
+- sidecar-service where the journal installs a thin bridge and Sourceright remains the screening engine;
+- hybrid where plugin metadata launches the CLI and a report artifact returns to the journal UI.
+
+## Enterprise Adapters
+
+ScholarOne, Editorial Manager, eJournalPress, Manuscript Manager, and similar editorial systems should initially be handled through adapter contracts or generic batch/webhook workflows. Live integrations should wait for platform API access, vendor documentation, or publisher test environments.
+
+The generic adapter contract should define:
+
+- Submission id.
+- Manuscript file or extracted text location.
+- Optional reference-list text or CSL JSON.
+- Report destination.
+- Severity thresholds.
+- Visibility rules for editors, reviewers, and authors.
+
+## Self-Improving Registry
+
+The platform roadmap should stay machine-readable and self-improving:
+
+- agents can survey official docs and repo fixtures to propose new platform tracks;
+- skills can encode repeatable discovery, packaging, and smoke workflows;
+- human review stays required before any new platform claim moves past reconnaissance.
+
+That means the adapter registry should prefer exact surfaces, evidence links, and bounded claims over broad "supported platform" language.

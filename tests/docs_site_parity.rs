@@ -181,6 +181,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/claim-provenance-roadmap.md",
         ),
         (
+            "submission-contracts.md",
+            "docs-site/src/content/docs/submission-contracts.md",
+        ),
+        (
             "contributing.md",
             "docs-site/src/content/docs/guides/contributing.md",
         ),

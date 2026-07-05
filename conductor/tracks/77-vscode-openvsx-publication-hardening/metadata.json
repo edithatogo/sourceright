@@ -1,0 +1,23 @@
+{
+  "id": "77-vscode-openvsx-publication-hardening",
+  "status": "in_progress",
+  "priority": "low",
+  "owners": [
+    "publication",
+    "editor-integration"
+  ],
+  "dependencies": [
+    "66-vscode-extension-packaging",
+    "69-marketplace-submission-evidence",
+    "72-submission-requirements-contracts"
+  ],
+  "owned_paths": [
+    "conductor/tracks/77-vscode-openvsx-publication-hardening/metadata.json",
+    "conductor/tracks/77-vscode-openvsx-publication-hardening/spec.md",
+    "conductor/tracks/77-vscode-openvsx-publication-hardening/plan.md",
+    "conductor/tracks/77-vscode-openvsx-publication-hardening/test-matrix.md",
+    ".vscode/",
+    "docs/src/vscode-extension.md",
+    "docs-site/src/content/docs/guides/vscode.md"
+  ]
+}

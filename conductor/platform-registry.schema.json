@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sourceright.conductor.platform-registry.v1",
+  "title": "Conductor platform registry",
+  "type": "object",
+  "required": ["schema_version", "$schema", "policy", "candidate_track_template", "platforms"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "type": "string" },
+    "policy": {
+      "type": "object",
+      "required": ["candidate_track_required", "ad_hoc_notes_allowed", "human_review_required", "auto_open_tracks"],
+      "properties": {
+        "candidate_track_required": { "type": "boolean" },
+        "ad_hoc_notes_allowed": { "type": "boolean" },
+        "human_review_required": { "type": "boolean" },
+        "auto_open_tracks": { "type": "boolean" }
+      }
+    },
+    "candidate_track_template": {
+      "type": "object",
+      "required": ["required_fields", "default_status", "approval_gate", "output_contract"],
+      "properties": {
+        "required_fields": { "type": "array", "items": { "type": "string" } },
+        "default_status": { "type": "string" },
+        "approval_gate": { "type": "string" },
+        "output_contract": { "type": "string" }
+      }
+    },
+    "platforms": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/platform" }
+    }
+  },
+  "$defs": {
+    "platform": {
+      "type": "object",
+      "required": [
+        "platform_id",
+        "name",
+        "family",
+        "owner_track",
+        "status",
+        "evidence_sources",
+        "capabilities",
+        "blockers",
+        "confidence",
+        "approval_state",
+        "candidate_track"
+      ],
+      "properties": {
+        "platform_id": { "type": "string" },
+        "name": { "type": "string" },
+        "family": { "type": "string" },
+        "owner_track": { "type": "string" },
+        "status": { "type": "string" },
+        "evidence_sources": { "type": "array" },
+        "capabilities": { "type": "array" },
+        "blockers": { "type": "array" },
+        "confidence": { "type": "number" },
+        "approval_state": { "type": "string" },
+        "candidate_track": { "$ref": "#/$defs/candidate_track" }
+      }
+    },
+    "candidate_track": {
+      "type": "object",
+      "required": [
+        "track_slug",
+        "title",
+        "proposed_status",
+        "trigger",
+        "scope",
+        "acceptance_gates",
+        "human_review_required",
+        "auto_open"
+      ],
+      "properties": {
+        "track_slug": { "type": "string" },
+        "title": { "type": "string" },
+        "proposed_status": { "type": "string" },
+        "trigger": { "type": "string" },
+        "scope": { "type": "array" },
+        "acceptance_gates": { "type": "array" },
+        "human_review_required": { "type": "boolean" },
+        "auto_open": { "type": "boolean" }
+      }
+    }
+  }
+}

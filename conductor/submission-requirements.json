@@ -1,0 +1,320 @@
+{
+  "$schema": "../schemas/sourceright.submission-requirements.schema.json",
+  "schema_version": "sourceright.submission_requirements.v1",
+  "repo_health_target": 9.5,
+  "self_improving_controls": {
+    "readiness_script": "scripts/verify-submission-readiness.ps1",
+    "ci_workflow": ".github/workflows/submission-readiness.yml",
+    "packet_manifest": "conductor/submission-packets/manifest.json"
+  },
+  "surfaces": [
+    {
+      "id": "official-mcp-registry",
+      "label": "Official MCP Registry",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://docs.anthropic.com/en/docs/mcp"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No registry acceptance evidence has been recorded yet."]
+    },
+    {
+      "id": "smithery",
+      "label": "Smithery",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://smithery.ai/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Smithery acceptance evidence has been recorded yet."]
+    },
+    {
+      "id": "glama",
+      "label": "Glama",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://glama.ai/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Glama acceptance evidence has been recorded yet."]
+    },
+    {
+      "id": "zotero",
+      "label": "Zotero",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://www.zotero.org/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Zotero package evidence has been recorded yet."]
+    },
+    {
+      "id": "endnote",
+      "label": "EndNote",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://endnote.com/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No EndNote package evidence has been recorded yet."]
+    },
+    {
+      "id": "ojs-pkp",
+      "label": "OJS/PKP",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://pkp.sfu.ca/software/ojs/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No OJS package evidence has been recorded yet."]
+    },
+    {
+      "id": "arxiv-submit-ce",
+      "label": "arXiv submit-ce",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://github.com/arXiv/submit-ce"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No arXiv submit-ce package evidence has been recorded yet."]
+    },
+    {
+      "id": "arxiv-submission-core",
+      "label": "arXiv submission-core",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://github.com/arXiv/arxiv-submission-core"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No arXiv submission-core package evidence has been recorded yet."]
+    },
+    {
+      "id": "claude-cowork",
+      "label": "Claude Cowork",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://docs.anthropic.com/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Claude host-package evidence has been recorded yet."]
+    },
+    {
+      "id": "codex-app",
+      "label": "Codex app",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://openai.com/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Codex host-package evidence has been recorded yet."]
+    },
+    {
+      "id": "github-copilot",
+      "label": "GitHub Copilot",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://github.com/features/copilot"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Copilot host-package evidence has been recorded yet."]
+    },
+    {
+      "id": "gemini-cli-extensions",
+      "label": "Gemini CLI extensions",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://ai.google.dev/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Gemini CLI extension evidence has been recorded yet."]
+    },
+    {
+      "id": "qwen-cli-extensions",
+      "label": "Qwen CLI extensions",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://www.alibabacloud.com/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Qwen CLI extension evidence has been recorded yet."]
+    },
+    {
+      "id": "vscode-open-vsx",
+      "label": "VS Code / Open VSX",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://open-vsx.org/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No VSIX or Open VSX evidence has been recorded yet."]
+    }
+  ]
+}

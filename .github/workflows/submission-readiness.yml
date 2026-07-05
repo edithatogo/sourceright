@@ -1,0 +1,50 @@
+name: Submission readiness
+
+on:
+  pull_request:
+    paths:
+      - conductor/requirements.md
+      - conductor/evidence-ledger.json
+      - conductor/submission-requirements.json
+      - conductor/submission-inventory.json
+      - conductor/submission-packets/**
+      - schemas/**
+      - scripts/**
+      - tests/submission_health_policy.rs
+      - .github/workflows/submission-readiness.yml
+  push:
+    branches: [main]
+    paths:
+      - conductor/requirements.md
+      - conductor/evidence-ledger.json
+      - conductor/submission-requirements.json
+      - conductor/submission-inventory.json
+      - conductor/submission-packets/**
+      - schemas/**
+      - scripts/**
+      - tests/submission_health_policy.rs
+      - .github/workflows/submission-readiness.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+jobs:
+  submission-readiness:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Run submission readiness verifier
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-submission-readiness.ps1
+      - name: Run submission health inventory verifier
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-submission-readiness.ps1
+      - name: Run submission contract tests
+        shell: pwsh
+        run: cargo test --locked --test submission_contracts_policy
+      - name: Run submission health policy tests
+        shell: pwsh
+        run: cargo test --locked --test submission_health_policy

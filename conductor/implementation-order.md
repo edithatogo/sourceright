@@ -36,6 +36,14 @@ These can run in parallel when their owned paths do not overlap:
 - Track 66: VS Code extension packaging.
 - Track 67: Microsoft Word add-in packaging.
 - Track 68: LibreOffice extension packaging.
+- Track 83: Janeway platform reconnaissance.
+- Track 84: Janeway plugin package hardening.
+- Track 85: Janeway install and smoke evidence.
+
+## Platform Expansion
+
+- Track 86: proprietary journal-platform matrix.
+- Track 87: self-improving platform registry.
 
 ## Publication And Proof
 
@@ -50,3 +58,12 @@ These can run in parallel when their owned paths do not overlap:
 
 Subagents may work in parallel only when their owned paths do not overlap.
 Shared contracts, schemas, and public docs are edited serially by the lead.
+
+## Submission Hardening
+
+- Track 72: submission requirements contracts and readiness checks.
+- Track 77: editor and registry publication hardening.
+- Track 78: arXiv upstream requirements reconnaissance.
+- Track 79: arXiv submit-ce maturity hardening.
+- Track 80: arXiv submission-core maturity hardening.
+- Track 81: arXiv upstream submission and acceptance.

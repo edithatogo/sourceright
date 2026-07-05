@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sourceright.live-submission-evidence.v1",
+  "title": "Live submission evidence",
+  "type": "object",
+  "required": ["$schema", "surface_id", "status", "public_url"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "surface_id": { "type": "string" },
+    "status": { "type": "string" },
+    "public_url": { "type": "string" },
+    "artifact_id": { "type": "string" },
+    "evidence_type": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}

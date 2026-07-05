@@ -1,0 +1,26 @@
+{
+  "id": "73-mcp-directory-submission-hardening",
+  "status": "in_progress",
+  "priority": "high",
+  "owners": ["publication", "mcp-distribution"],
+  "dependencies": [
+    "69-marketplace-submission-evidence",
+    "72-submission-requirements-contracts",
+    "56-mcp-registry-release-binding",
+    "57-smithery-distribution-readiness"
+  ],
+  "owned_paths": [
+    "conductor/tracks/73-mcp-directory-submission-hardening/metadata.json",
+    "conductor/tracks/73-mcp-directory-submission-hardening/spec.md",
+    "conductor/tracks/73-mcp-directory-submission-hardening/plan.md",
+    "conductor/tracks/73-mcp-directory-submission-hardening/test-matrix.md",
+    "conductor/tracks/73-mcp-directory-submission-hardening/smithery-server-card-2026-06-10.md",
+    "conductor/tracks/73-mcp-directory-submission-hardening/browser-listing-verification-2026-06-10.md",
+    ".well-known/mcp/server-card.json",
+    "docs-site/public/.well-known/mcp/server-card.json",
+    "scripts/generate-mcp-server-card.ps1",
+    "src/mcp.rs",
+    "tests/smithery_distribution_policy.rs",
+    "docs/src/publishing.md"
+  ]
+}

@@ -1,21 +1,22 @@
 ---
-title: Sourceright
-description: Reference verification, provenance, publishing, and quality controls for Sourceright.
+title: SourceRight
+description: Astro/Starlight documentation entrypoint for SourceRight.
 ---
 
-Sourceright is organized around the full citation workflow, from intake through
-verification, review, export, and publication.
+# SourceRight
 
-- Start with the [installation guide](guides/installation) and [workflow](guides/workflow).
-- Use the [feature contract matrix](feature-contract-matrix) as the canonical
-  requirements and repo-contract surface.
-- Use the [design page](design) for architecture diagrams and data boundaries.
-- Use the [CLI guide](guides/cli) for local commands.
-- Use the [MCP guide](guides/mcp) for the server contract and tool surfaces.
-- Review the [publishing guide](guides/publishing) before release or registry work.
-- Review the [security automation guide](guides/security-automation) before
-  changing dependency, Copilot, or GitHub security workflows.
-- Review the [limitations page](guides/limitations) for the current workflow gaps.
-- Review the [benchmark guide](guides/benchmarks) for the fixture-backed
-  technical-preview benchmark surface.
-- Read the [reference pages](reference/index) for provider, reporting, plugin, and QA policy.
+This repository owns a local Astro/Starlight documentation surface for the Legal NZ system.
+
+## Standard commands
+
+- `npm run docs:dev`
+- `npm run docs:build`
+- `npm run docs:check`
+
+## Source material
+
+Existing Astro docs-site, mdBook/book.toml legacy source, and docs/ Markdown.
+
+## Policy
+
+This docs app follows the root Legal NZ Astro documentation policy: Astro is the published documentation shell, while generated API, CLI, dataset, or prose references feed into Astro rather than replacing it.
