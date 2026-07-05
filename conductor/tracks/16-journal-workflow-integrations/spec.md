@@ -34,7 +34,7 @@ The workflow boundary is:
 - authors remain responsible for submitted content;
 - reviewers remain responsible for reviews;
 - editors remain accountable for editorial decisions;
-- any agentic recommendation must be auditable and overrideable;
+- any agentic recommendation must be auditable and overridable;
 - confidential manuscripts must stay inside the journal-controlled processing boundary unless explicit policy and permission allow another path.
 
 ## Boundaries
