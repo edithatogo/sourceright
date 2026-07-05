@@ -7,8 +7,8 @@ use std::path::PathBuf;
 use serde::Serialize;
 use sourceright::{
     CitationSyncConfig, ExportFormat, JournalPlatform, ReviewDecisionImport, SourcerightPolicy,
-    SourcerightWorkspace, discover_plugins, evaluate_policy, parse_csl_json, run_benchmark_suite,
-    run_citation_sync, read_manuscript_text,
+    SourcerightWorkspace, discover_plugins, evaluate_policy, parse_csl_json, read_manuscript_text,
+    run_benchmark_suite, run_citation_sync,
 };
 
 mod mcp;

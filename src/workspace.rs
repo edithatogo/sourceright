@@ -66,11 +66,13 @@ impl SourcerightWorkspace {
         }
     }
 
-    /// Constructs a workspace from an explicit root or a directory containing `.sourceright`.
+    /// Constructs a workspace from a root path or a parent directory that contains `.sourceright`.
     pub fn from_root_or_parent(path: impl Into<PathBuf>) -> Self {
         let path = path.into();
-        if path.join("references.csl.json").exists()
-            || path.file_name().and_then(|name| name.to_str()) == Some(".sourceright")
+        if path.file_name().and_then(|name| name.to_str()) == Some(".sourceright")
+            || path.join("references.csl.json").exists()
+            || path.join("references.verification.json").exists()
+            || path.join("review-queue.jsonl").exists()
         {
             return Self::from_root(path);
         }
