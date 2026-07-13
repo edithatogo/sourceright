@@ -303,17 +303,6 @@ impl SourcerightWorkspace {
     }
 }
 
-fn normalize_workspace_root(root: PathBuf) -> PathBuf {
-    if root.file_name().and_then(|name| name.to_str()) == Some(".sourceright")
-        || root.join("references.csl.json").exists()
-    {
-        return root;
-    }
-
-    let nested = root.join(".sourceright");
-    if nested.is_dir() { nested } else { root }
-}
-
 fn write_text_if_missing(path: &Path, value: &str) -> Result<(), WorkspaceError> {
     if path.exists() {
         return Ok(());
