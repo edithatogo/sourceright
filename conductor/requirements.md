@@ -74,6 +74,7 @@ controls it defines.
 | OJS proof | Should | 16, 45 | OJS fixture and optional live/test-instance smoke prove the journal contract. | Do not claim journal compatibility beyond tested adapters. |
 | Citation-manager proof | Should | 21, 45 | Zotero/EndNote tests prove preview/apply/audit semantics. | Do not claim live sync from export-only paths. |
 | Plugin/provider roadmap delivery | Should | 19, 20, 46 | Every registry entry has status, owner track, fixtures, and docs. | Do not show planned plugins as implemented. |
+| Scholarly extraction backend boundary | Should | 91-97 | Optional extraction backends emit neutral, provenance-rich candidates and review evidence. | No backend may silently write canonical CSL; live services remain opt-in. |
 | Public API provider adapters | Should | 48 | Unpaywall, OpenCitations, arXiv, Europe PMC, and related public providers have fixtures and opt-in live smokes. | Do not treat one provider success as evidence for another provider. |
 | Licensed provider adapters | Could | 49 | Dimensions, Scopus, and Web of Science have BYO-key auth, privacy, cache, and skip contracts. | Do not run licensed providers in default CI or imply bundled access. |
 | Repository record adapters | Should | 50 | Zenodo, OSF, Figshare, Dataverse, and institutional records have separate evidence contracts. | Do not bundle repositories under one untested provider claim. |

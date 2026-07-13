@@ -200,8 +200,39 @@ impl SourcerightWorkspace {
     /// Returns the cross-file reference integrity report.
     pub fn reference_report(&self) -> Result<ReferenceReport, WorkspaceError> {
         let csl: CslDocument = read_json(&self.references_csl_json)?;
-        let sidecar: VerificationSidecar = read_json(&self.verification_sidecar_json)?;
-        Ok(ReferenceReport::from_documents(&csl, &sidecar))
+        let (sidecar, sidecar_missing) = self.read_verification_sidecar_for_report()?;
+        let mut report = ReferenceReport::from_documents(&csl, &sidecar);
+        if sidecar_missing {
+            report.add_workspace_issue(crate::report::ReferenceReportIssue {
+                severity: crate::report::ReferenceReportSeverity::Info,
+                category: crate::report::ReferenceReportCategory::SidecarBoundary,
+                reference_id: None,
+                code: "report.missing_verification_sidecar".to_string(),
+                message: format!(
+                    "No verification sidecar was found at {}; reporting canonical CSL only with degraded verification coverage",
+                    self.verification_sidecar_json.display()
+                ),
+                ai_risk_signal: false,
+            });
+        }
+        Ok(report)
+    }
+
+    fn read_verification_sidecar_for_report(
+        &self,
+    ) -> Result<(VerificationSidecar, bool), WorkspaceError> {
+        if !self.verification_sidecar_json.exists() {
+            return Ok((VerificationSidecar::empty(), true));
+        }
+
+        let input = fs::read_to_string(&self.verification_sidecar_json)?;
+        let sidecar = parse_verification_sidecar_json(&input).map_err(|error| {
+            WorkspaceError::InvalidVerificationSidecar {
+                path: self.verification_sidecar_json.display().to_string(),
+                message: error.to_string(),
+            }
+        })?;
+        Ok((sidecar, false))
     }
 
     /// Returns a conflict-resolution report derived from the workspace files.
@@ -287,6 +318,10 @@ pub enum WorkspaceError {
     Io(#[from] io::Error),
     #[error("JSON error: {0}")]
     Json(#[from] serde_json::Error),
+    #[error(
+        "verification sidecar '{path}' is invalid: {message}; repair or move the file aside, then rerun report"
+    )]
+    InvalidVerificationSidecar { path: String, message: String },
 }
 
 #[cfg(test)]
@@ -337,6 +372,42 @@ mod tests {
         assert_eq!(report.summary.total_references, 0);
         assert_eq!(resource.uri, "sourceright://reports/reference-integrity");
         assert_eq!(resource.mime_type, "application/json");
+    }
+
+    #[test]
+    fn report_supports_csl_only_workspaces_with_actionable_degraded_diagnostic() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::from_root(tempdir.path());
+        fs::write(
+            &workspace.references_csl_json,
+            r#"[{"id":"smith-2024","type":"article-journal","title":"Trial"}]"#,
+        )
+        .expect("write csl");
+
+        let report = workspace
+            .reference_report_json()
+            .expect("report should degrade without sidecar");
+
+        assert_eq!(report.summary.info_count, 1);
+        assert!(report.issues.iter().any(|issue| {
+            issue.code == "report.missing_verification_sidecar"
+                && issue.category == crate::report::ReferenceReportCategory::SidecarBoundary
+        }));
+    }
+
+    #[test]
+    fn report_rejects_malformed_sidecars_with_actionable_path() {
+        let tempdir = tempfile::tempdir().expect("create tempdir");
+        let workspace = SourcerightWorkspace::from_root(tempdir.path());
+        fs::write(&workspace.references_csl_json, "[]").expect("write csl");
+        fs::write(&workspace.verification_sidecar_json, "{not-json").expect("write sidecar");
+
+        let error = workspace
+            .reference_report_json()
+            .expect_err("invalid sidecar");
+        let message = error.to_string();
+        assert!(message.contains("references.verification.json"));
+        assert!(message.contains("repair or move the file aside"));
     }
 
     #[test]

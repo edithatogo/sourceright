@@ -35,6 +35,7 @@
 - [Style And Recency](style-and-recency.md)
 - [Publishing Plan](publishing.md)
 - [Security Automation](security-automation.md)
+- [Security and Quality Gates](security-and-quality-gates.md)
 - [DevSecOps Automation Upgrade](devsecops-automation-upgrade.md)
 - [Release Runbook](release-runbook.md)
 - [Release Status](release-status.md)

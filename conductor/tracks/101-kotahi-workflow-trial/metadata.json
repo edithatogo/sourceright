@@ -1,0 +1,1 @@
+{"id":"101-kotahi-workflow-trial","status":"planned","priority":"medium","owners":["journal-platforms","kotahi"],"dependencies":["89-harness-security-quality-cicd-hardening","90-citation-ecosystem-differential-interoperability"],"owned_paths":["conductor/tracks/101-kotahi-workflow-trial/"]}

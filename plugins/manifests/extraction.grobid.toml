@@ -1,0 +1,22 @@
+[plugin]
+id = "extraction.grobid"
+name = "Optional GROBID reference extraction backend"
+category = "extraction"
+status = "fixture_tested_optional"
+plugin_api = "sourceright.plugin.v1"
+license_profile = "external_apache_service"
+summary = "Disabled-by-default local GROBID processReferences adapter producing review candidates and sidecar provenance."
+
+[auth]
+required = false
+mode = "local_service"
+env = []
+
+[runtime]
+network = true
+default_enabled = false
+live_tests_default = false
+
+[contracts]
+reads = ["pdf_document_bytes", "grobid_tei"]
+writes = ["reference_candidates", "sourceright.verification.v1"]

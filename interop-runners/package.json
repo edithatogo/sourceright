@@ -1,0 +1,17 @@
+{
+  "name": "sourceright-optional-interoperability-runners",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pinned, optional citation conversion observations for Sourceright.",
+  "license": "MIT OR Apache-2.0",
+  "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "citation-js": "node citation-js-runner.mjs",
+    "bibtex-parser": "node bibtex-parser-runner.mjs"
+  },
+  "dependencies": {
+    "@retorquere/bibtex-parser": "10.0.0",
+    "citation-js": "0.8.1"
+  }
+}

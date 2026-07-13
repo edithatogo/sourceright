@@ -1,0 +1,25 @@
+{
+  "schema_version": "sourceright.extraction_benchmark.v1",
+  "runner_status": "deterministic_fixture",
+  "live_network": false,
+  "redistribution": "self-authored fixture may be redistributed with Sourceright",
+  "fixtures": [
+    {
+      "id": "reference-basic",
+      "input": "fixtures/reference-basic.txt",
+      "gold": "fixtures/reference-basic.gold.json",
+      "prediction": "fixtures/reference-basic.prediction.json",
+      "source": "Sourceright contributors",
+      "license": "MIT OR Apache-2.0",
+      "access": "checked_in",
+      "content_sha256": "0228fc508f3e31ad49e7e128ed2a3090358317cd5892e4f9892cbc500a7aaaad",
+      "split": "test",
+      "cohort": {
+        "language": "en",
+        "layout": "plain_text",
+        "scan_status": "born_digital",
+        "domain": "bibliography"
+      }
+    }
+  ]
+}

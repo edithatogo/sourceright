@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.open-publishing-platform-registry.schema.json",
+  "title": "Sourceright open publishing platform trial registry",
+  "type": "object",
+  "required": ["schema_version", "inventory_date", "trial_contract", "platforms", "deferred"],
+  "properties": {
+    "schema_version": {"const": "sourceright.open-publishing-platform-registry.v1"},
+    "inventory_date": {"type": "string", "format": "date"},
+    "trial_contract": {"const": "read-only-fixture-backed-v1"},
+    "platforms": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "role", "upstream", "track", "decision"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "upstream": {"type": "string", "format": "uri"},
+          "track": {"type": "integer", "minimum": 98, "maximum": 107},
+          "decision": {"enum": ["trial", "trial-governance-gated", "trial-deployment-gated"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "deferred": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  },
+  "additionalProperties": false
+}

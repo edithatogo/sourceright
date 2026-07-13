@@ -1,0 +1,4 @@
+Sourceright technical-preview manuscript.
+Compile sourceright.tex with the arXiv-supported LaTeX processor selected by
+the submission system. The bibliography is references.bib. No shell escape,
+external network access, generated assets, or hidden files are required.

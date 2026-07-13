@@ -59,17 +59,21 @@ $zipPath = if ([System.IO.Path]::GetExtension($output) -eq ".zip") {
 } else {
     Join-Path $distDir ("smithery-" + [guid]::NewGuid().ToString("N") + ".zip")
 }
-Compress-Archive -Path (Join-Path $stagingRoot "*") -DestinationPath $zipPath -Force
+
+$zipBuilder = Join-Path $repoRoot "scripts/create-mcpb-zip.mjs"
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+    throw "Node.js is required to create MCPB ZIP archives with POSIX metadata"
+}
+& node $zipBuilder $stagingRoot $zipPath $binaryName $Platform
+if ($LASTEXITCODE -ne 0) {
+    throw "POSIX-aware MCPB ZIP creation failed with exit code $LASTEXITCODE"
+}
+
 if (-not (Test-Path -LiteralPath $zipPath)) {
-    throw "Compress-Archive did not create expected archive: $zipPath"
+    throw "Explicit ZIP creation did not create expected archive: $zipPath"
 }
 if ($zipPath -ne $output) {
-    Copy-Item -LiteralPath $zipPath -Destination $output -Force
-    try {
-        Remove-Item -LiteralPath $zipPath -Force
-    } catch {
-        Write-Warning "Temporary zip could not be removed: $zipPath"
-    }
+    Move-Item -LiteralPath $zipPath -Destination $output -Force
 }
 
 $manifestPath = Join-Path $stagingRoot "manifest.json"

@@ -1,0 +1,1 @@
+{"id":"103-ops-workflow-trial","status":"planned","priority":"medium","owners":["preprint-platforms","pkp-ops"],"dependencies":["60-mature-ojs-plugin","98-ojs-workflow-trial"],"owned_paths":["conductor/tracks/103-ops-workflow-trial/"]}

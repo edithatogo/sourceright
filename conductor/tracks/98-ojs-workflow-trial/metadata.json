@@ -1,0 +1,1 @@
+{"id":"98-ojs-workflow-trial","status":"planned","priority":"medium","owners":["journal-platforms","ojs"],"dependencies":["60-mature-ojs-plugin","75-journal-platform-publication-hardening","89-harness-security-quality-cicd-hardening"],"owned_paths":["conductor/tracks/98-ojs-workflow-trial/"]}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "citeweft.reference-model-manifest.v1",
+  "backend": "deterministic-reference-baseline",
+  "version": "deterministic-baseline-v1",
+  "label_map": {
+    "reference_entry": "reference_entry",
+    "callout": "callout",
+    "field": "field",
+    "review": "review"
+  },
+  "tokenizer": "unicode-whitespace-preserving-source-spans",
+  "runtime": "rust-standard-library",
+  "license": "MIT OR Apache-2.0",
+  "artifact_sha256": null,
+  "source_data": "self-authored fixture only",
+  "schema_compatibility": "citeweft.reference-model.v1"
+}

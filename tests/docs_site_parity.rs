@@ -128,6 +128,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/guides/security-automation.md",
         ),
         (
+            "security-and-quality-gates.md",
+            "docs-site/src/content/docs/security-and-quality-gates.md",
+        ),
+        (
             "release-runbook.md",
             "docs-site/src/content/docs/guides/release-runbook.md",
         ),
@@ -187,6 +191,30 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
         (
             "submission-contracts.md",
             "docs-site/src/content/docs/submission-contracts.md",
+        ),
+        (
+            "citeweft-grobid-extraction.md",
+            "docs-site/src/content/docs/citeweft-grobid-extraction.md",
+        ),
+        (
+            "native-layout-ir.md",
+            "docs-site/src/content/docs/native-layout-ir.md",
+        ),
+        (
+            "native-reference-model.md",
+            "docs-site/src/content/docs/native-reference-model.md",
+        ),
+        (
+            "native-entity-model.md",
+            "docs-site/src/content/docs/native-entity-model.md",
+        ),
+        (
+            "hybrid-routing.md",
+            "docs-site/src/content/docs/hybrid-routing.md",
+        ),
+        (
+            "citeweft-repository-extraction.md",
+            "docs-site/src/content/docs/citeweft-repository-extraction.md",
         ),
         (
             "contributing.md",

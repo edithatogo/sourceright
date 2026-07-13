@@ -23,6 +23,18 @@ pub struct ReferenceReport {
 }
 
 impl ReferenceReport {
+    pub fn add_workspace_issue(&mut self, issue: ReferenceReportIssue) {
+        match issue.severity {
+            ReferenceReportSeverity::Error => self.error_count += 1,
+            ReferenceReportSeverity::Warning => self.warning_count += 1,
+            ReferenceReportSeverity::Info => self.info_count += 1,
+        }
+        if issue.ai_risk_signal {
+            self.ai_risk_issue_count += 1;
+        }
+        self.issues.push(issue);
+    }
+
     pub fn from_documents(csl: &CslDocument, sidecar: &VerificationSidecar) -> Self {
         let mut issues = Vec::new();
 

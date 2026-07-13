@@ -1,0 +1,14 @@
+{
+  "schema_version": "citeweft.entity-model-manifest.v1",
+  "backend": "deterministic-lexicon",
+  "version": "deterministic-lexicon-v1",
+  "domain": "general-scholarly",
+  "language": "en",
+  "license": "MIT OR Apache-2.0",
+  "access": "checked_in",
+  "redistribution": "permitted with Sourceright",
+  "split": "fixture_only",
+  "source_data": "Sourceright contributors",
+  "model_artifact_sha256": null,
+  "notes": "Self-authored lexicon fixture; not a general NER accuracy claim."
+}

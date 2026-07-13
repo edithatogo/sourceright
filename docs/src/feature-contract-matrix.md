@@ -32,6 +32,7 @@ market-readiness hardening, and what is intentionally excluded for now.
 | CLI contract | Must | Implemented | Public commands keep JSON output stable where advertised. | `tests/cli_end_to_end.rs` |
 | MCP read contract | Must | Implemented | Tools, resources, and prompts are discoverable and local-stdio oriented. | MCP distribution checks |
 | Plugin registry | Must | Implemented | Runtime discovery validates manifests before exposing capabilities. | `plugins/registry.toml`, plugin tests |
+| Optional GROBID reference extraction | Should | Fixture-tested technical preview | A disabled-by-default local GROBID backend maps a supported TEI subset into neutral extraction records, intake candidates, and review-sidecar evidence without writing canonical CSL. | `src/citeweft.rs`, `src/grobid.rs`, `src/citeweft_adapter.rs` |
 | Fixture benchmark | Must | Implemented | Benchmark claims are fixture-backed regression signals, not public SOTA claims. | `sourceright bench --json` |
 | Publication metadata | Must | Implemented | Release, crate, OCI MCP, MCP Registry, and Glama metadata stay version-aligned. | release and MCP distribution tests |
 | Security governance | Must | Implemented | CI uses least privilege, dependency review, CodeQL, cargo audit, Scorecard, pinned actions, and quiet dependency automation. | `.github/workflows/security.yml`, Renovate config |

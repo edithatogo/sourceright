@@ -18,9 +18,18 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release-dry-run-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   dry-run:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -32,6 +41,9 @@ jobs:
         run: cargo build --release --locked
       - name: Package crate
         run: cargo package --locked
+      - name: Generate Cargo dependency SBOM
+        shell: bash
+        run: cargo metadata --locked --format-version 1 > target/sourceright-cargo-sbom.json
       - name: Install cargo-deny
         run: cargo install cargo-deny --locked
       - name: Dependency policy
@@ -49,6 +61,13 @@ jobs:
             printf '%s\n' "$unexpected_duplicates"
             exit 1
           fi
+      - name: Verify dependency SBOM
+        shell: bash
+        run: test -s target/sourceright-cargo-sbom.json
+      - name: Generate dry-run package attestation
+        uses: actions/attest-build-provenance@43d14bc2b83dec42d39ecae14e916627a18bb661 # v3
+        with:
+          subject-path: target/package/*.crate
       - name: Publish dry run
         run: cargo publish --dry-run --locked
         env:

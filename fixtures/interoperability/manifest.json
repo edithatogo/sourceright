@@ -1,0 +1,53 @@
+{
+  "schema_version": "sourceright.interoperability-fixture.v1",
+  "fixtures": [
+    {
+      "id": "bibtex-basic-self-authored",
+      "source_url": "https://github.com/edithatogo/sourceright/tree/main/fixtures/interoperability",
+      "upstream_revision": "self-authored-2026-07-12",
+      "license": "MIT OR Apache-2.0",
+      "provenance": "Created for Sourceright differential-conformance planning; no upstream fixture text copied.",
+      "reuse_status": "self-authored",
+      "input_format": "bibtex",
+      "input_path": "fixtures/interoperability/bibtex-basic.bib",
+      "expected_csl_path": "fixtures/interoperability/bibtex-basic.expected-csl.json",
+      "expected_semantic_assertions": {
+        "title": "Differential fixture for protected casing",
+        "author": ["Lovelace, Ada"],
+        "issued": "1843"
+      }
+    },
+    {
+      "id": "ris-basic-self-authored",
+      "source_url": "https://github.com/edithatogo/sourceright/tree/main/fixtures/interoperability",
+      "upstream_revision": "self-authored-2026-07-12",
+      "license": "MIT OR Apache-2.0",
+      "provenance": "Created for Sourceright differential-conformance planning; no upstream fixture text copied.",
+      "reuse_status": "self-authored",
+      "input_format": "ris",
+      "input_path": "fixtures/interoperability/ris-basic.ris",
+      "expected_csl_path": "fixtures/interoperability/ris-basic.expected-csl.json",
+      "expected_semantic_assertions": {
+        "title": "Differential RIS fixture",
+        "author": ["Lovelace, Ada"],
+        "issued": "1843"
+      }
+    },
+    {
+      "id": "bibtex-adversarial-self-authored",
+      "source_url": "https://github.com/edithatogo/sourceright/tree/main/fixtures/interoperability",
+      "upstream_revision": "self-authored-2026-07-12",
+      "license": "MIT OR Apache-2.0",
+      "provenance": "Created for Sourceright differential-conformance planning; macro, protected-casing, nested-brace, and month-field coverage; no upstream fixture text copied.",
+      "reuse_status": "self-authored",
+      "input_format": "bibtex",
+      "input_path": "fixtures/interoperability/bibtex-adversarial.bib",
+      "expected_csl_path": "fixtures/interoperability/bibtex-adversarial.expected-csl.json",
+      "expected_semantic_assertions": {
+        "title": "A Case-Sensitive Fixture: XML and CSL",
+        "author": ["Lovelace, Ada", "de Morgan, Augustus"],
+        "issued": "1843"
+      }
+    }
+  ]
+}

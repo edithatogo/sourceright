@@ -1,0 +1,1 @@
+{"id":"108-report-diagnostics-and-csl-only","status":"completed","priority":"high","owners":["sourceright-core"],"dependencies":["89-harness-security-quality-cicd-hardening"],"owned_paths":["src/report.rs","src/workspace.rs","tests/docs_site_parity.rs","README.md","docs/src/security-and-quality-gates.md","docs-site/src/content/docs/security-and-quality-gates.md"]}

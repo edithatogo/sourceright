@@ -1,0 +1,23 @@
+{
+  "schema_version": "citeweft.scholarly-document.v1",
+  "references": [
+    {
+      "id": "r1",
+      "raw_text": "Lovelace, A. (2026). A fixture reference.",
+      "title": "A fixture reference",
+      "authors": ["Ada Lovelace"],
+      "container_title": "Fixture Journal",
+      "publication_date": "2026",
+      "volume": "1",
+      "issue": "2",
+      "pages": "3-5",
+      "identifiers": [{"scheme": "doi", "value": "10.1000/fixture"}],
+      "span": {"surface": "grobid_tei", "source_id": "r1"}
+    }
+  ],
+  "provenance": {
+    "backend": "grobid",
+    "engine_version": "fixture",
+    "configuration": "processReferences;includeRawCitations=1;consolidateCitations=0"
+  }
+}

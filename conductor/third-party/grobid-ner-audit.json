@@ -1,0 +1,28 @@
+{
+  "schema_version": "sourceright.grobid_ner_audit.v1",
+  "source": "https://github.com/grobidOrg/grobid-ner",
+  "documentation": [
+    "https://grobid-ner.readthedocs.io/en/latest/using-grobid-ner/",
+    "https://grobid-ner.readthedocs.io/en/latest/class-and-senses/",
+    "https://grobid-ner.readthedocs.io/en/latest/training-ner-model/",
+    "https://grobid-ner.readthedocs.io/en/latest/generate-training-data/"
+  ],
+  "runtime": {
+    "language": "Java",
+    "api": "Java classes; no standalone REST contract recorded",
+    "version_status": "must be reverified before any bridge release",
+    "mandatory_dependency": false
+  },
+  "taxonomy": {
+    "documented_class_count": 27,
+    "bibliography_scope": "full bibliographic references are outside the annotated NER scope",
+    "mapping_policy": "preserve original labels and expose lossy mapping relations"
+  },
+  "data_and_model_access": {
+    "raw_data_redistribution": "file-level audit required",
+    "described_sources": "mixed availability; some require separate access",
+    "deprecated_or_unavailable_source": true,
+    "model_weights_in_repository": false
+  },
+  "decision": "Use GROBID-NER as a compatibility/provenance reference only; do not add it to the mandatory Rust or citation path."
+}

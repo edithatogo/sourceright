@@ -1,0 +1,9 @@
+{
+  "schema_version": "sourceright.third_party_evidence.v1",
+  "status": "technical-preview-evidence",
+  "records": [
+    {"id":"grobid-runtime","component":"GROBID external REST service","license":"Apache-2.0","source":"https://github.com/kermitt2/grobid","redistribution":"not bundled by Sourceright; operator supplies a pinned runtime","status":"source-and-image-digest-verification-pending"},
+    {"id":"pdfalto-boundary","component":"GROBID/pdfalto transitive runtime boundary","license":"verify from selected runtime image and release artifacts","source":"https://github.com/kermitt2/grobid","redistribution":"external service only; no embedded or repackaged pdfalto","status":"file-level-review-required"},
+    {"id":"grobid-fixture-reference-basic","component":"Checked-in TEI fixture","license":"self-authored","source":"fixtures/grobid/reference-basic.tei.xml","redistribution":"permitted","status":"verified"}
+  ]
+}

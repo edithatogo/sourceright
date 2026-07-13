@@ -1,0 +1,25 @@
+{
+  "schema_version": "sourceright.native_pdf_layout_candidates.v1",
+  "purpose": "Candidate inventory only; no parser dependency is selected by Track 93 contract work.",
+  "candidates": [
+    {
+      "id": "pdf_oxide",
+      "source": "https://github.com/yfedoseev/pdf_oxide",
+      "status": "not_selected",
+      "reason": "Requires current API, license, security, malformed-input, and cohort evidence before integration."
+    },
+    {
+      "id": "pdfsink-rs",
+      "source": "https://github.com/clark-labs-inc/pdfsink-rs",
+      "status": "not_selected",
+      "reason": "Requires current API, license, security, malformed-input, and cohort evidence before integration."
+    },
+    {
+      "id": "oxidize-pdf",
+      "source": "https://github.com/bzsanti/oxidizePdf",
+      "status": "not_selected",
+      "reason": "Requires current API, license, security, malformed-input, and cohort evidence before integration."
+    }
+  ],
+  "decision": "Keep the stable IR and fixture adapter parser-neutral until Track 92 evidence and a current dependency review support a bounded selection."
+}

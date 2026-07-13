@@ -1,0 +1,31 @@
+schema_version = "sourceright.interoperability-runners.v1"
+
+# Optional runners are never required by the Rust/core CI lane. Each runner
+# must use a lockfile or immutable revision, read checked-in fixtures, write
+# only to a temporary directory, and emit CSL JSON for interoperability-diff.
+
+[[runner]]
+id = "citation-js"
+tool = "citation-js"
+revision = "record-before-enablement"
+command = "node scripts/optional/citation-js-runner.mjs INPUT OUTPUT"
+status = "enabled-local-fixture-smoke"
+license = "MIT"
+lockfile = "interop-runners/package-lock.json"
+
+[[runner]]
+id = "biblatex-csl-converter"
+tool = "biblatex-csl-converter"
+revision = "record-before-enablement"
+command = "node scripts/optional/biblatex-csl-runner.mjs INPUT OUTPUT"
+status = "deferred-until-lockfile-and-license-evidence"
+license = "LGPL-3.0"
+
+[[runner]]
+id = "retorquere-bibtex-parser"
+tool = "bibtex-parser"
+revision = "record-before-enablement"
+command = "node scripts/optional/bibtex-parser-runner.mjs INPUT OUTPUT"
+status = "enabled-local-fixture-smoke"
+license = "ISC"
+lockfile = "interop-runners/package-lock.json"

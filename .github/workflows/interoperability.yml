@@ -1,0 +1,83 @@
+name: Optional interoperability
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/interoperability.yml"
+      - "Cargo.lock"
+      - "Cargo.toml"
+      - "fixtures/interoperability/**"
+      - "interop-runners/**"
+      - "schemas/sourceright.interoperability-*.json"
+      - "scripts/run-interoperability-*.ps1"
+      - "src/bin/interoperability-diff.rs"
+      - "src/interoperability.rs"
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/interoperability.yml"
+      - "Cargo.lock"
+      - "Cargo.toml"
+      - "fixtures/interoperability/**"
+      - "interop-runners/**"
+      - "schemas/sourceright.interoperability-*.json"
+      - "scripts/run-interoperability-*.ps1"
+      - "src/bin/interoperability-diff.rs"
+      - "src/interoperability.rs"
+  schedule:
+    - cron: "29 4 * * 4"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: interoperability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  matrix:
+    name: Differential fixture matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: interop-runners/package-lock.json
+      - name: Install optional runners
+        working-directory: interop-runners
+        run: npm ci --ignore-scripts
+      - name: Run differential matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          fixtures=(
+            "bibtex-basic|fixtures/interoperability/bibtex-basic.bib|fixtures/interoperability/bibtex-basic.expected-csl.json"
+            "bibtex-adversarial|fixtures/interoperability/bibtex-adversarial.bib|fixtures/interoperability/bibtex-adversarial.expected-csl.json"
+            "ris-basic|fixtures/interoperability/ris-basic.ris|fixtures/interoperability/ris-basic.expected-csl.json"
+          )
+          for fixture in "${fixtures[@]}"; do
+            IFS='|' read -r name input expected <<< "$fixture"
+            node interop-runners/citation-js-runner.mjs "$input" "artifacts/$name-citation-js.json"
+            cargo run --locked --bin interoperability-diff -- "$expected" "artifacts/$name-citation-js.json" citation-js "artifacts/$name-report.md"
+            if [[ "$name" == bibtex-* ]]; then
+              node interop-runners/bibtex-parser-runner.mjs "$input" "artifacts/$name-bibtex-parser.json"
+            fi
+          done
+      - name: Upload conformance artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: interoperability-conformance
+          path: artifacts/
+          if-no-files-found: error

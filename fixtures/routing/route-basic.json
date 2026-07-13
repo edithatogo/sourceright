@@ -1,0 +1,10 @@
+{
+  "schema_version": "citeweft.routing-fixture.v1",
+  "document_sha256": "fixture-document",
+  "model_fingerprint": "fixture-model-v1",
+  "options_fingerprint": "fixture-options-v1",
+  "mode": "auto",
+  "expected_backend": "native-fast",
+  "expected_reason": "calibrated_auto_selection",
+  "secrets": "token=<redacted>"
+}

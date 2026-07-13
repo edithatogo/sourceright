@@ -37,6 +37,7 @@ jobs:
   prose:
     name: Prose and Markdown
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -60,6 +61,7 @@ jobs:
   links:
     name: Offline link check
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -73,6 +75,7 @@ jobs:
         run: lychee --config lychee.toml --offline README.md docs/src/**/*.md docs/import-manifest.md conductor/**/*.md
 
   workflows:
+    timeout-minutes: 10
     name: Workflow lint
     runs-on: ubuntu-latest
     steps:
@@ -92,6 +95,9 @@ jobs:
         run: go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
       - name: Lint workflows
         run: actionlint
+      - name: Enforce workflow harness invariants
+        shell: pwsh
+        run: ./scripts/check-workflow-harness.ps1
       - name: Install zizmor
         run: python -m pip install zizmor==1.14.2
       - name: Security-lint workflows

@@ -1,0 +1,22 @@
+{
+  "id": 97,
+  "slug": "citeweft-repository-extraction",
+  "title": "CiteWeft Repository Extraction",
+  "status": "in_progress",
+  "priority": "critical",
+  "track_type": "repository-extraction",
+  "owner": "maintainers",
+  "created_by": "codex",
+  "created_at": "2026-07-12",
+  "github_project": "https://github.com/users/edithatogo/projects/17",
+  "github_issues": [42],
+  "owned_paths": [
+    "conductor/citeweft-extraction-manifest.json",
+    "conductor/tracks/97-citeweft-repository-extraction/",
+    "scripts/verify-citeweft-extraction.ps1",
+    "tests/citeweft_repository_policy.rs",
+    "docs/src/citeweft-repository-extraction.md",
+    "docs-site/src/content/docs/citeweft-repository-extraction.md"
+  ],
+  "human_review_required": true
+}

@@ -50,9 +50,19 @@ The canonical requirements and repo contract are in
 [docs/src/feature-contract-matrix.md](docs/src/feature-contract-matrix.md), with
 the design diagrams in [docs/src/design.md](docs/src/design.md).
 
+The current quality and security contract is documented in
+[docs/src/security-and-quality-gates.md](docs/src/security-and-quality-gates.md).
+Use the repository's bounded local gate runner before opening a change:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/run-local-rust-gates.ps1
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-workflow-harness.ps1
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-release-parity.ps1
+```
+
 ## Current Status
 
-The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. It should be treated as a structured triage and audit workflow and technical preview until tracks 36-40 close the remaining verification gaps. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
+The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. It should be treated as a structured triage and audit workflow and technical preview while the active Conductor programme hardens extraction, interoperability, publication trials, and external registry acceptance. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.
 
 ## CLI
 
@@ -71,6 +81,11 @@ surface is a technical preview for deterministic regression and stress checks.
 `citation-sync` defaults to preview mode and requires explicit `--apply` before
 writing audit logs or remote fixture snapshots.
 
+`report` can operate on a CSL-only directory. It emits a degraded-coverage
+diagnostic when `references.verification.json` is absent, while malformed
+sidecars fail with the path and a repair action instead of exposing only a
+low-level parser error.
+
 ## Planned Distribution
 
 - `sourceright` CLI binary.
@@ -84,12 +99,8 @@ writing audit logs or remote fixture snapshots.
 - `release-status.md` artifacts from the release and tag-triggered publish workflows.
 - `coverage-status.md` artifacts from the scheduled coverage workflow.
 - Thin adapter packages only where native tool ecosystems require them.
-- Track 30 owns the Starlight/Astro docs-site migration and Pages deployment.
-- Track 31 is reserved for coverage, mutation, property, load, edge, integration, and end-to-end test hardening.
-- Track 32 is reserved for publishing governance and provenance automation.
-- Track 33 covers live publication to crates.io, GitHub Releases, and registries.
-- Track 34 covers coverage measurement and reporting until the 85 percent floor is reproducible.
-- Track 35 covers the final public docs cutover and launch.
+- The active hardening programme is recorded in `conductor/tracks.md`; it includes harness/security/quality CI, interoperability fixtures, extraction experiments, and open-publishing platform trials.
+- Older track numbers remain in the Conductor archive for historical traceability; they are not a current product-readiness claim.
 - Tracks 36-40 cover examiner-grade audit hardening: document extraction, live core providers, citation disambiguation, URL/archive integrity, and low-noise writeback suggestions.
 - See `docs/src/release-runbook.md`, `docs/src/coverage-reporting.md`, and `docs/src/docs-cutover.md` for the operational sequence behind those tracks.
 - `v*.*.*` tags now auto-start the crate publish workflow, and the MCP registry workflow follows the release workflow completion.
@@ -101,6 +112,11 @@ writing audit logs or remote fixture snapshots.
   - `io.modelcontextprotocol.server.name`
   - `org.opencontainers.image.source`
 - `glama.json`
+
+Registry listings are external operational surfaces. Their current state and
+remaining maintainer or platform blockers are recorded in
+`conductor/submission-packets/live-evidence.json`; repository metadata alone is
+not treated as proof of a live score or callable-tool listing.
 
 ## Development
 

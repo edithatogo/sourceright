@@ -1,0 +1,1 @@
+{"id":"102-pubpub-workflow-trial","status":"planned","priority":"medium","owners":["journal-platforms","pubpub"],"dependencies":["89-harness-security-quality-cicd-hardening","90-citation-ecosystem-differential-interoperability"],"owned_paths":["conductor/tracks/102-pubpub-workflow-trial/"]}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "sourceright.grobid-fixtures.v1",
+  "license": "self-authored",
+  "fixtures": [
+    {
+      "id": "reference-basic",
+      "input": "reference-basic.tei.xml",
+      "neutral_expected": "reference-basic.neutral.json",
+      "adapter_expected": "reference-basic.adapter.json",
+      "source": "Sourceright contributors",
+      "notes": "Minimal self-authored TEI fixture for the supported processReferences subset."
+    }
+  ]
+}

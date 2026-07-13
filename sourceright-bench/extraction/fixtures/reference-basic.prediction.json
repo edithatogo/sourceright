@@ -1,0 +1,15 @@
+{
+  "document_id": "reference-basic",
+  "backend": {
+    "name": "fixture-snapshot",
+    "version": "2026-07-12",
+    "model": "none",
+    "config_fingerprint": "self-authored-v1",
+    "hardware": "cpu"
+  },
+  "operations": { "status": "success", "duration_ms": 1, "peak_memory_bytes": null },
+  "reference_segmentation": { "true_positive": 1, "false_positive": 0, "false_negative": 0 },
+  "field_extraction": { "true_positive": 4, "false_positive": 1, "false_negative": 1 },
+  "callout_linking": { "true_positive": 0, "false_positive": 0, "false_negative": 0 },
+  "coordinates": "unavailable"
+}

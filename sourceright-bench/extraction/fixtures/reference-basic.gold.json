@@ -1,0 +1,15 @@
+{
+  "document_id": "reference-basic",
+  "backend": {
+    "name": "gold",
+    "version": "fixture",
+    "model": "self-authored",
+    "config_fingerprint": "fixture-gold-v1",
+    "hardware": "not-applicable"
+  },
+  "operations": { "status": "success", "duration_ms": 0, "peak_memory_bytes": null },
+  "reference_segmentation": { "true_positive": 1, "false_positive": 0, "false_negative": 0 },
+  "field_extraction": { "true_positive": 5, "false_positive": 0, "false_negative": 0 },
+  "callout_linking": { "true_positive": 0, "false_positive": 0, "false_negative": 0 },
+  "coordinates": "unavailable"
+}

@@ -94,6 +94,11 @@ manifest = "plugins/manifests/extraction.docx-pdf.toml"
 status = "fixture_tested"
 
 [[plugins]]
+id = "extraction.grobid"
+manifest = "plugins/manifests/extraction.grobid.toml"
+status = "fixture_tested_optional"
+
+[[plugins]]
 id = "export.citation-files"
 manifest = "plugins/manifests/export.citation-files.toml"
 status = "core_exporter"

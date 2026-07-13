@@ -1,0 +1,16 @@
+{
+  "candidates": [{"id": "r1", "text": "Lovelace, A. (2026). A fixture reference.", "source": "reference-basic.tei.xml", "span": "grobid_tei:r1"}],
+  "sidecar": {
+    "schema_version": "sourceright.verification.v1",
+    "references": {
+      "r1": {
+        "extraction": {
+          "source": "reference-basic.tei.xml;backend=grobid;version=fixture",
+          "original_text": "Lovelace, A. (2026). A fixture reference.",
+          "span": "grobid_tei:r1"
+        },
+        "review_status": "queued"
+      }
+    }
+  }
+}

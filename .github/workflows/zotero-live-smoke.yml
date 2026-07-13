@@ -23,6 +23,7 @@ jobs:
   fixture-smoke:
     name: fixture-backed Zotero adapter smoke
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
@@ -37,6 +38,7 @@ jobs:
   disposable-library-smoke:
     name: optional disposable Zotero Web API smoke
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: fixture-smoke
     environment: zotero-live-smoke
     steps:

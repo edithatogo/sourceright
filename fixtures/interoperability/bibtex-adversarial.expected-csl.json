@@ -1,0 +1,12 @@
+{
+  "type": "book",
+  "title": "A Case-Sensitive Fixture: XML and CSL",
+  "author": [
+    {"family": "Lovelace", "given": "Ada"},
+    {"family": "de Morgan", "given": "Augustus"}
+  ],
+  "issued": {"date-parts": [[1843, 1]]},
+  "publisher": "Fixture Press",
+  "publisher-place": "London",
+  "note": "Macro and protected-casing coverage"
+}

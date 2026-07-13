@@ -1,0 +1,2 @@
+Sourceright self-authored extraction benchmark fixture.
+Reference: Lovelace, A. (2026). A fixture reference.

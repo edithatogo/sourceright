@@ -210,8 +210,17 @@ fn glama_metadata_is_present_and_valid() {
         .expect("glama maintainers must be array");
     assert!(maintainers.iter().any(|value| value == "edithatogo"));
     assert!(
-        read_repo_file("LICENSE").contains("Dual-licensed under Apache-2.0 OR MIT"),
-        "top-level LICENSE should advertise the repo-wide dual license"
+        read_repo_file("LICENSE").starts_with("MIT License"),
+        "top-level LICENSE should be machine-detectable by GitHub and MCP directories"
+    );
+    assert!(repo_root().join("LICENSE-MIT").is_file());
+    assert!(repo_root().join("LICENSE-APACHE").is_file());
+    assert_eq!(
+        toml::from_str::<toml::Value>(&read_repo_file("Cargo.toml"))
+            .expect("Cargo.toml must parse")["package"]["license"]
+            .as_str(),
+        Some("MIT OR Apache-2.0"),
+        "Cargo metadata and the two canonical license files preserve dual licensing"
     );
 }
 

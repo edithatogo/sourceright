@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.interoperability-report.schema.json",
+  "title": "Sourceright interoperability comparison report",
+  "type": "object",
+  "required": ["schema_version", "source", "canonical_items", "oracle_items", "equivalent_items", "differences"],
+  "properties": {
+    "schema_version": {"const": "sourceright.interoperability_report.v1"},
+    "source": {"type": "string", "minLength": 1},
+    "canonical_items": {"type": "integer", "minimum": 0},
+    "oracle_items": {"type": "integer", "minimum": 0},
+    "equivalent_items": {"type": "integer", "minimum": 0},
+    "differences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item_id", "path", "class", "canonical", "oracle"],
+        "properties": {
+          "item_id": {"type": "string"},
+          "path": {"type": "string"},
+          "class": {"enum": ["information_loss", "unsupported_construct", "parser_discrepancy", "review_required"]},
+          "canonical": {},
+          "oracle": {}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

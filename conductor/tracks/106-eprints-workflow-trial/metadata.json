@@ -1,0 +1,1 @@
+{"id":"106-eprints-workflow-trial","status":"planned","priority":"medium","owners":["preprint-platforms","eprints"],"dependencies":["89-harness-security-quality-cicd-hardening","90-citation-ecosystem-differential-interoperability"],"owned_paths":["conductor/tracks/106-eprints-workflow-trial/"]}

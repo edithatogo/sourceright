@@ -36,6 +36,7 @@ jobs:
   benchmark-smoke:
     name: CLI benchmark smoke
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -57,6 +58,7 @@ jobs:
     if: github.event_name == 'schedule' || inputs.run_fuzz
     name: parser fuzz smoke
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -77,6 +79,7 @@ jobs:
     if: github.event_name == 'schedule' || inputs.run_stress
     name: scheduled robustness gates
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6

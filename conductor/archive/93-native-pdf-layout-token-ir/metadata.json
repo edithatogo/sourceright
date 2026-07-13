@@ -1,0 +1,23 @@
+{
+  "id": 93,
+  "slug": "native-pdf-layout-token-ir",
+  "title": "Native PDF Layout and Token IR",
+  "status": "completed",
+  "priority": "high",
+  "track_type": "extraction-foundation",
+  "owner": "maintainers",
+  "created_by": "codex",
+  "created_at": "2026-07-12",
+  "github_project": "https://github.com/users/edithatogo/projects/17",
+  "github_issues": [38],
+  "owned_paths": [
+    "src/layout.rs",
+    "src/lib.rs",
+    "tests/layout_policy.rs",
+    "fixtures/layout/",
+    "conductor/third-party/native-pdf-layout.json",
+    "docs/src/native-layout-ir.md",
+    "conductor/tracks/93-native-pdf-layout-token-ir/"
+  ],
+  "human_review_required": true
+}

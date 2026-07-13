@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edithatogo.github.io/sourceright/schemas/sourceright.interoperability-fixture.schema.json",
+  "title": "Sourceright interoperability fixture manifest",
+  "type": "object",
+  "required": ["schema_version", "fixtures"],
+  "properties": {
+    "schema_version": {
+      "const": "sourceright.interoperability-fixture.v1"
+    },
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "source_url",
+          "upstream_revision",
+          "license",
+          "provenance",
+          "reuse_status",
+          "input_format",
+          "input_path",
+          "expected_csl_path",
+          "expected_semantic_assertions"
+        ],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "source_url": { "type": "string", "format": "uri" },
+          "upstream_revision": { "type": "string", "minLength": 1 },
+          "license": { "type": "string", "minLength": 1 },
+          "provenance": { "type": "string", "minLength": 1 },
+          "reuse_status": {
+            "enum": ["self-authored", "redistributable", "reference-only"]
+          },
+          "input_format": {
+            "enum": ["bibtex", "biblatex", "ris", "csl-json"]
+          },
+          "input_path": { "type": "string", "minLength": 1 },
+          "expected_csl_path": { "type": "string", "minLength": 1 },
+          "expected_semantic_assertions": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": { "type": ["string", "array"] }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,155 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\title{Sourceright: Evidence-Bounded Reference Verification for Scholarly Workflows}
+\author{Sourceright contributors}
+\date{Technical preview --- version 0.1.20}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Scholarly writing workflows often need to distinguish a citation that is
+syntactically present from a reference that has been reconciled against
+external evidence. Sourceright is an open-source technical preview for that
+workflow. It uses canonical CSL JSON for clean bibliographic records, a
+separate verification sidecar for provider evidence and conflicts, and a
+derived review queue for human action. This paper describes the architecture,
+claim boundaries, deterministic fixtures, optional extraction backends, and
+integration contracts for citation managers and journal or preprint workflows.
+The implementation is intentionally evidence-bounded: provider observations
+do not silently overwrite canonical data, and a warning or match is not a
+claim that a source or proposition is true. We report the current engineering
+surface and a reproducible evaluation plan rather than presenting unsupported
+accuracy or production-readiness claims.
+\end{abstract}
+
+\section{Motivation}
+
+Reference checking is commonly treated as a formatting task. In practice, a
+workflow may need to preserve the author's record, compare it with provider
+observations, identify missing or conflicting fields, and route uncertain cases
+to review. These concerns become more difficult when the same manuscript moves
+through a citation manager, a journal submission system, a preprint server, or
+an institutional repository.
+
+Sourceright addresses this as an audit-oriented workflow rather than as an
+automatic truth judge. Its current repository contains Rust CLI and library
+surfaces, fixture-backed provider adapters, report generation, and optional
+read-only integration contracts. The software is a technical preview; its
+fixture benchmarks are regression scaffolds, not externally comparable
+performance measurements.
+
+\section{Data and boundary model}
+
+The core data boundary has three distinct layers:
+
+\begin{enumerate}
+  \item \texttt{references.csl.json} is canonical clean bibliographic data.
+  \item \texttt{references.verification.json} stores provider observations,
+        provenance, confidence inputs, conflicts, and review state.
+  \item \texttt{review-queue.jsonl} is derived operational work for a person
+        or downstream workflow.
+\end{enumerate}
+
+This separation is a safety property. An external provider can suggest a
+candidate or expose a conflict without silently changing the author's
+canonical record. Legal citations remain a separate model and are not folded
+into academic CSL. Claim/source/provenance features may link evidence to
+claims, but they do not assert the truth of a claim.
+
+\section{Workflow architecture}
+
+The normal path is intentionally inspectable:
+
+\begin{enumerate}
+  \item ingest a manuscript, citation file, or provider fixture;
+  \item normalize records into the canonical CSL boundary;
+  \item query selected providers or optional extraction services;
+  \item record observations and provenance in the verification sidecar;
+  \item emit deterministic reports and review items; and
+  \item leave any mutation to an explicitly approved, audited workflow.
+\end{enumerate}
+
+The optional scholarly-document extraction boundary is backend-neutral. The
+repository includes an explicitly selected GROBID REST adapter and native
+Rust extraction experiments behind neutral schemas. The neutral layer is
+GROBID-inspired, not a GROBID fork or a claim of API compatibility. GROBID is
+an optional service boundary; it is not required for the core reference
+workflow.
+
+\section{Reproducibility and quality controls}
+
+The repository keeps self-authored and license-attributed fixtures under
+version control. Policy tests check schema shape, provenance fields, path
+grounding, and separation from canonical and verification files. Workflow
+controls pin GitHub Actions, use least-privilege permissions, disable
+persisted checkout credentials, enforce concurrency, and bound job duration.
+Release workflows generate checksums, attestations, and a Cargo dependency
+metadata SBOM artifact.
+
+The current evaluation strategy separates mandatory, network-free Rust checks
+from optional integration lanes. Fixture-backed tests establish deterministic
+regressions. Scheduled lanes may exercise coverage, fuzzing, mutation,
+stress, and benchmark scaffolds, but a local fixture result is not presented
+as state-of-the-art or population-level accuracy.
+
+\begin{table}[ht]
+\centering
+\caption{Evidence levels used by the project.}
+\begin{tabular}{ll}
+\toprule
+Level & Meaning \\
+\midrule
+Contracted & Interfaces, schemas, and policy boundaries are documented. \\
+Fixture-backed & Deterministic local inputs and expected outputs pass. \\
+Submitted & An external issue or submission URL exists. \\
+Publicly accepted & An external maintainer or registry provides acceptance evidence. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Integration surfaces}
+
+Sourceright can be used as a local CLI, a read-only MCP surface, or a thin
+adapter in citation-manager, journal, and repository workflows. The current
+integration posture is deliberately conservative. OJS, Janeway, arXiv
+submit-ce, and other journal or repository platforms have fixture-backed or
+contracted paths, but these should not be described as supported integrations
+until a disposable instance, platform-specific smoke, permissions review, and
+upstream contribution path have been verified.
+
+For arXiv-style source submissions, source hygiene is part of the proposed
+workflow. A submission bundle should contain only the files needed to compile
+the paper, include the bibliography inputs required by the selected TeX
+processor, and exclude credentials, repository archives, hidden files, and
+unrelated working material. Sourceright can screen citation and provenance
+signals before submission, but it does not submit to arXiv or mutate arXiv
+state.
+
+\section{Limitations and future work}
+
+The current release does not establish universal citation accuracy, complete
+PDF understanding, semantic claim verification, or institutional production
+readiness. Live provider availability, parser disagreement, multilingual
+coverage, and document-layout variation remain sources of uncertainty. Future
+work includes differential conversion checks against carefully licensed
+external tools, disposable-instance trials for open journal and repository
+platforms, stronger release evidence, and maintainer-reviewed upstream
+integration hooks.
+
+\section{Conclusion}
+
+Sourceright provides a conservative engineering pattern for reference
+verification: preserve canonical data, isolate observations, expose
+uncertainty, and make review work explicit. The repository's current evidence
+supports a technical-preview and pilot-oriented description. It does not
+support claims of final verification, benchmark superiority, or external
+platform acceptance.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

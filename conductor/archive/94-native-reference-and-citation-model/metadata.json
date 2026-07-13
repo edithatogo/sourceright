@@ -1,0 +1,22 @@
+{
+  "id": 94,
+  "slug": "native-reference-and-citation-model",
+  "title": "Native Reference and Citation Model",
+  "status": "completed",
+  "priority": "high",
+  "track_type": "extraction-model",
+  "owner": "maintainers",
+  "created_by": "codex",
+  "created_at": "2026-07-12",
+  "github_project": "https://github.com/users/edithatogo/projects/17",
+  "github_issues": [39],
+  "owned_paths": [
+    "src/reference_model.rs",
+    "src/lib.rs",
+    "tests/reference_model_policy.rs",
+    "fixtures/reference-model/",
+    "docs/src/native-reference-model.md",
+    "conductor/tracks/94-native-reference-and-citation-model/"
+  ],
+  "human_review_required": true
+}

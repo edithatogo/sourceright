@@ -1,0 +1,1 @@
+{"id":"100-episciences-workflow-trial","status":"planned","priority":"medium","owners":["journal-platforms","episciences"],"dependencies":["89-harness-security-quality-cicd-hardening","90-citation-ecosystem-differential-interoperability"],"owned_paths":["conductor/tracks/100-episciences-workflow-trial/"]}

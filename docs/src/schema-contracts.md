@@ -42,6 +42,15 @@ models change.
   and live evidence manifests for external submission surfaces.
 - `sourceright.live-submission-evidence.schema.json`: live submission evidence
   records for external submission surfaces and their public URLs.
+- `sourceright.submission-requirements.schema.json`: submission requirements
+  inventories for external submission surfaces and self-improving control
+  loops.
+- `sourceright.interoperability-fixture.schema.json`: fixture inputs for
+  differential citation-parser interoperability checks.
+- `sourceright.interoperability-report.schema.json`: deterministic reports
+  classifying equivalent items and field-level interoperability differences.
+- `sourceright.open-publishing-platform-registry.schema.json`: evidence-backed
+  registry records for open publishing platform workflow trials.
 
 ## Compatibility Rules
 

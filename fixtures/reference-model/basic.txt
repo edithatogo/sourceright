@@ -1,0 +1,4 @@
+A claim [1].
+
+References:
+[1] Ada Lovelace. (2026). A fixture reference. Fixture Journal. doi:10.1000/fixture.

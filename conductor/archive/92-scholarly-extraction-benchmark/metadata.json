@@ -1,0 +1,21 @@
+{
+  "id": 92,
+  "slug": "scholarly-extraction-benchmark",
+  "title": "Scholarly Extraction Benchmark",
+  "status": "completed",
+  "priority": "high",
+  "track_type": "benchmark-quality",
+  "owner": "maintainers",
+  "created_by": "codex",
+  "created_at": "2026-07-12",
+  "github_project": "https://github.com/users/edithatogo/projects/17",
+  "github_issues": [37],
+  "owned_paths": [
+    "src/extraction_benchmark.rs",
+    "src/lib.rs",
+    "src/main.rs",
+    "sourceright-bench/extraction/",
+    "conductor/tracks/92-scholarly-extraction-benchmark/"
+  ],
+  "human_review_required": true
+}

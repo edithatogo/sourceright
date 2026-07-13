@@ -1,0 +1,18 @@
+{
+  "schema_version": "sourceright.open-publishing-platform-registry.v1",
+  "inventory_date": "2026-07-12",
+  "trial_contract": "read-only-fixture-backed-v1",
+  "platforms": [
+    {"id":"ojs","name":"Open Journal Systems","role":"journal","upstream":"https://github.com/pkp/ojs","track":98,"decision":"trial"},
+    {"id":"janeway","name":"Janeway","role":"journal-preprint","upstream":"https://github.com/openlibhums/janeway","track":99,"decision":"trial"},
+    {"id":"episciences","name":"Episciences","role":"overlay-journal","upstream":"https://github.com/CCSDForge/episciences","track":100,"decision":"trial"},
+    {"id":"kotahi","name":"Kotahi","role":"journal-preprint","upstream":"https://github.com/okotahi/kotahi","track":101,"decision":"trial-governance-gated"},
+    {"id":"pubpub","name":"PubPub","role":"community-publishing","upstream":"https://github.com/knowledgefutures/pubpub","track":102,"decision":"trial"},
+    {"id":"ops","name":"Open Preprint Systems","role":"preprint","upstream":"https://github.com/pkp/ops","track":103,"decision":"trial"},
+    {"id":"invenio-rdm","name":"InvenioRDM","role":"repository-preprint","upstream":"https://github.com/inveniosoftware/invenio-app-rdm","track":104,"decision":"trial"},
+    {"id":"dspace","name":"DSpace","role":"repository-preprint","upstream":"https://github.com/DSpace/DSpace","track":105,"decision":"trial"},
+    {"id":"eprints","name":"EPrints","role":"repository-preprint","upstream":"https://github.com/eprints/eprints3","track":106,"decision":"trial"},
+    {"id":"samvera-hyrax","name":"Samvera Hyrax","role":"repository-preprint","upstream":"https://github.com/samvera/hyrax","track":107,"decision":"trial-deployment-gated"}
+  ],
+  "deferred": ["osf-preprints", "orvium", "preprints.org", "biorxiv", "medrxiv", "lodel", "ambra"]
+}

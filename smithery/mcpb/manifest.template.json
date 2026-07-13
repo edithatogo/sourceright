@@ -34,6 +34,14 @@
       ]
     }
   },
+  "user_config": {
+    "workspace_root": {
+      "type": "directory",
+      "title": "Sourceright workspace",
+      "description": "Optional path to a .sourceright workspace directory. Defaults to the current working directory.",
+      "required": false
+    }
+  },
   "tools_generated": true,
   "prompts_generated": true,
   "compatibility": {

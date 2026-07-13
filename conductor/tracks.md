@@ -93,3 +93,16 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 86 Proprietary journal-platform matrix | in_progress | Map ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager integration patterns, API access, and test environments. |
 | 87 Self-improving platform registry | in_progress | Build the agentic registry, skill/workflow hooks, and track-synthesis loop that keeps platform evidence current. |
 | 88 Open source documentation and maintenance hardening | planned | Audit and harden Sourceright public GitHub documentation, contributor experience, release hygiene, community-health files, and maintenance posture. |
+| 89 Harness engineering, security, quality, and CI/CD hardening | in_progress | Make repository controls deterministic, policy-tested, least-privilege, failure-artifact-driven, and linked to evidence-backed MCP registry scorecards. GitHub issues #25-#29; Project #17. |
+| 90 Citation ecosystem differential interoperability | planned | Build license-aware differential fixtures and semantic round-trip checks against Citation.js, biblatex-csl-converter, Better BibTeX's parser, JabRef/JabKit, and citeproc-js without moving canonical CSL or verification logic out of Rust. GitHub issues #30-#34; Project #17. |
+| 98 OJS workflow trial | planned | Trial Sourceright read-only metadata and report workflows against Open Journal Systems with fixture, API, permission, and upstream-contribution gates. GitHub issue #43; Project #17. |
+| 99 Janeway workflow trial | planned | Extend the existing Janeway reconnaissance/package work into a read-only disposable-instance trial without claiming support before smoke evidence. GitHub issue #44; Project #17. |
+| 100 Episciences workflow trial | planned | Trial overlay-journal metadata and provenance workflows against Episciences while preserving repository-source boundaries. GitHub issue #45; Project #17. |
+| 101 Kotahi workflow trial | planned | Trial read-only journal/preprint workflow reporting against Kotahi with an explicit governance and project-transition gate. GitHub issue #46; Project #17. |
+| 102 PubPub workflow trial | planned | Trial PubPub metadata and publication-report workflows through its documented API/import surface. GitHub issue #47; Project #17. |
+| 103 OPS workflow trial | planned | Trial read-only preprint metadata/report workflows against PKP Open Preprint Systems using the shared PKP boundary. GitHub issue #48; Project #17. |
+| 104 InvenioRDM workflow trial | planned | Trial REST/OAI metadata extraction and provenance reporting against an InvenioRDM instance. GitHub issue #49; Project #17. |
+| 105 DSpace workflow trial | planned | Trial REST/OAI/SWORD metadata extraction and provenance reporting against DSpace. GitHub issue #50; Project #17. |
+| 106 EPrints workflow trial | planned | Trial OAI/API metadata extraction and provenance reporting against EPrints. GitHub issue #51; Project #17. |
+| 107 Samvera Hyrax workflow trial | planned | Trial Hyrax repository metadata extraction with deployment and community-contribution gates. GitHub issue #52; Project #17. |
+| 108 Report diagnostics and CSL-only workspaces | completed | Make report behavior actionable for malformed/legacy verification sidecars and useful for CSL-only workspaces. GitHub issues #18 and #19. |
