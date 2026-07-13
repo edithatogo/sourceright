@@ -6,6 +6,10 @@ description: Editorial workflow integrations and screening contracts.
 Journal integrations support editorial screening contracts for OJS, arXiv
 submission platforms, and related editorial workflows.
 
+The arXiv platform adapters are represented by the `arXiv submit-ce` and
+`arXiv submission-core` contracts; they remain fixture-backed and separate
+from the `provider.arxiv` metadata provider.
+
 - Keep the contract platform-neutral where possible.
 - Preserve the editorial screening boundary.
 - Treat agentic workflow outputs as decision-support evidence, not editorial decisions.
