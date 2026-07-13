@@ -12,7 +12,8 @@
 - Sourceright CI for `17f090e`: core, security, docs, Pages, and robustness
   checks passed.
 
-This is source compatibility evidence only. Sourceright has not yet consumed
-the package as a committed Cargo dependency, so downstream dependency
-migration remains gated. The disposable consumer smoke proves the candidate
-crate can compile and execute outside its source repository.
+Sourceright now consumes the CiteWeft candidate through an exact Git revision
+in `Cargo.toml`, recorded in commit `ad1d675`; the duplicated local neutral
+modules were removed. The disposable consumer smoke and full Sourceright Rust
+gates pass after migration. Rollback remains available by reverting the
+dependency/wiring commit and is still tracked as an explicit release gate.
