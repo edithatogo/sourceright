@@ -7,11 +7,21 @@ yanked = "deny"
 multiple-versions = "deny"
 wildcards = "deny"
 highlight = "all"
-skip = [
-    { crate = "wit-bindgen", reason = "known target-specific WASI split" },
+
+[licenses]
+allow = [
+  "0BSD",
+  "Apache-2.0",
+  "BSL-1.0",
+  "LGPL-2.1-or-later",
+  "MIT",
+  "Unicode-3.0",
+  "Unlicense",
+  "Zlib",
 ]
 
 [sources]
 unknown-registry = "deny"
 unknown-git = "deny"
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = ["https://github.com/edithatogo/citeweft.git"]
