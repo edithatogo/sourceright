@@ -52,13 +52,9 @@ pub fn serve_http(listen: &str) -> io::Result<()> {
     eprintln!("sourceright mcp serve-http listening on http://{addr}");
 
     for stream in listener.incoming() {
-        match stream {
-            Ok(stream) => {
-                if let Err(error) = handle_http_connection(stream) {
-                    eprintln!("mcp serve-http connection error: {error}");
-                }
-            }
-            Err(error) => return Err(error),
+        let stream = stream?;
+        if let Err(error) = handle_http_connection(stream) {
+            eprintln!("mcp serve-http connection error: {error}");
         }
     }
 

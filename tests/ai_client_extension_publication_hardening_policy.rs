@@ -43,8 +43,8 @@ fn track_76_ai_client_extension_publication_hardening_is_completed() {
 
     let inventory = read("conductor/submission-requirements.json");
     assert!(inventory.contains("\"id\": \"claude-cowork\""));
-    assert!(inventory.contains("\"current_state\": \"hardened-local-mcp-config\""));
-    assert!(inventory.contains("\"current_state\": \"no-package-decision\""));
+    assert!(inventory.contains("\"hardened_local_package\": false"));
+    assert!(inventory.contains("\"gates\": {"));
 
     let ledger = read("conductor/evidence-ledger.json");
     assert!(ledger.contains("76-ai-client-extension-publication-hardening"));
