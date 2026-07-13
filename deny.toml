@@ -7,6 +7,9 @@ yanked = "deny"
 multiple-versions = "deny"
 wildcards = "deny"
 highlight = "all"
+skip = [
+  { crate = "wit-bindgen", reason = "known target-specific WASI split" },
+]
 
 [licenses]
 allow = [
