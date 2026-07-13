@@ -22,6 +22,7 @@ add a hosted HTTP endpoint.
 - `generic-stdio.json` - transport-focused generic stdio manifest.
 - `github-copilot-coding-agent.md` - Copilot coding-agent boundary note.
 - `host-manifest.json` - host status and claim boundaries for Track 65.
+- `opencode.json` - OpenCode MCP config example.
 - `smoke-requests.jsonl` - JSON-RPC requests for a manual stdio smoke test.
 
 ## Preconditions

@@ -59,7 +59,11 @@ fn main() {
     let apply = apply && !preview;
     let workspace_root = workspace_root.unwrap_or_else(|| PathBuf::from(".sourceright"));
 
-    let workspace = sourceright::SourcerightWorkspace::from_root(workspace_root);
+    let workspace = if apply {
+        sourceright::SourcerightWorkspace::from_root(workspace_root)
+    } else {
+        sourceright::SourcerightWorkspace::from_root_or_parent(workspace_root)
+    };
     let config = sourceright::CitationSyncConfig {
         preview: !apply,
         apply,

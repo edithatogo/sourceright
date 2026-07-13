@@ -1,0 +1,18 @@
+﻿{
+    "id":  "opencode-plugin-submission-and-acceptance",
+    "status":  "completed",
+    "priority":  "medium",
+    "owners":  [
+                   "ai-clients",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "76-ai-client-extension-publication-hardening",
+                         "82-self-improving-submission-and-health-loop"
+                     ],
+    "owned_paths":  [
+                        "extensions/opencode-sourceright/",
+                        "examples/mcp-clients/opencode.json",
+                        "conductor/tracks/89-opencode-plugin-submission-and-acceptance/"
+                    ]
+}

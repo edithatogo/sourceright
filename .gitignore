@@ -18,3 +18,17 @@ coverage-report.txt
 .codex-plan/
 AGENTS.md.backup
 *IASN2001657*
+
+# Codev (added by codev update 2026-06-24)
+.agent-farm/
+.consult/
+codev/.update-hashes.json
+.builders/
+.architect-role.md
+
+# Local browser automation caches (machine-specific, not repo content)
+.playwright-cli/
+.playwright-profile/
+
+# Local agent skills caches (machine/agent-specific, not repo content)
+.claude/

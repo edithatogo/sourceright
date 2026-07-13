@@ -21,6 +21,12 @@ workflow artifacts.
   report JSON and MCP resource payloads.
 - `sourceright.journal-screening.schema.json`:
   `sourceright.journal_screening.v1` editorial screening output.
+- `sourceright.arxiv-submission-fixture.schema.json`: synthetic current and
+  legacy arXiv submission-platform fixtures for the journal screening contract.
+- `sourceright.submission-requirements.schema.json`: machine-readable
+  submission-readiness inventory, evidence gates, blockers, and health target.
+- `sourceright.submission-packets.schema.json`: machine-readable submission
+  packet index for packet paths, local validation, blockers, and approval gates.
 - `sourceright.legal-citation-report.schema.json`: legal citation reports that
   stay separate from CSL JSON.
 - `sourceright.provenance-report.schema.json`: claim/source provenance graphs

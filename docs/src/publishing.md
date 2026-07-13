@@ -79,8 +79,14 @@ The prepared Smithery contract is:
 - `scripts/generate-mcp-server-card.ps1` — regenerates both files from a release
   binary.
 - `smithery/mcpb/manifest.template.json` — MCPB manifest v0.3 template for the
-  local stdio server (optional MCPB path; Win32 publish still blocked by Smithery
-  `400 No values to set` as of 2026-06-10).
+  local stdio server. The build script embeds `mcp/server-card.json` tool/resource
+  metadata required by Smithery stdio deploy (see
+  `conductor/tracks/73-mcp-directory-submission-hardening/smithery-mcpb-publish-2026-06-10.md`).
+- `smithery/smithery.yaml` — optional directory-based stdio publish config.
+- `smithery/well-known-worker/` — Cloudflare Worker for `/.well-known/mcp/server-card.json`
+  when GitHub project Pages blocks dot-prefixed paths.
+- `sourceright mcp serve-http` — minimal HTTP server for local smoke and self-hosting
+  (well-known card + `POST /mcp` JSON-RPC).
 - `scripts/build-smithery-mcpb.ps1` — stages a `.mcpb` bundle from a supplied
   release binary and writes platform-specific manifest fields.
 - `tests/smithery_distribution_policy.rs` — keeps the manifest, server card, and
@@ -89,7 +95,8 @@ The prepared Smithery contract is:
 Track 57 owns the Smithery publication path. It must choose and validate either
 Streamable HTTP publishing or MCPB/local packaging before release notes or docs
 claim Smithery availability. Prepared metadata is not accepted-listing evidence.
-The current state is MCPB-prepared, not Smithery-accepted.
+The current state is Smithery-submitted (MCPB listing live), not
+Smithery-publicly_accepted until registry install smoke is recorded.
 
 ### Glama
 

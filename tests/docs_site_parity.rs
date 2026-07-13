@@ -108,6 +108,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
             "docs-site/src/content/docs/guides/host-packaging.md",
         ),
         (
+            "submission-contracts.md",
+            "docs-site/src/content/docs/submission-contracts.md",
+        ),
+        (
             "journal-integrations.md",
             "docs-site/src/content/docs/journal-integrations.md",
         ),
@@ -138,6 +142,10 @@ fn docs_site_map() -> BTreeMap<&'static str, &'static str> {
         (
             "release-status.md",
             "docs-site/src/content/docs/release-status.md",
+        ),
+        (
+            "release-surface-refresh.md",
+            "docs-site/src/content/docs/guides/release-surface-refresh.md",
         ),
         (
             "release-notes.md",
@@ -257,8 +265,56 @@ fn docs_site_pages_still_reference_the_public_docs_site_contract() {
     let publishing = read("docs-site/src/content/docs/guides/publishing.md");
     let cutover = read("docs-site/src/content/docs/guides/docs-cutover.md");
     let release = read("docs-site/src/content/docs/guides/release-runbook.md");
+    let guide_index = read("docs-site/src/content/docs/guides/index.md");
+    let plugin_authoring = read("docs-site/src/content/docs/plugin-authoring.md");
+    let providers = read("docs-site/src/content/docs/reference/providers.md");
+    let mcp_plan = read("docs-site/src/content/docs/mcp-server-plan.md");
+    let mcp_guide = read("docs-site/src/content/docs/guides/mcp.md");
 
     assert!(publishing.contains("Astro site"));
     assert!(cutover.contains("canonical public docs surface"));
     assert!(release.contains("attestation"));
+    for marker in [
+        "Release Runbook",
+        "Release Surface Refresh",
+        "Coverage Reporting",
+        "Docs Cutover",
+    ] {
+        assert!(guide_index.contains(marker), "guide index missing {marker}");
+    }
+    for marker in [
+        "Provider plugins must not overwrite canonical CSL fields silently",
+        "Evidence-Ledger Requirements",
+        "Sandbox Policy",
+    ] {
+        assert!(
+            plugin_authoring.contains(marker),
+            "plugin authoring missing {marker}"
+        );
+    }
+    for marker in [
+        "Implementation Order",
+        "Fixture and Mocking Expectations",
+        "Expanded Provider Catalogue",
+        "Google Scholar Decision Log",
+    ] {
+        assert!(
+            providers.contains(marker),
+            "providers page missing {marker}"
+        );
+    }
+    for marker in [
+        "Current read-only tools",
+        "Write-capable tools should remain dry-run by default",
+        "require explicit apply",
+    ] {
+        assert!(
+            mcp_plan.contains(marker),
+            "MCP server plan missing {marker}"
+        );
+    }
+    assert!(
+        mcp_guide.contains("[mcp_servers.sourceright]"),
+        "Codex MCP guide must use the TOML config shape"
+    );
 }

@@ -53,6 +53,28 @@ These can run in parallel when their owned paths do not overlap:
 - Track 57 closes Smithery.
 - Track 54 proves demos.
 - Track 69 records marketplace submission evidence for host packages.
+- Track 70 refreshes release-surface evidence before publication wording changes.
+- Track 81 records arXiv upstream submission and acceptance evidence after
+  requirements, maturity, stability, testing, and approval gates pass.
+- Track 82 validates the submission inventory and repo-health target before
+  submission-related wording changes.
+
+## Host Plugin Submission and Acceptance
+
+Tracks 83–90 convert hardened local MCP/config artifacts into feature-complete
+host packages and approval-gated public submissions. Run after Track 82.
+
+1. Track 83: VS Code and Open VSX submission and acceptance.
+2. Track 84: Claude Desktop package submission and acceptance.
+3. Track 85: Codex app package submission and acceptance.
+4. Track 86: GitHub Copilot extension submission and acceptance.
+5. Track 87: Gemini CLI extension submission and acceptance.
+6. Track 88: Qwen CLI extension submission and acceptance.
+7. Track 89: OpenCode plugin submission and acceptance.
+8. Track 90: Cline MCP Marketplace submission and acceptance.
+
+Tracks 87–89 can run in parallel when extension scaffolds do not overlap.
+Track 83 should land before Track 86 if a shared VS Code/Copilot MCP surface is reused.
 
 ## Parallelization Rule
 

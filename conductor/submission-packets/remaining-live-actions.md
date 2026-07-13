@@ -1,7 +1,8 @@
 # Remaining Live Submission Actions
 
 Date: 2026-05-19  
-Last browser sweep: 2026-06-10
+Last browser sweep: 2026-06-10  
+Last operator session: 2026-06-10 (host plugins 83–90 + GitHub release assets)
 
 This is the live-action runbook for the blockers that cannot be closed by local
 repo evidence alone. Use it after the local readiness checks are green.
@@ -10,17 +11,21 @@ repo evidence alone. Use it after the local readiness checks are green.
 
 | Surface | Result | Operator action |
 | --- | --- | --- |
-| Smithery | Server-card **implemented** (`mcp/server-card.json`, repo `.well-known/`, docs prerender route). **Blocker:** GitHub project Pages serves Starlight **404** for `/.well-known/*` (dot paths); Smithery scans still **405/422**. Win32 MCPB still **400**. | Unblock via MCPB publish fix, Streamable HTTP host, or docs host that serves dot paths; or ask Smithery to ingest repo-root/raw card |
-| Glama | API and listing URLs return **404**; search has no match | Sign in at `glama.ai/mcp/servers`, use **Add Server** with `https://github.com/edithatogo/sourceright` |
-| OJS/PKP | No `sourceright` entry in `pkp/plugin-gallery` | Open Gallery PR or run disposable OJS smoke when infrastructure exists |
+| Smithery | **Accepted** — listing + registry gateway install smoke (`smithery-install-smoke-2026-06-10.md`). | Optional: Linux MCPB parity; restart Cursor to pick up `~/.cursor/mcp.json` if not already active |
+| Glama | **Accepted** — id `c7qsbvekc1` listing/API **200** (`glama-acceptance-2026-06-10.md`) | None |
+| OJS/PKP | Fixture + plugin archive smoke **passed** (`ojs-colab-smoke-2026-06-10.md`); Docker disposable skipped | Optional Docker + PKP Gallery PR |
 | arXiv `submit-ce` | Issue **#72 open**; no maintainer acceptance yet | Monitor and reply on #72 if needed |
 | arXiv `submission-core` | Issue **#88 closed**; legacy repo, no acceptance | Treat as informational; focus on `submit-ce` |
+| Host plugins 83–90 | Packages on **v0.1.20** release; Cline **#1764 open** | Set `VSCE_PAT`/`OVSX_PAT`/`NPM_TOKEN` for marketplace/npm publish (`host-plugins-publish-runbook.md`) |
 
 Evidence files:
 
 - `conductor/tracks/73-mcp-directory-submission-hardening/browser-listing-verification-2026-06-10.md`
+- `conductor/tracks/73-mcp-directory-submission-hardening/smithery-install-smoke-2026-06-10.md`
+- `conductor/tracks/73-mcp-directory-submission-hardening/glama-acceptance-2026-06-10.md`
 - `conductor/tracks/73-mcp-directory-submission-hardening/smithery-server-card-2026-06-10.md`
 - `conductor/tracks/75-journal-platform-publication-hardening/browser-gallery-verification-2026-06-10.md`
+- `conductor/tracks/75-journal-platform-publication-hardening/ojs-colab-smoke-2026-06-10.md`
 - `conductor/tracks/81-arxiv-upstream-submission-and-acceptance/upstream-monitor-2026-06-10.md`
 
 ## Current Blockers

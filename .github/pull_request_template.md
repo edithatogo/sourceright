@@ -23,6 +23,7 @@ Conductor track:
 
 - [ ] The change maps to `conductor/requirements.md` and a Conductor track.
 - [ ] Public wording does not claim production readiness, final verification, AI detection, legal compliance, or registry/platform support without evidence.
+- [ ] Release-surface wording changes ran `scripts/verify-release-surface-refresh.ps1` and kept accepted/prepared/deferred states aligned.
 - [ ] Plugin/module changes preserve the no-submodule default unless a separate release lifecycle is documented.
 
 ## Governance

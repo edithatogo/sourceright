@@ -1,0 +1,9 @@
+{
+  "mcp": {
+    "sourceright": {
+      "type": "local",
+      "command": ["sourceright", "mcp"],
+      "enabled": true
+    }
+  }
+}

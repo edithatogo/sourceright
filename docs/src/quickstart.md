@@ -32,7 +32,10 @@ sourceright review queue [.sourceright-directory]
 ```
 
 `report` gives the reference-integrity summary. `review queue` shows the
-records that still need attention.
+records that still need attention. Commands that read a workspace accept either
+the `.sourceright` directory itself or its parent project directory, so
+`sourceright report --json examples/workspace` works against the checked-in
+sample data.
 
 ## 4. Export only from clean canonical data
 

@@ -49,10 +49,10 @@ market-readiness hardening, and what is intentionally excluded for now.
 | More citation managers | Could | Planned | EndNote and other managers should follow preview/apply/audit semantics. | sync contract docs |
 | HTTP MCP hosting | Could | Deferred | Local stdio remains the current server contract until a separate transport track exists. | MCP docs |
 | AI client MCP packaging | Should | Contracted | Claude, Codex, GitHub Copilot, and generic MCP clients must be documented as client configuration or deferred package tracks, not implied plugins. | host packaging docs and MCP transcript smoke |
-| VS Code extension | Could | Contracted | A future VSIX must reuse CLI/MCP diagnostics and must not reimplement citation logic. Current `.vscode` files are development tooling only. | host packaging docs |
+| VS Code extension | Could | Local package smoke-tested | The VSIX scaffold reuses CLI/MCP diagnostics and does not reimplement citation logic. Current `.vscode` files remain development tooling only. | host packaging docs and Track 77 VSIX smoke |
 | Microsoft Word add-in | Could | Contracted | A future Office Add-in must prove range provenance and reversible dry-run editing before any in-document write claim. | host packaging docs |
 | LibreOffice extension | Could | Contracted | A future `.oxt`/UNO package must prove Writer range mapping and reversible dry-run editing before extension claims. | host packaging docs |
-| Marketplace submission evidence | Should | Contracted | Host marketplaces and directories require accepted/prepared/deferred evidence before release wording can claim installability. | release-status and host packaging docs |
+| Marketplace submission evidence | Should | Fixture-backed refresh cadence | Host marketplaces and directories require accepted/prepared/deferred evidence before release wording can claim installability, and release-surface wording changes run the offline refresh verifier. | release-status, host packaging docs, and `scripts/verify-release-surface-refresh.ps1` |
 | Automatic final verification | Won't for now | Excluded | The product must not claim examiner-grade final verification until tracks 36-40 prove it. | product guidelines |
 | AI authorship detection | Won't for now | Excluded | Citation errors are not treated as proof of AI authorship. | report wording tests |
 | Silent provider overwrite | Won't for now | Excluded | Provider data never mutates canonical CSL without review or explicit apply. | sidecar boundary tests |

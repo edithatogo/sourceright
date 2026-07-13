@@ -1,0 +1,23 @@
+{
+  "schema_version": "sourceright.arxiv_submission_core_contract_snapshot.v1",
+  "retrieved_at": "2026-06-09",
+  "upstream_repository": "https://github.com/arXiv/arxiv-submission-core",
+  "platform_generation": "legacy",
+  "platform_labels": ["arxiv-submission-core", "arxiv_submission_core"],
+  "journal_screening_schema_version": "sourceright.journal_screening.v1",
+  "fixture_schema_path": "schemas/sourceright.arxiv-submission-fixture.schema.json",
+  "submission_platform_enum": "arxiv_submission_core",
+  "required_submission_fields": ["submission_id", "platform", "manuscript_label"],
+  "required_primary_event_fields": ["event_type"],
+  "event_cases": ["accepted", "held", "rejected", "malformed", "unknown-event"],
+  "expected_statuses": [
+    "screened",
+    "screened_with_warnings",
+    "screened_with_errors"
+  ],
+  "unknown_event_degrades_to": "screened_with_warnings",
+  "malformed_event_degrades_to": "screened_with_errors",
+  "integration_boundary": "submission event/domain payload to Sourceright journal-screen",
+  "no_writeback": true,
+  "no_live_credentials_default_ci": true
+}

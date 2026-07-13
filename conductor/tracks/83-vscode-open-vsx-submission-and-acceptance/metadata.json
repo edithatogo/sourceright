@@ -1,0 +1,20 @@
+﻿{
+    "id":  "vscode-open-vsx-submission-and-acceptance",
+    "status":  "completed",
+    "priority":  "high",
+    "owners":  [
+                   "editor-extension",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "66-vscode-extension-packaging",
+                         "77-vscode-open-vsx-publication-hardening",
+                         "72-submission-requirements-contracts",
+                         "82-self-improving-submission-and-health-loop"
+                     ],
+    "owned_paths":  [
+                        "extensions/vscode-sourceright/",
+                        "conductor/tracks/83-vscode-open-vsx-submission-and-acceptance/",
+                        "conductor/submission-packets/vscode-open-vsx.md"
+                    ]
+}

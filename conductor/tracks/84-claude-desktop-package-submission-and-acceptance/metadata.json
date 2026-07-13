@@ -1,0 +1,21 @@
+﻿{
+    "id":  "claude-desktop-package-submission-and-acceptance",
+    "status":  "completed",
+    "priority":  "high",
+    "owners":  [
+                   "ai-clients",
+                   "mcp",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "65-ai-client-mcp-packaging",
+                         "76-ai-client-extension-publication-hardening",
+                         "73-mcp-directory-submission-hardening",
+                         "82-self-improving-submission-and-health-loop"
+                     ],
+    "owned_paths":  [
+                        "examples/mcp-clients/claude-desktop.json",
+                        "smithery/mcpb/",
+                        "conductor/tracks/84-claude-desktop-package-submission-and-acceptance/"
+                    ]
+}

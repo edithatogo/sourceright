@@ -36,12 +36,17 @@ implemented_read_only_surfaces:
   - sourceright report --mcp-resource [.sourceright-directory]
   - sourceright conflicts [.sourceright-directory]
   - sourceright citations <manuscript.txt> [.sourceright-directory]
-  - sourceright review queue|partitions|import-decisions
+  - sourceright review queue|partitions
   - sourceright journal-screen [.sourceright-directory]
   - sourceright legal <legal-text.txt>
   - sourceright provenance <document-text.txt>
   - sourceright policy <references.csl.json>
   - sourceright plugins [validate] [--json]
+implemented_apply_gated_write_surfaces:
+  - workspace.init apply=true
+  - sourceright review import-decisions apply=true
+  - review.import_decisions apply=true
+  - exports.write apply=true
   - sourceright export --all [.sourceright-directory]
 resource_uris:
   - sourceright://reports/reference-integrity
@@ -70,6 +75,7 @@ sourceright mcp status --json
   "available_resources": 8,
   "available_prompts": 5,
   "implemented_read_only_surfaces": [...],
+  "implemented_apply_gated_write_surfaces": [...],
   "resource_uris": [...],
   "message": "MCP server mode is implemented; run `sourceright mcp` to start the stdio server."
 }

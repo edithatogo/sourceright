@@ -28,15 +28,10 @@ Sourceright's MCP surface is read-first and audit-friendly.
 
 ### Generic MCP clients
 
-```json
-{
-  "mcpServers": {
-    "sourceright": {
-      "command": "sourceright",
-      "args": ["mcp"]
-    }
-  }
-}
+```toml
+[mcp_servers.sourceright]
+command = "sourceright"
+args = ["mcp"]
 ```
 
 ### Claude Desktop

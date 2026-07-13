@@ -41,6 +41,12 @@ impl SourcerightWorkspace {
     /// Derives the workspace location for a document or directory.
     pub fn for_document_or_dir(path: impl AsRef<Path>) -> Self {
         let path = path.as_ref();
+        if path.file_name().and_then(|name| name.to_str()) == Some(".sourceright")
+            || path.join("references.csl.json").exists()
+        {
+            return Self::from_root(path);
+        }
+
         let root = if path.extension().is_some() {
             let name = path
                 .file_name()
@@ -295,6 +301,17 @@ impl SourcerightWorkspace {
             &sidecar,
         ))
     }
+}
+
+fn normalize_workspace_root(root: PathBuf) -> PathBuf {
+    if root.file_name().and_then(|name| name.to_str()) == Some(".sourceright")
+        || root.join("references.csl.json").exists()
+    {
+        return root;
+    }
+
+    let nested = root.join(".sourceright");
+    if nested.is_dir() { nested } else { root }
 }
 
 fn write_text_if_missing(path: &Path, value: &str) -> Result<(), WorkspaceError> {

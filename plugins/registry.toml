@@ -64,6 +64,16 @@ manifest = "plugins/manifests/journal.ojs.toml"
 status = "planned_adapter"
 
 [[plugins]]
+id = "journal.arxiv-submit-ce"
+manifest = "plugins/manifests/journal.arxiv-submit-ce.toml"
+status = "planned_adapter"
+
+[[plugins]]
+id = "journal.arxiv-submission-core"
+manifest = "plugins/manifests/journal.arxiv-submission-core.toml"
+status = "planned_adapter"
+
+[[plugins]]
 id = "repository.pubmed"
 manifest = "plugins/manifests/repository.pubmed.toml"
 status = "core_normalizer"

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["@edithatogo/sourceright-opencode"],
+  "mcp": {
+    "sourceright": {
+      "type": "local",
+      "command": ["sourceright", "mcp"],
+      "enabled": true
+    }
+  }
+}

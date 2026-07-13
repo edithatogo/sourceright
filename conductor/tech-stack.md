@@ -36,8 +36,10 @@
 - CI/CD: GitHub Actions for formatting, linting, tests, docs, security scanning, release dry-runs, and tagged releases.
 - Release targets: crates.io package, GitHub Release binaries, checksums, SBOM/provenance artifacts, and later package-manager formulas/manifests.
 
-## Current scaffold
+## Current implementation
 
 - `Cargo.toml` defines the initial Rust package.
-- `src/main.rs` provides a minimal CLI placeholder with planned `mcp` mode.
+- `src/main.rs` provides the CLI and MCP status/manifest entrypoints.
+- `src/mcp.rs` provides the stdio MCP server with read-only resources and
+  explicit apply-gated write tools.
 - `legacy/humanizer-next/` preserves the imported reference workflow.

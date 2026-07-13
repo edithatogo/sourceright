@@ -24,6 +24,7 @@ include = [
     "/sourceright-bench/**",
     "/docs/src/**",
     "/smithery/**",
+    "/smithery/smithery.yaml",
     "/conductor/submission-requirements.json",
     "/conductor/submission-packets/**",
     "/conductor/release-channels.md",

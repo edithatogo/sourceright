@@ -1,0 +1,6 @@
+name = "sourceright-mcp-well-known"
+main = "src/worker.js"
+compatibility_date = "2026-06-10"
+
+[vars]
+CARD_URL = "https://raw.githubusercontent.com/edithatogo/sourceright/main/.well-known/mcp/server-card.json"

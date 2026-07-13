@@ -1,0 +1,12 @@
+{
+  "name": "sourceright",
+  "version": "0.1.20",
+  "description": "Reference verification MCP for Qwen Code — CSL integrity, review queues, and audited write plans via sourceright mcp.",
+  "mcpServers": {
+    "sourceright": {
+      "command": "sourceright",
+      "args": ["mcp"]
+    }
+  },
+  "contextFileName": "QWEN.md"
+}

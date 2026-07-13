@@ -25,6 +25,8 @@ fn feature_contract_matrix_is_canonical_and_granular() {
         "MCP",
         "Zotero",
         "official MCP Registry",
+        "Fixture-backed refresh cadence",
+        "scripts/verify-release-surface-refresh.ps1",
     ] {
         assert!(
             matrix.contains(contract),
@@ -123,6 +125,14 @@ fn release_maturity_control_layer_exists() {
     let order = read("conductor/implementation-order.md");
     assert!(order.contains("Foundation First"));
     assert!(order.contains("Parallelization Rule"));
+    assert!(order.contains("Track 70 refreshes release-surface evidence"));
+
+    let release_channels = read("conductor/release-channels.md");
+    assert!(
+        release_channels.contains("release-surface refresh before publication wording changes")
+    );
+    assert!(release_channels.contains("56, 57, 70"));
+    assert!(release_channels.contains("66, 69, 70"));
 
     let secrets = read("conductor/secrets-and-live-tests.md");
     assert!(secrets.contains("SOURCERIGHT_PROVIDER_LIVE"));
@@ -398,6 +408,65 @@ fn conductor_requirements_has_track_47_overclaim_guards() {
     );
     assert!(requirements.contains("Use \"technical preview\" and \"structured triage\" wording."));
     assert!(requirements.contains("Never equate citation errors with AI authorship."));
+}
+
+#[test]
+fn external_proofs_keep_mcp_write_surfaces_out_of_read_only_contracts() {
+    let mcp_proof = read("conductor/tracks/45-external-proof-suites/mcp-transcript-proof.md");
+    let citation_proof =
+        read("conductor/tracks/45-external-proof-suites/citation-manager-proof.md");
+
+    assert!(mcp_proof.contains("implemented_apply_gated_write_surfaces"));
+    assert!(mcp_proof.contains("exports.write apply=true"));
+    assert!(
+        !mcp_proof
+            .contains("  - sourceright plugins [validate] [--json]\n  - sourceright export --all"),
+        "export writes must not be listed in the read-only MCP proof surface"
+    );
+    assert!(citation_proof.contains("Citation-Sync Is Not A Read-Only MCP Surface"));
+    assert!(citation_proof.contains("contains(\"citation-sync\") | not"));
+    assert!(
+        !citation_proof.contains("select(contains(\"citation-sync\"))"),
+        "citation-sync must not be advertised as a read-only MCP surface"
+    );
+}
+
+#[test]
+fn mcp_read_only_docs_do_not_include_apply_gated_or_cli_sync_surfaces() {
+    for path in [
+        "docs/src/mcp.md",
+        "docs/src/mcp-server-plan.md",
+        "docs-site/src/content/docs/mcp-server-plan.md",
+    ] {
+        let content = read(path);
+        let read_only_start = content
+            .find("Read-only tools:")
+            .or_else(|| content.find("Current read-only tools"))
+            .expect("read-only section should be present");
+        let read_only_tail = &content[read_only_start..];
+        let read_only_section = read_only_tail
+            .split("Write-capable")
+            .next()
+            .expect("read-only section should precede write-capable section");
+
+        assert!(
+            read_only_section.contains("exports.preview")
+                || read_only_section.contains("preview export artifacts"),
+            "{path} read-only MCP docs should include export preview, not export writes"
+        );
+        assert!(
+            !read_only_section.contains("exports.write"),
+            "{path} must not list exports.write in read-only MCP docs"
+        );
+        assert!(
+            !read_only_section.contains("citation-sync"),
+            "{path} must not advertise citation-sync as a read-only MCP surface"
+        );
+        assert!(
+            !read_only_section.contains("import-decisions"),
+            "{path} must not advertise review import-decisions as read-only"
+        );
+    }
 }
 
 #[test]

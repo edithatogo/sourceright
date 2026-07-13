@@ -113,6 +113,13 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
         output_text(&report).contains("\"schema_version\":\"sourceright.reference_report.v1\"")
     );
 
+    let report_from_parent = run_in_dir(&["report", "--json", "."], root);
+    assert!(report_from_parent.status.success());
+    assert!(
+        output_text(&report_from_parent)
+            .contains("\"schema_version\":\"sourceright.reference_report.v1\"")
+    );
+
     let conflicts = run_in_dir(&["conflicts", ".sourceright"], root);
     assert!(conflicts.status.success());
     assert!(
@@ -178,6 +185,41 @@ fn cli_surface_sweep_covers_the_major_dispatch_paths() {
     );
     assert!(export_preview.status.success());
     assert!(output_text(&export_preview).contains("sourceright.export_manifest.v1"));
+
+    let export_preview_from_parent =
+        run_in_dir(&["export", "--preview", "--format", "ris", "."], root);
+    assert!(export_preview_from_parent.status.success());
+    assert!(output_text(&export_preview_from_parent).contains("sourceright.export_manifest.v1"));
+
+    let conflicts_from_parent = run_in_dir(&["conflicts", "."], root);
+    assert!(conflicts_from_parent.status.success());
+    assert!(
+        output_text(&conflicts_from_parent)
+            .contains("No provider conflicts or merge decisions were detected.")
+    );
+
+    let journal_from_parent = run_in_dir(
+        &[
+            "journal-screen",
+            "--platform",
+            "ojs",
+            "--submission-id",
+            "SUB-PARENT",
+            "--manuscript",
+            "manuscript.docx",
+            ".",
+        ],
+        root,
+    );
+    assert!(journal_from_parent.status.success());
+    assert!(output_text(&journal_from_parent).contains("\"submission_id\":\"SUB-PARENT\""));
+
+    let export_all_from_parent = run_in_dir(&["export", "--all", "."], root);
+    assert!(
+        !export_all_from_parent.status.success(),
+        "write-mode export should not reinterpret a parent directory as .sourceright"
+    );
+    assert!(!root.join("exports").join("references.ris").exists());
 
     let export_all = run_in_dir(&["export", "--all", ".sourceright"], root);
     assert!(export_all.status.success());
@@ -298,6 +340,62 @@ fn ojs_fixture_screens_to_editor_and_author_outputs_end_to_end() {
     );
     assert!(!output.contains("AI-generated"));
     assert!(!output.contains("AI authorship"));
+}
+
+#[test]
+fn arxiv_platform_fixtures_screen_to_shared_journal_contract() {
+    for fixture_path in [
+        "fixtures/journal/arxiv-submit-ce-submission.json",
+        "fixtures/journal/arxiv-submission-core-submission.json",
+    ] {
+        let tempdir = TempDir::new().expect("create tempdir");
+        let root = tempdir.path();
+
+        let fixture_text = read_fixture(fixture_path);
+        let fixture: Value = serde_json::from_str(&fixture_text).expect("valid arXiv fixture");
+        let submission = &fixture["submission"];
+
+        let init = run_in_dir(&["init"], root);
+        assert!(init.status.success());
+
+        let workspace = root.join(".sourceright");
+        let references = serde_json::to_string(&fixture["csl_references"]).expect("serialize csl");
+        let sidecar = fixture["verification_sidecar"].clone();
+
+        write(workspace.join("references.csl.json"), &references);
+        write(
+            workspace.join("references.verification.json"),
+            &serde_json::to_string(&sidecar).expect("serialize sidecar"),
+        );
+
+        let journal = run_in_dir(
+            &[
+                "journal-screen",
+                "--platform",
+                submission["platform"].as_str().expect("platform"),
+                "--submission-id",
+                submission["submission_id"].as_str().expect("submission id"),
+                "--manuscript",
+                submission["manuscript_label"]
+                    .as_str()
+                    .expect("manuscript label"),
+                ".sourceright",
+            ],
+            root,
+        );
+
+        assert!(journal.status.success());
+        let output = output_text(&journal);
+        let report: Value = serde_json::from_str(&output).expect("journal output json");
+        let expected = &fixture["expected_screening_report"];
+
+        assert_eq!(report["schema_version"], expected["schema_version"]);
+        assert_eq!(report["submission_id"], expected["submission_id"]);
+        assert_eq!(report["platform"], expected["platform"]);
+        assert_eq!(report["status"], expected["status"]);
+        assert!(!output.contains("AI-generated"));
+        assert!(!output.contains("AI authorship"));
+    }
 }
 
 fn read_fixture(path: &str) -> String {

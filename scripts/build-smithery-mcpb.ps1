@@ -29,7 +29,11 @@ if ([string]::IsNullOrWhiteSpace($OutputPath)) {
     $OutputPath = Join-Path $repoRoot "dist/sourceright-smithery-$version-$Platform.mcpb"
 }
 
-$output = [System.IO.Path]::GetFullPath((Join-Path (Get-Location) $OutputPath))
+if ([System.IO.Path]::IsPathRooted($OutputPath)) {
+    $output = [System.IO.Path]::GetFullPath($OutputPath)
+} else {
+    $output = [System.IO.Path]::GetFullPath((Join-Path (Get-Location) $OutputPath))
+}
 $distDir = Split-Path -Parent $output
 New-Item -ItemType Directory -Force -Path $distDir | Out-Null
 
@@ -39,12 +43,21 @@ New-Item -ItemType Directory -Force -Path (Join-Path $stagingRoot "bin") | Out-N
 $binaryName = if ($Platform -eq "win32") { "sourceright.exe" } else { "sourceright" }
 Copy-Item -LiteralPath $binary -Destination (Join-Path $stagingRoot "bin/$binaryName") -Force
 
+$serverCardPath = Join-Path $repoRoot "mcp/server-card.json"
+if (-not (Test-Path -LiteralPath $serverCardPath)) {
+    throw "Missing MCP server card for Smithery metadata: $serverCardPath"
+}
+
+$serverCard = Get-Content -Raw -LiteralPath $serverCardPath | ConvertFrom-Json
 $manifest = Get-Content -Raw -LiteralPath $templatePath | ConvertFrom-Json
 $manifest.version = $version
 $manifest.compatibility.platforms = @($Platform)
 $manifest.server.entry_point = "bin/$binaryName"
 $manifest.server.mcp_config.command = '${__dirname}' + "/bin/$binaryName"
-$manifest | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath (Join-Path $stagingRoot "manifest.json") -Encoding UTF8
+$manifest | Add-Member -NotePropertyName tools -NotePropertyValue $serverCard.tools -Force
+$manifest | Add-Member -NotePropertyName resources -NotePropertyValue $serverCard.resources -Force
+$manifest | Add-Member -NotePropertyName prompts -NotePropertyValue $serverCard.prompts -Force
+$manifest | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $stagingRoot "manifest.json") -Encoding UTF8
 
 Copy-Item -LiteralPath (Join-Path $repoRoot "README.md") -Destination (Join-Path $stagingRoot "README.md") -Force
 Copy-Item -LiteralPath (Join-Path $repoRoot "LICENSE-MIT") -Destination (Join-Path $stagingRoot "LICENSE-MIT") -Force
@@ -83,6 +96,9 @@ if ($generated.manifest_version -ne "0.3") {
 }
 if ($generated.server.mcp_config.args[0] -ne "mcp") {
     throw "Generated MCPB manifest does not start Sourceright in MCP mode"
+}
+if (-not $generated.tools -or @($generated.tools).Count -lt 1) {
+    throw "Generated MCPB manifest is missing embedded Smithery tool metadata"
 }
 
 [pscustomobject]@{

@@ -9,8 +9,9 @@ Expose Sourceright through a local Rust CLI first, then through an MCP server ov
 - `sourceright init`: create or confirm the local Sourceright workspace layout.
 - `sourceright validate-csl`: validate canonical CSL JSON and return deterministic diagnostics.
 - `sourceright report`: generate a reference integrity report from a Sourceright workspace, with Markdown, JSON, and MCP-resource output modes.
-- `sourceright mcp`: placeholder command that clearly reports MCP server mode is not ready yet.
-- `sourceright mcp status`: status-only placeholder output that exits successfully for readiness checks.
+- `sourceright mcp`: start the local stdio MCP server.
+- `sourceright mcp status`: report MCP readiness, read-only resources, and
+  apply-gated write surfaces without starting the server.
 
 ## `validate-csl` Contract
 
@@ -44,20 +45,28 @@ Machine-readable output:
 
 ## MCP Interface
 
-Initial MCP behavior is a placeholder exposed through `sourceright mcp`. Plain `mcp` must not start or imply a server. It should print a conservative status and exit non-zero. `mcp status` may exit successfully because it only reports readiness. The Rust core and CLI now expose the first read-only contracts for adapters: CSL validation JSON and reference report JSON/resource output.
+MCP behavior is exposed through `sourceright mcp`. Plain `mcp` starts the
+stdio server; `mcp status` exits successfully because it only reports readiness.
+The Rust core and CLI expose read-only contracts for adapters plus explicit
+apply-gated write tools for workspace initialization, review-decision import,
+and export writes.
 
-Planned tools:
+Implemented and planned tools:
 
-- `references.extract`
-- `references.normalize`
-- `references.verify`
 - `references.review_queue`
-- `references.export`
-- `pipeline.run`
+- `references.validate_csl`
+- `references.report`
+- `references.citations`
+- `journal.screen_submission`
+- `exports.preview`
+- `workspace.init`
+- `review.import_decisions`
+- `exports.write`
+- planned later: `references.extract`, `references.normalize`,
+  `references.verify`, and `pipeline.run`
 
 Planned resources:
 
-- Canonical CSL JSON.
 - Validation diagnostics.
 - Verification sidecar.
 - Review queue.

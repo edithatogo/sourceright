@@ -1,0 +1,15 @@
+{
+  "shell": {
+    "architect": "claude",
+    "builder": "claude",
+    "shell": "pwsh"
+  },
+  "worktree": {
+    "symlinks": [
+      "target"
+    ],
+    "postSpawn": [
+      "cargo fetch"
+    ]
+  }
+}

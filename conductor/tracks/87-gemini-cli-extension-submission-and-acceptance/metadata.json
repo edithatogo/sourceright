@@ -1,0 +1,17 @@
+﻿{
+    "id":  "gemini-cli-extension-submission-and-acceptance",
+    "status":  "completed",
+    "priority":  "medium",
+    "owners":  [
+                   "ai-clients",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "76-ai-client-extension-publication-hardening",
+                         "82-self-improving-submission-and-health-loop"
+                     ],
+    "owned_paths":  [
+                        "extensions/gemini-sourceright/",
+                        "conductor/tracks/87-gemini-cli-extension-submission-and-acceptance/"
+                    ]
+}

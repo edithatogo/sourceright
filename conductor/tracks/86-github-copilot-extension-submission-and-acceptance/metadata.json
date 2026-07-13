@@ -1,0 +1,20 @@
+﻿{
+    "id":  "github-copilot-extension-submission-and-acceptance",
+    "status":  "completed",
+    "priority":  "medium",
+    "owners":  [
+                   "ai-clients",
+                   "github",
+                   "publication"
+               ],
+    "dependencies":  [
+                         "64-github-side-governance-additions",
+                         "76-ai-client-extension-publication-hardening",
+                         "82-self-improving-submission-and-health-loop"
+                     ],
+    "owned_paths":  [
+                        "examples/mcp-clients/vscode-mcp.json",
+                        "examples/mcp-clients/github-copilot-coding-agent.md",
+                        "conductor/tracks/86-github-copilot-extension-submission-and-acceptance/"
+                    ]
+}

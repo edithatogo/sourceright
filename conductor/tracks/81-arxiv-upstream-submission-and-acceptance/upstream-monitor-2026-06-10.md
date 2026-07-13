@@ -24,3 +24,12 @@ correct active intake surface is **`arXiv/submit-ce`**.
 2. Complement `submit_ce/ui/filters/tex_filters.py` citation warnings with structured CSL screening.
 
 Awaiting maintainer guidance on preferred insertion point before opening a PR.
+
+## Re-check (2026-06-10 session)
+
+| Repo | Issue | State | New activity |
+| --- | --- | --- | --- |
+| submit-ce | #72 | Open | No maintainer reply since 2026-06-09 follow-up |
+| arxiv-submission-core | #88 | Closed | No action required |
+
+No upstream PR opened. Monitor #72 for maintainer response.

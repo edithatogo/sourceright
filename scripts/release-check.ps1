@@ -4,8 +4,17 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+if ([string]::IsNullOrWhiteSpace($ReleaseTag)) {
+    $ReleaseTag = "v0.1.20"
+}
+
 Write-Host "Release tag: $ReleaseTag"
-Write-Host "Required checks:"
+Write-Host "Running release-surface evidence refresh checks..."
+& (Join-Path $PSScriptRoot 'verify-release-surface-refresh.ps1') -ReleaseTag $ReleaseTag
+
+Write-Host "Release checks executed by this helper:"
+Write-Host " - powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-release-surface-refresh.ps1 -ReleaseTag $ReleaseTag"
+Write-Host "Manual release follow-up checklist:"
 Write-Host " - cargo package --locked"
 Write-Host " - cargo publish --dry-run --locked"
 Write-Host " - cargo deny check advisories bans sources"

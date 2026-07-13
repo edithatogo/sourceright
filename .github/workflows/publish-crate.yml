@@ -54,6 +54,9 @@ jobs:
           fi
       - name: Verify package
         run: cargo package --locked
+      - name: Release surface evidence
+        shell: pwsh
+        run: ./scripts/verify-release-surface-refresh.ps1
       - name: Verify clean tree
         shell: bash
         run: test -z "$(git status --porcelain --untracked-files=no)"

@@ -67,7 +67,7 @@ plugins at runtime, it still needs:
 
 A comprehensive catalogue of all normaliser provider candidates (including
 access model, status, owning track, evidence level, fixture coverage, default-CI
-behaviour, and overclaim guard) is maintained in [Provider Strategy](providers#expanded-provider-catalogue).
+behaviour, and overclaim guard) is maintained in [Provider Strategy](providers.md#expanded-provider-catalogue).
 That catalogue covers:
 
 - **Core/public**: Crossref, DataCite, OpenAlex, PubMed/NCBI, ORCID,

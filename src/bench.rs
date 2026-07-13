@@ -195,19 +195,19 @@ fn run_task(bench_dir: &Path, task: &BenchmarkTask) -> Result<String, BenchmarkE
             Ok(render_sidecar(&sidecar))
         }
         "report" => {
-            let workspace = SourcerightWorkspace::from_root(&fixture_path);
+            let workspace = SourcerightWorkspace::from_root_or_parent(&fixture_path);
             Ok(serde_json::to_string_pretty(&workspace.reference_report_json()?)? + "\n")
         }
         "citations" => {
             let manuscript = fs::read_to_string(&fixture_path)?;
-            let workspace = SourcerightWorkspace::from_root(bench_dir.join("fixtures"));
+            let workspace = SourcerightWorkspace::from_root_or_parent(bench_dir.join("fixtures"));
             Ok(workspace
                 .citation_reconciliation_report(&manuscript)?
                 .to_markdown())
         }
         "review-queue" => Ok(fs::read_to_string(fixture_path.join("review-queue.jsonl"))?),
         "export" => {
-            let workspace = SourcerightWorkspace::from_root(&fixture_path);
+            let workspace = SourcerightWorkspace::from_root_or_parent(&fixture_path);
             Ok(render_export_suite(&workspace)?)
         }
         "legal" => {
@@ -221,7 +221,7 @@ fn run_task(bench_dir: &Path, task: &BenchmarkTask) -> Result<String, BenchmarkE
             Ok(serde_json::to_string_pretty(&report)? + "\n")
         }
         "journal-screen" => {
-            let workspace = SourcerightWorkspace::from_root(&fixture_path);
+            let workspace = SourcerightWorkspace::from_root_or_parent(&fixture_path);
             let report: JournalScreeningReport = workspace.journal_screening_report(
                 "BENCH-001".to_string(),
                 JournalPlatform::Ojs,

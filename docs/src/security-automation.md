@@ -67,6 +67,19 @@ the same minimal toolchain and install `clippy` and `rustfmt` consistently. The
 `cargo clippy --all-targets -- -D warnings`, matching the CI lint posture for
 developers who use VS Code-compatible editors.
 
+On Windows workstations where the MSVC host linker is unavailable or blocked,
+use the local GNU validation wrapper instead of plain `cargo`:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify-local-windows-gnu.ps1
+```
+
+The wrapper selects `stable-x86_64-pc-windows-gnu`, writes build artifacts to an
+explicit `C:\tmp` target directory, and runs format, clippy, tests, locked
+check, plugin validation, benchmark smoke, and the example report smoke. This
+keeps validation out of OneDrive-locked `target/` directories and avoids the
+MSVC `link.exe` path that can fail before Sourceright code is compiled.
+
 Crate roots use `#![forbid(unsafe_code)]`. This is intentionally stricter than
 Clippy because Sourceright's citation-audit core should not need unsafe Rust.
 `cargo-semver-checks` is advisory for now: the current technical-preview Rust
@@ -144,7 +157,9 @@ Read-only API check on 2026-05-14 showed branch protection currently requires:
 `Rust ubuntu-latest`, `Rust macos-latest`, `Rust windows-latest`, `Docs build`,
 `CodeQL`, `Cargo audit`, and `Dependency review`, with one approving review and
 admin enforcement disabled. It did not show `Pages`, `Coverage`, `Robustness`,
-`Quality`, or release dry-run as required checks. Changing those settings
+`Quality`, or release dry-run as required checks. The release dry-run gate now
+also checks release-surface evidence boundaries before publication wording can
+change. Changing those settings
 remains an account-side admin task outside this repo-local track.
 
 ### Merge Queue

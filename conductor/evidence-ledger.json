@@ -344,6 +344,266 @@
         "Private account-side submissions must not be described as completed repo proof until public listing evidence exists."
       ]
     },
+    "70-release-surface-refresh-cadence": {
+      "category": "publication",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Release-surface refresh cadence is documented in source docs and the Starlight docs mirror.",
+        "scripts/verify-release-surface-refresh.ps1 performs deterministic offline checks for accepted, prepared, deferred, and not-applicable release-surface boundaries.",
+        "scripts/release-check.ps1 invokes the release-surface verifier before listing remaining release gates.",
+        "release-dry-run.yml runs the release-surface verifier and triggers on relevant release-surface docs and script changes.",
+        "The PR template prompts reviewers to run the verifier when release-surface wording changes.",
+        "No prepared or deferred release surface is promoted to accepted by Track 70."
+      ],
+      "blockers": [
+        "External marketplace or registry promotion still requires public URL, version or artifact id, verification date, and install metadata.",
+        "Live registry checks remain opt-in and are not part of default CI.",
+        "Private account-side submissions remain excluded until public listing evidence is recorded.",
+        "Prepared Smithery, Glama, Zotero, OJS, AI-client, editor, office-suite, and package-manager surfaces must not be described as accepted without their owning evidence rows being updated."
+      ]
+    },
+    "71-arxiv-submission-platform-adapters": {
+      "category": "integration",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "arXiv submit-ce and arxiv-submission-core submission-platform adapters are represented as separate planned journal plugin manifests.",
+        "Both arXiv platform generations reuse the shared sourceright.journal_screening.v1 contract.",
+        "Synthetic fixtures cover current submit-ce style source-bundle screening and legacy submission-core event/domain screening.",
+        "Shared schema, CLI, MCP, registry, and overclaim dependencies are addressed before platform-specific lanes.",
+        "provider.arxiv remains separate sidecar-only preprint identity and version evidence."
+      ],
+      "blockers": [
+        "No upstream arXiv pull request or module acceptance is claimed.",
+        "No live arXiv test environment, credential, or API integration has been exercised.",
+        "No arXiv-side writeback or canonical CSL mutation is implemented.",
+        "Future upstream module work requires explicit compatibility review against the target arXiv repository and opt-in proof evidence."
+      ]
+    },
+    "72-submission-requirements-contracts": {
+      "category": "publication",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Cross-surface submission contracts define evidence gates from requirements searched through publicly accepted.",
+        "Official MCP Registry, Smithery, Glama, Zotero, EndNote, OJS/PKP, arXiv, Claude Cowork, Codex app, GitHub Copilot, Gemini CLI, Qwen CLI, and VS Code/Open VSX are covered by the submission contract.",
+        "External issues, pull requests, marketplace listings, and registry submissions require explicit approval before execution."
+      ],
+      "blockers": [
+        "This track does not submit to any external host.",
+        "Host-specific requirements must be searched and recorded by downstream tracks before submission.",
+        "Prepared metadata remains below accepted-public-listing evidence."
+      ]
+    },
+    "73-mcp-directory-submission-hardening": {
+      "category": "publication",
+      "evidence_level": "publicly-accepted",
+      "allowed_claims": [
+        "Official MCP Registry metadata for 0.1.20 aligns with server.json, OCI labels, and distribution policy tests.",
+        "Smithery MCPB bundle builds from a release binary with local MCP status smoke.",
+        "Smithery listing accepted at https://smithery.ai/servers/edithatogo/sourceright with registry gateway install smoke (2026-06-10).",
+        "Glama repository metadata validates locally through glama.json and docs references."
+      ],
+      "blockers": [
+        "No Glama accepted listing is claimed.",
+        "External Glama publication requires explicit approval and live listing evidence.",
+        "Smithery Linux MCPB parity is not claimed."
+      ]
+    },
+    "74-citation-manager-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "hardened_local_package",
+      "allowed_claims": [
+        "Zotero is a hardened local CLI/Web API adapter with fixture proof and opt-in disposable-library smoke workflows.",
+        "EndNote is a hardened local ENW/RIS file handoff with golden export fixtures and documented import boundary.",
+        "No Zotero .xpi or EndNote plugin listing is claimed."
+      ],
+      "blockers": [
+        "External Zotero forum or Plugin Gallery publication requires explicit approval and live listing evidence.",
+        "Default-CI live Zotero library writes are not claimed; opt-in smoke remains credential-gated."
+      ]
+    },
+    "75-journal-platform-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "hardened_local_package",
+      "allowed_claims": [
+        "OJS generic plugin install-test archive and repo-local lint path are hardened.",
+        "Fixture-backed journal screening for the OJS platform path is proven in default CI.",
+        "arXiv upstream work remains separate from OJS/PKP package submission."
+      ],
+      "blockers": [
+        "No PKP Plugin Gallery acceptance is claimed.",
+        "Live disposable OJS install smoke remains opt-in and is not recorded in default CI."
+      ]
+    },
+    "76-ai-client-extension-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "hardened_local_package",
+      "allowed_claims": [
+        "Claude, Codex, and Copilot are hardened local MCP/workflow configuration surfaces with explicit no-plugin boundaries.",
+        "Gemini CLI and Qwen CLI have documented no-package decisions until extension scaffolds exist.",
+        "MCP status smoke and AI client policy tests prove stdio server readiness for client wiring."
+      ],
+      "blockers": [
+        "No Claude Cowork, Codex app, Copilot, Gemini CLI, or Qwen CLI marketplace extension listing is claimed.",
+        "Per-host client transcript smoke and Copilot entitlement proof remain opt-in."
+      ]
+    },
+    "77-vscode-open-vsx-publication-hardening": {
+      "category": "publication",
+      "evidence_level": "hardened_local_package",
+      "allowed_claims": [
+        "A local VSIX scaffold builds and passes isolated install/uninstall smoke with Workspace Trust declared.",
+        "Marketplace and Open VSX metadata are drafted; the extension reuses CLI diagnostics and stays preview-first for writes."
+      ],
+      "blockers": [
+        "No VS Code Marketplace or Open VSX accepted listing is claimed.",
+        "External publication remains approval-gated until listing URL and submission receipt exist."
+      ]
+    },
+    "78-arxiv-upstream-requirements-recon": {
+      "category": "arxiv-upstream",
+      "evidence_level": "contracted",
+      "allowed_claims": [
+        "Requirements reconnaissance for arXiv/submit-ce and arXiv/arxiv-submission-core is documented in the requirements matrix and evidence packet.",
+        "Issue-first upstream engagement is the default path; local adapters remain fixture-backed with no arXiv state mutation."
+      ],
+      "blockers": [
+        "No upstream arXiv issue or pull request is claimed.",
+        "Tracks 79-81 maturity hardening and approval remain before upstream submission."
+      ]
+    },
+    "79-arxiv-submit-ce-maturity-hardening": {
+      "category": "arxiv-upstream",
+      "evidence_level": "hardened_local_package",
+      "allowed_claims": [
+        "submit-ce variant fixtures, schema drift snapshot, and security boundaries are hardened for local upstream-ready evidence.",
+        "Maintainer issue/PR draft and evidence packet exist; screening remains read-only with no arXiv writeback."
+      ],
+      "blockers": [
+        "No upstream submit-ce submission or acceptance is claimed.",
+        "Optional local submit-ce platform smoke remains opt-in until maintainer test commands are pinned."
+      ]
+    },
+    "80-arxiv-submission-core-maturity-hardening": {
+      "category": "arxiv-upstream",
+      "evidence_level": "hardened_local_package",
+      "allowed_claims": [
+        "submission-core legacy event fixtures, migration mapping snapshot, and security boundaries are hardened for local upstream-ready evidence.",
+        "Maintainer issue/PR draft and evidence packet exist; screening remains read-only with no legacy state writeback."
+      ],
+      "blockers": [
+        "No upstream arxiv-submission-core submission or acceptance is claimed.",
+        "Optional local legacy platform smoke remains opt-in until maintainer test commands are pinned."
+      ]
+    },
+    "81-arxiv-upstream-submission-and-acceptance": {
+      "category": "arxiv-upstream",
+      "evidence_level": "submitted",
+      "allowed_claims": [
+        "Track 81 readiness review confirms Tracks 78–80 gates are green for maintainer-ready upstream drafts.",
+        "Issue-first bodies for arXiv/submit-ce and arXiv/arxiv-submission-core were submitted as GitHub issues on 2026-06-09.",
+        "Submitted status is evidenced by issue URLs in live-evidence.json and approval-record-2026-06-09.md.",
+        "Accepted status requires merged PR, maintainer acceptance, or public acceptance URL."
+      ],
+      "blockers": [
+        "Open issue evidence must not be described as accepted.",
+        "Maintainer response and any upstream PR remain pending."
+      ]
+    },
+    "82-self-improving-submission-and-health-loop": {
+      "category": "publication",
+      "evidence_level": "fixture-backed",
+      "allowed_claims": [
+        "Submission requirements are represented in a machine-readable inventory.",
+        "Submission readiness has a deterministic local verifier and CI workflow.",
+        "The submission workstream records a repo health target of at least 9.5 before external submission claims change.",
+        "Agents, skills, or workflows should be added only after a stable host package or workflow contract exists."
+      ],
+      "blockers": [
+        "The inventory is a readiness control, not proof of external submission.",
+        "Live host requirements still need to be searched and recorded by the owning downstream tracks.",
+        "No new external issues, pull requests, marketplace listings, or registry submissions are claimed."
+      ]
+    },
+    "83-vscode-open-vsx-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 83 defines the VS Code/Open VSX submission and acceptance lane after Track 77 hardening."
+      ],
+      "blockers": [
+        "No feature-complete Marketplace/Open VSX submission or accepted listing is claimed."
+      ]
+    },
+    "84-claude-desktop-package-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 84 defines the Claude Desktop/Cowork package submission lane."
+      ],
+      "blockers": [
+        "No Claude marketplace or connector acceptance is claimed."
+      ]
+    },
+    "85-codex-app-package-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 85 defines the Codex app package submission lane."
+      ],
+      "blockers": [
+        "No Codex app plugin or registry acceptance is claimed."
+      ]
+    },
+    "86-github-copilot-extension-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 86 defines the GitHub Copilot extension submission lane."
+      ],
+      "blockers": [
+        "No Copilot extension or Marketplace acceptance is claimed."
+      ]
+    },
+    "87-gemini-cli-extension-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 87 defines the Gemini CLI extension submission lane including Antigravity-compatible flows."
+      ],
+      "blockers": [
+        "No Gemini CLI extension publish or acceptance is claimed."
+      ]
+    },
+    "88-qwen-cli-extension-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 88 defines the Qwen CLI extension submission lane."
+      ],
+      "blockers": [
+        "No Qwen CLI extension publish or acceptance is claimed."
+      ]
+    },
+    "89-opencode-plugin-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 89 defines the OpenCode plugin and MCP distribution lane."
+      ],
+      "blockers": [
+        "No OpenCode npm/OCX distribution acceptance is claimed."
+      ]
+    },
+    "90-cline-mcp-marketplace-submission-and-acceptance": {
+      "category": "publication",
+      "evidence_level": "planned",
+      "allowed_claims": [
+        "Track 90 defines the Cline MCP Marketplace submission lane."
+      ],
+      "blockers": [
+        "No Cline MCP Marketplace accepted listing is claimed."
+      ]
+    },
     "44-branch-triage-and-stale-work-closure": {
       "category": "governance",
       "evidence_level": "fixture-backed",

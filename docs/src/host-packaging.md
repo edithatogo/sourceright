@@ -12,8 +12,10 @@ CSL.
 | Claude Desktop | 65 | MCP-compatible local stdio server with `examples/mcp-clients/claude-desktop.json`; no Claude-specific package. | MCP discovery smoke, dry-run write proof, and wording that says client configuration rather than Claude plugin. |
 | Codex | 65 | CLI/MCP usable from repo workflows with `examples/mcp-clients/codex-config.toml`; no Codex-specific package. | Client smoke plus policy tests that keep Codex claims to CLI/MCP integration. |
 | GitHub Copilot | 64, 65 | Repository coding-agent prep exists through instructions and setup workflow; `examples/mcp-clients/vscode-mcp.json` covers VS Code MCP settings; no Copilot extension package. | Entitlement/settings evidence for coding-agent use, or a separate accepted Copilot extension package. |
+| Gemini CLI extensions | 76 | No extension package is currently claimed; requirements and package path are planned. | Official extension requirements, manifest/package validation, install smoke, MCP transcript proof, and submission evidence. |
+| Qwen CLI extensions | 76 | No extension package is currently claimed; requirements and package path are planned. | Official extension requirements, manifest/package validation, install smoke, MCP transcript proof, and submission evidence. |
 | Generic MCP clients | 56, 57, 65 | Official MCP Registry accepted for `0.1.20`; Glama and Smithery are prepared; `examples/mcp-clients/generic-mcp-client.json` documents local stdio launch. | Transcript smoke and separate accepted/prepared evidence per directory. |
-| VS Code | 66 | Explicitly deferred with a future VSIX contract; `.vscode` settings and `examples/mcp-clients/vscode-mcp.json` are not an extension package. | VSIX package, Workspace Trust implementation, diagnostics fixture, install smoke, and Marketplace/Open VSX listing evidence. |
+| VS Code | 66, 77 | Local VSIX scaffold builds and passes isolated install/uninstall smoke; `.vscode` settings and `examples/mcp-clients/vscode-mcp.json` remain development/client configuration, not Marketplace acceptance. | Marketplace/Open VSX submission evidence and accepted listing evidence before public plugin acceptance claims. |
 | Microsoft Word | 67 | Explicitly deferred with a future Office Add-in contract; DOCX extraction is separate and no Office Add-in package exists. | Office Add-in manifest, sideload/AppSource notes, document-range provenance, reversible write plans, and fixture smoke. |
 | LibreOffice Writer | 68 | Explicitly deferred with a future Writer extension contract; ODT/DOCX processing is separate. No `.oxt`/UNO extension package exists. | `.oxt` package, UNO/adapter contract, local install/uninstall smoke, Writer range provenance, reversible write plans, and listing evidence. |
 | Zotero | 58 | CLI/Web API adapter is fixture-backed with preview/apply/audit semantics; no Zotero `.xpi` or Plugin Gallery listing is claimed. | Package decision, install proof, disposable-library smoke, and accepted listing evidence before plugin marketplace claims. |
@@ -78,3 +80,7 @@ metadata are recorded.
 
 Track 69 records the cross-host marketplace evidence model in
 `conductor/tracks/69-marketplace-submission-evidence/marketplace-evidence.md`.
+Track 72 records the cross-surface submission contract in
+`conductor/submission-contracts.md`; Tracks 73-77 harden MCP directories,
+citation managers, journal platforms, AI clients, and VS Code/Open VSX toward
+submission evidence.

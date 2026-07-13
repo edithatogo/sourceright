@@ -429,6 +429,11 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
             Some("server-card") => {
                 print_mcp_server_card(args)?;
             }
+            Some("serve-http") => {
+                let listen = parse_mcp_serve_http_listen(&mut args)?;
+                reject_extra_args("mcp serve-http", &args)?;
+                mcp::serve_http(&listen).map_err(|error| error.to_string())?;
+            }
             Some("--json") => {
                 reject_extra_args("mcp --json", &args)?;
                 println!("{}", serde_json::to_string(&McpStatusOutput::current())?);
@@ -478,6 +483,22 @@ fn print_mcp_manifest(
     let json: serde_json::Value = serde_json::from_str(manifest)?;
     println!("{}", serde_json::to_string(&json)?);
     Ok(())
+}
+
+fn parse_mcp_serve_http_listen(args: &mut VecDeque<String>) -> Result<String, CliError> {
+    let mut listen = "127.0.0.1:8787".to_string();
+    while let Some(arg) = args.front() {
+        if arg == "--listen" {
+            args.pop_front();
+            let value = args
+                .pop_front()
+                .ok_or_else(|| CliError::usage("missing value for `mcp serve-http --listen`"))?;
+            listen = value;
+        } else {
+            break;
+        }
+    }
+    Ok(listen)
 }
 
 fn print_mcp_server_card(mut args: VecDeque<String>) -> Result<(), CliError> {
@@ -1470,9 +1491,12 @@ Usage:
   sourceright mcp --status
   sourceright mcp status --json
   sourceright mcp --json
+  sourceright mcp serve-http [--listen 127.0.0.1:8787]
 
 Behavior:
   `sourceright mcp` starts the stdio MCP server and stays attached to it.
+  `sourceright mcp serve-http` starts a minimal HTTP server for Smithery URL
+  scans: `GET /.well-known/mcp/server-card.json` and `POST /mcp` JSON-RPC.
   `sourceright mcp status` prints the same readiness status and exits successfully.
   `sourceright mcp tools|resources|prompts --json` prints compact read-only
   manifest JSON for adapter development.

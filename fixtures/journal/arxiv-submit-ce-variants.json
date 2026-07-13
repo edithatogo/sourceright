@@ -1,0 +1,88 @@
+{
+  "$schema": "../../schemas/sourceright.arxiv-submission-fixture.schema.json",
+  "fixture_name": "arxiv-submit-ce-variant-suite",
+  "description": "Synthetic submit-ce variant suite covering complete, warning, rejected, and malformed source-bundle screening cases.",
+  "created": "2026-05-18T00:00:00Z",
+  "upstream_target": {
+    "repository": "https://github.com/arXiv/submit-ce",
+    "platform_generation": "current",
+    "integration_boundary": "submission source bundle to Sourceright journal-screen"
+  },
+  "submission": {
+    "submission_id": "ARXIV-CE-VARIANTS",
+    "platform": "arxiv_submit_ce",
+    "manuscript_label": "variant-suite.tar.gz"
+  },
+  "variants": [
+    {
+      "case": "complete",
+      "source_bundle": {
+        "primary_tex": "main.tex",
+        "references": "references.bib",
+        "extracted_text": "All references have identifiers and provider evidence."
+      },
+      "expected_status": "screened"
+    },
+    {
+      "case": "warning",
+      "source_bundle": {
+        "primary_tex": "main.tex",
+        "references": "references.bib",
+        "extracted_text": "One reference needs manual metadata review."
+      },
+      "expected_status": "screened_with_warnings"
+    },
+    {
+      "case": "rejected",
+      "source_bundle": {
+        "primary_tex": "main.tex",
+        "references": "",
+        "extracted_text": ""
+      },
+      "expected_status": "blocked_for_extraction"
+    },
+    {
+      "case": "malformed",
+      "source_bundle": {
+        "primary_tex": "",
+        "references": "references.bib",
+        "extracted_text": "Malformed bundle has no primary TeX entry."
+      },
+      "expected_status": "screened_with_errors"
+    }
+  ],
+  "csl_references": [
+    {
+      "id": "complete-2026",
+      "type": "article-journal",
+      "title": "Complete submit-ce fixture",
+      "DOI": "10.1234/arxiv-2601-01000"
+    }
+  ],
+  "verification_sidecar": {
+    "schema_version": "sourceright.verification.v1",
+    "references": {
+      "complete-2026": {
+        "provider_candidates": [
+          {
+            "provider": "arxiv",
+            "confidence": 0.98,
+            "retrieved_at": "2026-05-18T00:00:00Z",
+            "data": {
+              "id": "2601.01000",
+              "version": "v1",
+              "title": "Complete submit-ce fixture"
+            }
+          }
+        ],
+        "review_status": "not_required"
+      }
+    }
+  },
+  "expected_screening_report": {
+    "schema_version": "sourceright.journal_screening.v1",
+    "submission_id": "ARXIV-CE-VARIANTS",
+    "platform": "arxiv_submit_ce",
+    "status": "screened_with_warnings"
+  }
+}

@@ -5,8 +5,8 @@ description: Configure Sourceright citation-sync for Zotero Web API preview, app
 
 Sourceright integrates with Zotero through the Zotero Web API v3, not a
 traditional `.xpi` browser plugin. The same `sourceright citation-sync` command
-handles preview, apply, and audit workflows from the command line, CI, or MCP
-server runtime.
+handles preview, apply, and audit workflows from the command line or CI. It is
+not advertised as a read-only MCP tool surface.
 
 Zotero's current public plugin documentation says plugins are installed from
 `.xpi` files, that Zotero does not currently provide a list of available

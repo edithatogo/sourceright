@@ -51,7 +51,7 @@ fn prepared_and_deferred_marketplaces_are_not_claimed_as_accepted() {
         "Prepared metadata is not public marketplace acceptance",
         "No Zotero `.xpi` or Plugin Gallery listing is claimed",
         "No PKP Plugin Gallery acceptance is claimed",
-        "Requires VSIX package",
+        "No VS Code Marketplace or Open VSX acceptance is claimed",
         "Requires Office Add-in manifest",
         "Requires `.oxt` package",
     ] {
@@ -64,7 +64,7 @@ fn prepared_and_deferred_marketplaces_are_not_claimed_as_accepted() {
     for marker in [
         "| Zotero | prepared |",
         "| OJS/PKP | prepared |",
-        "| VS Code Marketplace / Open VSX | deferred |",
+        "| VS Code Marketplace / Open VSX | prepared |",
         "| Microsoft AppSource / Word add-in | deferred |",
         "| LibreOffice Extensions | deferred |",
     ] {
