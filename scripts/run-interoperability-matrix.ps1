@@ -4,8 +4,9 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$nodeRoot = "C:\Users\60217257\scoop\apps\nodejs\current"
-$env:Path = "$nodeRoot;$nodeRoot\bin;$env:Path"
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+    throw "Node.js is required for the interoperability matrix; install Node.js 20+ and retry."
+}
 $runnerRoot = Join-Path $PSScriptRoot "..\interop-runners"
 $fixtures = @(
     @{
@@ -45,9 +46,9 @@ try {
         }
 
         $report = Join-Path (Resolve-Path "..\$OutputDirectory") "$($fixture.Name).md"
-        $env:CARGO_TARGET_DIR = "C:\tmp\sourceright-target"
-        $env:RUSTUP_TOOLCHAIN = "stable-x86_64-pc-windows-gnu"
-        $env:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "gcc"
+        $env:CARGO_TARGET_DIR = Join-Path ([System.IO.Path]::GetTempPath()) "sourceright-target"
+        $env:RUSTUP_TOOLCHAIN = "stable"
+        Remove-Item Env:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER -ErrorAction SilentlyContinue
         cargo run --locked --bin interoperability-diff -- "..\$($fixture.Expected)" $oracle citation-js $report
         if ($LASTEXITCODE -ne 0) {
             throw "Interoperability comparison failed for $($fixture.Name)."

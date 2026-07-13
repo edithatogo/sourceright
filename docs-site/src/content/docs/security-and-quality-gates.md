@@ -15,6 +15,10 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-workflow-harness.ps1
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-release-parity.ps1
 ```
 
+On Linux or macOS, use `./scripts/run-local-rust-gates.sh`. The PowerShell
+runner selects the Windows GNU toolchain only when GCC is available; both
+runners use a temporary target directory.
+
 The workflow harness checks full-SHA action pinning, least-privilege
 permissions, non-persisting checkout credentials, bounded job timeouts, and
 concurrency declarations. Release parity keeps dry-run and publication paths

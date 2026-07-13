@@ -60,6 +60,11 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-workflow-harness.ps1
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-release-parity.ps1
 ```
 
+On Linux or macOS, the Rust gate runner is also available as
+`./scripts/run-local-rust-gates.sh`. It uses the host stable toolchain and a
+temporary target directory; the PowerShell runner follows the same policy and
+selects the Windows GNU toolchain only when GCC is available.
+
 ## Current Status
 
 The Rust core now includes canonical CSL handling, verification sidecars, intake segmentation, provider evidence normalization, cleaning, conflict resolution, citation reconciliation, manual review queues, reporting, exports, journal screening contracts, legal citation records, and claim/source provenance graphs. It should be treated as a structured triage and audit workflow and technical preview while the active Conductor programme hardens extraction, interoperability, publication trials, and external registry acceptance. Imported reference workflow material lives under `legacy/humanizer-next/` as provenance and regression material until audited, ported, or retired.

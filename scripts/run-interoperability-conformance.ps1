@@ -7,8 +7,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 $runnerRoot = Join-Path $PSScriptRoot "..\interop-runners"
-$nodeRoot = "C:\Users\60217257\scoop\apps\nodejs\current"
-$env:Path = "$nodeRoot;$nodeRoot\bin;$env:Path"
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+    throw "Node.js is required for the interoperability runner; install Node.js 20+ and retry."
+}
 
 Push-Location $runnerRoot
 try {
@@ -22,8 +23,8 @@ finally {
 
 $outputDirectory = Split-Path -Parent $OutputPath
 if ($outputDirectory) { New-Item -ItemType Directory -Force $outputDirectory | Out-Null }
-$env:CARGO_TARGET_DIR = "C:\tmp\sourceright-target"
-$env:RUSTUP_TOOLCHAIN = "stable-x86_64-pc-windows-gnu"
-$env:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = "gcc"
+$env:CARGO_TARGET_DIR = Join-Path ([System.IO.Path]::GetTempPath()) "sourceright-target"
+$env:RUSTUP_TOOLCHAIN = "stable"
+$env:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER = $null
 $oraclePath = Join-Path $runnerRoot ".tmp\citation-js.json"
 cargo run --locked --bin interoperability-diff -- $CanonicalPath $oraclePath citation-js $OutputPath

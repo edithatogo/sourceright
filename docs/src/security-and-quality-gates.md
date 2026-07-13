@@ -14,8 +14,9 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-workflow-harness.ps1
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/check-release-parity.ps1
 ```
 
-The Rust runner uses a dedicated target directory and the GNU toolchain on
-Windows. The workflow harness checks full-SHA action pinning, least-privilege
+The Rust runners use a dedicated temporary target directory. The POSIX runner
+uses the host stable toolchain; the PowerShell runner selects the Windows GNU
+toolchain only when GCC is available. The workflow harness checks full-SHA action pinning, least-privilege
 permissions, non-persisting checkout credentials, bounded job timeouts, and
 concurrency declarations. Release parity checks keep dry-run and publication
 paths aligned, including provenance attestation and dependency policy checks.
