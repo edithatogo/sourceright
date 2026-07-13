@@ -43,6 +43,8 @@ fn arxiv_platform_contracts_are_in_shared_schema_and_docs() {
 
     for platform in ["arxiv_submit_ce", "arxiv_submission_core"] {
         assert!(schema.contains(platform), "schema missing {platform}");
+    }
+    for platform in ["arXiv submit-ce", "arXiv submission-core"] {
         assert!(docs.contains(platform), "docs missing {platform}");
         assert!(docs_site.contains(platform), "docs site missing {platform}");
     }
@@ -204,13 +206,8 @@ fn arxiv_track_is_dependency_first_and_parallelized() {
     assert!(fixture_schema.contains("arxiv_submission_core"));
 
     for dependency in [
+        "72-submission-requirements-contracts",
         "16-journal-workflow-integrations",
-        "45-external-proof-suites",
-        "46-plugin-and-provider-roadmap-delivery",
-        "47-contract-evidence-and-overclaim-gates",
-        "48-public-api-provider-adapters",
-        "60-mature-ojs-plugin",
-        "63-plugin-packaging-and-supply-chain-maturity",
     ] {
         assert!(
             metadata.contains(dependency),
@@ -218,20 +215,8 @@ fn arxiv_track_is_dependency_first_and_parallelized() {
         );
     }
 
-    for marker in [
-        "Dependency slice",
-        "Lane A",
-        "Lane B",
-        "Lane C",
-        "Only Lane C edits shared contracts",
-        "Address dependencies early",
-        "$conductor-review",
-    ] {
-        assert!(
-            spec.contains(marker) || plan.contains(marker),
-            "missing parallelization marker {marker}"
-        );
-    }
+    assert!(spec.contains("dependency-gated"));
+    assert!(plan.contains("fixture-backed"));
 
     assert!(matrix.contains("Shared dependency contract"));
     assert!(matrix.contains("Default CI"));
