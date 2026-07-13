@@ -10,6 +10,9 @@ The arXiv platform adapters are represented by the `arXiv submit-ce` and
 `arXiv submission-core` contracts; they remain fixture-backed and separate
 from the `provider.arxiv` metadata provider.
 
+The `provider.arxiv` lane supplies metadata evidence only; the journal adapters
+do not claim canonical CSL writeback or upstream arXiv acceptance.
+
 - Keep the contract platform-neutral where possible.
 - Preserve the editorial screening boundary.
 - Treat agentic workflow outputs as decision-support evidence, not editorial decisions.
