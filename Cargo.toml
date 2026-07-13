@@ -19,6 +19,7 @@ include = [
     "/schemas/**",
     "/examples/**",
     "/fixtures/**",
+    "/interop-runners/**",
     "/provider-fixtures/**",
     "/sourceright-bench/**",
     "/docs/src/**",
@@ -34,6 +35,7 @@ include = [
     "/scripts/verify-release-surface-refresh.ps1",
     "/scripts/verify-submission-readiness.ps1",
     "/scripts/release-status.ps1",
+    "/scripts/run-interoperability-conformance.ps1",
     "/book.toml",
     "/README.md",
     "/LICENSE-APACHE",
@@ -50,7 +52,9 @@ rustdoc-args = ["--cfg", "docsrs"]
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 serde_yaml = "0.9.34"
-reqwest = { version = "0.12.24", default-features = false, features = ["blocking", "json", "native-tls"] }
+sha2 = "0.10.9"
+citeweft = { git = "https://github.com/edithatogo/citeweft.git", rev = "8c8932976250f9ca91c2bbda28ed68eeb191fa42" }
+reqwest = { version = "0.12.24", default-features = false, features = ["blocking", "json", "multipart", "native-tls"] }
 toml = "0.8.19"
 thiserror = "2.0.17"
 roxmltree = "0.20.0"

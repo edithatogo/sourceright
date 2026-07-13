@@ -6,9 +6,10 @@ use std::path::PathBuf;
 
 use serde::Serialize;
 use sourceright::{
-    CitationSyncConfig, ExportFormat, JournalPlatform, ReviewDecisionImport, SourcerightPolicy,
-    SourcerightWorkspace, discover_plugins, evaluate_policy, parse_csl_json, read_manuscript_text,
-    run_benchmark_suite, run_citation_sync,
+    CitationSyncConfig, ExportFormat, GrobidConfig, GrobidExtractor, JournalPlatform,
+    ReviewDecisionImport, SourcerightPolicy, SourcerightWorkspace, adapt_scholarly_document,
+    discover_plugins, evaluate_policy, parse_csl_json, read_manuscript_text, run_benchmark_suite,
+    run_citation_sync, run_extraction_benchmark,
 };
 
 mod mcp;
@@ -319,6 +320,31 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 return Err(CliError::validation_failed("benchmark suite failed"));
             }
         }
+        Some("extraction-bench") => {
+            if maybe_print_command_help("extraction-bench", &mut args, EXTRACTION_BENCH_HELP)? {
+                return Ok(());
+            }
+            let options = parse_extraction_bench_args(args)?;
+            let report = run_extraction_benchmark(&options.manifest_path)
+                .map_err(|error| error.to_string())?;
+            if options.json {
+                println!("{}", serde_json::to_string(&report)?);
+            } else {
+                println!("Extraction fixtures: {}", report.fixture_count);
+                println!("Passed: {}", report.passed_count);
+                println!("Failed: {}", report.failed_count);
+                for fixture in &report.fixtures {
+                    println!(
+                        "- {}: {}",
+                        fixture.id,
+                        if fixture.passed { "passed" } else { "failed" }
+                    );
+                }
+            }
+            if report.failed_count > 0 || !report.leakage_violations.is_empty() {
+                return Err(CliError::validation_failed("extraction benchmark failed"));
+            }
+        }
         Some("citation-sync") => {
             if maybe_print_command_help("citation-sync", &mut args, CITATION_SYNC_HELP)? {
                 return Ok(());
@@ -337,6 +363,50 @@ fn run(args: impl Iterator<Item = String>) -> Result<(), CliError> {
                 return Err(CliError::validation_failed(
                     "citation sync reported conflicts",
                 ));
+            }
+        }
+        Some("extract-references") => {
+            if maybe_print_command_help("extract-references", &mut args, EXTRACT_REFERENCES_HELP)? {
+                return Ok(());
+            }
+            let options = parse_extract_references_args(args)?;
+            let extractor = GrobidExtractor {
+                config: options.config,
+            };
+            if options.health {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(
+                        &extractor.health().map_err(|error| error.to_string())?
+                    )?
+                );
+            } else {
+                let source = options
+                    .source
+                    .as_ref()
+                    .expect("source required unless --health");
+                let bytes = fs::read(source).map_err(|error| error.to_string())?;
+                let document = extractor
+                    .extract_references(&bytes)
+                    .map_err(|error| error.to_string())?;
+                let adapted = adapt_scholarly_document(&document, &source.display().to_string());
+                if options.json {
+                    println!("{}", serde_json::to_string_pretty(&adapted)?);
+                } else {
+                    println!("references: {}", adapted.candidates.len());
+                    println!(
+                        "review_queue: {}",
+                        adapted.sidecar.review_queue_entries().len()
+                    );
+                    println!(
+                        "input_hash: {}",
+                        document
+                            .provenance
+                            .input_hash
+                            .as_deref()
+                            .unwrap_or("unknown")
+                    );
+                }
             }
         }
         Some("mcp") => match args.pop_front().as_deref() {
@@ -686,6 +756,39 @@ fn parse_bench_args(mut args: VecDeque<String>) -> Result<BenchOptions, CliError
     })
 }
 
+fn parse_extraction_bench_args(mut args: VecDeque<String>) -> Result<BenchOptions, CliError> {
+    let mut json = false;
+    let mut manifest_path = None;
+    while let Some(arg) = args.pop_front() {
+        match arg.as_str() {
+            "--json" => json = true,
+            "--manifest" => {
+                manifest_path = Some(PathBuf::from(required_arg(
+                    "extraction-bench",
+                    args.pop_front(),
+                    "extraction benchmark manifest path",
+                )?));
+            }
+            _ if arg.starts_with('-') => {
+                return Err(CliError::usage(format!(
+                    "unexpected argument for `extraction-bench`: {arg}\nrun `sourceright extraction-bench --help` for usage"
+                )));
+            }
+            _ if manifest_path.is_none() => manifest_path = Some(PathBuf::from(arg)),
+            _ => {
+                return Err(CliError::usage(format!(
+                    "unexpected argument for `extraction-bench`: {arg}\nrun `sourceright extraction-bench --help` for usage"
+                )));
+            }
+        }
+    }
+    Ok(BenchOptions {
+        manifest_path: manifest_path
+            .unwrap_or_else(|| PathBuf::from("sourceright-bench/extraction/manifest.json")),
+        json,
+    })
+}
+
 fn parse_citation_sync_args(mut args: VecDeque<String>) -> Result<CitationSyncOptions, CliError> {
     let mut apply = false;
     let mut preview = false;
@@ -833,6 +936,98 @@ struct BenchOptions {
 struct CitationSyncOptions {
     workspace_root: PathBuf,
     config: CitationSyncConfig,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ExtractReferencesOptions {
+    source: Option<PathBuf>,
+    health: bool,
+    json: bool,
+    config: GrobidConfig,
+}
+
+fn parse_extract_references_args(
+    mut args: VecDeque<String>,
+) -> Result<ExtractReferencesOptions, CliError> {
+    let mut config = GrobidConfig {
+        enabled: true,
+        ..GrobidConfig::default()
+    };
+    let mut source = None;
+    let mut health = false;
+    let mut json = false;
+    while let Some(arg) = args.pop_front() {
+        match arg.as_str() {
+            "--health" => health = true,
+            "--json" => json = true,
+            "--allow-remote" => config.allow_remote = true,
+            "--allow-host" => config.allowed_remote_hosts.push(required_arg(
+                "extract-references",
+                args.pop_front(),
+                "allowed host",
+            )?),
+            "--base-url" => {
+                config.base_url = required_arg("extract-references", args.pop_front(), "base URL")?
+            }
+            "--timeout-seconds" => {
+                config.timeout_seconds =
+                    parse_u64_arg("extract-references", args.pop_front(), "timeout-seconds")?
+            }
+            "--max-document-bytes" => {
+                config.max_document_bytes =
+                    parse_usize_arg("extract-references", args.pop_front(), "max-document-bytes")?
+            }
+            "--max-response-bytes" => {
+                config.max_response_bytes =
+                    parse_usize_arg("extract-references", args.pop_front(), "max-response-bytes")?
+            }
+            "--max-retries" => {
+                config.max_retries =
+                    parse_u64_arg("extract-references", args.pop_front(), "max-retries")?
+                        .try_into()
+                        .map_err(|_| CliError::usage("max-retries is too large"))?
+            }
+            value if value.starts_with('-') => {
+                return Err(CliError::usage(format!(
+                    "unexpected extract-references option: {value}"
+                )));
+            }
+            value if source.is_none() => source = Some(PathBuf::from(value)),
+            value => {
+                return Err(CliError::usage(format!(
+                    "unexpected extract-references argument: {value}"
+                )));
+            }
+        }
+    }
+    if !health && source.is_none() {
+        return Err(CliError::usage(
+            "extract-references requires a PDF path or --health",
+        ));
+    }
+    if health && source.is_some() {
+        return Err(CliError::usage(
+            "--health cannot be combined with a PDF path",
+        ));
+    }
+    Ok(ExtractReferencesOptions {
+        source,
+        health,
+        json,
+        config,
+    })
+}
+
+fn parse_u64_arg(command: &str, value: Option<String>, name: &str) -> Result<u64, CliError> {
+    required_arg(command, value, name)?
+        .parse()
+        .map_err(|_| CliError::usage(format!("{name} must be an integer")))
+}
+
+fn parse_usize_arg(command: &str, value: Option<String>, name: &str) -> Result<usize, CliError> {
+    required_arg(command, value, name)?
+        .parse()
+        .map_err(|_| CliError::usage(format!("{name} must be an integer")))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -1011,7 +1206,9 @@ Usage:
   sourceright export [--all|--format <format>] [.sourceright-directory]
   sourceright plugins [validate] [--json]
   sourceright bench [--json] [--manifest <tasks.yaml>]
+  sourceright extraction-bench [--json] [--manifest <manifest.json>]
   sourceright citation-sync [--preview|--apply] [options] [.sourceright-directory]
+  sourceright extract-references [options] <document.pdf>
   sourceright mcp
   sourceright mcp status|--status|--json
   sourceright mcp tools|resources|prompts|server-card [--json]
@@ -1030,7 +1227,9 @@ Commands:
   export        Write clean reference exports from canonical CSL JSON.
   plugins       Discover and validate runtime plugin manifests.
   bench         Run deterministic fixture-backed benchmark tasks.
+  extraction-bench  Run stage-wise scholarly extraction benchmark fixtures.
   citation-sync Preview or apply citation-manager sync plans.
+  extract-references  Extract scholarly references through an explicitly selected local GROBID service.
   mcp           Start the local MCP server or inspect its readiness/status.
 
 Run `sourceright <command> --help` for command-specific usage.";
@@ -1207,6 +1406,19 @@ Exit codes:
   1 when any task differs from its checked-in baseline.
   2 for usage, I/O, manifest, or parse errors.";
 
+const EXTRACTION_BENCH_HELP: &str = "sourceright extraction-bench
+
+Run the deterministic, stage-wise scholarly extraction benchmark.
+
+Usage:
+  sourceright extraction-bench [--json] [--manifest <manifest.json>]
+
+Default:
+  Uses `sourceright-bench/extraction/manifest.json`.
+
+The default suite is offline, self-authored, hash-verified, and does not claim
+accuracy beyond the represented fixture cohort.";
+
 const CITATION_SYNC_HELP: &str = "sourceright citation-sync
 
 Preview or apply citation-manager sync plans.
@@ -1225,7 +1437,28 @@ Zotero live sync:
 
 Output:
   Prints pretty `sourceright.citation_sync.v1` JSON.
-  Conflicts are reported without silently overwriting CSL data.";
+Conflicts are reported without silently overwriting CSL data.";
+
+const EXTRACT_REFERENCES_HELP: &str = "sourceright extract-references
+
+Extract references through the optional GROBID processReferences endpoint.
+
+Usage:
+  sourceright extract-references [options] <document.pdf>
+  sourceright extract-references --health [options]
+
+Options:
+  --base-url <url>              GROBID base URL (default: http://127.0.0.1:8070)
+  --allow-remote                Permit an HTTPS remote endpoint explicitly
+  --allow-host <host>           Add an explicit remote hostname allowlist entry
+  --timeout-seconds <n>         Request timeout
+  --max-document-bytes <n>      Upload limit
+  --max-response-bytes <n>      TEI response limit
+  --max-retries <n>             Bounded overload retries
+  --json                        Emit candidates and review-sidecar evidence as JSON
+  --health                      Probe health/version without uploading a document
+
+The command is opt-in and does not write canonical CSL or sidecar files.";
 
 const MCP_HELP: &str = "sourceright mcp
 
@@ -1292,6 +1525,34 @@ const MCP_PROMPTS_MANIFEST: &str = include_str!("../mcp/prompts.v1.json");
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn extract_references_options_are_explicit_and_safe_by_default() {
+        let options = parse_extract_references_args(VecDeque::from(vec![
+            "--json".to_string(),
+            "--timeout-seconds".to_string(),
+            "7".to_string(),
+            "--max-retries".to_string(),
+            "1".to_string(),
+            "document.pdf".to_string(),
+        ]))
+        .expect("parse extract-references options");
+
+        assert!(options.config.enabled);
+        assert!(!options.config.allow_remote);
+        assert_eq!(options.config.timeout_seconds, 7);
+        assert_eq!(options.config.max_retries, 1);
+        assert!(options.json);
+        assert_eq!(options.source, Some(PathBuf::from("document.pdf")));
+    }
+
+    #[test]
+    fn extract_references_health_cannot_upload_a_document() {
+        let options = parse_extract_references_args(VecDeque::from(vec!["--health".to_string()]))
+            .expect("parse health options");
+        assert!(options.health);
+        assert!(options.source.is_none());
+    }
 
     #[test]
     fn missing_required_argument_reports_command_help() {

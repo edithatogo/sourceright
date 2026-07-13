@@ -1,0 +1,57 @@
+{
+  "schema_version": "sourceright.citeweft_extraction_manifest.v1",
+  "status": "external_candidate_consumption",
+  "license": "MIT OR Apache-2.0; recheck third-party notices before split",
+  "standalone_core": [],
+  "external_core": {
+    "repository": "https://github.com/edithatogo/citeweft",
+    "revision": "8c8932976250f9ca91c2bbda28ed68eeb191fa42",
+    "release": "v0.1.0-candidate.1",
+    "crate_sha256": "827c1cebe0a2fb00a8cf567b1287f9a3756cab4d36b6b27561af013a271eaa7e"
+  },
+  "sourceright_adapters": [
+    "src/citeweft_adapter.rs",
+    "src/grobid.rs"
+  ],
+  "excluded_sourceright_surfaces": [
+    "src/csl.rs",
+    "src/providers.rs",
+    "src/sidecar.rs",
+    "src/workspace.rs",
+    "src/main.rs",
+    "src/mcp.rs"
+  ],
+  "forbidden_core_imports": [
+    "crate::csl",
+    "crate::providers",
+    "crate::sidecar",
+    "crate::workspace",
+    "crate::intake",
+    "crate::legal",
+    "crate::export",
+    "crate::review",
+    "crate::provenance",
+    "crate::policy",
+    "crate::reconcile",
+    "crate::plugins",
+    "crate::journal",
+    "crate::citation_sync",
+    "sourceright::"
+  ],
+  "schema_contracts": [
+    "citeweft.scholarly-document.v1",
+    "citeweft.layout-document.v1",
+    "citeweft.reference-model.v1",
+    "citeweft.entity-model.v1",
+    "citeweft.routing-trace.v1"
+  ],
+  "external_gates": {
+    "destination_approval": "complete",
+    "history_preservation": "complete_for_committed_slice",
+    "independent_ci_security": "complete",
+    "package_release": "candidate_published",
+    "downstream_compatibility": "complete_for_candidate_smoke",
+    "rollback_issue_migration": "open"
+  },
+  "publication_claim": "not_permitted_from_local_inventory"
+}
