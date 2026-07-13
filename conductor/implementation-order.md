@@ -89,3 +89,4 @@ Shared contracts, schemas, and public docs are edited serially by the lead.
 - Track 79: arXiv submit-ce maturity hardening.
 - Track 80: arXiv submission-core maturity hardening.
 - Track 81: arXiv upstream submission and acceptance.
+Track 71: arXiv submission platform adapters is dependency-gated on Track 72 and the journal workflow integration boundary.

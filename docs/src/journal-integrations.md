@@ -17,7 +17,7 @@ The current core can support a platform adapter through:
 - `sourceright export`.
 - JSON-ready report and sidecar models in the Rust library.
 
-The remaining platform work is adapter glue: retrieving submission files, running extraction, storing reports, and returning editor-facing or author-facing summaries. The Rust contract already models OJS, arXiv submit-ce, arXiv submission-core, generic webhooks, ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager as screening platform targets. The `provider.arxiv` lane supplies metadata evidence only; the journal adapters do not claim canonical CSL writeback or upstream arXiv acceptance.
+The remaining platform work is adapter glue: retrieving submission files, running extraction, storing reports, and returning editor-facing or author-facing summaries. The Rust contract already models OJS, arXiv submit-ce, arXiv submission-core, generic webhooks, ScholarOne, Editorial Manager, eJournalPress, and Manuscript Manager as screening platform targets. The `provider.arxiv` lane supplies metadata evidence only; the journal adapters do not claim canonical CSL writeback or upstream arXiv acceptance. The registered adapter identifiers are `journal.arxiv-submit-ce` and `journal.arxiv-submission-core`.
 
 ## Agentic Submission Management
 
