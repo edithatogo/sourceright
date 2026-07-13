@@ -14,6 +14,7 @@ The `provider.arxiv` lane supplies metadata evidence only; the journal adapters
 do not claim canonical CSL writeback or upstream arXiv acceptance.
 The registered adapter identifiers are `journal.arxiv-submit-ce` and
 `journal.arxiv-submission-core`.
+These are supported journal-screening platform labels with adapter contract fixtures.
 
 - Keep the contract platform-neutral where possible.
 - Preserve the editorial screening boundary.
