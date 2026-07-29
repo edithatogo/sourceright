@@ -7,6 +7,9 @@
 > Evidence level: **contracted** — all findings are derived from reference-able
 > GitHub repository files, not from live API calls or maintainer interviews.
 
+This is an **issue-first** reconnaissance: upstream questions and acceptance
+boundaries are recorded before any adapter submission or write operation.
+
 ## Repo status overview
 
 | Property | `arXiv/submit-ce` | `arXiv/arxiv-submission-core` |
@@ -267,3 +270,8 @@ is designed for the arXiv-NG microservices architecture with Docker Compose.
 > **Evidence level**: `contracted` — all claims are derived from reference-able
 > GitHub files at the URLs listed above. No live API calls, credentials, or
 > upstream acceptance evidence were used.
+
+> **Disclaimer**: fixture-backed, not arXiv-reviewed.
+
+Contribution path: **issue-first** engagement is required unless an upstream
+maintainer explicitly requests a pull request.
