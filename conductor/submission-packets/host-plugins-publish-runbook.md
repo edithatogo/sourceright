@@ -10,7 +10,7 @@ Date: 2026-06-10
 | `sourceright-claude-desktop-0.1.20-win32.mcpb` | Claude Desktop MCPB path |
 | `edithatogo-sourceright-*-0.1.20.tgz` | `npm install` from release URL or git path |
 
-Release: https://github.com/edithatogo/sourceright/releases/tag/v0.1.20
+Release: <https://github.com/edithatogo/sourceright/releases/tag/v0.1.20>
 
 ## Marketplace (tokens required)
 
@@ -39,4 +39,4 @@ cd extensions/opencode-sourceright && npm publish --access public
 
 ## Cline
 
-Submitted: https://github.com/cline/mcp-marketplace/issues/1764 (open, awaiting review).
+Submitted: <https://github.com/cline/mcp-marketplace/issues/1764> (open, awaiting review).

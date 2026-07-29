@@ -9,7 +9,7 @@ provenance, unavailable-coordinate semantics, leakage validation, and the
 container runs, resource metrics, and cohort thresholds remain explicitly
 opt-in follow-on work.
 
-Completion evidence: https://github.com/edithatogo/sourceright/issues/37#issuecomment-4946809007
+Completion evidence: <https://github.com/edithatogo/sourceright/issues/37#issuecomment-4946809007>
 
 Review fix: added explicit operation status, latency, and optional peak-memory
 metadata to the snapshot/report contract. Resource values are not inferred when

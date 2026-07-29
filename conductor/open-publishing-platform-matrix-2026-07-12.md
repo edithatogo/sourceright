@@ -7,16 +7,16 @@ project worldwide has been enumerated.
 
 | Platform | Role | Upstream | Sourceright trial shape | Decision | Track |
 | --- | --- | --- | --- | --- | --- |
-| Open Journal Systems | Journal workflow/publication | https://github.com/pkp/ojs | Read-only metadata/report plugin or sidecar | Trial | 98 |
-| Janeway | Journal and preprint workflow/publication | https://github.com/openlibhums/janeway | Sidecar first; plugin after hook audit | Trial | 99; builds on 83-85 |
-| Episciences | Overlay journals over repositories | https://github.com/CCSDForge/episciences | Repository/overlay metadata bridge | Trial | 100 |
-| Kotahi | Journal/preprint workflow and production | https://github.com/okotahi/kotahi | Read-only workflow/report bridge | Trial with governance gate | 101 |
-| PubPub | Community publishing | https://github.com/knowledgefutures/pubpub | API/import metadata bridge | Trial | 102 |
-| Open Preprint Systems | Preprint workflow/publication | https://github.com/pkp/ops | Read-only metadata/report plugin or sidecar | Trial | 103 |
-| InvenioRDM | Repository and preprint-capable deposit platform | https://github.com/inveniosoftware/invenio-app-rdm | REST/OAI metadata adapter | Trial | 104 |
-| DSpace | Institutional repository/preprint deposit | https://github.com/DSpace/DSpace | REST/OAI/SWORD metadata adapter | Trial | 105 |
-| EPrints | Open repository/preprint deposit | https://github.com/eprints/eprints3 | OAI/API metadata adapter | Trial | 106 |
-| Samvera Hyrax | Repository engine suitable for preprints | https://github.com/samvera/hyrax | API/OAI metadata adapter | Trial with deployment gate | 107 |
+| Open Journal Systems | Journal workflow/publication | <https://github.com/pkp/ojs> | Read-only metadata/report plugin or sidecar | Trial | 98 |
+| Janeway | Journal and preprint workflow/publication | <https://github.com/openlibhums/janeway> | Sidecar first; plugin after hook audit | Trial | 99; builds on 83-85 |
+| Episciences | Overlay journals over repositories | <https://github.com/CCSDForge/episciences> | Repository/overlay metadata bridge | Trial | 100 |
+| Kotahi | Journal/preprint workflow and production | <https://github.com/okotahi/kotahi> | Read-only workflow/report bridge | Trial with governance gate | 101 |
+| PubPub | Community publishing | <https://github.com/knowledgefutures/pubpub> | API/import metadata bridge | Trial | 102 |
+| Open Preprint Systems | Preprint workflow/publication | <https://github.com/pkp/ops> | Read-only metadata/report plugin or sidecar | Trial | 103 |
+| InvenioRDM | Repository and preprint-capable deposit platform | <https://github.com/inveniosoftware/invenio-app-rdm> | REST/OAI metadata adapter | Trial | 104 |
+| DSpace | Institutional repository/preprint deposit | <https://github.com/DSpace/DSpace> | REST/OAI/SWORD metadata adapter | Trial | 105 |
+| EPrints | Open repository/preprint deposit | <https://github.com/eprints/eprints3> | OAI/API metadata adapter | Trial | 106 |
+| Samvera Hyrax | Repository engine suitable for preprints | <https://github.com/samvera/hyrax> | API/OAI metadata adapter | Trial with deployment gate | 107 |
 
 ## Reconnaissance-only or excluded surfaces
 
