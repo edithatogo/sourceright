@@ -95,7 +95,7 @@ jobs:
         run: |
           set -euo pipefail
           cd target/package
-          sha256sum *.crate > crate-sha256sums.txt
+          sha256sum -- ./*.crate > crate-sha256sums.txt
           sha256sum --check crate-sha256sums.txt
       - name: Generate dry-run package attestation
         if: steps.crate-publication.outputs.publishable == 'true'
