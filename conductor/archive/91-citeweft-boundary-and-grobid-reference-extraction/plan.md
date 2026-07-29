@@ -45,4 +45,3 @@
 ## Review fixes
 
 - [x] Disable HTTP redirects in the extraction client and add a regression test proving redirect responses are rejected.
-
