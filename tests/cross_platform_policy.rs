@@ -27,8 +27,17 @@ fn interoperability_scripts_do_not_depend_on_a_specific_user_install() {
         "scripts/run-interoperability-matrix.ps1",
     ] {
         let script = read(path);
-        assert!(script.contains("Get-Command node"), "{path} should resolve node");
-        assert!(!script.contains("60217257\\scoop"), "{path} has a user path");
-        assert!(!script.contains("C:\\tmp\\sourceright-target"), "{path} has a host path");
+        assert!(
+            script.contains("Get-Command node"),
+            "{path} should resolve node"
+        );
+        assert!(
+            !script.contains("60217257\\scoop"),
+            "{path} has a user path"
+        );
+        assert!(
+            !script.contains("C:\\tmp\\sourceright-target"),
+            "{path} has a host path"
+        );
     }
 }

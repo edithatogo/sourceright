@@ -6,6 +6,8 @@ mdBook = "mdBook"
 Zotero = "Zotero"
 THES = "THES"
 supersed = "supersed"
+ACI = "ACI"
+aci = "aci"
 
 [files]
 extend-exclude = [
