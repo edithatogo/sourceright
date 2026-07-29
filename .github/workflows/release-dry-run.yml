@@ -57,7 +57,7 @@ jobs:
         id: crate-publication
         shell: bash
         run: |
-          if grep -Eq 'citeweft[[:space:]]*=[^\n]*git[[:space:]]*=' Cargo.toml; then
+          if grep -q 'citeweft' Cargo.toml && grep -q 'git' Cargo.toml; then
             echo "publishable=false" >> "$GITHUB_OUTPUT"
             echo "Crates.io dry-run deferred: CiteWeft is currently consumed from its stable Git tag and is not published on crates.io."
           else
