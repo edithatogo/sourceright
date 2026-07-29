@@ -43,10 +43,10 @@
         "81-arxiv-upstream-submission-and-acceptance"
       ],
       "surfaces": ["arxiv-submit-ce", "arxiv-submission-core"],
-      "status": "blocked",
+      "status": "submitted",
       "approval_required": true,
       "local_validation": ["scripts/verify-submission-readiness.ps1"],
-      "blockers": ["No arXiv upstream acceptance evidence has been recorded yet."]
+      "blockers": []
     },
     {
       "id": "ai-client-extensions",
@@ -67,6 +67,34 @@
       "approval_required": true,
       "local_validation": ["scripts/verify-submission-readiness.ps1"],
       "blockers": ["No VS Code or Open VSX evidence has been recorded yet."]
+    },
+    {
+      "id": "host-plugins",
+      "path": "conductor/submission-packets/host-plugins.md",
+      "owning_tracks": [
+        "83-vscode-open-vsx-submission-and-acceptance",
+        "84-claude-desktop-package-submission-and-acceptance",
+        "85-codex-app-package-submission-and-acceptance",
+        "86-github-copilot-extension-submission-and-acceptance",
+        "87-gemini-cli-extension-submission-and-acceptance",
+        "88-qwen-cli-extension-submission-and-acceptance",
+        "89-opencode-plugin-submission-and-acceptance",
+        "90-cline-mcp-marketplace-submission-and-acceptance"
+      ],
+      "surfaces": [
+        "vscode-open-vsx",
+        "claude-cowork",
+        "codex-app",
+        "github-copilot",
+        "gemini-cli-extensions",
+        "qwen-cli-extensions",
+        "opencode",
+        "cline"
+      ],
+      "status": "blocked",
+      "approval_required": true,
+      "local_validation": ["scripts/verify-submission-readiness.ps1"],
+      "blockers": ["No external host acceptance evidence has been recorded yet."]
     },
     {
       "id": "agent-workflow",
