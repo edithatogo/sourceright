@@ -1,6 +1,6 @@
 {
     "id":  "80-arxiv-submission-core-maturity-hardening",
-    "status":  "in_progress",
+    "status": "completed",
     "priority":  "low",
     "owners":  [
                    "arxiv-integration",
@@ -11,12 +11,21 @@
                          "78-arxiv-upstream-requirements-recon",
                          "72-submission-requirements-contracts"
                      ],
-    "owned_paths":  [
-                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/metadata.json",
-                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/spec.md",
-                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/plan.md",
-                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/test-matrix.md",
-                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/evidence-packet.md",
-                        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/security-boundaries.md"
-                    ]
+    "owned_paths": [
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/metadata.json",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/spec.md",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/plan.md",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/test-matrix.md",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/evidence-packet.md",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/security-boundaries.md",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/requirements-evidence.md",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/migration-mapping-check-2026-06-09.md",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/submission-core-contract-snapshot.json",
+        "conductor/tracks/80-arxiv-submission-core-maturity-hardening/review.md",
+        "fixtures/journal/arxiv-submission-core-submission.json",
+        "fixtures/journal/arxiv-submission-core-variants.json",
+        "docs/src/release-status.md",
+        "docs-site/src/content/docs/release-status.md",
+        "conductor/submission-packets/arxiv-upstream.md"
+    ]
 }

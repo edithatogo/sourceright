@@ -6,6 +6,8 @@ Raise the legacy `arXiv/arxiv-submission-core` adapter to migration-safe maturit
 stability, and testing evidence so that any existing submission-core users have
 a documented migration path to the active `arXiv/submit-ce` surface.
 
+Disclaimer: **legacy-documented; not reviewed or accepted by arXiv maintainers for continued use**.
+
 ## User outcome
 
 Legacy submission-core users and arXiv maintainers can review:
@@ -65,7 +67,7 @@ Legacy submission-core users and arXiv maintainers can review:
 | arXiv submission-core submission fixture | `fixtures/journal/arxiv-submission-core-submission.json` | JSON — `{$schema, fixture_name, description, created, submission, manuscript, csl_references, verification_sidecar, expected_screening_report}` |
 | Journal screening report | `src/journal.rs` → `screen_journal_submission()` | `sourceright.journal_screening.v1` — JSON with `submission_id`, `platform`, `status`, `editorial_summary`, `author_action_checklist`, `reference_report` |
 | Platform enum | `src/journal.rs` → `JournalPlatform::ArxivSubmissionCore` | Serialized as `arxiv_submission_core` (snake_case) |
-| Requirements matrix (Track 78) | `conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/requirements-matrix.md` | Markdown — 6-dimension comparison including submission-core |
+| Requirements matrix (Track 78) | `conductor/tracks/78-arxiv-upstream-requirements-recon/requirements-matrix.md` | Markdown — 6-dimension comparison including submission-core |
 | Evidence packet | `conductor/tracks/80-arxiv-submission-core-maturity-hardening/evidence-packet.md` | Markdown — current state, issue record, contract snapshot, security boundaries, migration path |
 | Security boundaries | `conductor/tracks/80-arxiv-submission-core-maturity-hardening/security-boundaries.md` | Markdown — read-only scope, no arXiv API calls, legacy warning |
 | Upstream issue | `https://github.com/arXiv/arxiv-submission-core/issues/88` | GitHub issue — filed 2026-06-09, closed 2026-06-10 with maintainer redirect |
@@ -117,4 +119,3 @@ Subagent A must complete before Subagent B (contract snapshot must be verified
 before evidence packet is drafted). Subagent C can run in parallel with
 Subagent B (security boundaries and release-status updates are independent of
 the evidence packet's narrative).
-

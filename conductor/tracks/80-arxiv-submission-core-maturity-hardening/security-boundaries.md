@@ -10,6 +10,8 @@
 > is arXiv-approved, arXiv-compatible, or actively integrated with arXiv's
 > infrastructure.
 >
+> Disclaimer: **legacy-documented; not reviewed or accepted by arXiv maintainers for continued use**.
+>
 > Evidence level: **contracted** — all claims are derived from reference-able
 > sources.
 
@@ -29,6 +31,9 @@ All operations are local, deterministic, and fixture-backed.
 ## Boundaries
 
 ### 1. Read-only screening — no arXiv submission state mutation
+
+No mutation of submission-core is permitted by this adapter.
+Provider evidence is never silently overwritten.
 
 | Property | Detail |
 |---|---|
@@ -120,7 +125,7 @@ The adapter carries the following warnings in all evidence documents:
 - Upstream issue: `https://github.com/arXiv/arxiv-submission-core/issues/88`
 - Redirect comment: `https://github.com/arXiv/arxiv-submission-core/issues/88#issuecomment-4662122861`
 - Track 78 requirements matrix:
-  `conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/requirements-matrix.md`
+  `conductor/tracks/78-arxiv-upstream-requirements-recon/requirements-matrix.md`
 - Track 79 submit-ce maturity hardening:
   `conductor/tracks/79-arxiv-submit-ce-maturity-hardening/`
 - Track 81 upstream submission and acceptance:

@@ -1,6 +1,7 @@
 # submission-core Migration Mapping Check
 
 Date: 2026-06-09
+Disclaimer: **legacy-documented; not reviewed or accepted by arXiv maintainers for continued use**.
 
 ## Pinned contract
 
