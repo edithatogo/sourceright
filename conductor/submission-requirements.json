@@ -77,6 +77,7 @@
     {
       "id": "zotero",
       "label": "Zotero",
+      "current_state": "hardened-local-adapter",
       "approval_required": true,
       "external_submission_allowed": false,
       "requirements_sources": [
@@ -99,6 +100,7 @@
     {
       "id": "endnote",
       "label": "EndNote",
+      "current_state": "hardened-local-file-handoff",
       "approval_required": true,
       "external_submission_allowed": false,
       "requirements_sources": [
