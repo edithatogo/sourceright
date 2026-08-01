@@ -48,3 +48,4 @@ Private account-side submissions are not represented as completed repo proof.
 They can be added only after the submitted artifact, account action, and public
 listing state are recorded with a URL, date, version or artifact id, and install
 metadata.
+No PKP Plugin Gallery acceptance is claimed; OJS/PKP remains a prepared local package.
