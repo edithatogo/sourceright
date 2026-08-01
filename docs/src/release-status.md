@@ -32,8 +32,8 @@ Registries are classified into four statuses:
 | crates.io | accepted | 0.1.20 | <https://crates.io/crates/sourceright> | 2026-05-11 | `cargo install sourceright`. Package metadata in `Cargo.toml`. `Publish crate` workflow is manual and token-gated. |
 | docs.rs | accepted | 0.1.20 | <https://docs.rs/crate/sourceright/0.1.20> | 2026-05-11 | Auto-built from crates.io publish. `package.metadata.docs.rs` configures `all-features = true`. |
 | Official MCP Registry | accepted | 0.1.20 | <https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.edithatogo/sourceright> | 2026-05-13 | Listed as active and latest. Server metadata from `server.json`. OCI image target: `ghcr.io/edithatogo/sourceright-mcp:0.1.20`. |
-| Smithery | accepted | 0.1.20 | <https://smithery.ai/servers/edithatogo/sourceright> (release `263ee636-5d24-4010-9dd9-e199d4f7b848`); install smoke in `smithery-install-smoke-2026-06-10.md`. | 2026-06-10 | Install via `npx -y @smithery/cli@latest run edithatogo/sourceright`. |
-| Glama | accepted | 0.1.20 | <https://glama.ai/mcp/servers/c7qsbvekc1> (id `c7qsbvekc1`, namespace `edithatogo`, slug `sourceright`); API verification in `glama-acceptance-2026-06-10.md`. | 2026-06-10 | Slug-path listing URLs still 404; use the id-based listing URL for public proof. |
+| Smithery | submitted | 0.1.20 | <https://smithery.ai/servers/edithatogo/sourceright> (release `263ee636-5d24-4010-9dd9-e199d4f7b848`); `smithery-mcpb-publish-2026-06-10.md` and install smoke in `smithery-install-smoke-2026-06-10.md`. | 2026-06-10 | MCPB listing is submitted, not publicly_accepted; public acceptance remains unclaimed until registry install smoke is recorded. |
+| Glama | accepted | 0.1.20 | <https://glama.ai/mcp/servers/c7qsbvekc1> (id `c7qsbvekc1`, namespace `edithatogo`, slug `sourceright`); `glama-metadata-verification.md` and API verification in `glama-acceptance-2026-06-10.md`. | 2026-06-10 | Slug-path listing URLs still 404; use the id-based listing URL for public proof. |
 
 ### Prepared Registries
 
@@ -50,6 +50,7 @@ Registries are classified into four statuses:
 | EndNote | prepared | 0.1.20 | ENW/RIS file handoff hardened in `conductor/tracks/74-citation-manager-publication-hardening/endnote-reparse-verification-2026-06-09.md`; golden fixtures and export docs. | 2026-06-09 | No EndNote plugin or live sync is claimed. File import in EndNote desktop is operator-verified, not default-CI proof. |
 | OJS/PKP | prepared | 0.1.0 plugin | Hardened in `conductor/tracks/75-journal-platform-publication-hardening/ojs-fixture-smoke-2026-06-09.md`; plugin source, install archive, and fixture screening. | 2026-06-09 | No PKP Plugin Gallery acceptance is claimed. Live OJS install smoke and Gallery listing remain approval-gated. |
 | VS Code Marketplace / Open VSX | prepared | 0.1.20 | Hardened in `conductor/tracks/77-vscode-open-vsx-publication-hardening/vsix-smoke-2026-06-09.md`; `extensions/vscode-sourceright/` and `dist/vscode-smoke/edithatogo.sourceright-0.1.20.vsix`. | 2026-06-09 | Local VSIX with isolated install/uninstall smoke; no Marketplace/Open VSX listing claimed. Requires public listing evidence before accepted claim. |
+| arXiv/arxiv-submission-core | legacy/inactive | — | Maintainer @dginev confirmed legacy status and redirected users in [issue #88](https://github.com/arXiv/arxiv-submission-core/issues/88) (closed 2026-06-10). Track 80 records the migration mapping. | 2026-07-14 | No active integration, live API, or acceptance claim. Migrate to arXiv/submit-ce; see Track 79. |
 
 ### Deferred Registries
 
