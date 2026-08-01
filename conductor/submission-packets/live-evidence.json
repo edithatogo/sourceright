@@ -1,9 +1,29 @@
 {
   "$schema": "sourceright.live-submission-evidence.v1",
-  "surface_id": "REPLACE_WITH_SURFACE_ID",
-  "status": "draft",
-  "public_url": "REPLACE_WITH_URL",
-  "artifact_id": "REPLACE_WITH_ARTIFACT_ID",
-  "evidence_type": "REPLACE_WITH_EVIDENCE_TYPE",
-  "notes": "REPLACE_WITH_NOTES"
+  "entries": [
+    {
+      "surface_id": "smithery",
+      "status": "submitted",
+      "public_url": "https://smithery.ai/servers/edithatogo/sourceright",
+      "artifact_id": "sourceright-mcp",
+      "evidence_type": "public-listing",
+      "notes": "Public listing is recorded; green release scan/install evidence remains open."
+    },
+    {
+      "surface_id": "arxiv-submit-ce-fixture",
+      "status": "fixture_backed",
+      "public_url": "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/journal-screen-smoke-2026-06-10.md",
+      "artifact_id": "arxiv-submit-ce",
+      "evidence_type": "fixture-backed-read-only-smoke",
+      "notes": "Synthetic submit-ce screening emitted sourceright.journal_screening.v1 with screened_with_warnings. This is not arXiv-reviewed and does not mutate arXiv state."
+    },
+    {
+      "surface_id": "arxiv-upstream-issues",
+      "status": "submitted",
+      "public_url": "https://github.com/arXiv/submit-ce/issues/72",
+      "artifact_id": "arxiv-submit-ce",
+      "evidence_type": "issue-first-submission",
+      "notes": "arxiv-submit-ce issue https://github.com/arXiv/submit-ce/issues/72 and arxiv-submission-core issue https://github.com/arXiv/arxiv-submission-core/issues/88 were filed after Tracks 78-80 readiness review. No upstream acceptance is claimed."
+    }
+  ]
 }
