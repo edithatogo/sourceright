@@ -138,11 +138,7 @@ impl GrobidExtractor {
 
         for attempt in 0..=self.config.max_retries {
             let form = reference_request(pdf);
-            let response = match client
-                .post(endpoint.clone())
-                .multipart(form)
-                .send()
-            {
+            let response = match client.post(endpoint.clone()).multipart(form).send() {
                 Ok(response) => response,
                 Err(error) if attempt == self.config.max_retries => {
                     return Err(GrobidError::Overloaded);
