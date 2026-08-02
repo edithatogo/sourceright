@@ -60,6 +60,8 @@ function runCliInTerminal(args) {
 }
 
 function activate(context) {
+  // The report command is the read-only `report --json` bridge used by the
+  // extension; write-capable export paths remain intentionally unavailable.
   const commands = [
     ['sourceright.init', ['init'], 'Sourceright: Init Workspace', () => runCliInTerminal(['init'])],
     [

@@ -294,6 +294,7 @@ current environment. The GitHub REST endpoints for listing user or repository
 app installations were not available to the current token type, so installed
 Marketplace apps must be verified in GitHub repository settings if that
 inventory is needed.
+
 ### Release-surface evidence boundary
 
 Release checks also run `scripts/verify-release-surface-refresh.ps1`. This is
