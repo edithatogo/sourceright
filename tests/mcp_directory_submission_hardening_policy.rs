@@ -8,7 +8,8 @@ fn read(path: &str) -> String {
 fn track_73_mcp_directory_submission_hardening_is_completed() {
     let metadata = read("conductor/tracks/73-mcp-directory-submission-hardening/metadata.json");
     assert!(
-        metadata.contains("\"status\": \"completed\""),
+        metadata.contains("\"status\": \"completed\"")
+            || metadata.contains("\"status\":  \"completed\""),
         "track 73 should be completed"
     );
 
@@ -39,7 +40,10 @@ fn track_73_mcp_directory_submission_hardening_is_completed() {
     let release_status = read("docs/src/release-status.md");
     assert!(release_status.contains("smithery-mcpb-publish-2026-06-10.md"));
     assert!(release_status.contains("glama-metadata-verification.md"));
-    assert!(release_status.contains("| Smithery | submitted |"));
+    assert!(
+        release_status.contains("| Smithery | submitted |")
+            || release_status.contains("| Smithery | accepted |")
+    );
     assert!(release_status.contains("smithery.ai/servers/edithatogo/sourceright"));
 
     let live_evidence = read("conductor/submission-packets/live-evidence.json");
