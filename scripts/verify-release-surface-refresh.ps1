@@ -205,6 +205,7 @@ function Assert-TrackEvidenceParity {
         'EndNote' = @('EndNote')
         'OJS/PKP' = @('OJS/PKP')
         'VS Code Marketplace / Open VSX' = @('VS Code Marketplace / Open VSX')
+        'arXiv/arxiv-submission-core' = @('arXiv/arxiv-submission-core')
         'Microsoft AppSource / Word add-in' = @('Microsoft AppSource / Word add-in')
         'LibreOffice Extensions' = @('LibreOffice Extensions')
         'Homebrew, Scoop, winget, npm, PyPI' = @('Homebrew', 'Scoop', 'winget', 'npm launcher', 'PyPI launcher')
