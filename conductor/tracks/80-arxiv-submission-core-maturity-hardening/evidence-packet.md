@@ -10,6 +10,8 @@
 > **Disclaimer**: Adapter is **legacy-documented** and has **not been reviewed or
 > accepted by arXiv maintainers for continued use**. Users should migrate to the
 > active `arXiv/submit-ce` surface (see Migration path section below).
+>
+> Disclaimer: **legacy-documented; not reviewed or accepted by arXiv maintainers for continued use**.
 
 ## Current state
 
@@ -87,7 +89,7 @@ The submission-core adapter contract is frozen at:
 The Track 78 requirements matrix provides broader context for the submission-core
 adapter across 6 dimensions:
 
-`conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/requirements-matrix.md`
+`conductor/tracks/78-arxiv-upstream-requirements-recon/requirements-matrix.md`
 
 Key findings for submission-core:
 - **CONTRIBUTING.md**: ✅ Present — detailed Gitflow guide

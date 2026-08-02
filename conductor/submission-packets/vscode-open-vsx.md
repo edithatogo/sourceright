@@ -8,6 +8,7 @@
 ## Local Gates
 
 - `scripts/verify-submission-readiness.ps1`
+- Install/uninstall smoke is recorded by `scripts/smoke-vscode-vsix.ps1`.
 
 ## Draft
 

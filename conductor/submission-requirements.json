@@ -21,8 +21,8 @@
         }
       ],
       "gates": {
-        "requirements_searched": false,
-        "contracted": false,
+        "requirements_searched": true,
+        "contracted": true,
         "hardened_local_package": false,
         "submission_ready": false,
         "submitted": false,
@@ -77,6 +77,7 @@
     {
       "id": "zotero",
       "label": "Zotero",
+      "current_state": "hardened-local-adapter",
       "approval_required": true,
       "external_submission_allowed": false,
       "requirements_sources": [
@@ -99,6 +100,7 @@
     {
       "id": "endnote",
       "label": "EndNote",
+      "current_state": "hardened-local-file-handoff",
       "approval_required": true,
       "external_submission_allowed": false,
       "requirements_sources": [
@@ -160,7 +162,7 @@
         "submitted": false,
         "publicly_accepted": false
       },
-      "blockers": ["No arXiv submit-ce package evidence has been recorded yet."]
+      "blockers": ["Track 79 submit-ce maturity hardening remains before any upstream submission."]
     },
     {
       "id": "arxiv-submission-core",
@@ -175,14 +177,14 @@
         }
       ],
       "gates": {
-        "requirements_searched": false,
-        "contracted": false,
+        "requirements_searched": true,
+        "contracted": true,
         "hardened_local_package": false,
         "submission_ready": false,
         "submitted": false,
         "publicly_accepted": false
       },
-      "blockers": ["No arXiv submission-core package evidence has been recorded yet."]
+      "blockers": ["Track 80 legacy migration hardening remains before any upstream submission."]
     },
     {
       "id": "claude-cowork",
@@ -295,8 +297,53 @@
       "blockers": ["No Qwen CLI extension evidence has been recorded yet."]
     },
     {
+      "id": "cline",
+      "label": "Cline MCP Marketplace",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://marketplace.cline.bot/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No Cline marketplace evidence has been recorded yet."]
+    },
+    {
+      "id": "opencode",
+      "label": "OpenCode plugin",
+      "approval_required": true,
+      "external_submission_allowed": false,
+      "requirements_sources": [
+        {
+          "status": "searched",
+          "retrieved_at": "2026-05-18",
+          "url": "https://opencode.ai/"
+        }
+      ],
+      "gates": {
+        "requirements_searched": false,
+        "contracted": false,
+        "hardened_local_package": false,
+        "submission_ready": false,
+        "submitted": false,
+        "publicly_accepted": false
+      },
+      "blockers": ["No OpenCode plugin evidence has been recorded yet."]
+    },
+    {
       "id": "vscode-open-vsx",
       "label": "VS Code / Open VSX",
+      "current_state": "hardened-local-package",
       "approval_required": true,
       "external_submission_allowed": false,
       "requirements_sources": [

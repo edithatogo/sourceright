@@ -297,7 +297,7 @@
       "blockers": [
         "No VSIX package, extension manifest, Marketplace listing, or Open VSX listing exists.",
         "Workspace Trust implementation, package build, and install smoke remain future work.",
-        "Marketplace/Open VSX acceptance evidence is deferred to Track 69."
+        "Accepted status requires public listing URL, version, verification date, and install metadata."
       ]
     },
     "67-word-addin-packaging": {
@@ -485,10 +485,10 @@
     },
     "80-arxiv-submission-core-maturity-hardening": {
       "category": "arxiv-upstream",
-      "evidence_level": "hardened_local_package",
+      "evidence_level": "contracted",
       "allowed_claims": [
-        "submission-core legacy event fixtures, migration mapping snapshot, and security boundaries are hardened for local upstream-ready evidence.",
-        "Maintainer issue/PR draft and evidence packet exist; screening remains read-only with no legacy state writeback."
+        "submission-core legacy event fixtures, migration mapping snapshot, and security boundaries are documented for contracted local evidence.",
+        "Maintainer issue #88 and evidence packet exist; screening remains read-only with no legacy state writeback."
       ],
       "blockers": [
         "No upstream arxiv-submission-core submission or acceptance is claimed.",
@@ -797,65 +797,27 @@
     },
     "77-vscode-openvsx-publication-hardening": {
       "category": "publication",
-      "evidence_level": "contracted",
+      "evidence_level": "hardened_local_package",
       "allowed_claims": [
-        "VS Code extension packaging is explicitly deferred with documented VSIX future contract.",
-        "Track structure (metadata, spec, plan, test-matrix) is in place."
+        "The local VSIX scaffold builds and passes isolated install/uninstall smoke with Workspace Trust declared.",
+        "Marketplace and Open VSX metadata, demand decision, and deferral policy are documented; no accepted listing is claimed."
       ],
       "blockers": [
-        "Demand assessment not yet triggered.",
-        "No VSIX package, install smoke, or listing evidence exists.",
+        "Demand assessment deferred external publication.",
+        "No VS Code Marketplace or Open VSX accepted listing is claimed.",
         "Marketplace/Open VSX acceptance evidence is deferred to Track 69."
       ]
     },
     "77-vscode-open-vsx-publication-hardening": {
       "category": "publication",
-      "evidence_level": "contracted",
+      "evidence_level": "hardened_local_package",
       "allowed_claims": [
-        "VS Code and Open VSX publication hardening is tracked as a deferred publication lane.",
-        "The alias path is available for registry checks."
+        "VS Code and Open VSX publication hardening is complete at local-package evidence level.",
+        "The local package reuses CLI diagnostics and remains preview-first for writes."
       ],
       "blockers": [
-        "No VSIX package, install smoke, or listing evidence is claimed here.",
-        "Open VSX publication remains deferred until demand justifies it."
-      ]
-    },    "78-arxiv-upstream-requirements-reconnaissance": {
-      "category": "requirements",
-      "evidence_level": "contracted",
-      "allowed_claims": [
-        "Requirements matrix documents both arXiv/submit-ce (active) and arXiv/arxiv-submission-core (legacy/inactive).",
-        "submit-ce: OpenAPI 3.1.0, Python 3.11/uv, pytest, ruff/flake8, OAuth2, GCR deploy.",
-        "submission-core: Gitflow, Travis CI, Python 3.6/Pipenv, nose2, legacy/archived.",
-        "Handoff documented for Tracks 79 and 80."
-      ],
-      "blockers": [
-        "Requirements derived from public repo inspection only.",
-        "No live API or maintainer confirmation of requirements accuracy."
-      ]
-    },
-    "79-arxiv-submit-ce-maturity-hardening": {
-      "category": "integration",
-      "evidence_level": "fixture-backed",
-      "allowed_claims": [
-        "journal-screen smoke recorded 2026-06-10 against synthetic submit-ce fixture: exit code 0, status screened_with_warnings.",
-        "Integration hook proposed on arXiv/submit-ce Issue #72.",
-        "Platform detection and screening report schema defined."
-      ],
-      "blockers": [
-        "No maintainer acceptance of integration hook proposal yet.",
-        "No live arXiv API calls tested."
-      ]
-    },
-    "80-arxiv-submission-core-maturity-hardening": {
-      "category": "integration",
-      "evidence_level": "contracted",
-      "allowed_claims": [
-        "arXiv/arxiv-submission-core confirmed legacy/inactive by maintainer @dginev on issue #88.",
-        "Evidence packet documents current state, security boundaries, and migration path to submit-ce."
-      ],
-      "blockers": [
-        "No active users identified for migration.",
-        "Legacy repo may not accept new contributions."
+        "No VS Code Marketplace or Open VSX accepted listing is claimed.",
+        "External publication remains deferred until demand, approval, and credentials are recorded."
       ]
     },
     "81-arxiv-upstream-submission-and-acceptance": {
@@ -889,13 +851,13 @@
       "category": "requirements",
       "evidence_level": "contracted",
       "allowed_claims": [
-        "Janeway is documented as the next open-source journal platform candidate.",
-        "The integration contract distinguishes plugin-first, sidecar, and hybrid shapes.",
-        "Track structure and docs updates are in place."
+        "Official Janeway repository, installation, plugin, typesetting, and API surfaces are documented as reconnaissance evidence.",
+        "The integration contract distinguishes sidecar-first, plugin-first, and hybrid shapes.",
+        "Track 83 records promotion gates without claiming Janeway support, publication, or acceptance."
       ],
       "blockers": [
-        "Janeway docs survey not yet completed.",
-        "No package or smoke evidence exists yet.",
+        "The official plugin guide is explicitly incomplete and hook stability is unverified.",
+        "No package, disposable install, or smoke evidence exists yet.",
         "No Janeway claim may move past reconnaissance."
       ]
     },
@@ -903,13 +865,13 @@
       "category": "integration",
       "evidence_level": "fixture-backed",
       "allowed_claims": [
-        "A Janeway adapter package contract is being defined around a thin Rust-core boundary.",
-        "Preview-first and packageable are the intended claims.",
-        "Track structure is in place."
+        "A Janeway adapter package scaffold and deterministic contract exist around a thin Rust-core boundary.",
+        "The `janeway` platform label is wired through the local Rust, CLI, MCP, and report-schema contracts.",
+        "Preview-only packaging evidence exists; no install, support, or upstream acceptance is claimed."
       ],
       "blockers": [
-        "No adapter skeleton has been implemented.",
-        "No fixture-backed Janeway package checks exist yet.",
+        "No disposable Janeway install or smoke evidence exists yet.",
+        "Janeway hook stability and package compatibility remain unverified.",
         "No live install or publication claim is allowed."
       ]
     },
@@ -919,16 +881,16 @@
       "allowed_claims": [
         "Disposable-instance install and screening smoke are the target evidence.",
         "Blocker documentation is acceptable when the live path is unavailable.",
-        "Track structure is in place."
+        "The fail-closed harness records the unavailable runtime and attempted command chain without claiming live success."
       ],
       "blockers": [
-        "No disposable Janeway smoke has been recorded yet.",
-        "No live install transcript or report transcript exists yet.",
+        "Docker and Podman are unavailable on the current Windows workstation.",
+        "No live install transcript, activation transcript, or report transcript exists.",
         "No publication claim may be made until smoke evidence is captured."
       ]
     },
     "86-proprietary-journal-platform-matrix": {
-      "status": "in_progress",
+      "status": "completed",
       "category": "requirements",
       "evidence_level": "contracted",
       "allowed_claims": [
@@ -941,7 +903,7 @@
       ]
     },
     "87-self-improving-platform-registry": {
-      "status": "in_progress",
+      "status": "completed",
       "category": "workflow",
       "evidence_level": "contracted",
       "allowed_claims": [

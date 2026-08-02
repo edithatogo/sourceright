@@ -9,6 +9,7 @@ This report presents a comprehensive review of the Streamlit website/app and its
 The Streamlit app acts as a **synthetic-data demonstrator** showing reference health metrics and journal screening workflows. The codebase is clean, modular, and separates data loading from visual rendering.
 
 ### Codebase Organization
+
 - **App Entry Point**: [app.py](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py) handles the page configuration, component layout, and rendering loop.
 - **Data Model & Processing**: [demo_model.py](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/demo_model.py) manages the internal metrics keys, static descriptions, and file-parsing helpers.
 - **Synthetic Data Payloads**: Located under the `sample_workspace/` directory:
@@ -16,12 +17,16 @@ The Streamlit app acts as a **synthetic-data demonstrator** showing reference he
   - [journal-screening.json](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/sample_workspace/journal-screening.json): Submission-level screening checklist metadata.
 
 ### Data Loading Flow
+
 In [app.py:L10-11](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py#L10-L11), the app dynamically resolves the `sample_workspace` folder relative to the script location and passes it to the `load_sample_payloads` function:
+
 ```python
 sample_dir = Path(__file__).parent / "sample_workspace"
 report, journal = load_sample_payloads(sample_dir)
 ```
+
 The implementation in [demo_model.py:L18-22](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/demo_model.py#L18-L22) reads the files synchronously with UTF-8 encoding, preventing any remote database dependencies:
+
 ```python
 def load_sample_payloads(sample_dir: Path | None = None) -> tuple[dict[str, Any], dict[str, Any]]:
     root = sample_dir or Path(__file__).parent / "sample_workspace"
@@ -37,16 +42,20 @@ def load_sample_payloads(sample_dir: Path | None = None) -> tuple[dict[str, Any]
 The dashboard uses Streamlit's built-in grid components to build a dashboard layout tailored to high-density medical/scientific reviews.
 
 - **Wide Layout Configuration**: Configured at [app.py:L8](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py#L8) to stretch elements across the monitor view:
+
   ```python
   st.set_page_config(page_title="Sourceright demo", layout="wide")
   ```
+
 - **Information Banners**: Appended at [app.py:L15-17](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py#L15-L17) using `st.info` to communicate that the data is synthetic.
 - **Top Metrics Row**: An 6-way split columns layout displays high-level counts ([app.py:L20-22](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py#L20-L22)):
+
   ```python
   cols = st.columns(6)
   for col, (label, value) in zip(cols, metric_rows(report)):
       col.metric(label, value)
   ```
+
 - **Asymmetric Content Columns**: Split into `2/3` and `1/3` sections ([app.py:L24](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py#L24)):
   - **Left (2/3 Width)**: Dedicated to listing the detailed reference issues table via `st.dataframe(...)` with index numbers hidden for a cleaner presentation ([app.py:L26-27](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py#L26-L27)).
   - **Right (1/3 Width)**: Holds metadata like submission ID, platform info, status, and the Checklist items ([app.py:L29-32](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/app.py#L29-L32)).
@@ -67,15 +76,18 @@ The dashboard uses Streamlit's built-in grid components to build a dashboard lay
 
 The repository has a custom script designed to launch and verify the integrity of the Streamlit application runtime: [server_smoke.py](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/server_smoke.py).
 
-### How the Smoke Test Works:
+### How the Smoke Test Works
+
 1. **Gate Guard**: Exits cleanly unless the environment variable `SOURCERIGHT_DEMO_SERVER_SMOKE=1` is present ([server_smoke.py:L23-24](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/server_smoke.py#L23-L24)).
 2. **Dynamic Port Allocation**: To prevent collisions on build runners, it assigns a random, unused TCP port on the host interface ([server_smoke.py:L32-35](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/server_smoke.py#L32-L35)):
+
    ```python
    def _free_port() -> int:
        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
            sock.bind(("127.0.0.1", 0))
            return int(sock.getsockname()[1])
    ```
+
 3. **Headless Subprocess Execution**: Spawns the Streamlit server programmatically with telemetry analytics turned off ([server_smoke.py:L40-58](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/server_smoke.py#L40-L58)).
 4. **HTTP Health Probing**: Polling logic uses `http.client.HTTPConnection` to issue requests to the landing page (`/`). It asserts that:
    - Response status matches `200`.
@@ -90,6 +102,7 @@ The repository has a custom script designed to launch and verify the integrity o
 Details are documented in [DEPLOY.md](file:///C:/Users/60217257/OneDrive%20-%20Flinders/repos/sourceright/streamlit_app/DEPLOY.md).
 
 ### Cloud Target: Streamlit Community Cloud
+
 - **Launch path**: Configured to load `streamlit_app/app.py`.
 - **Environment variables**: Zero secrets or server credentials required since all datasets are local, read-only JSON resources.
 - **Resource Allocations**: Capped at **1 GB RAM** and **10 GB storage**, with active instances sleeping after 15 minutes of inactivity.

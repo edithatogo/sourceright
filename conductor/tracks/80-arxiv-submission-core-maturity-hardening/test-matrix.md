@@ -40,7 +40,7 @@
 | Platform enum variant exists | `JournalPlatform::ArxivSubmissionCore` exists in `src/journal.rs` and serializes to `arxiv_submission_core` | Code review of `src/journal.rs`; serialization roundtrip test | Default-CI |
 | Screening report shape documented | Evidence packet describes expected screening report schema version, platform field, status field | `evidence-packet.md` — Contract snapshot section | Default-CI |
 | Expected screening status correct | Fixture `expected_screening_report.status` is `screened_with_warnings` (matching 1 verified + 1 unverified reference) | `fixtures/journal/arxiv-submission-core-submission.json` — `expected_screening_report.status` field | Default-CI |
-| Track 78 requirements matrix referenced | Evidence packet references `conductor/tracks/78-arxiv-upstream-requirements-reconnaissance/requirements-matrix.md` for broader requirements context | `evidence-packet.md` — Contract snapshot section contains reference | Default-CI |
+| Track 78 requirements matrix referenced | Evidence packet references `conductor/tracks/78-arxiv-upstream-requirements-recon/requirements-matrix.md` for broader requirements context | `evidence-packet.md` — Contract snapshot section contains reference | Default-CI |
 
 ## Handoff completeness — opt-in live
 

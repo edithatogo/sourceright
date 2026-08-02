@@ -89,8 +89,8 @@ fn smithery_builder_and_docs_preserve_prepared_not_accepted_boundary() {
     assert!(publishing.contains("scripts/build-smithery-mcpb.ps1"));
     assert!(publishing.contains("not accepted-listing evidence"));
 
-    assert!(release_status.contains("| Smithery | submitted |"));
-    assert!(release_status.contains("not publicly_accepted"));
+    assert!(release_status.contains("| Smithery | accepted |"));
+    assert!(release_status.contains("public acceptance is bounded"));
     assert!(track_review.contains("Smithery MCPB readiness is implemented"));
 }
 

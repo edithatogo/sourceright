@@ -26,6 +26,8 @@ or CI success is not enough to submit anything externally.
 | GitHub Copilot | Host-package contract or explicit deferral | Requirements searched -> Contracted -> Hardened local package -> Submission-ready -> Submitted -> Publicly accepted |
 | Gemini CLI extensions | Host-package contract or explicit deferral | Requirements searched -> Contracted -> Hardened local package -> Submission-ready -> Submitted -> Publicly accepted |
 | Qwen CLI extensions | Host-package contract or explicit deferral | Requirements searched -> Contracted -> Hardened local package -> Submission-ready -> Submitted -> Publicly accepted |
+| OpenCode | Host-package contract or explicit deferral | Requirements searched -> Contracted -> Hardened local package -> Submission-ready -> Submitted -> Publicly accepted |
+| Cline MCP Marketplace | Marketplace package or explicit deferral | Requirements searched -> Contracted -> Hardened local package -> Submission-ready -> Submitted -> Publicly accepted |
 | VS Code / Open VSX | VSIX or marketplace package and install proof | Requirements searched -> Contracted -> Hardened local package -> Submission-ready -> Submitted -> Publicly accepted |
 
 ## Approval Rule

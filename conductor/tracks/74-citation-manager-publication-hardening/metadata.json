@@ -1,6 +1,6 @@
 {
   "id": "74-citation-manager-publication-hardening",
-  "status": "in_progress",
+  "status": "completed",
   "priority": "medium",
   "owners": ["publication", "citation-manager-integration"],
   "dependencies": [

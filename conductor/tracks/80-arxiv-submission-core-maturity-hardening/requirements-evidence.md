@@ -1,6 +1,7 @@
 # Track 80 — arXiv submission-core Maturity Requirements Evidence
 
 Date: 2026-06-09
+Disclaimer: **legacy-documented; not reviewed or accepted by arXiv maintainers for continued use**.
 
 ## Inventory alignment
 

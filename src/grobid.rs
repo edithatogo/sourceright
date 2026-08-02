@@ -132,16 +132,19 @@ impl GrobidExtractor {
         let endpoint = endpoint_for(&self.config, "api/processReferences")?;
         let client = Client::builder()
             .timeout(Duration::from_secs(self.config.timeout_seconds))
+            .redirect(reqwest::redirect::Policy::none())
             .build()
             .map_err(|error| GrobidError::Transport(error.to_string()))?;
 
         for attempt in 0..=self.config.max_retries {
             let form = reference_request(pdf);
-            let response = client
-                .post(endpoint.clone())
-                .multipart(form)
-                .send()
-                .map_err(|error| GrobidError::Transport(error.to_string()))?;
+            let response = match client.post(endpoint.clone()).multipart(form).send() {
+                Ok(response) => response,
+                Err(_error) if attempt == self.config.max_retries => {
+                    return Err(GrobidError::Overloaded);
+                }
+                Err(_) => continue,
+            };
             if response.status() == StatusCode::NO_CONTENT {
                 return Err(GrobidError::NoContent);
             }
@@ -612,5 +615,29 @@ mod tests {
             Err(GrobidError::NoContent)
         ));
         worker.join().expect("no-content worker");
+    }
+    #[test]
+    fn extraction_does_not_follow_redirects() {
+        let listener = TcpListener::bind("127.0.0.1:0").expect("bind redirect mock GROBID");
+        let address = listener.local_addr().expect("redirect address");
+        let worker = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().expect("accept redirect request");
+            consume_request(&mut stream);
+            stream
+                .write_all(b"HTTP/1.1 302 Found\r\nLocation: http://127.0.0.1:9/redirected\r\nContent-Length: 0\r\n\r\n")
+                .unwrap();
+        });
+        let extractor = GrobidExtractor {
+            config: GrobidConfig {
+                enabled: true,
+                base_url: format!("http://{address}"),
+                ..GrobidConfig::default()
+            },
+        };
+        assert!(matches!(
+            extractor.extract_references(b"pdf"),
+            Err(GrobidError::Http(StatusCode::FOUND))
+        ));
+        worker.join().expect("redirect worker");
     }
 }

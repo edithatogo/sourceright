@@ -3,10 +3,20 @@
   "fixture_name": "arxiv-submit-ce-submission-synthetic-001",
   "description": "Synthetic arXiv submit-ce submission fixture for journal screening contract smoke tests.",
   "created": "2026-06-10T00:00:00Z",
+  "upstream_target": {
+    "repository": "https://github.com/arXiv/submit-ce",
+    "platform_generation": "current",
+    "integration_boundary": "submission source bundle to Sourceright journal-screen"
+  },
   "submission": {
     "submission_id": "ARXIV-CE-2026-0001",
-    "platform": "arxiv-submit-ce",
+    "platform": "arxiv_submit_ce",
     "manuscript_label": "source-package.tar.gz"
+  },
+  "source_bundle": {
+    "primary_tex": "\\documentclass{article}\\begin{document}Synthetic submission.\\end{document}",
+    "references": "@article{ng2026, title={Citation Integrity Checks}}",
+    "extracted_text": "Citation Integrity Checks for Preprint Submission Packages"
   },
   "manuscript": {
     "title": "Citation Integrity Checks for Preprint Submission Packages",

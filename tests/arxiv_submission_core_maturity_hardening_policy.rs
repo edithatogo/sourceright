@@ -156,7 +156,8 @@ fn track_80_arxiv_submission_core_maturity_hardening_is_completed() {
     let metadata =
         read("conductor/tracks/80-arxiv-submission-core-maturity-hardening/metadata.json");
     assert!(
-        metadata.contains("\"status\": \"completed\""),
+        metadata.contains("\"status\":  \"completed\"")
+            || metadata.contains("\"status\": \"completed\""),
         "track 80 should be completed"
     );
 
@@ -175,7 +176,7 @@ fn track_80_arxiv_submission_core_maturity_hardening_is_completed() {
     }
 
     let review = read("conductor/tracks/80-arxiv-submission-core-maturity-hardening/review.md");
-    assert!(review.contains("hardened local package"));
+    assert!(review.contains("contracted"));
     assert!(review.contains("No upstream submission"));
 
     let journal_docs = read("docs/src/journal-integrations.md");
@@ -183,9 +184,13 @@ fn track_80_arxiv_submission_core_maturity_hardening_is_completed() {
 
     let inventory = read("conductor/submission-requirements.json");
     assert!(inventory.contains("\"id\": \"arxiv-submission-core\""));
-    assert!(inventory.contains("\"current_state\": \"hardened-local-package\""));
+    assert!(inventory.contains("\"hardened_local_package\": false"));
 
     let ledger = read("conductor/evidence-ledger.json");
     assert!(ledger.contains("80-arxiv-submission-core-maturity-hardening"));
-    assert!(ledger.contains("\"evidence_level\": \"hardened_local_package\""));
+    let ledger_json = parse_json("conductor/evidence-ledger.json");
+    assert_eq!(
+        ledger_json["tracks"]["80-arxiv-submission-core-maturity-hardening"]["evidence_level"],
+        "contracted"
+    );
 }

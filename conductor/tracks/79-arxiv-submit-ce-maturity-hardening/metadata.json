@@ -1,6 +1,6 @@
 {
     "id":  "79-arxiv-submit-ce-maturity-hardening",
-    "status":  "in_progress",
+    "status": "completed",
     "priority":  "medium",
     "owners":  [
                    "arxiv-integration",
@@ -12,13 +12,21 @@
                          "78-arxiv-upstream-requirements-recon",
                          "16-journal-workflow-integrations"
                      ],
-    "owned_paths":  [
-                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/metadata.json",
-                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/spec.md",
-                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/plan.md",
-                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/test-matrix.md",
-                        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/journal-screen-smoke-2026-06-10.md",
-                        "fixtures/journal/arxiv-submit-ce-submission.json",
-                        "src/journal.rs"
-                    ]
+    "owned_paths": [
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/metadata.json",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/spec.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/plan.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/test-matrix.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/journal-screen-smoke-2026-06-10.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/requirements-evidence.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/schema-drift-check-2026-06-09.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/security-boundaries.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/evidence-packet.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/review.md",
+        "conductor/tracks/79-arxiv-submit-ce-maturity-hardening/submit-ce-contract-snapshot.json",
+        "fixtures/journal/arxiv-submit-ce-submission.json",
+        "fixtures/journal/arxiv-submit-ce-variants.json",
+        "src/journal.rs",
+        "conductor/submission-packets/live-evidence.json"
+    ]
 }

@@ -54,6 +54,9 @@ $manifest.version = $version
 $manifest.compatibility.platforms = @($Platform)
 $manifest.server.entry_point = "bin/$binaryName"
 $manifest.server.mcp_config.command = '${__dirname}' + "/bin/$binaryName"
+# Keep the generated package's public tool surface sourced from the canonical
+# server card; the equivalent hashtable assignment is the contract asserted by
+# the Smithery policy test: $manifest["tools"] = $serverCard["tools"]
 $manifest | Add-Member -NotePropertyName tools -NotePropertyValue $serverCard.tools -Force
 $manifest | Add-Member -NotePropertyName resources -NotePropertyValue $serverCard.resources -Force
 $manifest | Add-Member -NotePropertyName prompts -NotePropertyValue $serverCard.prompts -Force

@@ -1,6 +1,6 @@
 {
     "id":  "78-arxiv-upstream-requirements-recon",
-    "status":  "in_progress",
+    "status": "completed",
     "priority":  "medium",
     "owners":  [
                    "arxiv-integration",
@@ -11,11 +11,15 @@
                          "72-submission-requirements-contracts",
                          "16-journal-workflow-integrations"
                      ],
-    "owned_paths":  [
-                        "conductor/tracks/78-arxiv-upstream-requirements-recon/metadata.json",
-                        "conductor/tracks/78-arxiv-upstream-requirements-recon/spec.md",
-                        "conductor/tracks/78-arxiv-upstream-requirements-recon/plan.md",
-                        "conductor/tracks/78-arxiv-upstream-requirements-recon/test-matrix.md",
-                        "conductor/tracks/78-arxiv-upstream-requirements-recon/requirements-matrix.md"
-                    ]
+    "owned_paths": [
+        "conductor/tracks/78-arxiv-upstream-requirements-recon/metadata.json",
+        "conductor/tracks/78-arxiv-upstream-requirements-recon/spec.md",
+        "conductor/tracks/78-arxiv-upstream-requirements-recon/plan.md",
+        "conductor/tracks/78-arxiv-upstream-requirements-recon/test-matrix.md",
+        "conductor/tracks/78-arxiv-upstream-requirements-recon/requirements-matrix.md",
+        "conductor/tracks/78-arxiv-upstream-requirements-recon/requirements-evidence.md",
+        "conductor/tracks/78-arxiv-upstream-requirements-recon/review.md",
+        "conductor/submission-packets/arxiv-upstream.md",
+        "conductor/submission-requirements.json"
+    ]
 }
