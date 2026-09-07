@@ -2,7 +2,17 @@
   "schema_version": "org.sourceright.standardflow-integration.v1",
   "integration_id": "sourceright-standardflow-citation-evidence",
   "producer_repository": "edithatogo/sourceright",
-  "producer_revision": "c5fa583431390eee1bf5eae04dc47b01c50d4a1e",
+  "producer_baseline_revision": "c5fa583431390eee1bf5eae04dc47b01c50d4a1e",
+  "artifact_provenance": {
+    "kind": "pull_request_head",
+    "repository": "edithatogo/sourceright",
+    "pull_request": 105,
+    "immutable": false,
+    "paths": [
+      "integration/standardflow/contract.json",
+      "integration/standardflow/fixtures/citation-evidence.json"
+    ]
+  },
   "consumer_repository": "edithatogo/standards_check",
   "consumer_revision": "f248d7c4dd40dd34cb45b5b6150b4750a5b28864",
   "consumer_pull_request": 59,
@@ -45,5 +55,5 @@
     "Restore the prior exact consumer revision and retain the failed receipt.",
     "Do not mutate canonical CSL or verification sidecars as part of rollback."
   ],
-  "claim_boundary": "The pinned StandardFlow foundation passed its contract and Rust gates. This agreement remains a source-level evidence exchange: it does not prove merge, runtime adapter behaviour, downstream parity, citation truth or publication readiness."
+  "claim_boundary": "The producer_baseline_revision identifies the existing Sourceright logic whose semantics are exported. The integration artifacts are presently retrievable through pull request 105 and are explicitly mutable until a post-merge receipt records an immutable artifact-bearing commit. This source-level exchange does not prove runtime adapter behaviour, downstream parity, citation truth or publication readiness."
 }
