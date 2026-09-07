@@ -1,0 +1,49 @@
+{
+  "schema_version": "org.sourceright.standardflow-integration.v1",
+  "integration_id": "sourceright-standardflow-citation-evidence",
+  "producer_repository": "edithatogo/sourceright",
+  "producer_revision": "c5fa583431390eee1bf5eae04dc47b01c50d4a1e",
+  "consumer_repository": "edithatogo/standards_check",
+  "consumer_revision": "820898e7ae21784145f98e04d8fc482367a6f015",
+  "consumer_pull_request": 59,
+  "automatic_revision_updates": false,
+  "default_network": false,
+  "default_external_writes": false,
+  "default_telemetry": false,
+  "dependency_direction": "standardflow_consumes_sourceright_evidence",
+  "contracts": [
+    {
+      "name": "StandardFlow ecosystem evidence envelope",
+      "version": "dev.standardflow.ecosystem-evidence.v1",
+      "consumer_path": "schemas/ecosystem-evidence.v1.schema.json",
+      "fixture": "integration/standardflow/fixtures/citation-evidence.json"
+    }
+  ],
+  "authority": {
+    "canonical_bibliography": "Sourceright CSL JSON",
+    "verification_evidence": "Sourceright verification sidecar and provider receipts",
+    "standard_selection_and_assessment": "StandardFlow",
+    "human_authority_required_for": [
+      "canonical CSL mutation",
+      "conflict adjudication",
+      "final reference-integrity determination",
+      "publication or external write"
+    ]
+  },
+  "allowed_capabilities": [
+    "local_contract_read",
+    "local_fixture_validation",
+    "citation_evidence_export"
+  ],
+  "verification": [
+    "python scripts/check_standardflow_integration.py",
+    "cargo test --locked"
+  ],
+  "degraded_mode": "Continue normal Sourceright CSL and verification-sidecar workflows without StandardFlow export.",
+  "rollback": [
+    "Disable or remove the optional StandardFlow export adapter.",
+    "Restore the prior exact consumer revision and retain the failed receipt.",
+    "Do not mutate canonical CSL or verification sidecars as part of rollback."
+  ],
+  "claim_boundary": "This contract prepares a source-level evidence exchange. It does not prove that standards_check PR 59 is merged, that the consumer compiles, or that a citation is true, fit for purpose, or publication-ready."
+}
