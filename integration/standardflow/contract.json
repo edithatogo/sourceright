@@ -14,7 +14,7 @@
     ]
   },
   "consumer_repository": "edithatogo/standards_check",
-  "consumer_revision": "f248d7c4dd40dd34cb45b5b6150b4750a5b28864",
+  "consumer_revision": "f1e7b6c6e283865c1b7dbb34dbe33d8bf6f6c799",
   "consumer_pull_request": 59,
   "automatic_revision_updates": false,
   "default_network": false,
@@ -55,5 +55,5 @@
     "Restore the prior exact consumer revision and retain the failed receipt.",
     "Do not mutate canonical CSL or verification sidecars as part of rollback."
   ],
-  "claim_boundary": "The producer_baseline_revision identifies the existing Sourceright logic whose semantics are exported. The integration artifacts are presently retrievable through pull request 105 and are explicitly mutable until a post-merge receipt records an immutable artifact-bearing commit. This source-level exchange does not prove runtime adapter behaviour, downstream parity, citation truth or publication readiness."
+  "claim_boundary": "The producer_baseline_revision identifies the existing Sourceright logic whose semantics are exported. The integration artifacts are presently retrievable through pull request 105 and are explicitly mutable until a post-merge receipt records an immutable artifact-bearing commit. The pinned consumer revision passed its contract, Rust and legacy document-build gates. This source-level exchange does not prove runtime adapter behaviour, downstream parity, citation truth or publication readiness."
 }

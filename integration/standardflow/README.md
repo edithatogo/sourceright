@@ -6,7 +6,7 @@ The optional exchange emits a versioned `citation_verification` evidence envelop
 
 `producer_baseline_revision` identifies the existing Sourceright logic whose semantics are represented. `artifact_provenance` separately records where the contract or envelope can be retrieved. During review this is a deliberately mutable pull-request path; a post-merge verification receipt must replace it with the immutable artifact-bearing commit before any released interoperability claim.
 
-The consumer is exact-pinned to verified `edithatogo/standards_check` revision `f248d7c4dd40dd34cb45b5b6150b4750a5b28864` from pull request 59. Automatic pin updates are prohibited. Absence or incompatibility of StandardFlow leaves normal Sourceright behaviour unchanged.
+The consumer is exact-pinned to verified `edithatogo/standards_check` revision `f1e7b6c6e283865c1b7dbb34dbe33d8bf6f6c799` from pull request 59. Its contract, Rust and legacy document-build gates passed. Automatic pin updates are prohibited. Absence or incompatibility of StandardFlow leaves normal Sourceright behaviour unchanged.
 
 Validate the source contract and fixture with:
 
