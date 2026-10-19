@@ -137,6 +137,6 @@ jobs:
         with:
           persist-credentials: false
       - name: Install typos
-        run: cargo install typos-cli --locked
+        run: cargo install typos-cli --version 1.49.0 --locked
       - name: Check typos
         run: typos --config typos.toml

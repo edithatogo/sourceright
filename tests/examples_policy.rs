@@ -11,8 +11,8 @@ fn read_json(path: impl AsRef<Path>) -> Value {
     serde_json::from_str(&read(path)).expect("fixture should be valid JSON")
 }
 
-fn read_yaml(path: impl AsRef<Path>) -> serde_yaml::Value {
-    serde_yaml::from_str(&read(path)).expect("fixture should be valid YAML")
+fn read_yaml(path: impl AsRef<Path>) -> Value {
+    serde_saphyr::from_str(&read(path)).expect("fixture should be valid YAML")
 }
 
 #[test]

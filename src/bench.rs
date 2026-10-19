@@ -77,7 +77,7 @@ pub enum BenchmarkError {
     #[error("JSON error: {0}")]
     Json(#[from] serde_json::Error),
     #[error("YAML error: {0}")]
-    Yaml(#[from] serde_yaml::Error),
+    Yaml(#[from] serde_saphyr::Error),
     #[error("workspace error: {0}")]
     Workspace(#[from] crate::workspace::WorkspaceError),
     #[error("benchmark manifest validation error: {0}")]
@@ -89,7 +89,7 @@ pub enum BenchmarkError {
 impl BenchmarkManifest {
     pub fn load(path: impl AsRef<Path>) -> Result<Self, BenchmarkError> {
         let input = fs::read_to_string(path)?;
-        Ok(serde_yaml::from_str(&input)?)
+        Ok(serde_saphyr::from_str(&input)?)
     }
 }
 
@@ -321,6 +321,71 @@ mod tests {
             BenchmarkManifest::load("sourceright-bench/tasks.yaml").expect("load manifest");
         assert_eq!(manifest.schema_version, BENCHMARK_MANIFEST_SCHEMA_VERSION);
         assert_eq!(manifest.tasks.len(), 13);
+    }
+
+    #[test]
+    fn yaml_manifest_preserves_typed_task_configuration() {
+        let tempdir = tempfile::tempdir().unwrap();
+        let path = tempdir.path().join("tasks.yaml");
+        let input = r#"schema_version: sourceright.benchmark_tasks.v1
+runner_status: technical_preview
+live_network: false
+workspace_crate: false
+tasks:
+  - id: "quoted: task"
+    surface: report
+    fixture: fixtures/workspace
+    baseline: baselines/report.json
+    measures: [correctness, latency]
+    performance:
+      max_duration_ms: 1500
+      enforce: true
+  - id: optional-performance
+    surface: report
+    fixture: fixtures/workspace
+    baseline: baselines/report.json
+    measures: [correctness]
+"#;
+        fs::write(&path, input).unwrap();
+        let manifest = BenchmarkManifest::load(&path).unwrap();
+        assert_eq!(manifest.schema_version, BENCHMARK_MANIFEST_SCHEMA_VERSION);
+        assert_eq!(manifest.runner_status, "technical_preview");
+        assert!(!manifest.live_network);
+        assert!(!manifest.workspace_crate);
+        assert_eq!(manifest.tasks.len(), 2);
+        assert_eq!(manifest.tasks[0].id, "quoted: task");
+        assert_eq!(manifest.tasks[0].surface, "report");
+        assert_eq!(manifest.tasks[0].fixture, "fixtures/workspace");
+        assert_eq!(manifest.tasks[0].baseline, "baselines/report.json");
+        assert_eq!(
+            manifest.tasks[0].measures,
+            [BenchmarkMeasure::Correctness, BenchmarkMeasure::Latency]
+        );
+        assert_eq!(
+            manifest.tasks[0].performance,
+            Some(BenchmarkPerformance {
+                max_duration_ms: Some(1500),
+                enforce: true
+            })
+        );
+        assert_eq!(manifest.tasks[1].performance, None);
+
+        for invalid in [
+            input.replace(
+                "measures: [correctness, latency]",
+                "measures: [correctness, unknown]",
+            ),
+            input.replace("max_duration_ms: 1500", "max_duration_ms: -1"),
+            input.replace("live_network: false", "live_network: [false]"),
+            input.replace("    fixture: fixtures/workspace\n", ""),
+            input.replace("measures: [correctness, latency]", "measures: [correctness"),
+        ] {
+            fs::write(&path, invalid).unwrap();
+            assert!(matches!(
+                BenchmarkManifest::load(&path),
+                Err(BenchmarkError::Yaml(_))
+            ));
+        }
     }
 
     #[test]
