@@ -87,6 +87,7 @@ pub enum CitationReconciliationIssueType {
     AmbiguousMatch,
     MixedStyleManuscript,
     TitleFallbackMatch,
+    MalformedNumericCitation,
 }
 
 impl CitationReconciliationIssueType {
@@ -99,6 +100,7 @@ impl CitationReconciliationIssueType {
             Self::AmbiguousMatch => "ambiguous_match",
             Self::MixedStyleManuscript => "mixed_style_manuscript",
             Self::TitleFallbackMatch => "title_fallback_match",
+            Self::MalformedNumericCitation => "malformed_numeric_citation",
         }
     }
 }
@@ -107,9 +109,9 @@ pub fn reconcile_citations(text: &str, references: &CslDocument) -> CitationReco
     let occurrences = extract_citation_occurrences(text);
     let reference_index = ReferenceIndex::new(references);
     let mut matches = Vec::new();
-    let mut issues = Vec::new();
+    let mut issues = numeric_group_diagnostics(text);
     let mut cited_ids = BTreeSet::new();
-    let mut citation_counts = BTreeMap::<String, usize>::new();
+    let mut seen_numeric = BTreeSet::new();
     let mut last_numeric = 0;
     let has_author_date = occurrences
         .iter()
@@ -135,13 +137,14 @@ pub fn reconcile_citations(text: &str, references: &CslDocument) -> CitationReco
         if occurrence.style == CitationStyle::Numeric
             && let Ok(number) = occurrence.key.parse::<usize>()
         {
-            if number < last_numeric {
+            if seen_numeric.insert(number) && number < last_numeric {
                 issues.push(CitationReconciliationIssue {
                     issue_type: CitationReconciliationIssueType::NumericOrder,
                     reference_id: None,
                     citation_text: Some(occurrence.text.clone()),
-                    message: "Numeric citation appears after a higher numbered citation."
-                        .to_string(),
+                    message:
+                        "First use of numeric citation appears after a higher numbered first use."
+                            .to_string(),
                 });
             }
             last_numeric = last_numeric.max(number);
@@ -154,9 +157,6 @@ pub fn reconcile_citations(text: &str, references: &CslDocument) -> CitationReco
                 match_source,
             } => {
                 cited_ids.insert(reference_id.clone());
-                if occurrence.style != CitationStyle::Identifier {
-                    *citation_counts.entry(reference_id.clone()).or_default() += 1;
-                }
                 if match_source == ReferenceMatchSource::TitleFallback {
                     issues.push(CitationReconciliationIssue {
                         issue_type: CitationReconciliationIssueType::TitleFallbackMatch,
@@ -187,18 +187,6 @@ pub fn reconcile_citations(text: &str, references: &CslDocument) -> CitationReco
                 citation_text: Some(occurrence.text.clone()),
                 message: "Citation does not match a reference-list entry.".to_string(),
             }),
-        }
-    }
-
-    for (reference_id, count) in citation_counts {
-        if count > 1 {
-            issues.push(CitationReconciliationIssue {
-                issue_type: CitationReconciliationIssueType::DuplicateCitation,
-                reference_id: Some(reference_id),
-                citation_text: None,
-                message: "Reference is cited more than once; check whether repeated citation is intended."
-                    .to_string(),
-            });
         }
     }
 
@@ -433,26 +421,116 @@ fn extract_parenthetical(
     }
 }
 
-fn extract_numeric(line: &str, line_number: usize, occurrences: &mut Vec<CitationOccurrence>) {
-    let mut cursor = 0;
-    while let Some(start) = line[cursor..].find('[') {
-        let absolute_start = cursor + start;
-        let Some(end) = line[absolute_start..].find(']') else {
-            break;
-        };
-        let absolute_end = absolute_start + end + 1;
-        let candidate = &line[absolute_start..absolute_end];
-        let key = candidate.trim_matches(['[', ']']).trim();
-        if key.chars().all(|ch| ch.is_ascii_digit()) && !key.is_empty() {
-            occurrences.push(CitationOccurrence {
-                text: candidate.to_string(),
-                style: CitationStyle::Numeric,
-                key: key.to_string(),
-                span: format!("line:{line_number}:{}-{absolute_end}", absolute_start + 1),
-            });
+// Scan balanced bracket surfaces atomically so nested or unclosed numeric
+// candidates can never leak partial valid citations.
+fn bracket_surfaces(line: &str) -> Vec<(usize, usize)> {
+    let mut surfaces = Vec::new();
+    let mut depth = 0usize;
+    let mut start = 0;
+    for (offset, ch) in line.char_indices() {
+        if ch == '[' {
+            if depth == 0 {
+                start = offset;
+            }
+            depth += 1;
+        } else if ch == ']' && depth > 0 {
+            depth -= 1;
+            if depth == 0 {
+                surfaces.push((start, offset + 1));
+            }
         }
-        cursor = absolute_end;
     }
+    if depth > 0 {
+        surfaces.push((start, line.len()));
+    }
+    surfaces
+}
+
+fn extract_numeric(line: &str, line_number: usize, occurrences: &mut Vec<CitationOccurrence>) {
+    for (start, end) in bracket_surfaces(line) {
+        let candidate = &line[start..end];
+        let Some(key) = candidate
+            .strip_prefix('[')
+            .and_then(|s| s.strip_suffix(']'))
+        else {
+            continue;
+        };
+        if let Ok(keys) = parse_numeric_group(key) {
+            for key in keys {
+                occurrences.push(CitationOccurrence {
+                    text: candidate.to_string(),
+                    style: CitationStyle::Numeric,
+                    key: key.to_string(),
+                    span: format!("line:{line_number}:{}-{end}", start + 1),
+                });
+            }
+        }
+    }
+}
+
+// Bound expansion and reject the entire malformed group rather than silently
+// inventing a partial citation. Spans refer to UTF-8 byte positions in input.
+fn parse_numeric_group(value: &str) -> Result<Vec<usize>, ()> {
+    if value.is_empty() || value.len() > 4096 {
+        return Err(());
+    }
+    let mut result = Vec::new();
+    for part in value.split(',') {
+        let parts = part.trim().split(['-', '–', '—']).collect::<Vec<_>>();
+        if parts.is_empty() || parts.len() > 2 {
+            return Err(());
+        }
+        let number = |s: &str| -> Result<usize, ()> {
+            let s = s.trim();
+            if s.is_empty() || !s.bytes().all(|b| b.is_ascii_digit()) {
+                return Err(());
+            }
+            let n = s.parse::<usize>().map_err(|_| ())?;
+            if n == 0 {
+                return Err(());
+            }
+            Ok(n)
+        };
+        let start = number(parts[0])?;
+        let end = if parts.len() == 2 {
+            number(parts[1])?
+        } else {
+            start
+        };
+        if end < start || end - start >= 1000 || result.len() + (end - start) + 1 > 1000 {
+            return Err(());
+        }
+        result.extend(start..=end);
+    }
+    Ok(result)
+}
+
+fn numeric_group_diagnostics(text: &str) -> Vec<CitationReconciliationIssue> {
+    let mut issues = Vec::new();
+    for (line_index, line) in text.lines().enumerate() {
+        let mut ignored = Vec::new();
+        let ranges = extract_latex_citations(line, line_index + 1, &mut ignored);
+        let line = mask_ranges(line, &ranges);
+        for (start, end) in bracket_surfaces(&line) {
+            let surface = &line[start..end];
+            let candidate = &surface[1..];
+            let numeric_like = candidate
+                .trim_start_matches(|ch: char| ch == '[' || ch.is_whitespace())
+                .starts_with(|ch: char| ch.is_ascii_digit());
+            let valid = candidate
+                .strip_suffix(']')
+                .is_some_and(|s| parse_numeric_group(s).is_ok());
+            if numeric_like && !valid {
+                issues.push(CitationReconciliationIssue {
+                    issue_type: CitationReconciliationIssueType::MalformedNumericCitation,
+                    reference_id: None,
+                    citation_text: Some(surface.chars().take(160).collect()),
+                    message: format!("Malformed or oversized numeric group at line:{}:{}-{end}; review manually (maximum 1000 expanded entries).", line_index + 1, start + 1),
+                });
+            }
+        }
+    }
+    issues
 }
 
 fn citation_author_phrase(candidate: &str) -> String {
@@ -926,6 +1004,76 @@ mod tests {
     use crate::csl::CslItem;
 
     #[test]
+    fn grouped_numeric_ranges_preserve_source_spans() {
+        let found = extract_citation_occurrences("é [1, 2–4] then [2]");
+        assert_eq!(
+            found.iter().map(|x| x.key.as_str()).collect::<Vec<_>>(),
+            ["1", "2", "3", "4", "2"]
+        );
+        assert!(
+            found[..4]
+                .iter()
+                .all(|x| x.text == "[1, 2–4]" && x.span == "line:1:4-13")
+        );
+    }
+
+    #[test]
+    fn numeric_order_tracks_first_use_not_repeats() {
+        let refs = CslDocument { items: vec![] };
+        let report = reconcile_citations("[1] [2] [1] [3]", &refs);
+        assert!(
+            !report
+                .issues
+                .iter()
+                .any(|x| x.issue_type == CitationReconciliationIssueType::NumericOrder)
+        );
+        let report = reconcile_citations("[1] [3] [2]", &refs);
+        assert!(
+            report
+                .issues
+                .iter()
+                .any(|x| x.issue_type == CitationReconciliationIssueType::NumericOrder)
+        );
+    }
+
+    #[test]
+    fn malformed_numeric_groups_are_bounded_and_reported() {
+        let refs = CslDocument { items: vec![] };
+        for source in [
+            "[3-1]",
+            "[1,,2]",
+            "[0]",
+            "[1-999999999999999999999999]",
+            "[1-10001]",
+            "[[1]]",
+            "[1,foo]",
+            "[1;2]",
+            "[1,[2]]",
+            "[1,2",
+        ] {
+            let report = reconcile_citations(source, &refs);
+            assert!(report.occurrences.is_empty(), "{source}");
+            assert!(
+                report
+                    .issues
+                    .iter()
+                    .any(|x| x.issue_type.as_str() == "malformed_numeric_citation"),
+                "{source}"
+            );
+        }
+    }
+
+    #[test]
+    fn prose_brackets_are_not_malformed_numeric_groups() {
+        let report = reconcile_citations(
+            "[text] [see appendix] [https://example.org]",
+            &CslDocument { items: vec![] },
+        );
+        assert!(report.occurrences.is_empty());
+        assert!(report.issues.is_empty());
+    }
+
+    #[test]
     fn latex_citations_match_reference_ids() {
         let references = CslDocument {
             items: vec![
@@ -1344,7 +1492,7 @@ mod tests {
 
         assert!(issue_types.contains(&CitationReconciliationIssueType::NumericOrder));
         assert!(issue_types.contains(&CitationReconciliationIssueType::MissingReference));
-        assert!(issue_types.contains(&CitationReconciliationIssueType::DuplicateCitation));
+        assert!(!issue_types.contains(&CitationReconciliationIssueType::DuplicateCitation));
         assert!(!issue_types.contains(&CitationReconciliationIssueType::UncitedReference));
     }
 
