@@ -1,0 +1,59 @@
+{
+  "schema_version": "org.sourceright.standardflow-integration.v1",
+  "integration_id": "sourceright-standardflow-citation-evidence",
+  "producer_repository": "edithatogo/sourceright",
+  "producer_baseline_revision": "c5fa583431390eee1bf5eae04dc47b01c50d4a1e",
+  "artifact_provenance": {
+    "kind": "pull_request_head",
+    "repository": "edithatogo/sourceright",
+    "pull_request": 105,
+    "immutable": false,
+    "paths": [
+      "integration/standardflow/contract.json",
+      "integration/standardflow/fixtures/citation-evidence.json"
+    ]
+  },
+  "consumer_repository": "edithatogo/standards_check",
+  "consumer_revision": "f1e7b6c6e283865c1b7dbb34dbe33d8bf6f6c799",
+  "consumer_pull_request": 59,
+  "automatic_revision_updates": false,
+  "default_network": false,
+  "default_external_writes": false,
+  "default_telemetry": false,
+  "dependency_direction": "standardflow_consumes_sourceright_evidence",
+  "contracts": [
+    {
+      "name": "StandardFlow ecosystem evidence envelope",
+      "version": "dev.standardflow.ecosystem-evidence.v1",
+      "consumer_path": "schemas/ecosystem-evidence.v1.schema.json",
+      "fixture": "integration/standardflow/fixtures/citation-evidence.json"
+    }
+  ],
+  "authority": {
+    "canonical_bibliography": "Sourceright CSL JSON",
+    "verification_evidence": "Sourceright verification sidecar and provider receipts",
+    "standard_selection_and_assessment": "StandardFlow",
+    "human_authority_required_for": [
+      "canonical CSL mutation",
+      "conflict adjudication",
+      "final reference-integrity determination",
+      "publication or external write"
+    ]
+  },
+  "allowed_capabilities": [
+    "local_contract_read",
+    "local_fixture_validation",
+    "citation_evidence_export"
+  ],
+  "verification": [
+    "python scripts/check_standardflow_integration.py",
+    "cargo test --locked"
+  ],
+  "degraded_mode": "Continue normal Sourceright CSL and verification-sidecar workflows without StandardFlow export.",
+  "rollback": [
+    "Disable or remove the optional StandardFlow export adapter.",
+    "Restore the prior exact consumer revision and retain the failed receipt.",
+    "Do not mutate canonical CSL or verification sidecars as part of rollback."
+  ],
+  "claim_boundary": "The producer_baseline_revision identifies the existing Sourceright logic whose semantics are exported. The integration artifacts are presently retrievable through pull request 105 and are explicitly mutable until a post-merge receipt records an immutable artifact-bearing commit. The pinned consumer revision passed its contract, Rust and legacy document-build gates. This source-level exchange does not prove runtime adapter behaviour, downstream parity, citation truth or publication readiness."
+}
