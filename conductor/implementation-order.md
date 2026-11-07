@@ -81,6 +81,16 @@ Track 83 should land before Track 86 if a shared VS Code/Copilot MCP surface is 
 Subagents may work in parallel only when their owned paths do not overlap.
 Shared contracts, schemas, and public docs are edited serially by the lead.
 
+## Scoped Evidence Consumers
+
+[Track 110](tracks/110-scoped-evidence-consumers/plan.md) is a bounded follow-up
+to the delivered Track 14 linkage baseline. Start with a neutral consumer
+binding and deterministic local source/span checks, then test an optional typed
+observation handoff. Reuse existing sidecars, hashes and provenance code; do not
+build a clinical verifier or duplicate Searchright's provider runtime. This
+integration is optional for rcagent's initial rules/local-retrieval studies and
+does not block the existing reference-verification product.
+
 ## Submission Hardening
 
 - Track 72: submission requirements contracts and readiness checks.
