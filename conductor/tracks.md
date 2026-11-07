@@ -125,3 +125,4 @@ Sourceright work is organised as numbered Conductor tracks. Tracks 00-12 establi
 | 107 Samvera Hyrax workflow trial | completed | Trial Hyrax repository metadata extraction with deployment and community-contribution gates. GitHub issue #52; Project #17. |
 | 108 Report diagnostics and CSL-only workspaces | completed | Make report behavior actionable for malformed/legacy verification sidecars and useful for CSL-only workspaces. GitHub issues #18 and #19. |
 | 109 Australian legal citation precision | completed | Improve full Australian neutral-citation extraction, prose rejection, provider hints, and explicit review confidence without changing the CSL boundary. GitHub issue #17. |
+| 110 [Scoped evidence consumers](tracks/110-scoped-evidence-consumers/spec.md) | planned | Extend the existing provenance layer with consumer-bound source/span checks and separately typed support observations; no semantic-truth, local-runtime or downstream compatibility claim. |
