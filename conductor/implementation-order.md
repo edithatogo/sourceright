@@ -91,6 +91,13 @@ build a clinical verifier or duplicate Searchright's provider runtime. This
 integration is optional for rcagent's initial rules/local-retrieval studies and
 does not block the existing reference-verification product.
 
+[Track 111](tracks/111-quantitative-table-claim-provenance/plan.md) extends
+the sidecar provenance contract with cell-level quantitative estimate, interval,
+and caution-footnote verification for `tobac` (`F01`) and `searchright`
+(`Track 42` / `Track 44`), consuming neutral table-cell spans from `citeweft`
+(`03-tabular-numeric-span-grounding`) and raw release hashes from
+`archive-govt-nz` (`tobac_merkle_lineage_provenance_20261110`).
+
 ## Submission Hardening
 
 - Track 72: submission requirements contracts and readiness checks.
