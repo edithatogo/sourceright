@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 RUN cargo build --release --locked --bin sourceright
 
-FROM debian:bookworm-slim@sha256:67b30a61dc87758f0caf819646104f29ecbda97d920aaf5edc834128ac8493d3
+FROM debian:bookworm-slim@sha256:60eac759739651111db372c07be67863818726f754804b8707c90979bda511df
 
 LABEL org.opencontainers.image.source="https://github.com/edithatogo/sourceright"
 LABEL org.opencontainers.image.description="Sourceright MCP stdio server"
