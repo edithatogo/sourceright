@@ -12,6 +12,7 @@
 - **Security:** credential/URL redaction, provider licence/terms, SSRF and rate limits remain mandatory; do not turn raw upstream content into trace artifacts.
 
 ## Evidence and release gate
+
 1. Discover actual source, package boundary, MSRV, lockfile, existing tests and Conductor ownership; avoid speculative dependencies.
 2. For runtime behaviour, write failing contract tests before implementation, run targeted and full suites; preserve stable schemas, errors, CLI semantics and deterministic outputs.
 3. Record `cargo tree -d`, feature selections, security/licensing/advisory reviews, transitive dependency cost and rollback before accepting an adoption.
