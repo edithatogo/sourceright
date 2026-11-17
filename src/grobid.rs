@@ -412,25 +412,52 @@ mod tests {
 
     use super::*;
 
-    fn consume_request(stream: &mut std::net::TcpStream) {
+    fn consume_request(stream: &mut impl Read) -> Vec<u8> {
         let mut request = Vec::new();
         let mut chunk = [0_u8; 8192];
         loop {
             let size = stream.read(&mut chunk).expect("read request");
+            assert_ne!(size, 0, "request ended before its declared body was read");
             request.extend_from_slice(&chunk[..size]);
-            let text = String::from_utf8_lossy(&request);
-            let Some(header_end) = text.find("\r\n\r\n") else {
+            let Some(header_end) = request.windows(4).position(|part| part == b"\r\n\r\n") else {
                 continue;
             };
-            let content_length = text
+            let headers = std::str::from_utf8(&request[..header_end]).expect("HTTP headers");
+            let content_length = headers
                 .lines()
-                .find_map(|line| line.strip_prefix("Content-Length: "))
-                .and_then(|value| value.parse::<usize>().ok())
-                .unwrap_or_default();
+                .find_map(|line| {
+                    let (name, value) = line.split_once(':')?;
+                    name.eq_ignore_ascii_case("content-length")
+                        .then(|| value.trim().parse::<usize>().expect("content length"))
+                })
+                .expect("mock requests must declare their body length");
             if request.len() >= header_end + 4 + content_length {
-                break;
+                return request;
             }
         }
+    }
+
+    #[test]
+    fn mock_consumes_fragmented_request_with_case_insensitive_length() {
+        struct Fragmented(std::io::Cursor<Vec<u8>>);
+        impl Read for Fragmented {
+            fn read(&mut self, output: &mut [u8]) -> std::io::Result<usize> {
+                // Force headers and multipart body to arrive separately.
+                self.0.read(&mut output[..1])
+            }
+        }
+        for header in ["content-length", "Content-Length", "CoNtEnT-LeNgTh"] {
+            let request = format!("POST / HTTP/1.1\r\n{header}: 4\r\n\r\nbody").into_bytes();
+            let mut stream = Fragmented(std::io::Cursor::new(request.clone()));
+            assert_eq!(consume_request(&mut stream), request);
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "request ended before its declared body was read")]
+    fn mock_rejects_truncated_request_without_spinning() {
+        let mut stream = std::io::Cursor::new(b"POST / HTTP/1.1\r\ncontent-length: 4\r\n\r\nbo");
+        consume_request(&mut stream);
     }
     const TEI: &str = r#"<TEI><text><back><listBibl><biblStruct xml:id="b0"><analytic><title level="a">Safe extraction</title><author><persName><forename>Ada</forename><surname>Lovelace</surname></persName></author><idno type="DOI">10.1000/test</idno></analytic><monogr><title level="j">Journal</title><imprint><date when="2026"/><biblScope unit="volume">2</biblScope><biblScope unit="issue">1</biblScope><biblScope unit="page" from="10" to="12"/></imprint></monogr><note type="raw_reference">Lovelace, A. (2026). Safe extraction.</note></biblStruct></listBibl></back></text></TEI>"#;
     #[test]
@@ -492,9 +519,8 @@ mod tests {
         let address = listener.local_addr().expect("mock address");
         let worker = thread::spawn(move || {
             let (mut stream, _) = listener.accept().expect("accept request");
-            let mut request = [0_u8; 8192];
-            let size = stream.read(&mut request).expect("read request");
-            let request = String::from_utf8_lossy(&request[..size]);
+            let request = consume_request(&mut stream);
+            let request = String::from_utf8_lossy(&request);
             assert!(request.contains("includeRawCitations"));
             assert!(request.contains("consolidateCitations"));
             let body = TEI.as_bytes();
@@ -529,24 +555,7 @@ mod tests {
         let address = listener.local_addr().expect("mock address");
         let worker = thread::spawn(move || {
             let (mut stream, _) = listener.accept().expect("accept request");
-            let mut request = Vec::new();
-            let mut chunk = [0_u8; 8192];
-            let expected = loop {
-                let size = stream.read(&mut chunk).expect("read request");
-                request.extend_from_slice(&chunk[..size]);
-                let text = String::from_utf8_lossy(&request);
-                if let Some(header_end) = text.find("\r\n\r\n") {
-                    let content_length = text
-                        .lines()
-                        .find_map(|line| line.strip_prefix("Content-Length: "))
-                        .and_then(|value| value.parse::<usize>().ok())
-                        .unwrap_or_default();
-                    if request.len() >= header_end + 4 + content_length {
-                        break header_end + 4 + content_length;
-                    }
-                }
-            };
-            assert!(request.len() >= expected);
+            consume_request(&mut stream);
             stream
                 .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 11\r\nConnection: close\r\n\r\n01234567890")
                 .unwrap();
