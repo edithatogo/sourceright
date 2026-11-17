@@ -1,0 +1,16 @@
+{
+  "id": "110-scoped-evidence-consumers",
+  "status": "planned",
+  "priority": "medium",
+  "owners": ["Sourceright provenance", "rcagent consumer adapter"],
+  "created": "2026-11-08",
+  "updated": "2026-11-08",
+  "dependencies": [
+    "05-verification-sidecar",
+    "14-claim-source-provenance",
+    "36-document-extraction-hardening"
+  ],
+  "owned_paths": ["conductor/tracks/110-scoped-evidence-consumers/"],
+  "evidence_level": "planned",
+  "coordinator": "https://github.com/edithatogo/rcagent/pull/117"
+}
