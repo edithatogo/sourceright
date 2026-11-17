@@ -1,0 +1,18 @@
+{
+  "id": "111-quantitative-table-claim-provenance",
+  "status": "planned",
+  "priority": "medium",
+  "owners": ["Sourceright provenance", "tobac consumer adapter"],
+  "created": "2026-11-10",
+  "updated": "2026-11-10",
+  "dependencies": [
+    "05-verification-sidecar",
+    "14-claim-source-provenance",
+    "36-document-extraction-hardening",
+    "91-citeweft-boundary-and-grobid-reference-extraction",
+    "110-scoped-evidence-consumers"
+  ],
+  "owned_paths": ["conductor/tracks/111-quantitative-table-claim-provenance/"],
+  "evidence_level": "planned",
+  "coordinator": "https://github.com/edithatogo/tobac/pull/155"
+}

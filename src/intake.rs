@@ -100,53 +100,58 @@ fn read_docx_text(path: &Path) -> Result<String, ManuscriptReadError> {
 }
 
 fn render_docx_paragraph(paragraph: roxmltree::Node<'_, '_>) -> String {
-    let mut text = String::new();
-    render_docx_node(paragraph, &mut text, false);
-    text
+    let mut segments: Vec<(String, bool)> = Vec::new();
+    collect_docx_segments(paragraph, &mut segments, false);
+    let mut output = String::new();
+    for (text, superscript) in segments {
+        let trimmed = text.trim();
+        // Keep the entire group together, including punctuation split across runs.
+        // The reconciliation parser diagnoses malformed/oversized numeric groups.
+        if superscript
+            && trimmed.chars().any(|ch| ch.is_ascii_digit())
+            && trimmed
+                .chars()
+                .all(|ch| ch.is_ascii_digit() || ch.is_whitespace() || ",–—-".contains(ch))
+        {
+            if !output.is_empty() && !matches!(output.chars().last(), Some(' ' | '\n' | '\t')) {
+                output.push(' ');
+            }
+            output.push('[');
+            output.push_str(trimmed);
+            output.push(']');
+        } else {
+            output.push_str(&text);
+        }
+    }
+    output
 }
 
-fn render_docx_node(node: roxmltree::Node<'_, '_>, output: &mut String, superscript: bool) {
-    for child in node.children() {
-        if child.is_text() {
-            render_docx_text(child.text().unwrap_or_default(), output, superscript);
-            continue;
-        }
-
-        if !child.is_element() {
-            continue;
-        }
-
+fn collect_docx_segments(
+    node: roxmltree::Node<'_, '_>,
+    segments: &mut Vec<(String, bool)>,
+    superscript: bool,
+) {
+    for child in node.children().filter(|child| child.is_element()) {
         match child.tag_name().name() {
-            "r" => {
-                let child_superscript = run_is_superscript(child);
-                render_docx_node(child, output, child_superscript);
-            }
-            "t" => {
-                render_docx_text(child.text().unwrap_or_default(), output, superscript);
-            }
-            "tab" | "br" | "cr" => {
-                if !matches!(output.chars().last(), Some(' ' | '\n' | '\t')) {
-                    output.push(' ');
+            "r" => collect_docx_segments(child, segments, run_is_superscript(child)),
+            "t" | "tab" | "br" | "cr" => {
+                let text = if child.tag_name().name() == "t" {
+                    child.text().unwrap_or_default()
+                } else {
+                    " "
+                };
+                if let Some((last, flag)) = segments.last_mut()
+                    && *flag == superscript
+                {
+                    last.push_str(text);
+                } else {
+                    segments.push((text.to_string(), superscript));
                 }
             }
-            _ => render_docx_node(child, output, superscript),
+            "rPr" => {}
+            _ => collect_docx_segments(child, segments, superscript),
         }
     }
-}
-
-fn render_docx_text(text: &str, output: &mut String, superscript: bool) {
-    let trimmed = text.trim();
-    if superscript && !trimmed.is_empty() && trimmed.chars().all(|ch| ch.is_ascii_digit()) {
-        if !output.is_empty() && !matches!(output.chars().last(), Some(' ' | '\n' | '\t')) {
-            output.push(' ');
-        }
-        output.push('[');
-        output.push_str(trimmed);
-        output.push(']');
-        return;
-    }
-
-    output.push_str(text);
 }
 
 fn run_is_superscript(run: roxmltree::Node<'_, '_>) -> bool {
@@ -502,6 +507,25 @@ mod tests {
             .write_all(document_xml.as_bytes())
             .expect("write document.xml");
         writer.finish().expect("finish docx");
+    }
+
+    #[test]
+    fn docx_grouped_superscripts_across_runs_are_not_lost() {
+        let tempdir = tempfile::tempdir().unwrap();
+        let path = tempdir.path().join("grouped.docx");
+        write_test_docx(
+            &path,
+            r#"<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>Evidence.</w:t></w:r><w:r><w:rPr><w:vertAlign w:val="superscript"/></w:rPr><w:t>1,</w:t></w:r><w:r><w:rPr><w:vertAlign w:val="superscript"/></w:rPr><w:t>2–4</w:t></w:r><w:r><w:t> repeated.</w:t></w:r><w:r><w:rPr><w:vertAlign w:val="superscript"/></w:rPr><w:t>2</w:t></w:r></w:p></w:body></w:document>"#,
+        );
+        let text = read_manuscript_text(&path).unwrap();
+        assert_eq!(text, "Evidence. [1,2–4] repeated. [2]");
+        assert_eq!(
+            extract_citation_occurrences(&text)
+                .iter()
+                .map(|x| x.key.as_str())
+                .collect::<Vec<_>>(),
+            ["1", "2", "3", "4", "2"]
+        );
     }
 
     #[test]
