@@ -66,11 +66,25 @@ jobs:
       - name: Package crate
         if: steps.crate-publication.outputs.publishable == 'true'
         run: cargo package --locked
-      - name: Generate Cargo dependency SBOM
+      - name: Inventory exact locked Rust dependencies
+        uses: edithatogo/repository-standards/.github/actions/cargo-lock-sbom@bc76f1fbe0fa87a1371eadc06b08f54b48c623f7
+        with:
+          lockfile: Cargo.lock
+          output: target/sourceright.dependencies.cdx.json
+          name: sourceright
+          source-sha: ${{ github.sha }}
+      - name: Scan release preparation dependencies
+        uses: edithatogo/repository-standards/.github/actions/grype-scan@bc76f1fbe0fa87a1371eadc06b08f54b48c623f7
+        with:
+          sbom: target/sourceright.dependencies.cdx.json
+          mode: enforce
+          severity-cutoff: critical
+          artifact-name: grype-sourceright-dry-run
+          output-directory: .grype/dry-run-report
+          source-sha: ${{ github.sha }}
+      - name: Install checksum-verified cargo-deny 0.22.0
         shell: bash
-        run: cargo metadata --locked --format-version 1 > target/sourceright-cargo-sbom.json
-      - name: Install cargo-deny
-        run: cargo install cargo-deny --locked
+        run: bash scripts/install-cargo-deny.sh
       - name: Dependency policy
         shell: bash
         run: |
@@ -88,7 +102,7 @@ jobs:
           fi
       - name: Verify dependency SBOM
         shell: bash
-        run: test -s target/sourceright-cargo-sbom.json
+        run: test -s target/sourceright.dependencies.cdx.json
       - name: Verify package checksum manifest
         if: steps.crate-publication.outputs.publishable == 'true'
         shell: bash

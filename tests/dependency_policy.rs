@@ -17,12 +17,15 @@ fn dependency_policy_uses_cargo_deny_for_advisories_bans_and_sources_plus_cargo_
 
     for workflow in [&release, &publish_crate, &release_dry_run, &ci] {
         assert!(workflow.contains("cargo deny check advisories bans sources"));
+        assert!(workflow.contains("bash scripts/install-cargo-deny.sh"));
+        assert!(!workflow.contains("cargo install cargo-deny --locked"));
         assert!(workflow.contains("cargo tree -d --locked --target x86_64-unknown-linux-gnu"));
     }
 
     assert!(release_check.contains("cargo deny check advisories bans sources"));
     assert!(release_check.contains("cargo tree -d --locked --target x86_64-unknown-linux-gnu"));
     assert!(deny.contains("[bans]"));
+    assert!(deny.contains("unmaintained = \"all\""));
     assert!(publishing.contains("cargo deny check advisories bans sources"));
     assert!(publishing.contains("cargo tree -d --locked --target x86_64-unknown-linux-gnu"));
 }

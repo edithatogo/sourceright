@@ -29,7 +29,10 @@ fn release_dry_run_preserves_release_gate_parity_and_sbom_generation() {
     for control in [
         "cargo build --release --locked",
         "cargo package --locked",
-        "cargo metadata --locked --format-version 1",
+        "/.github/actions/cargo-lock-sbom@",
+        "/.github/actions/grype-scan@",
+        "mode: enforce",
+        "severity-cutoff: critical",
         "cargo deny check advisories bans sources",
         "cargo publish --dry-run --locked",
         "actions/attest-build-provenance@",
@@ -37,5 +40,5 @@ fn release_dry_run_preserves_release_gate_parity_and_sbom_generation() {
         assert!(release.contains(control), "release missing {control}");
         assert!(dry_run.contains(control), "dry-run missing {control}");
     }
-    assert!(dry_run.contains("target/sourceright-cargo-sbom.json"));
+    assert!(dry_run.contains("target/sourceright.dependencies.cdx.json"));
 }
