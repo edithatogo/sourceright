@@ -40,12 +40,22 @@ fn release_paths_publish_checksums_attestations_and_dependency_sbom() {
         ".github/workflows/publish-crate.yml",
     ] {
         let workflow = read(path);
-        assert!(workflow.contains("cargo metadata --locked --format-version 1"));
+        assert!(workflow.contains("/.github/actions/cargo-lock-sbom@"));
+        assert!(workflow.contains("lockfile: Cargo.lock"));
+        assert!(workflow.contains("sbom: target/sourceright.dependencies.cdx.json"));
+        assert!(workflow.contains("/.github/actions/grype-scan@"));
+        assert!(workflow.contains("mode: enforce"));
+        assert!(workflow.contains("severity-cutoff: critical"));
+        let inventory = workflow.find("/.github/actions/cargo-lock-sbom@").unwrap();
+        let scan = workflow.find("/.github/actions/grype-scan@").unwrap();
+        let publication = workflow.find("cargo publish --dry-run --locked").unwrap();
+        assert!(inventory < scan && scan < publication);
         assert!(workflow.contains("actions/attest-build-provenance@"));
         assert!(workflow.contains("attestations: write"));
     }
 
     let release = read(".github/workflows/release.yml");
     assert!(release.contains("sha256"));
-    assert!(release.contains("sourceright-cargo-sbom.json"));
+    assert!(release.contains("sourceright.dependencies.cdx.json"));
+    assert_eq!(release.matches("needs: release-gate").count(), 3);
 }

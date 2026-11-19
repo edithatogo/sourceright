@@ -10,3 +10,7 @@
    syntax, dependency reachability, promotion order and current lock parsing.
 
 Only scoped branches/PRs are delivered. No releases or registries are published.
+
+5. Repair the demonstrated cargo-deny installation blocker with the exact 0.22.0
+   prebuilt Linux binary; qualify its digest/version and existing deny policy,
+   and test refusal of corrupt downloads before extraction or PATH export.

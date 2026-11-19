@@ -47,3 +47,9 @@ existing vulnerability gate was disabled by this rollout.
 References: [Cargo lockfile semantics](https://doc.rust-lang.org/cargo/guide/cargo-toml-vs-cargo-lock.html),
 [Grype documentation](https://oss.anchore.com/docs/guides/vulnerability/getting-started/),
 [CycloneDX JSON 1.6](https://cyclonedx.org/docs/1.6/json/).
+
+The existing cargo-deny policy remains independent of Grype. CI, dry runs and
+both release publishers use the checksum-verified official cargo-deny 0.22.0
+Linux binary, avoiding a compiler upgrade to the application's Rust 1.94 profile.
+The previous all-dependency unmaintained-advisory scope is explicit in deny.toml.
+The local released-inventory job retains the mandatory 25-minute timeout.

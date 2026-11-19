@@ -2,6 +2,8 @@
 db-urls = ["https://github.com/rustsec/advisory-db"]
 ignore = []
 yanked = "deny"
+# Preserve the pre-0.22 policy scope, including transitive dependencies.
+unmaintained = "all"
 
 [bans]
 multiple-versions = "deny"
