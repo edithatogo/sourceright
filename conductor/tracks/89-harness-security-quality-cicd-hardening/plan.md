@@ -56,3 +56,23 @@
   gates passed on 2026-07-12.
 - [ ] Run `$conductor-review` and address all actionable findings.
 - [ ] Synchronize GitHub issues and Project status with repository evidence.
+
+## Bounded parser campaign increment, 2026-11-20
+
+- [x] Configure the existing two parsers for 30 seconds on relevant PRs and 300 seconds on scheduled/manual campaigns, retaining source/compiler logs and minimized failures for 14 days.
+- [x] Pin the fuzz-only nightly and cargo-fuzz; cap target inputs at 64 KiB and libFuzzer RSS at 1 GiB with a five-second per-input timeout.
+- [x] Validate workflow syntax/expressions with actionlint 1.7.9, changed-target rustfmt and `git diff --check`.
+- [ ] Qualify native campaign execution and default sanitizers on the candidate head.
+
+This increments Phase 3 without closing unrelated mutation, stress, benchmark, publication or provider validation obligations. Reproduce retained inputs with the same pinned nightly and `cargo +nightly-2026-11-19 fuzz run TARGET --codegen-units 16 fuzz/artifacts/TARGET/INPUT`. The existing default Rust toolchain is unchanged.
+
+Local native builds were attempted on base
+`bd6bc0bf2d1c5066fc093f7c5cd6ad1a2918fd82` with nightly-2026-11-19 and
+cargo-fuzz 0.13.2, one Cargo build job and 1,000-input smoke limits. The initial
+single-codegen-unit build was killed while compiling Sourceright. A second
+build with 16 units was killed while compiling serde-saphyr. Both exited before
+campaign execution; neither is passing native evidence or a parser finding.
+The second attempt selected local `ASAN_OPTIONS=detect_leaks=0` because this
+workspace cannot run LeakSanitizer under ptrace, but compilation still failed.
+Hosted CI retains the default sanitizer configuration. Its actual execution
+is required before this candidate can be admitted.
