@@ -76,3 +76,7 @@ The second attempt selected local `ASAN_OPTIONS=detect_leaks=0` because this
 workspace cannot run LeakSanitizer under ptrace, but compilation still failed.
 Hosted CI retains the default sanitizer configuration. Its actual execution
 is required before this candidate can be admitted.
+
+PR jobs retain a 15-minute overall bound. Scheduled/manual jobs allow 25 minutes
+for both five-minute campaigns plus cold tool and harness builds; individual
+input, memory and campaign limits remain unchanged.
