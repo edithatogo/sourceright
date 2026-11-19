@@ -29,9 +29,22 @@ jobs:
         run: cargo install cargo-deny --locked
       - name: Package crate
         run: cargo package --locked
-      - name: Generate Cargo dependency SBOM
-        shell: bash
-        run: cargo metadata --locked --format-version 1 > target/sourceright-cargo-sbom.json
+      - name: Inventory exact locked Rust dependencies
+        uses: edithatogo/repository-standards/.github/actions/cargo-lock-sbom@bc76f1fbe0fa87a1371eadc06b08f54b48c623f7
+        with:
+          lockfile: Cargo.lock
+          output: target/sourceright.dependencies.cdx.json
+          name: sourceright
+          source-sha: ${{ github.sha }}
+      - name: Scan resolved Rust dependencies with Grype
+        uses: edithatogo/repository-standards/.github/actions/grype-scan@bc76f1fbe0fa87a1371eadc06b08f54b48c623f7
+        with:
+          sbom: target/sourceright.dependencies.cdx.json
+          mode: enforce
+          severity-cutoff: critical
+          artifact-name: grype-sourceright-release
+          output-directory: .grype/release
+          source-sha: ${{ github.sha }}
       - name: Check dependency policy
         shell: bash
         run: |
@@ -61,8 +74,16 @@ jobs:
           cargo run --locked --bin sourceright -- --help
           cargo run --locked --bin sourceright -- mcp status --json
           cargo run --locked --bin sourceright -- plugins validate --json
+      - name: Retain the resolved source inventory for downstream jobs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: grype-sourceright-dependency-inventory
+          path: target/sourceright.dependencies.cdx.json
+          if-no-files-found: error
+          retention-days: 90
 
   package:
+    needs: release-gate
     timeout-minutes: 45
     name: Package ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -113,6 +134,7 @@ jobs:
           path: dist/*
 
   crate:
+    needs: release-gate
     timeout-minutes: 20
     name: Crate package
     runs-on: ubuntu-latest
@@ -129,6 +151,11 @@ jobs:
         uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
       - name: Package crate
         run: cargo package --locked
+      - name: Download the dependency inventory that passed the gate
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.1
+        with:
+          name: grype-sourceright-dependency-inventory
+          path: target
       - name: Generate crate attestation
         uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         with:
@@ -136,12 +163,13 @@ jobs:
       - name: Upload crate
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: crate-package
+          name: sourceright-crate-package
           path: |
             target/package/*.crate
-            target/sourceright-cargo-sbom.json
+            target/sourceright.dependencies.cdx.json
 
   oci:
+    needs: release-gate
     timeout-minutes: 30
     name: OCI MCP image
     runs-on: ubuntu-latest
@@ -168,19 +196,76 @@ jobs:
         id: release-version
         shell: bash
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-      - name: Build and push image
+      - name: Build and push the isolated image candidate
         id: build-image
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           push: true
-          tags: |
-            ghcr.io/edithatogo/sourceright-mcp:${{ steps.release-version.outputs.version }}
-            ghcr.io/edithatogo/sourceright-mcp:latest
+          platforms: linux/amd64
+          tags: ghcr.io/edithatogo/sourceright-mcp:candidate-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           labels: |
             org.opencontainers.image.version=${{ steps.release-version.outputs.version }}
-      - name: Push image
-        run: echo "Image pushed by build-push-action"
+      - name: Resolve the candidate's only runnable platform manifest
+        id: image-manifest
+        shell: bash
+        env:
+          CANDIDATE_IMAGE: ghcr.io/edithatogo/sourceright-mcp@${{ steps.build-image.outputs.digest }}
+        run: |
+          set -euo pipefail
+          docker buildx imagetools inspect --raw "$CANDIDATE_IMAGE" > "$RUNNER_TEMP/sourceright-image-index.json"
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          document = json.loads((Path(os.environ['RUNNER_TEMP']) / 'sourceright-image-index.json').read_text())
+          candidate = os.environ['CANDIDATE_IMAGE']
+          digest = candidate.rsplit('@', 1)[1]
+          media_type = document.get('mediaType')
+          if media_type in ('application/vnd.oci.image.index.v1+json', 'application/vnd.docker.distribution.manifest.list.v2+json'):
+              runnable = []
+              for descriptor in document['manifests']:
+                  platform = descriptor.get('platform', {})
+                  if platform.get('os') == 'unknown' and platform.get('architecture') == 'unknown' and descriptor.get('annotations', {}).get('vnd.docker.reference.type') == 'attestation-manifest':
+                      continue
+                  if platform.get('os') != 'linux' or platform.get('architecture') != 'amd64':
+                      raise SystemExit('candidate contains an unexpected runnable platform')
+                  runnable.append(descriptor['digest'])
+              if len(runnable) != 1:
+                  raise SystemExit('candidate must contain exactly one linux/amd64 manifest')
+              digest = runnable[0]
+          elif media_type not in ('application/vnd.oci.image.manifest.v1+json', 'application/vnd.docker.distribution.manifest.v2+json'):
+              raise SystemExit('unsupported candidate manifest format')
+          if not re.fullmatch(r'sha256:[0-9a-f]{64}', digest):
+              raise SystemExit('invalid platform manifest digest')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('image=' + candidate.rsplit('@', 1)[0] + '@' + digest + '\n')
+          PY
+      - name: Scan the exact image digest before release tags
+        uses: edithatogo/repository-standards/.github/actions/grype-scan@bc76f1fbe0fa87a1371eadc06b08f54b48c623f7
+        with:
+          image: ${{ steps.image-manifest.outputs.image }}
+          platform: linux/amd64
+          mode: enforce
+          severity-cutoff: critical
+          artifact-name: grype-sourceright-image
+          output-directory: .grype/image-report
+          source-sha: ${{ github.sha }}
+      - name: Promote the exact scanned digest without rebuilding
+        shell: bash
+        env:
+          SCANNED_IMAGE: ghcr.io/edithatogo/sourceright-mcp@${{ steps.build-image.outputs.digest }}
+          RELEASE_VERSION: ${{ steps.release-version.outputs.version }}
+        run: |
+          set -euo pipefail
+          docker buildx imagetools create --prefer-index=false \
+            --tag "ghcr.io/edithatogo/sourceright-mcp:$RELEASE_VERSION" \
+            --tag ghcr.io/edithatogo/sourceright-mcp:latest \
+            "$SCANNED_IMAGE"
+          expected="${SCANNED_IMAGE##*@}"
+          for tag in "$RELEASE_VERSION" latest; do
+            actual="$(docker buildx imagetools inspect "ghcr.io/edithatogo/sourceright-mcp:$tag" --format '{{ .Manifest.Digest }}')"
+            test "$actual" = "$expected"
+          done
       - name: Generate image attestation
         uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         with:
@@ -197,6 +282,10 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout release status tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Download artifacts
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
@@ -206,7 +295,7 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
         with:
-          files: dist/*
+          files: dist/**/*
           generate_release_notes: true
       - name: Generate release status
         shell: pwsh
