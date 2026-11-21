@@ -55,25 +55,75 @@ jobs:
           path: bench-artifacts/benchmark-results.json
 
   fuzz:
-    if: github.event_name == 'schedule' || inputs.run_fuzz
+    if: github.event_name == 'pull_request' || github.event_name == 'schedule' || inputs.run_fuzz
     name: parser fuzz smoke
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: ${{ github.event_name == 'pull_request' && 15 || 25 }}
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+          fetch-depth: 2
+      - name: Select changed parser inputs
+        id: fuzz-scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python3 - <<'PYTHON'
+          import os
+          import subprocess
+
+          run = True
+          if os.environ["EVENT_NAME"] == "pull_request":
+              paths = subprocess.check_output(
+                  ["git", "diff", "--name-only", "-z", "HEAD^1", "HEAD"], text=True
+              ).split("\0")
+              run = any(
+                  path.startswith(("src/", "fuzz/", "schemas/"))
+                  or path in ("Cargo.toml", "Cargo.lock", ".github/workflows/robustness.yml")
+                  for path in paths
+              )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"run={str(run).lower()}\n")
+          print("Parser campaign selected" if run else "Parser input paths unchanged")
+          PYTHON
       - name: Install Rust nightly
+        if: steps.fuzz-scope.outputs.run == 'true'
         uses: dtolnay/rust-toolchain@2c76c034f9e32a5d6e2c104dc4df23a22476db04 # nightly
         with:
-          toolchain: nightly
+          toolchain: nightly-2026-11-19
       - name: Install cargo-fuzz
-        run: cargo install cargo-fuzz --locked
-      - name: Run bounded fuzz smoke
+        if: steps.fuzz-scope.outputs.run == 'true'
+        run: cargo +nightly-2026-11-19 install cargo-fuzz --version 0.13.2 --locked
+      - name: Run bounded parser campaigns
+        if: steps.fuzz-scope.outputs.run == 'true'
+        env:
+          FUZZ_SECONDS: ${{ github.event_name == 'pull_request' && '30' || '300' }}
+          CARGO_BUILD_JOBS: '2'
         run: |
-          cargo +nightly fuzz run validate_csl -- -max_total_time=30
-          cargo +nightly fuzz run validate_sidecar -- -max_total_time=30
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/parser-fuzz"
+          {
+            git rev-parse HEAD
+            rustc +nightly-2026-11-19 --version
+            cargo +nightly-2026-11-19 fuzz --version
+          } | tee "$RUNNER_TEMP/parser-fuzz/environment.txt"
+          for target in validate_csl validate_sidecar; do
+            cargo +nightly-2026-11-19 fuzz run "$target" --codegen-units 16 -- \
+              -max_total_time="$FUZZ_SECONDS" -max_len=65536 -rss_limit_mb=1024 -timeout=5 \
+              2>&1 | tee "$RUNNER_TEMP/parser-fuzz/$target.txt"
+          done
+      - name: Retain parser campaign evidence
+        if: always() && steps.fuzz-scope.outputs.run == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: parser-fuzz-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/parser-fuzz
+            fuzz/artifacts
+          if-no-files-found: ignore
+          retention-days: 14
 
   stress-bench:
     if: github.event_name == 'schedule' || inputs.run_stress
